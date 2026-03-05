@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>mialyk // about</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+:root {
+  --white:#FEFEFE; --grey-l:#A8B0B2; --grey-m:#88888C;
+  --black:#181818; --brand:#FFB742; --effect1:#DA6628; --effect2:#F3FF97;
+  --fs-48:clamp(36px,5vw,48px); --fs-36:clamp(28px,4vw,36px);
+  --fs-24:clamp(20px,2.5vw,24px); --fs-16:16px; --fs-12:12px; --fs-10:10px;
+  --font-brand:'Press Start 2P',monospace; --font-body:'DM Mono',monospace;
+  --fw-light:300; --fw-reg:400; --fw-bold:700;
+  --icon-sm:16px; --icon-md:24px; --nav-h:60px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--white);color:var(--black);font-family:var(--font-body);font-weight:var(--fw-reg);font-size:var(--fs-12);line-height:1.6;-webkit-font-smoothing:antialiased;cursor:none;overflow-x:hidden;}
+
+/* CURSOR */
+#cursor-canvas{position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:9999;}
+.click-ripple{position:fixed;border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%) scale(0);animation:rippleOut 0.5s cubic-bezier(0.2,0.8,0.4,1) forwards;}
+@keyframes rippleOut{0%{transform:translate(-50%,-50%) scale(0);opacity:0.7;}100%{transform:translate(-50%,-50%) scale(4);opacity:0;}}
+
+/* NAV */
+header{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:var(--white);border-bottom:1px solid rgba(24,24,24,0.08);display:flex;align-items:center;justify-content:space-between;padding:0 40px;z-index:500;}
+.nav-logo{font-family:var(--font-brand);font-size:var(--fs-16);color:var(--black);text-decoration:none;letter-spacing:0.02em;display:flex;align-items:center;gap:6px;line-height:1;}
+.nav-logo span.slash{color:var(--brand);}
+.nav-logo sub{font-family:var(--font-body);font-weight:var(--fw-light);font-size:var(--fs-12);color:var(--grey-m);letter-spacing:0.05em;vertical-align:baseline;margin-left:2px;}
+nav{display:flex;align-items:center;gap:36px;}
+.nav-link{font-size:var(--fs-12);font-weight:var(--fw-reg);color:var(--grey-m);text-decoration:none;letter-spacing:0.06em;text-transform:uppercase;position:relative;transition:color 0.2s;}
+.nav-link::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:var(--brand);transition:width 0.3s cubic-bezier(0.4,0,0.2,1);}
+.nav-link:hover,.nav-link.active{color:var(--black);}
+.nav-link:hover::after,.nav-link.active::after{width:100%;}
+.nav-item{position:relative;}
+.nav-dropdown{position:absolute;top:calc(100% + 16px);left:50%;background:var(--white);border:1px solid rgba(24,24,24,0.1);min-width:180px;padding:8px 0;opacity:0;visibility:hidden;transform:translateX(-50%) translateY(-8px);transition:opacity 0.2s,transform 0.2s,visibility 0.2s;box-shadow:0 8px 32px rgba(24,24,24,0.08);}
+.nav-item:hover .nav-dropdown{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0);}
+.dropdown-item{display:block;padding:10px 20px;font-size:var(--fs-12);color:var(--grey-m);text-decoration:none;letter-spacing:0.04em;transition:background 0.15s,color 0.15s;white-space:nowrap;}
+.dropdown-item:hover{background:rgba(255,183,66,0.08);color:var(--black);}
+.dropdown-dot{display:inline-block;width:5px;height:5px;background:var(--brand);border-radius:50%;margin-right:10px;vertical-align:middle;}
+.dropdown-locked{opacity:0.6;}.dropdown-locked:hover{opacity:1;}
+
+/* BUTTONS */
+.btn{font-family:var(--font-body);font-weight:var(--fw-reg);font-size:var(--fs-12);letter-spacing:0.1em;text-transform:uppercase;border:1px solid var(--black);background:transparent;color:var(--black);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;line-height:1;box-sizing:border-box;-webkit-appearance:none;appearance:none;margin:0;transition:background 0.2s,color 0.2s,border-color 0.2s;}
+.btn:hover{background:var(--black);color:var(--white);}
+.btn--sm{font-size:var(--fs-10);padding:0 16px;height:36px;}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:var(--black);}
+.btn.primary:hover{background:var(--effect1);border-color:var(--effect1);color:var(--white);}
+
+/* ICONS */
+.pxi{display:inline-block;width:16px;height:16px;vertical-align:middle;flex-shrink:0;fill:currentColor;}
+.pxi--sm{width:14px;height:14px;}.pxi--md{width:18px;height:18px;}
+
+/* PW MODAL */
+@keyframes popIn{from{opacity:0;transform:scale(0.92) translateY(16px);}to{opacity:1;transform:scale(1) translateY(0);}}
+#pw-modal{display:none;position:fixed;inset:0;background:rgba(24,24,24,0.5);backdrop-filter:blur(4px);z-index:700;align-items:center;justify-content:center;}
+#pw-modal.active{display:flex;}
+#pw-inner{background:var(--white);border:1px solid rgba(24,24,24,0.12);padding:32px;max-width:360px;width:90%;box-shadow:0 24px 80px rgba(24,24,24,0.12);animation:popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);}
+.pw-title{font-family:var(--font-brand);font-size:var(--fs-12);color:var(--black);margin-bottom:8px;line-height:1.8;}
+.pw-sub{font-size:var(--fs-10);color:var(--grey-m);margin-bottom:24px;font-weight:var(--fw-light);letter-spacing:0.06em;}
+.pw-input{font-family:var(--font-body);font-size:var(--fs-12);width:100%;padding:12px 16px;border:1px solid rgba(24,24,24,0.2);background:var(--white);color:var(--black);outline:none;margin-bottom:8px;transition:border-color 0.2s;letter-spacing:0.1em;}
+.pw-input:focus{border-color:var(--brand);}.pw-input.error{border-color:var(--effect1);}
+.pw-error{font-size:var(--fs-10);color:var(--effect1);margin-bottom:16px;min-height:14px;font-weight:var(--fw-light);}
+.pw-btns{display:flex;gap:10px;}
+
+/* PIXEL BG */
+#pixel-bg{position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:0;opacity:0.4;}
+
+/* LAYOUT */
+main{padding-top:calc(var(--nav-h) + 80px);padding-bottom:120px;max-width:1100px;margin:0 auto;padding-left:40px;padding-right:40px;position:relative;z-index:1;}
+
+/* HERO */
+.about-hero{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;margin-bottom:120px;opacity:0;transform:translateY(24px);transition:opacity 0.6s ease,transform 0.6s ease;}
+.about-hero.visible{opacity:1;transform:translateY(0);}
+.hero-label{font-size:var(--fs-10);font-weight:var(--fw-light);color:var(--brand);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:24px;display:flex;align-items:center;gap:10px;}
+.hero-label::before{content:'';display:inline-block;width:24px;height:1px;background:var(--brand);}
+.hero-title{font-family:var(--font-brand);font-size:var(--fs-24);color:var(--black);line-height:1.9;margin-bottom:32px;}
+.hero-title span{color:var(--brand);}
+.hero-bio{font-size:var(--fs-12);font-weight:var(--fw-light);color:var(--grey-m);line-height:2;margin-bottom:24px;}
+.hero-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+.hero-tag{font-size:var(--fs-10);letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border:1px solid rgba(24,24,24,0.15);color:var(--grey-m);transition:border-color 0.2s,color 0.2s;}
+.hero-tag:hover{border-color:var(--brand);color:var(--black);}
+
+/* CHARACTER CARD */
+.char-card{border:1px solid rgba(24,24,24,0.1);padding:32px;position:relative;background:var(--white);}
+.char-card::before{content:'player elwgrich';position:absolute;top:-1px;left:24px;background:var(--brand);color:var(--black);font-family:var(--font-brand);font-size:8px;padding:4px 10px;letter-spacing:0.1em;}
+.char-canvas-wrap{display:flex;justify-content:center;align-items:center;margin-bottom:24px;padding:20px 0;border-bottom:1px solid rgba(24,24,24,0.08);}
+#char-canvas{image-rendering:pixelated;display:block;}
+.char-stats{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.stat-label{font-size:var(--fs-10);color:var(--grey-l);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;}
+.stat-value{font-size:var(--fs-12);color:var(--black);}
+.stat-bar-wrap{height:4px;background:rgba(24,24,24,0.08);margin-top:6px;}
+.stat-bar{height:100%;background:var(--brand);width:0;transition:width 1.2s cubic-bezier(0.4,0,0.2,1);}
+
+/* SECTION HEADERS */
+.section-header{display:flex;align-items:center;gap:20px;margin-bottom:48px;opacity:0;transform:translateY(20px);transition:opacity 0.5s ease,transform 0.5s ease;}
+.section-header.visible{opacity:1;transform:translateY(0);}
+.section-num{font-family:var(--font-brand);font-size:var(--fs-10);color:var(--brand);}
+.section-title{font-family:var(--font-brand);font-size:var(--fs-16);color:var(--black);line-height:1.8;}
+.section-line{flex:1;height:1px;background:rgba(24,24,24,0.08);}
+
+/* EXP CARDS */
+.exp-section{margin-bottom:120px;}
+.exp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:2px;}
+.exp-card{border:1px solid rgba(24,24,24,0.1);padding:28px;position:relative;background:var(--white);transition:border-color 0.2s,transform 0.2s;opacity:0;transform:translateY(20px);}
+.exp-card.visible{opacity:1;transform:translateY(0);}
+.exp-card:hover{border-color:var(--brand);transform:translateY(-2px);}
+.exp-card-type{font-size:var(--fs-10);font-weight:var(--fw-light);color:var(--brand);letter-spacing:0.16em;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.exp-card-type::before{content:'';width:14px;height:1px;background:var(--brand);}
+.exp-card-title{font-family:var(--font-brand);font-size:var(--fs-12);color:var(--black);line-height:1.9;margin-bottom:4px;}
+.exp-card-company{font-size:var(--fs-12);color:var(--grey-m);margin-bottom:4px;}
+.exp-card-period{font-size:var(--fs-10);color:var(--grey-l);font-weight:var(--fw-light);letter-spacing:0.08em;margin-bottom:16px;}
+.exp-card-desc{font-size:var(--fs-12);font-weight:var(--fw-light);color:var(--grey-m);line-height:1.9;border-top:1px solid rgba(24,24,24,0.06);padding-top:14px;}
+.exp-card-pts{position:absolute;top:16px;right:20px;font-family:var(--font-brand);font-size:8px;color:var(--grey-l);letter-spacing:0.08em;}
+.exp-card:hover .exp-card-pts{color:var(--brand);}
+
+/* SKILLS */
+.skills-section{margin-bottom:120px;}
+.skills-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px 80px;}
+.skill-cat-label{font-size:var(--fs-10);font-weight:var(--fw-light);color:var(--brand);letter-spacing:0.16em;text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:8px;}
+.skill-cat-label::before{content:'▶';font-size:8px;}
+.skill-item{margin-bottom:16px;opacity:0;transform:translateX(-8px);transition:opacity 0.4s ease,transform 0.4s ease;}
+.skill-item.visible{opacity:1;transform:translateX(0);}
+.skill-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;}
+.skill-name{font-size:var(--fs-12);color:var(--black);}
+.skill-level{font-size:var(--fs-10);color:var(--grey-l);font-weight:var(--fw-light);letter-spacing:0.08em;}
+.skill-track{height:3px;background:rgba(24,24,24,0.06);position:relative;}
+.skill-fill{height:100%;background:var(--brand);width:0;transition:width 1s cubic-bezier(0.4,0,0.2,1);position:relative;}
+.skill-fill::after{content:'';position:absolute;right:0;top:-2px;width:3px;height:7px;background:var(--effect1);}
+
+/* CONTACT */
+.contact-section{margin-bottom:40px;}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;}
+.contact-item{border:1px solid rgba(24,24,24,0.1);padding:28px 32px;display:flex;align-items:center;gap:20px;text-decoration:none;color:var(--black);opacity:0;transform:translateY(12px);transition:opacity 0.4s ease,transform 0.4s ease,border-color 0.2s,background 0.2s;}
+.contact-item.visible{opacity:1;transform:translateY(0);}
+.contact-item:hover{border-color:var(--brand);background:rgba(255,183,66,0.03);}
+.contact-icon{width:36px;height:36px;border:1px solid rgba(24,24,24,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--grey-m);transition:border-color 0.2s,color 0.2s;}
+.contact-item:hover .contact-icon{border-color:var(--brand);color:var(--brand);}
+.contact-label{font-size:var(--fs-10);color:var(--grey-l);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;}
+.contact-value{font-size:var(--fs-12);color:var(--black);}
+
+/* FOOTER */
+footer{background:var(--white);color:var(--grey-m);padding:32px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;font-size:var(--fs-12);letter-spacing:0.08em;border-top:1px solid rgba(24,24,24,0.1);position:relative;z-index:1;}
+.footer-copy{color:var(--grey-m);font-weight:var(--fw-light);}
+.footer-copy span{color:var(--brand);}
+.footer-socials{display:flex;align-items:center;gap:20px;}
+.social-link{color:var(--grey-m);transition:color 0.2s;display:flex;align-items:center;gap:6px;text-decoration:none;font-size:var(--fs-12);}
+.social-link:hover{color:var(--brand);}
+.social-link svg{width:var(--icon-sm);height:var(--icon-sm);fill:currentColor;flex-shrink:0;pointer-events:none;}
+</style>
+</head>
+<body>
+<canvas id="cursor-canvas"></canvas>
+<canvas id="pixel-bg"></canvas>
+
+<!-- HEADER -->
+<header>
+  <a href="/" class="nav-logo">mialyk<span class="slash">//</span><sub>creative lead</sub></a>
+  <nav>
+    <div class="nav-item">
+      <a href="#" class="nav-link">Projects</a>
+      <div class="nav-dropdown">
+        <a href="/helpurr.html" class="dropdown-item"><span class="dropdown-dot"></span>Helpurr</a>
+        <a href="#" class="dropdown-item dropdown-locked" onclick="showPasswordModal(event)"><span class="dropdown-dot"></span>Le.social <svg class="pxi pxi--sm" viewBox="0 0 24 24" fill="currentColor"><rect x="8" y="4" width="8" height="2"/><rect x="6" y="6" width="2" height="4"/><rect x="16" y="6" width="2" height="4"/><rect x="4" y="10" width="16" height="2"/><rect x="4" y="10" width="2" height="10"/><rect x="18" y="10" width="2" height="10"/><rect x="4" y="20" width="16" height="2"/><rect x="10" y="14" width="4" height="2"/><rect x="11" y="16" width="2" height="2"/></svg></a>
+        <a href="/ora.html" class="dropdown-item"><span class="dropdown-dot"></span>ORA</a>
+        <a href="/meed.html" class="dropdown-item"><span class="dropdown-dot"></span>Meed</a>
+        <a href="/debox.html" class="dropdown-item"><span class="dropdown-dot"></span>DeBox</a>
+        <a href="/cheddar.html" class="dropdown-item"><span class="dropdown-dot"></span>Cheddar Verse</a>
+        <a href="/illustration.html" class="dropdown-item"><span class="dropdown-dot"></span>Illustration</a>
+        <a href="/vfx.html" class="dropdown-item"><span class="dropdown-dot"></span>VFX</a>
+        <a href="/hamartia.html" class="dropdown-item"><span class="dropdown-dot"></span>Hamartia <span style="font-size:10px;color:var(--grey-m)">Game</span></a>
+      </div>
+    </div>
+    <a href="/about.html" class="nav-link active">About</a>
+  </nav>
+</header>
+
+<!-- MAIN -->
+<main>
+
+  <!-- HERO -->
+  <section class="about-hero" id="hero">
+    <div class="hero-left">
+      <div class="hero-label">Player Profile</div>
+      <h1 class="hero-title"><span>Mia</span><br><span style="color:var(--black)">Lam Yin Kwan</span></h1>
+      <p class="hero-bio">I operate at the intersection where users meet product — conjuring the magic in between. From brand identity to perceptual interfaces, I build visual worlds from the ground up. From pixels to protocols.</p>
+      <p class="hero-bio">Early builder at Helpurr. Fluent in English, Cantonese, and Mandarin.</p>
+      <div class="hero-tags">
+        <span class="hero-tag">Creative Direction</span>
+        <span class="hero-tag">Brand Identity</span>
+        <span class="hero-tag">UI / UX</span>
+        <span class="hero-tag">Web3</span>
+        <span class="hero-tag">3D & VFX</span>
+        <span class="hero-tag">Illustration</span>
+        <span class="hero-tag">Motion</span>
+      </div>
+    </div>
+    <div class="char-card">
+      <div class="char-canvas-wrap"><canvas id="char-canvas" width="180" height="240"></canvas></div>
+      <div class="char-stats">
+        <div class="stat-row"><div class="stat-label">Token</div><div class="stat-value" style="color:var(--brand);font-family:var(--font-brand);">elwgrich</div></div>
+        <div class="stat-row"><div class="stat-label">Level</div><div class="stat-value" id="level-count">000</div></div>
+        <div class="stat-row"><div class="stat-label">Class</div><div class="stat-value">Creative Lead</div></div>
+        <div class="stat-row"><div class="stat-label">Guild</div><div class="stat-value">Builder</div></div>
+        <div class="stat-row" style="grid-column:1/-1"><div class="stat-label">Design Power</div><div class="stat-bar-wrap"><div class="stat-bar" data-fill="100"></div></div></div>
+        <div class="stat-row" style="grid-column:1/-1"><div class="stat-label">Blockchain XP</div><div class="stat-bar-wrap"><div class="stat-bar" data-fill="85"></div></div></div>
+        <div class="stat-row" style="grid-column:1/-1"><div class="stat-label">Art Skill</div><div class="stat-bar-wrap"><div class="stat-bar" data-fill="96"></div></div></div>
+        <div class="stat-row" style="grid-column:1/-1"><div class="stat-label">3D / VFX</div><div class="stat-bar-wrap"><div class="stat-bar" data-fill="78"></div></div></div>
+      </div>
+</div>
+  </section>
+
+  <!-- QUEST LOG -->
+  <section class="exp-section">
+    <div class="section-header" id="exp-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Quest Log</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="exp-grid">
+
+      <div class="exp-card" data-delay="0">
+        <div class="exp-card-pts">+50 XP</div>
+        <div class="exp-card-type">Main Quest</div>
+        <div class="exp-card-title">Creative Lead</div>
+        <div class="exp-card-company">Helpurr — AI Pet Care</div>
+        <div class="exp-card-period">2025 — 2026 · Early Builder</div>
+        <div class="exp-card-desc">Early team member shaping the art direction and brand identity for an AI-powered pet care app. Built the visual language from zero — character design, UI aesthetic, and brand system for Helpurr's launch.</div>
+      </div>
+
+      <div class="exp-card" data-delay="80">
+        <div class="exp-card-pts">+50 XP</div>
+        <div class="exp-card-type">Passion Project · Builder</div>
+        <div class="exp-card-title">Creative Director</div>
+        <div class="exp-card-company">Le.social</div>
+        <div class="exp-card-period">2025 — 2026 · Self-initiated</div>
+        <div class="exp-card-desc">Conceived and built Le.social — the best tool for your social name card. A passion project exploring digital identity, minimal design, and how people present themselves online.</div>
+      </div>
+
+      <div class="exp-card" data-delay="160">
+        <div class="exp-card-pts">+50 XP</div>
+        <div class="exp-card-type">Main Quest</div>
+        <div class="exp-card-title">Creative Lead</div>
+        <div class="exp-card-company">ORA Protocol</div>
+        <div class="exp-card-period">Jun 2024 — Feb 2025 · Full-time</div>
+        <div class="exp-card-desc">Built ORA's visual identity and brand system from zero. Led art direction for Chain Reaction, Token Launches, and ETH × AI initiatives — videos, products, merchandise.</div>
+      </div>
+
+      <div class="exp-card" data-delay="240">
+        <div class="exp-card-pts">+50 XP</div>
+        <div class="exp-card-type">Side Quest</div>
+        <div class="exp-card-title">APAC Growth</div>
+        <div class="exp-card-company">UniCorss</div>
+        <div class="exp-card-period">Feb 2024 — Sep 2024 · Part-time</div>
+        <div class="exp-card-desc">Spearheaded BTC campaign across HK, Taiwan, Malaysia, Singapore — 50+ projects, growing brand exposure across Runes Asia, TWB, OrdinalsSummit, BTCMY2024.</div>
+      </div>
+
+      <div class="exp-card" data-delay="320">
+        <div class="exp-card-pts">+50 XP</div>
+        <div class="exp-card-type">Main Quest</div>
+        <div class="exp-card-title">Senior Designer</div>
+        <div class="exp-card-company">Meed (ex-Super Ultra)</div>
+        <div class="exp-card-period">Jun 2022 — Jul 2024 · Full-time</div>
+        <div class="exp-card-desc">Designed Meed's AI-enhanced digital rewards platform — web app and dashboard. Built hype casual mobile games and co-designed "Skysurfer". Won Moralis × Google & Cronos Labs hackathons.</div>
+      </div>
+
+      <div class="exp-card" data-delay="400">
+        <div class="exp-card-pts">+40 XP</div>
+        <div class="exp-card-type">Side Quest</div>
+        <div class="exp-card-title">Community Manager</div>
+        <div class="exp-card-company">DeBox · Hong Kong</div>
+        <div class="exp-card-period">Mar 2023 — Aug 2024 · Part-time</div>
+        <div class="exp-card-desc">Grew DeBox HK community from 0 to 2600 in 4 months. Hosted Twitter Spaces, Member meetups, and organised 1st IRL event & Happy Hour.</div>
+      </div>
+
+      <div class="exp-card" data-delay="480">
+        <div class="exp-card-pts">+40 XP</div>
+        <div class="exp-card-type">Guild Work</div>
+        <div class="exp-card-title">Designer</div>
+        <div class="exp-card-company">852Dev · Freelance</div>
+        <div class="exp-card-period">Mar 2023 — Present</div>
+        <div class="exp-card-desc">Marketing materials, banners, backdrops, Poap Design and brand assets. Assisted in IRL events and refreshed 852Dev branding.</div>
+      </div>
+
+      <div class="exp-card" data-delay="560">
+        <div class="exp-card-pts">+35 XP</div>
+        <div class="exp-card-type">Main Quest</div>
+        <div class="exp-card-title">2D / 3D Artist</div>
+        <div class="exp-card-company">Leader Success Technology</div>
+        <div class="exp-card-period">Jan 2021 — May 2022 · Full-time</div>
+        <div class="exp-card-desc">Branding for NFT projects "Cheddar Verse" and "Eleia - Crack of Dawn". 3D assets for blind box, illustrations for social media.</div>
+      </div>
+
+      <div class="exp-card" data-delay="640">
+        <div class="exp-card-pts">+30 XP</div>
+        <div class="exp-card-type">Main Quest</div>
+        <div class="exp-card-title">Surfacing Artist</div>
+        <div class="exp-card-company">Enchanting Studio Limited</div>
+        <div class="exp-card-period">Aug 2021 — Jan 2022 · Full-time</div>
+        <div class="exp-card-desc">Texture creation for realistic side-characters and environments in an undisclosed film. Outstanding employee, October.</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SKILL TREE -->
+  <section class="skills-section">
+    <div class="section-header" id="skills-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Skill Tree</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-category">
+        <div class="skill-cat-label">Design</div>
+        <div class="skill-item" data-fill="96"><div class="skill-row"><span class="skill-name">Adobe Creative Suite</span><span class="skill-level">MAX</span></div><div class="skill-track"><div class="skill-fill"></div></div></div>
+        <div class="skill-item" data-fill="90"><div class="skill-row"><span class="skill-name">Figma</span><span class="skill-level">Expert</span></div><div class="skill-track"><div class="skill-fill"></div></div></div>
+        <div class="skill-item" data-fill="85"><div class="skill-row"><span class="skill-name">Brand Identity</span><span class="skill-level">Expert</span></div><div class="skill-track"><div class="skill-fill"></div></div></div>
+        <div class="skill-item" data-fill="88"><div class="skill-row"><span class="skill-name">UI / UX</span><span class="skill-level">Expert</span></div><div class="skill-track"><div class="skill-fill"></div></div></div>
+        <div class="skill-item" data-fill="80"><div class="skill-row"><span class="skill-name">Motion Design</span><span class="skill-level">Advanced</span></div><div class="skill-track"><div class="skill-fill"></div></div></div>
+        <div class="skill-item" data-fill="90"><div class="skill-row"><span class="skill-name">AI Generation</span><span class="skill-level">Expert</span></div><div class="skill-track"><div class="skill-fill"></div></div></div>
+        <div class="skill-item" data-fill="85"><div class="skill-row"><span class="skill-name">Vibe Coding</span><span class="skill-level">Expert</span></div><div class="skill-track"><div class="skill-fill"></div></div></div>
+      </div>
+      <div class="skill-category">
+        <div class="skill-cat-label">3D & Production</div>
+        <div class="skill-item" data-fill="82"><div class="skill-row"><span class="skill-name">Unreal Engine</span><span class="skill-level">Advanced</span></div><div class="skill-track"><div class="skill-fill"></div></div></div>
+        <div class="skill-item" data-fill="78"><div class="skill-row"><span class="skill-name">3D Modelling & Texture</span><span class="skill-level">Advanced</span></div><div class="skill-track"><div class="skill-fill"></div></div></div>
+        <div class="skill-item" data-fill="75"><div class="skill-row"><span class="skill-name">VFX / Compositing</span><span class="skill-level">Advanced</span></div><div class="skill-track"><div class="skill-fill"></div></div></div>
+        <div class="skill-item" data-fill="70"><div class="skill-row"><span class="skill-name">Midjourney / AI Art</span><span class="skill-level">Advanced</span></div><div class="skill-track"><div class="skill-fill"></div></div></div>
+      </div>
+      <div class="skill-category">
+        <div class="skill-cat-label">Web3 & Strategy</div>
+        <div class="skill-item" data-fill="88"><div class="skill-row"><span class="skill-name">Blockchain / Web3 Fluency</span><span class="skill-level">Expert</span></div><div class="skill-track"><div class="skill-fill"></div></div></div>
+        <div class="skill-item" data-fill="82"><div class="skill-row"><span class="skill-name">Product Management</span><span class="skill-level">Advanced</span></div><div class="skill-track"><div class="skill-fill"></div></div></div>
+        <div class="skill-item" data-fill="80"><div class="skill-row"><span class="skill-name">Community Building</span><span class="skill-level">Advanced</span></div><div class="skill-track"><div class="skill-fill"></div></div></div>
+        <div class="skill-item" data-fill="75"><div class="skill-row"><span class="skill-name">Agile / Roadmapping</span><span class="skill-level">Advanced</span></div><div class="skill-track"><div class="skill-fill"></div></div></div>
+      </div>
+      <div class="skill-category">
+        <div class="skill-cat-label">Languages</div>
+        <div class="skill-item" data-fill="100"><div class="skill-row"><span class="skill-name">Cantonese</span><span class="skill-level">Native</span></div><div class="skill-track"><div class="skill-fill"></div></div></div>
+        <div class="skill-item" data-fill="95"><div class="skill-row"><span class="skill-name">English</span><span class="skill-level">Fluent</span></div><div class="skill-track"><div class="skill-fill"></div></div></div>
+        <div class="skill-item" data-fill="88"><div class="skill-row"><span class="skill-name">Mandarin</span><span class="skill-level">Fluent</span></div><div class="skill-track"><div class="skill-fill"></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact-section">
+    <div class="section-header" id="contact-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Send Message</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="contact-grid">
+      <a href="mailto:lamyinkwanmia&#64;gmail&#46;com" class="contact-item">
+        <div class="contact-icon"><svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="4" width="20" height="2"/><rect x="2" y="18" width="20" height="2"/><rect x="2" y="4" width="2" height="14"/><rect x="20" y="4" width="2" height="14"/><rect x="4" y="6" width="6" height="2"/><rect x="10" y="8" width="4" height="2"/><rect x="14" y="6" width="6" height="2"/></svg></div>
+        <div><div class="contact-label">Email</div><div class="contact-value">lamyinkwanmia&#64;gmail&#46;com</div></div>
+      </a>
+      <a href="https://www.linkedin.com/in/mia-lyk" target="_blank" class="contact-item">
+        <div class="contact-icon"><svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></div>
+        <div><div class="contact-label">LinkedIn</div><div class="contact-value">linkedin.com/in/mia-lyk</div></div>
+      </a>
+      <a href="https://www.instagram.com/mia_lyk" target="_blank" class="contact-item">
+        <div class="contact-icon"><svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></div>
+        <div><div class="contact-label">Instagram</div><div class="contact-value">@mia_lyk</div></div>
+      </a>
+      <a href="https://x.com/elwgrich/" target="_blank" class="contact-item">
+        <div class="contact-icon"><svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.213 5.567 5.95-5.567zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
+        <div><div class="contact-label">X / Twitter</div><div class="contact-value">@elwgrich</div></div>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<!-- PASSWORD MODAL -->
+<div id="pw-modal">
+  <div id="pw-inner">
+    <div class="pw-title"><svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor"><rect x="8" y="4" width="8" height="2"/><rect x="6" y="6" width="2" height="4"/><rect x="16" y="6" width="2" height="4"/><rect x="4" y="10" width="16" height="2"/><rect x="4" y="10" width="2" height="10"/><rect x="18" y="10" width="2" height="10"/><rect x="4" y="20" width="16" height="2"/><rect x="10" y="14" width="4" height="2"/><rect x="11" y="16" width="2" height="2"/></svg> Le.social</div>
+    <div class="pw-sub">This project is password protected.<br>Enter password to view.</div>
+    <input class="pw-input" type="password" id="pw-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkPassword()">
+    <div class="pw-error" id="pw-error"></div>
+    <div class="pw-btns">
+      <button class="btn btn--sm primary" onclick="checkPassword()">Enter ▶</button>
+      <button class="btn btn--sm" onclick="closePwModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-copy">© 2026 <span>mialyk</span> — All rights reserved</div>
+  <div class="footer-socials">
+    <a href="https://www.linkedin.com/in/mia-lyk" target="_blank" class="social-link" title="LinkedIn"><svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+    <a href="https://www.instagram.com/mia_lyk" target="_blank" class="social-link" title="Instagram"><svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></a>
+    <a href="https://www.artstation.com/mialyk" target="_blank" class="social-link" title="ArtStation"><svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor"><path d="M0 17.723l2.027 3.505h.001a2.424 2.424 0 0 0 2.164 1.333h13.457l-2.792-4.838H0zm24 .025c0-.484-.143-.935-.388-1.314L15.728 2.728a2.424 2.424 0 0 0-2.164-1.333H9.419L21.598 22.54l1.92-3.325c.378-.637.482-.919.482-1.467zm-11.129-3.462L7.428 4.858l-5.444 9.428h10.887z"/></svg></a>
+    <a href="https://x.com/elwgrich/" target="_blank" class="social-link" title="X"><svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.213 5.567 5.95-5.567zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+  </div>
+</footer>
+
+<script>
+// PIXEL BG
+const bgCanvas=document.getElementById('pixel-bg');
+const bgCtx=bgCanvas.getContext('2d');
+bgCanvas.width=window.innerWidth; bgCanvas.height=window.innerHeight;
+function drawBg(){bgCtx.clearRect(0,0,bgCanvas.width,bgCanvas.height);const C=28,cols=Math.ceil(bgCanvas.width/C),rows=Math.ceil(bgCanvas.height/C);for(let c=0;c<cols;c++)for(let r=0;r<rows;r++){bgCtx.fillStyle='rgba(136,136,140,0.12)';bgCtx.fillRect(c*C+C/2-1,r*C+C/2-1,2,2);}}
+drawBg();
+window.addEventListener('resize',()=>{bgCanvas.width=window.innerWidth;bgCanvas.height=window.innerHeight;drawBg();});
+
+// CHARACTER CANVAS
+const charCanvas=document.getElementById('char-canvas');
+const charCtx=charCanvas.getContext('2d');
+charCtx.imageSmoothingEnabled=false;
+let charAnim=0;
+let blinkTimer=0,blinkDuration=0,blinkNext=Math.floor(Math.random()*150)+80;
+let earTwitchTimer=0,earTwitchNext=Math.floor(Math.random()*200)+120;
+let whiskerPhase=0;
+
+function drawChar(){
+  charCtx.clearRect(0,0,180,240);
+  const S=6;
+
+  // GRID: canvas 30cols x 40rows (180x240px)
+  // Ears up 2 rows vs before → top at row 4
+  //
+  // HEAD:     cols 7-20 (14w), rows 6-15 (10h)
+  // EAR-L:    cols 0-7  (8w),  rows 4-11 (8h)  ← right edge = head left col 7, NO overlap
+  // EAR-R:    cols 20-27(8w),  rows 4-11 (8h)  ← left edge = head right col 20, NO overlap
+  // HEADBAND: row 9
+  // EYES:     rows 10-12 (mid-ear 4-11 = row 7-8 mid, but eyes mid-head = row 10-12)
+  // NOSE:     row 13
+  // SCARF:    rows 15-16
+  // BODY:     cols 7-21 (left=head left 7, right=head right+1=21), rows 17-26
+  //           bottom-left arc 3 blocks, no far-left bottom line
+  // ARMS:     cols 5-6 (L) / 22-23 (R), rows 18-22
+  // TAIL:     cols 22-29, rows 18-25
+
+  const W  ='#FFFFFF';
+  const BK ='#222222';
+  const CR ='#FFDDCC';
+  const OR ='#FF6600';
+  const ORD='#CC4400';
+  const PK ='#FFB0B0';
+  const GR ='#CCCCCC';
+
+  function b(c,r,col){ charCtx.fillStyle=col; charCtx.fillRect(c*S,r*S,S,S); }
+  function row(c1,c2,r,col){ for(let c=c1;c<=c2;c++) b(c,r,col); }
+  function col(r1,r2,c,col){ for(let r=r1;r<=r2;r++) b(c,r,col); }
+  function rect(c1,r1,c2,r2,col){ for(let r=r1;r<=r2;r++) row(c1,c2,r,col); }
+
+  const bob=Math.round(Math.sin(charAnim*0.04)*1.5);
+
+  blinkTimer++;
+  let blink=false;
+  if(blinkTimer>=blinkNext){
+    blinkDuration++;
+    blink=blinkDuration<=4;
+    if(blinkDuration>6){blinkTimer=0;blinkDuration=0;blinkNext=100+Math.floor(Math.random()*160);}
+  }
+  earTwitchTimer++;
+  let leOff=0;
+  if(earTwitchTimer>=earTwitchNext){
+    leOff=Math.round(Math.sin((earTwitchTimer-earTwitchNext)*0.7)*-1); // upward
+    if(earTwitchTimer-earTwitchNext>16){earTwitchTimer=0;earTwitchNext=140+Math.floor(Math.random()*200);}
+  }
+  whiskerPhase+=0.045;
+  const ww=Math.round(Math.sin(whiskerPhase));
+
+  charCtx.save();
+  charCtx.translate(0, bob);
+
+  // TAIL (draw first - behind body)
+  const ts=Math.round(Math.sin(charAnim*0.055)*1);
+  rect(22,20,23,24,GR);
+  b(22,19,BK); b(23,19,BK);
+  b(24,20,BK); b(24,21,BK); b(24,22,BK); b(24,23,BK); b(24,24,BK);
+  b(22,25,BK); b(23,25,BK);
+  // upper fork
+  b(24,18+ts,GR); b(25,17+ts,GR); b(26,16+ts,GR); b(27,16+ts,GR);
+  b(25,18+ts,GR); b(26,17+ts,GR);
+  b(25,16+ts,BK); b(27,15+ts,BK); b(28,16+ts,BK); b(28,17+ts,BK);
+  b(28,18+ts,BK); b(27,19+ts,BK); b(26,19+ts,BK); b(25,19+ts,BK); b(24,17+ts,BK);
+  b(27,16+ts,W);
+  // lower fork
+  b(24,26-ts,GR); b(25,27-ts,GR); b(26,28-ts,GR); b(27,28-ts,GR);
+  b(25,26-ts,GR); b(26,27-ts,GR);
+  b(25,28-ts,BK); b(27,29-ts,BK); b(28,28-ts,BK); b(28,27-ts,BK);
+  b(28,26-ts,BK); b(27,25-ts,BK); b(26,25-ts,BK); b(25,25-ts,BK); b(24,27-ts,BK);
+  b(27,28-ts,W);
+
+  // BODY (cols 7-21, rows 17-26)
+  rect(7,17,21,26,W);
+  row(8,20,17,BK); b(7,17,BK); b(21,17,BK);  // top
+  col(18,25,21,BK);                             // right
+  col(18,22,7,BK);                              // left straight rows 18-22
+  b(7,23,BK); b(8,24,BK); b(9,25,BK);          // left arc 3 steps
+  b(7,24,W); b(7,25,W); b(7,26,W);             // clear arc corners
+  b(8,25,W); b(8,26,W); b(9,26,W);
+  row(10,20,26,BK); b(21,26,BK);               // bottom (no left corner)
+  // belly bump
+  row(12,17,27,W); b(12,27,BK); b(17,27,BK);
+  row(13,16,27,W); row(12,17,27,BK);
+
+  // ARMS
+  rect(5,18,6,22,W);
+  row(5,6,17,BK); row(5,6,23,BK);
+  col(18,22,4,BK); b(4,17,BK); b(4,23,BK);
+  b(7,17,BK); b(7,23,BK);
+
+  rect(22,18,23,22,W);
+  row(22,23,17,BK); row(22,23,23,BK);
+  col(18,22,24,BK); b(24,17,BK); b(24,23,BK);
+  b(21,17,BK); b(21,23,BK);
+
+  // SCARF (rows 15-16, cols 7-20)
+  row(7,20,15,OR); row(7,20,16,ORD);
+  row(7,20,14,BK);
+  b(6,15,BK); b(6,16,BK); b(21,15,BK); b(21,16,BK);
+  b(21,14,OR); b(22,14,OR);
+  b(21,15,OR); b(22,15,OR); b(23,15,OR);
+  b(22,16,OR); b(23,16,OR);
+  b(20,14,BK); b(23,14,BK); b(24,15,BK); b(24,16,BK);
+  b(23,17,BK); b(22,17,BK); b(21,17,BK);
+
+  // HEAD (cols 7-20, rows 6-15, 14w x 10h)
+  rect(8,7,19,14,W);
+  row(8,19,6,W); b(7,6,BK); b(20,6,BK);
+  row(7,20,6,BK); row(7,20,15,BK);
+  col(7,14,7,BK); col(7,14,20,BK);
+  b(7,7,BK); b(20,7,BK);
+  // cheeks
+  b(8,11,PK); b(9,11,PK); b(8,12,PK); b(9,12,PK);
+  b(18,11,PK); b(19,11,PK); b(18,12,PK); b(19,12,PK);
+
+  // HEADBAND (row 9)
+  row(8,19,9,OR); b(7,9,BK); b(20,9,BK);
+  b(20,8,OR); b(21,8,OR); b(21,9,OR); b(22,9,OR); b(21,10,OR); b(20,10,ORD);
+  b(19,8,BK); b(22,8,BK); b(23,9,BK); b(23,10,BK); b(22,11,BK); b(21,11,BK); b(20,11,BK);
+
+  // EARS 8x8, up 2 rows (rows 4-11), no overlap with head
+  // LEFT ear: cols 0-7 (right edge col7 = head left edge col7, share outline)
+  //   → draw cols 0-6 white, col 7 is head outline so skip
+  const eT = 4; // ears start row 4 (2 rows higher than before)
+  rect(0,eT+leOff,6,eT+7+leOff,W);           // cols 0-6 (not 7 to avoid overlap)
+  rect(2,eT+1+leOff,5,eT+5+leOff,CR);
+  row(0,6,eT+leOff,BK);                       // top
+  row(0,6,eT+7+leOff,BK);                     // bottom
+  col(eT+1+leOff,eT+6+leOff,0,BK);           // left
+  col(eT+1+leOff,eT+6+leOff,6,BK);           // right (col 6, not 7)
+
+  // RIGHT ear: cols 21-27 (left edge col21 = head right+1, no overlap)
+  rect(21,eT,27,eT+7,W);
+  rect(23,eT+1,26,eT+5,CR);
+  row(21,27,eT,BK);
+  row(21,27,eT+7,BK);
+  col(eT+1,eT+6,21,BK);
+  col(eT+1,eT+6,27,BK);
+
+  // EYES rows 10-12
+  if(blink){
+    charCtx.fillStyle=BK;
+    charCtx.fillRect(9*S,11*S+2,3*S,2);
+    charCtx.fillRect(16*S,11*S+2,3*S,2);
+  } else {
+    rect(9,10,11,12,BK); b(9,10,W); b(10,10,W); b(9,11,W);
+    rect(16,10,18,12,BK); b(16,10,W); b(17,10,W); b(16,11,W);
+  }
+
+  // NOSE
+  b(13,13,BK); b(14,13,BK);
+
+  // WHISKERS
+  charCtx.strokeStyle=BK; charCtx.globalAlpha=0.22; charCtx.lineWidth=1;
+  const wy=13*S+3;
+  charCtx.beginPath(); charCtx.moveTo(3*S,wy+ww*2);   charCtx.lineTo(10*S,wy+ww);   charCtx.stroke();
+  charCtx.beginPath(); charCtx.moveTo(3*S,wy+5-ww*2); charCtx.lineTo(10*S,wy+3-ww); charCtx.stroke();
+  charCtx.beginPath(); charCtx.moveTo(24*S,wy+ww*2);  charCtx.lineTo(17*S,wy+ww);   charCtx.stroke();
+  charCtx.beginPath(); charCtx.moveTo(24*S,wy+5-ww*2);charCtx.lineTo(17*S,wy+3-ww); charCtx.stroke();
+  charCtx.globalAlpha=1;
+
+  charCtx.restore();
+  charAnim++;
+  requestAnimationFrame(drawChar);
+}
+
+drawChar();
+
+
+// LEVEL COUNTER
+let lv=0; const lvEl=document.getElementById('level-count');
+function countUp(){if(lv<8){lv++;lvEl.textContent=String(lv).padStart(3,'0');setTimeout(countUp,120);}}
+setTimeout(countUp,600);
+
+// CURSOR
+const cursorCanvas=document.getElementById('cursor-canvas');
+const cursorCtx=cursorCanvas.getContext('2d');
+cursorCanvas.width=window.innerWidth; cursorCanvas.height=window.innerHeight;
+window.addEventListener('resize',()=>{cursorCanvas.width=window.innerWidth;cursorCanvas.height=window.innerHeight;});
+let mouseX=-100,mouseY=-100,isHovering=false;
+let bodyX=-100,bodyY=-100,curAngle=0,targetAngle=0,legPhase=0,lastBodyX=-100,lastBodyY=-100;
+let cursorScale=2,targetScale=2;
+document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY;});
+document.querySelectorAll('a,button,.exp-card,.contact-item,.hero-tag').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{isHovering=true;});
+  el.addEventListener('mouseleave',()=>{isHovering=false;});
+});
+document.addEventListener('click',e=>{
+  const ripple=document.createElement('div');
+  ripple.className='click-ripple';
+  const s=isHovering?32:20;
+  ripple.style.cssText=`width:${s}px;height:${s}px;left:${e.clientX}px;top:${e.clientY}px;border:2px solid #FFB742;background:rgba(255,183,66,0.15);`;
+  document.body.appendChild(ripple);
+  setTimeout(()=>ripple.remove(),520);
+});
+function drawMouseCursor(P,angle,moving){
+  const B='#FFB742',D='#DA6628',I='#FFD4A8',E='#181818',H='#FFF8E0';
+  function p(rx,ry,w,h,col){cursorCtx.fillStyle=col;cursorCtx.fillRect(Math.round(rx-w/2),Math.round(ry-h/2),Math.round(w),Math.round(h));}
+  cursorCtx.save(); cursorCtx.rotate(angle);
+  const hS=P*8,arc=moving?Math.sin(legPhase*1.4)*P*2.5:P*2.0,tb=-hS/2-P;
+  p(tb-P*1,arc*0.3,P*2,P*2,D); p(tb-P*4,arc*0.9,P*1.5,P*1.5,B); p(tb-P*7,arc*0.4,P,P,B);
+  const eS=P*3,eI=P*2,eX=-P*1,eTY=-P*4.5,eBY=P*4.5;
+  p(eX,eTY,eS,eS,B); p(eX,eBY,eS,eS,B);
+  p(eX-eS/2,eTY,P,eS,D); p(eX-eS/2,eBY,P,eS,D);
+  p(eX+P*0.3,eTY,eI,eI,I); p(eX+P*0.3,eBY,eI,eI,I);
+  p(0,0,hS,hS,B);
+  p(P*2.5,P*2.5,P*5,P,D); p(P*2.5,P*2.5,P,P*5,D);
+  p(-P*2,-P*2,P*3,P,H); p(-P*2,-P*2,P,P*3,H);
+  p(P*1.5,-P*1.8,P*1.5,P*1.5,E); p(P*1.5,P*1.8,P*1.5,P*1.5,E);
+  p(P*1.8,-P*2.1,P,P,H); p(P*1.8,P*1.5,P,P,H);
+  p(P*3.5,0,P*1.5,P*1.5,D);
+  cursorCtx.fillStyle='rgba(136,136,140,0.6)';
+  cursorCtx.fillRect(Math.round(P*3.2-P*1.5),Math.round(-P*0.3),Math.round(P*3),1);
+  cursorCtx.fillRect(Math.round(P*3.2-P*1.5),Math.round(P*0.8),Math.round(P*3),1);
+  cursorCtx.restore();
+}
+function cursorLoop(){
+  cursorCtx.clearRect(0,0,cursorCanvas.width,cursorCanvas.height);
+  cursorCtx.imageSmoothingEnabled=false;
+  targetScale=isHovering?2.8:2; cursorScale+=(targetScale-cursorScale)*0.18;
+  bodyX+=(mouseX-bodyX)*0.22; bodyY+=(mouseY-bodyY)*0.22;
+  const vx=bodyX-lastBodyX,vy=bodyY-lastBodyY,speed=Math.sqrt(vx*vx+vy*vy),moving=speed>0.4;
+  lastBodyX=bodyX; lastBodyY=bodyY;
+  const dx=mouseX-bodyX,dy=mouseY-bodyY;
+  if(Math.abs(dx)>1||Math.abs(dy)>1) targetAngle=Math.atan2(dy,dx);
+  let da=targetAngle-curAngle;
+  while(da>Math.PI)da-=Math.PI*2; while(da<-Math.PI)da+=Math.PI*2;
+  curAngle+=da*0.25; if(moving)legPhase+=0.28;
+  cursorCtx.save(); cursorCtx.translate(Math.round(bodyX),Math.round(bodyY));
+  drawMouseCursor(cursorScale,curAngle,moving); cursorCtx.restore();
+  requestAnimationFrame(cursorLoop);
+}
+cursorLoop();
+
+// PASSWORD MODAL
+const LE_SOCIAL_PASSWORD='mialyk2024';
+function showPasswordModal(e){
+  e.preventDefault();
+  document.getElementById('pw-input').value='';
+  document.getElementById('pw-error').textContent='';
+  document.getElementById('pw-input').classList.remove('error');
+  document.getElementById('pw-modal').classList.add('active');
+  setTimeout(()=>document.getElementById('pw-input').focus(),100);
+}
+function closePwModal(){document.getElementById('pw-modal').classList.remove('active');}
+function checkPassword(){
+  const val=document.getElementById('pw-input').value;
+  if(val===LE_SOCIAL_PASSWORD){closePwModal();window.location.href='/lesocial.html';}
+  else{
+    document.getElementById('pw-input').classList.add('error');
+    document.getElementById('pw-error').textContent='✕ Incorrect password';
+    document.getElementById('pw-input').value='';
+    setTimeout(()=>document.getElementById('pw-input').classList.remove('error'),1500);
+  }
+}
+document.getElementById('pw-modal').addEventListener('click',function(e){if(e.target===this)closePwModal();});
+
+// SCROLL ANIMATIONS
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      const el=entry.target,delay=parseInt(el.dataset.delay||0);
+      setTimeout(()=>{
+        el.classList.add('visible');
+        el.querySelectorAll('.skill-fill').forEach(bar=>{
+          const p=bar.closest('.skill-item');
+          if(p) bar.style.width=p.dataset.fill+'%';
+        });
+        el.querySelectorAll('.stat-bar').forEach(bar=>{bar.style.width=bar.dataset.fill+'%';});
+      },delay);
+    }
+  });
+},{threshold:0.1});
+
+// Hero visible immediately
+setTimeout(()=>{
+  document.getElementById('hero').classList.add('visible');
+  document.querySelectorAll('.stat-bar').forEach(bar=>{bar.style.width=bar.dataset.fill+'%';});
+},300);
+
+// Observe everything
+document.querySelectorAll('.section-header,.exp-card,.skill-item,.contact-item').forEach((el,i)=>{
+  if(!el.dataset.delay) el.dataset.delay=0;
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
