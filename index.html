@@ -989,7 +989,7 @@ const EXPERIENCES = [
     company: 'ORA Protocol',
     period: 'Jun 2024 — Feb 2025 · 9 mos',
     desc: 'Art direction & design leadership for a cutting-edge Web3 protocol. Built visual identity and brand system from the ground up.',
-    pts: 10,
+    pts: 50,
     url: 'https://ora.io',
     color: '#00F6FF',
   },
@@ -1000,7 +1000,7 @@ const EXPERIENCES = [
     company: 'Helpurr — AI Cat Pain Detector',
     period: 'Oct 2025 — Feb 2026 · 5 mos',
     desc: 'AI-powered cat pain detection using computer vision. Led end-to-end product design and UX strategy.',
-    pts: 10,
+    pts: 50,
     url: 'https://helpurr.com',
     color: '#C0FFEE',
   },
@@ -1011,7 +1011,7 @@ const EXPERIENCES = [
     company: 'Meed Loyalty',
     period: 'Jun 2022 — Jul 2024 · 2 yrs',
     desc: 'UI/UX, design systems, 3D assets for Web3 loyalty platform. Hackathon winner ×2 (Moralis x Google, Cronos Labs).',
-    pts: 10,
+    pts: 50,
     url: 'https://meed.com',
     color: '#F87C56',
   },
@@ -1022,7 +1022,7 @@ const EXPERIENCES = [
     company: 'Hamartia',
     period: '2023 — 2024',
     desc: 'Game design, art direction and visual development for Hamartia.',
-    pts: 10,
+    pts: 50,
     url: '#hamartia',
     color: '#FF4444',
   },
@@ -1033,7 +1033,7 @@ const EXPERIENCES = [
     company: 'Cheddar Verse',
     period: '2023',
     desc: 'Visual identity and world-building for Cheddar Verse metaverse project.',
-    pts: 10,
+    pts: 50,
     url: '#cheddar',
     color: '#FFBF56',
   },
@@ -1044,9 +1044,42 @@ const EXPERIENCES = [
     company: 'DeBox',
     period: '2022 — 2023',
     desc: 'Product design and visual identity for DeBox community platform.',
-    pts: 10,
+    pts: 50,
     url: '#debox',
     color: '#00C454',
+  },
+  {
+    id: 'lesocial', label: 'LE.SOC',
+    tag: 'Project Unlocked',
+    title: 'Creative Director',
+    company: 'Le.social',
+    period: '2023 — 2024',
+    desc: 'Brand identity and product design for Le.social — a curated social platform.',
+    pts: 50,
+    url: '#lesocial',
+    color: '#03442D',
+  },
+  {
+    id: 'illustration', label: 'ILLUST',
+    tag: 'Project Unlocked',
+    title: 'Illustrator',
+    company: 'Illustration',
+    period: '2020 — Present',
+    desc: 'Personal illustration work spanning character design, editorial, and world-building.',
+    pts: 50,
+    url: '#illustration',
+    color: '#88888C',
+  },
+  {
+    id: 'vfx', label: 'VFX',
+    tag: 'Project Unlocked',
+    title: 'VFX Artist',
+    company: 'VFX',
+    period: '2021 — 2023',
+    desc: 'Motion graphics and visual effects for film and digital media projects.',
+    pts: 50,
+    url: '#vfx',
+    color: '#181818',
   },
 ];
 
@@ -1134,7 +1167,7 @@ function maintainCandies() {
   }
 }
 
-const MAX_EXP_BEANS = 5;
+const MAX_EXP_BEANS = EXPERIENCES.length; // one bean per project, no duplicates
 
 function safeSpawnBean(excludeBeans) {
   // excludeBeans: list of beans already planned this batch (not yet in expBeans)
@@ -1168,20 +1201,19 @@ function safeSpawnBean(excludeBeans) {
 }
 
 function spawnExpBeans() {
-  // Always pick from ALL projects randomly — allow revisits
+  // Each project appears at most once — no duplicates ever
   const onScreen = new Set(expBeans.map(e => e.exp.id));
-  // Pool: all projects not currently on screen
+  // Pool: only projects NOT currently on screen
   let pool = EXPERIENCES.filter(exp => !onScreen.has(exp.id));
-  if (pool.length === 0) pool = [...EXPERIENCES]; // all on screen — unlikely but safe
 
-  // Shuffle
+  // Shuffle pool
   for (let i = pool.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [pool[i], pool[j]] = [pool[j], pool[i]];
   }
 
   const needed = Math.max(0, MAX_EXP_BEANS - expBeans.length);
-  const toAdd  = pool.slice(0, needed);
+  const toAdd  = pool.slice(0, needed); // never more than missing slots
   const newBeans = [];
 
   toAdd.forEach(exp => {
@@ -1295,7 +1327,7 @@ function tick() {
       snake.pop();
     }
   }
-  // Always maintain beans at 5 every tick
+  // Always maintain beans — one per project, no duplicates
   maintainExpBeans();
 
   checkSnakeInBounds();
@@ -1509,18 +1541,19 @@ function draw() {
   });
 
   // ── Candies — pixel squares ──
+  // size -0% / -25% / -50% from original; all colours #DCE0E2 lightened
   candies.forEach(c => {
     const ox = c.x * CELL;
     const oy = c.y * CELL;
     const S  = CELL;
 
     if (c.size === 1) {
-      // tiny 4×4 dot
-      const p = Math.max(2, Math.round(S * 0.18));
-      px(ox + S/2 - p, oy + S/2 - p, p*2, p*2, GREY_L);
+      // small — 50% of original (S*0.18 * 0.5)
+      const p = Math.max(1, Math.round(S * 0.09));
+      px(ox + S/2 - p, oy + S/2 - p, p*2, p*2, '#DCE0E2');
     } else if (c.size === 5) {
-      // medium pixel circle (3×3 sprite)
-      const p = Math.max(2, Math.round(S * 0.14));
+      // medium cross — 25% smaller (S*0.14 * 0.75)
+      const p = Math.max(1, Math.round(S * 0.105));
       const m = [
         [0,1,0],
         [1,1,1],
@@ -1529,11 +1562,11 @@ function draw() {
       const offX = ox + Math.floor(S/2) - p*1.5;
       const offY = oy + Math.floor(S/2) - p*1.5;
       m.forEach((row,ry) => row.forEach((v,rx) => {
-        if(v) px(offX + rx*p, offY + ry*p, p, p, GREY_M);
+        if(v) px(offX + rx*p, offY + ry*p, p, p, '#C9CDCE');
       }));
     } else {
-      // big candy — 5×5 star pixel
-      const p = Math.max(2, Math.round(S * 0.12));
+      // large star — original size (S*0.12)
+      const p = Math.max(1, Math.round(S * 0.12));
       const star = [
         [0,0,1,0,0],
         [0,1,1,1,0],
@@ -1544,7 +1577,7 @@ function draw() {
       const offX = ox + Math.floor(S/2) - p*2.5;
       const offY = oy + Math.floor(S/2) - p*2.5;
       star.forEach((row,ry) => row.forEach((v,rx) => {
-        if(v) px(offX + rx*p, offY + ry*p, p, p, BRAND);
+        if(v) px(offX + rx*p, offY + ry*p, p, p, '#FFB742');
       }));
     }
   });
