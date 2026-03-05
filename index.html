@@ -1,0 +1,1836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>mialyk // creative lead</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root {
+  /* Colors */
+  --white:   #FEFEFE;
+  --grey-l:  #A8B0B2;
+  --grey-m:  #88888C;
+  --black:   #181818;
+  --brand:   #FFB742;
+  --effect1: #DA6628;
+  --effect2: #F3FF97;
+
+  /* Typography scale — min 10px */
+  --fs-48: clamp(36px, 5vw, 48px);
+  --fs-36: clamp(28px, 4vw, 36px);
+  --fs-24: clamp(20px, 2.5vw, 24px);
+  --fs-16: 16px;
+  --fs-12: 12px;
+  --fs-10: 10px;
+
+  /* Fonts */
+  --font-brand: 'Press Start 2P', monospace;
+  --font-body:  'DM Mono', monospace;
+
+  /* Font weights */
+  --fw-light:  300;
+  --fw-reg:    400;
+  --fw-bold:   700;
+
+  /* Icon sizes */
+  --icon-sm: 16px;
+  --icon-md: 24px;
+
+  /* Spacing */
+  --nav-h: 60px;
+}
+
+/* ============================================================
+   RESET
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--white);
+  color: var(--black);
+  font-family: 'DM Mono', monospace;
+  font-weight: var(--fw-reg);
+  font-size: var(--fs-16);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  cursor: none;
+}
+
+/* ============================================================
+   CUSTOM CURSOR
+   ============================================================ */
+#cursor-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+}
+/* Click ripple */
+.click-ripple {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%) scale(0);
+  animation: rippleOut 0.5s cubic-bezier(0.2,0.8,0.4,1) forwards;
+}
+@keyframes rippleOut {
+  0%   { transform: translate(-50%,-50%) scale(0); opacity: 0.7; }
+  100% { transform: translate(-50%,-50%) scale(4); opacity: 0; }
+}
+
+/* ============================================================
+   HEADER / NAV
+   ============================================================ */
+header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--nav-h);
+  background: var(--white);
+  border-bottom: 1px solid rgba(24,24,24,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  z-index: 500;
+}
+
+.nav-logo {
+  font-family: 'Press Start 2P', monospace;
+  font-size: var(--fs-16);
+  color: var(--black);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 1;
+}
+.nav-logo span.slash { color: var(--brand); }
+.nav-logo sub {
+  font-family: 'DM Mono', monospace;
+  font-weight: var(--fw-light);
+  font-size: var(--fs-12);
+  color: var(--grey-m);
+  letter-spacing: 0.05em;
+  vertical-align: baseline;
+  margin-left: 2px;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+
+.nav-link {
+  font-size: var(--fs-12);
+  font-weight: var(--fw-reg);
+  color: var(--grey-m);
+  text-decoration: none;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  position: relative;
+  transition: color 0.2s;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px; left: 0;
+  width: 0; height: 1px;
+  background: var(--brand);
+  transition: width 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+.nav-link:hover { color: var(--black); }
+.nav-link:hover::after { width: 100%; }
+
+/* Dropdown */
+.nav-item { position: relative; }
+.nav-dropdown {
+  position: absolute;
+  top: calc(100% + 16px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--white);
+  border: 1px solid rgba(24,24,24,0.1);
+  min-width: 180px;
+  padding: 8px 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%) translateY(-8px);
+  transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
+  box-shadow: 0 8px 32px rgba(24,24,24,0.08);
+}
+.nav-item:hover .nav-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+.dropdown-item {
+  display: block;
+  padding: 10px 20px;
+  font-size: var(--fs-12);
+  color: var(--grey-m);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.dropdown-item:hover { background: rgba(255,183,66,0.08); color: var(--black); }
+.dropdown-dot {
+  display: inline-block;
+  width: 5px; height: 5px;
+  background: var(--brand);
+  border-radius: 50%;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+/* ============================================================
+   MAIN GAME AREA
+   ============================================================ */
+#home {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--white);
+}
+
+canvas#gameCanvas {
+  display: block;
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Game UI overlay */
+#game-ui {
+  position: absolute;
+  top: calc(var(--nav-h) + 20px);
+  left: 40px;
+  pointer-events: none;
+  z-index: 10;
+}
+#pts-label {
+  font-family: 'DM Mono', monospace;
+  font-size: var(--fs-12);
+  font-weight: var(--fw-light);
+  color: var(--grey-l);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+#pts-value {
+  font-family: 'Press Start 2P', monospace;
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-24);
+  color: var(--black);
+  line-height: 1.4;
+  transition: color 0.2s;
+}
+#pts-value.flash { color: var(--brand); }
+
+#hint {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: var(--fs-12);
+  color: var(--grey-l);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 10;
+  animation: fadeHint 1.5s ease-in-out infinite alternate;
+  transition: color 0.3s;
+}
+@keyframes fadeHint { from { opacity: 0.3; } to { opacity: 0.9; } }
+#hint.hidden { display: none; }
+#hint.playing {
+  color: var(--brand);
+  animation: none;
+  opacity: 1;
+}
+
+/* ============================================================
+   POPUP SYSTEM — 3 sizes: sm / md / lg
+   ============================================================ */
+
+/* Overlay (shared) */
+.popup-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(24,24,24,0.4);
+  backdrop-filter: blur(4px);
+  z-index: 600;
+  align-items: center;
+  justify-content: center;
+}
+.popup-overlay.active { display: flex; }
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.92) translateY(16px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Inner window (shared) */
+.popup-window {
+  background: var(--white);
+  border: 1px solid rgba(24,24,24,0.12);
+  width: 90%;
+  position: relative;
+  box-shadow: 0 24px 80px rgba(24,24,24,0.12);
+  animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+/* Size tokens */
+.popup-window--sm { max-width: 360px; padding: 32px; }
+.popup-window--md { max-width: 560px; padding: 48px; }
+.popup-window--lg { max-width: 760px; padding: 64px; }
+
+/* Legacy IDs mapped to system */
+#popup { display: none; position: fixed; inset: 0;
+  background: rgba(24,24,24,0.4); backdrop-filter: blur(4px);
+  z-index: 600; align-items: center; justify-content: center; }
+#popup.active { display: flex; }
+#popup-inner {
+  background: var(--white);
+  border: 1px solid rgba(24,24,24,0.12);
+  width: 560px;
+  max-width: 90vw;
+  min-height: 520px;
+  height: 520px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 80px rgba(24,24,24,0.12);
+  animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  overflow: hidden;
+}
+
+.popup-top {
+  padding: 48px 48px 0;
+  flex-shrink: 0;
+}
+
+.popup-mid {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 48px;
+}
+
+.popup-btns {
+  flex-shrink: 0;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.popup-tag {
+  font-size: var(--fs-12);
+  font-weight: var(--fw-light);
+  color: var(--brand);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.popup-tag::before {
+  content: '';
+  display: inline-block;
+  width: 20px; height: 1px;
+  background: var(--brand);
+}
+
+.popup-title {
+  font-family: 'Press Start 2P', monospace;
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-16);
+  color: var(--black);
+  line-height: 1.8;
+  margin-bottom: 6px;
+}
+
+.popup-company {
+  font-size: var(--fs-12);
+  color: var(--grey-m);
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+
+.popup-period {
+  font-size: var(--fs-12);
+  font-weight: var(--fw-light);
+  color: var(--grey-l);
+  letter-spacing: 0.08em;
+  margin-bottom: 24px;
+}
+
+.popup-desc {
+  font-size: var(--fs-12);
+  font-weight: var(--fw-light);
+  color: var(--grey-m);
+  line-height: 1.9;
+  margin-bottom: 24px;
+  width: 100%;
+  word-break: break-word;
+}
+
+.popup-pts {
+  font-family: 'Press Start 2P', monospace;
+  font-size: var(--fs-12);
+  font-weight: var(--fw-bold);
+  color: var(--brand);
+  margin-bottom: 28px;
+}
+
+
+
+/* ── Button system — 3 sizes ── */
+/* ── 8-bit pixel arrow (↗) ── */
+.pixel-arrow {
+  display: inline-block;
+  width: 10px; height: 10px;
+  position: relative;
+  vertical-align: middle;
+  margin-left: 4px;
+  flex-shrink: 0;
+}
+.pixel-arrow::before,
+.pixel-arrow::after {
+  content: '';
+  position: absolute;
+  background: currentColor;
+  image-rendering: pixelated;
+}
+/* horizontal bar — top */
+.pixel-arrow::before { top: 0; right: 0; width: 8px; height: 2px; }
+/* vertical bar — right */
+.pixel-arrow::after  { top: 0; right: 0; width: 2px; height: 8px; }
+/* diagonal dots via box-shadow on ::before */
+
+/* ── Button base — reset everything ── */
+.btn {
+  font-family: 'DM Mono', monospace;
+  font-weight: var(--fw-reg);
+  font-size: var(--fs-12);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 12px 24px;        /* md default */
+  border: 1px solid var(--black);
+  background: transparent;
+  color: var(--black);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  line-height: 1;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.btn:hover { background: var(--black); color: var(--white); }
+
+/* ── 3 sizes — fixed height guarantees visual consistency ── */
+.btn--sm { font-size: var(--fs-10); padding: 0 16px; height: 36px; }
+.btn--md { font-size: var(--fs-12); padding: 0 24px; height: 44px; width: 172px; }
+.btn--lg { font-size: var(--fs-12); padding: 0 32px; height: 52px; }
+
+/* ── Variants ── */
+.btn.primary {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: var(--black);
+}
+.btn.primary:hover { background: var(--effect1); border-color: var(--effect1); color: var(--white); }
+
+.popup-close {
+  position: absolute;
+  top: 20px; right: 20px;
+  width: var(--icon-md); height: var(--icon-md);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--grey-l);
+  font-size: var(--fs-16);
+  transition: color 0.2s;
+  background: none; border: none;
+}
+.popup-close:hover { color: var(--black); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  background: var(--white);
+  color: var(--grey-m);
+  padding: 32px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: var(--fs-12);
+  letter-spacing: 0.08em;
+  border-top: 1px solid rgba(24,24,24,0.1);
+}
+
+.footer-copy { color: var(--grey-m); font-weight: var(--fw-light); }
+.footer-copy span { color: var(--brand); }
+
+.footer-socials {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.social-link {
+  color: var(--grey-m);
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  font-size: var(--fs-12);
+}
+.social-link:hover { color: var(--brand); }
+.social-link svg {
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+  fill: currentColor;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+/* ── Pixel art icons — inline SVG rects, colour via currentColor ── */
+.pxi {
+  display: inline-block;
+  width: 16px; height: 16px;
+  vertical-align: middle;
+  flex-shrink: 0;
+  fill: currentColor;
+  position: relative;
+  top: -1px;          /* optical centre adjustment */
+}
+.btn .pxi {
+  display: block;     /* inside flex = block, no inline baseline shift */
+  margin-left: 6px;
+  top: 0;
+}
+.pxi--sm  { width: 14px; height: 14px; }
+.pxi--md  { width: 18px; height: 18px; }
+.pxi--lg  { width: 24px; height: 24px; }
+
+.dropdown-locked { opacity: 0.6; }
+.dropdown-locked:hover { opacity: 1; }
+.lock-icon { font-size: 10px; margin-left: 4px; }
+
+/* Password Modal — sm size */
+#pw-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(24,24,24,0.5);
+  backdrop-filter: blur(4px);
+  z-index: 700;
+  align-items: center;
+  justify-content: center;
+}
+#pw-modal.active { display: flex; }
+#pw-inner {
+  background: var(--white);
+  border: 1px solid rgba(24,24,24,0.12);
+  padding: 32px;       /* --sm padding */
+  max-width: 360px;    /* --sm max-width */
+  width: 90%;
+  box-shadow: 0 24px 80px rgba(24,24,24,0.12);
+  animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.pw-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: var(--fs-12);
+  color: var(--black);
+  margin-bottom: 8px;
+  line-height: 1.8;
+}
+.pw-sub {
+  font-size: var(--fs-10);
+  color: var(--grey-m);
+  margin-bottom: 24px;
+  font-weight: var(--fw-light);
+  letter-spacing: 0.06em;
+}
+.pw-input {
+  font-family: 'DM Mono', monospace;
+  font-size: var(--fs-12);
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid rgba(24,24,24,0.2);
+  background: var(--white);
+  color: var(--black);
+  outline: none;
+  margin-bottom: 8px;
+  transition: border-color 0.2s;
+  letter-spacing: 0.1em;
+}
+.pw-input:focus { border-color: var(--brand); }
+.pw-input.error { border-color: var(--effect1); }
+.pw-error {
+  font-size: var(--fs-10);
+  color: var(--effect1);
+  margin-bottom: 16px;
+  min-height: 14px;
+  font-weight: var(--fw-light);
+}
+.pw-btns { display: flex; gap: 10px; }
+
+/* ============================================================
+   CANDY SCORE FLOATER
+   ============================================================ */
+.score-float {
+  position: absolute;
+  font-family: 'Press Start 2P', monospace;
+  font-size: var(--fs-16);
+  font-weight: var(--fw-bold);
+  color: var(--brand);
+  pointer-events: none;
+  z-index: 20;
+  animation: floatUp 0.8s ease-out forwards;
+}
+@keyframes floatUp {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-40px); }
+}
+</style>
+</head>
+<body>
+
+<!-- CUSTOM CURSOR -->
+<canvas id="cursor-canvas"></canvas>
+
+<!-- HEADER -->
+<header>
+  <a href="#home" class="nav-logo" onclick="scrollToTop(event)">
+    mialyk<span class="slash">//</span><sub>creative lead</sub>
+  </a>
+  <nav>
+    <div class="nav-item">
+      <a href="#" class="nav-link">Projects</a>
+      <div class="nav-dropdown">
+        <a href="#" class="dropdown-item"><span class="dropdown-dot"></span>Helpurr</a>
+        <a href="#" class="dropdown-item dropdown-locked" onclick="showPasswordModal(event)"><span class="dropdown-dot"></span>Le.social <svg class="pxi pxi--sm" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <rect x="8" y="4" width="8" height="2"/><rect x="6" y="6" width="2" height="4"/>
+  <rect x="16" y="6" width="2" height="4"/><rect x="4" y="10" width="16" height="2"/>
+  <rect x="4" y="10" width="2" height="10"/><rect x="18" y="10" width="2" height="10"/>
+  <rect x="4" y="20" width="16" height="2"/>
+  <rect x="10" y="14" width="4" height="2"/><rect x="11" y="16" width="2" height="2"/>
+ style="margin-left:4px;opacity:0.5"></svg></a>
+        <a href="#" class="dropdown-item"><span class="dropdown-dot"></span>ORA</a>
+        <a href="#" class="dropdown-item"><span class="dropdown-dot"></span>Meed</a>
+        <a href="#" class="dropdown-item"><span class="dropdown-dot"></span>DeBox</a>
+        <a href="#" class="dropdown-item"><span class="dropdown-dot"></span>Cheddar Verse</a>
+        <a href="#" class="dropdown-item"><span class="dropdown-dot"></span>Illustration</a>
+        <a href="#" class="dropdown-item"><span class="dropdown-dot"></span>VFX</a>
+        <a href="#" class="dropdown-item"><span class="dropdown-dot"></span>Hamartia <span style="font-size:10px;color:var(--grey-m)">Game</span></a>
+      </div>
+    </div>
+    <a href="#about" class="nav-link">About</a>
+  </nav>
+</header>
+
+<!-- HOME: SNAKE GAME -->
+<section id="home">
+  <canvas id="gameCanvas"></canvas>
+
+  <div id="game-ui">
+    <div id="pts-label">score</div>
+    <div id="pts-value">000</div>
+  </div>
+
+  <div id="hint">↑ ↓ ← →  play &nbsp;·&nbsp; space / click  pause</div>
+</section>
+
+<!-- EXPERIENCE POPUP -->
+<div id="popup">
+  <div id="popup-inner">
+    <button class="popup-close" onclick="closePopup()"><svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <rect x="4" y="4" width="2" height="2"/><rect x="6" y="6" width="2" height="2"/>
+  <rect x="8" y="8" width="2" height="2"/><rect x="10" y="10" width="2" height="2"/>
+  <rect x="12" y="12" width="2" height="2"/><rect x="14" y="14" width="2" height="2"/>
+  <rect x="16" y="16" width="2" height="2"/><rect x="18" y="18" width="2" height="2"/>
+  <rect x="18" y="4" width="2" height="2"/><rect x="16" y="6" width="2" height="2"/>
+  <rect x="14" y="8" width="2" height="2"/><rect x="12" y="10" width="2" height="2"/>
+  <rect x="10" y="12" width="2" height="2"/><rect x="8" y="14" width="2" height="2"/>
+  <rect x="6" y="16" width="2" height="2"/><rect x="4" y="18" width="2" height="2"/>
+</svg></button>
+
+    <!-- TOP: snap to top -->
+    <div class="popup-top">
+      <div class="popup-tag" id="popup-tag">Experience Unlocked</div>
+      <div class="popup-title" id="popup-title">—</div>
+      <div class="popup-company" id="popup-company">—</div>
+      <div class="popup-period" id="popup-period">—</div>
+    </div>
+
+    <!-- MIDDLE: auto padding, grows equally -->
+    <div class="popup-mid">
+      <div class="popup-desc" id="popup-desc">—</div>
+      <div class="popup-pts" id="popup-pts">+10 pts</div>
+    </div>
+
+    <!-- BOTTOM: snap to bottom -->
+    <div class="popup-btns">
+      <a class="btn btn--md primary" id="popup-view-btn" href="#" target="_blank">View Project <svg class="pxi pxi--sm" style="margin-top:3.4px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" xmlns="http://www.w3.org/2000/svg"><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+      <button class="btn btn--md" onclick="closePopup()">Continue</button>
+    </div>
+  </div>
+</div>
+
+<!-- PASSWORD MODAL -->
+<div id="pw-modal">
+  <div id="pw-inner">
+    <div class="pw-title"><svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <rect x="8" y="4" width="8" height="2"/><rect x="6" y="6" width="2" height="4"/>
+  <rect x="16" y="6" width="2" height="4"/><rect x="4" y="10" width="16" height="2"/>
+  <rect x="4" y="10" width="2" height="10"/><rect x="18" y="10" width="2" height="10"/>
+  <rect x="4" y="20" width="16" height="2"/>
+  <rect x="10" y="14" width="4" height="2"/><rect x="11" y="16" width="2" height="2"/>
+ style="margin-right:8px;vertical-align:middle"></svg> Le.social</div>
+    <div class="pw-sub">This project is password protected.<br>Enter password to view.</div>
+    <input class="pw-input" type="password" id="pw-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkPassword()">
+    <div class="pw-error" id="pw-error"></div>
+    <div class="pw-btns">
+      <button class="btn btn--sm primary" onclick="checkPassword()">Enter ▶</button>
+      <button class="btn btn--sm" onclick="closePwModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-copy">© 2026 <span>mialyk</span> — All rights reserved</div>
+  <div class="footer-socials">
+
+    <!-- LinkedIn -->
+    <a href="https://www.linkedin.com/in/mia-lyk" target="_blank" class="social-link" title="LinkedIn"><svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+
+    <!-- Instagram -->
+    <a href="https://www.instagram.com/mia_lyk" target="_blank" class="social-link" title="Instagram"><svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></a>
+
+    <!-- ArtStation -->
+    <a href="https://www.artstation.com/mialyk" target="_blank" class="social-link" title="ArtStation"><svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M0 17.723l2.027 3.505h.001a2.424 2.424 0 0 0 2.164 1.333h13.457l-2.792-4.838H0zm24 .025c0-.484-.143-.935-.388-1.314L15.728 2.728a2.424 2.424 0 0 0-2.164-1.333H9.419L21.598 22.54l1.92-3.325c.378-.637.482-.919.482-1.467zm-11.129-3.462L7.428 4.858l-5.444 9.428h10.887z"/></svg></a>
+
+    <!-- X / Twitter -->
+    <a href="https://x.com/elwgrich/" target="_blank" class="social-link" title="X"><svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.213 5.567 5.95-5.567zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+
+  </div>
+</footer>
+
+<!-- ============================================================
+     GAME SCRIPT
+     ============================================================ -->
+<script>
+// ── Mouse Cursor Canvas ─────────────────────────────────────
+const cursorCanvas = document.getElementById('cursor-canvas');
+const cursorCtx    = cursorCanvas.getContext('2d');
+cursorCanvas.width  = window.innerWidth;
+cursorCanvas.height = window.innerHeight;
+window.addEventListener('resize', () => {
+  cursorCanvas.width  = window.innerWidth;
+  cursorCanvas.height = window.innerHeight;
+});
+
+let mouseX = -100, mouseY = -100;
+let isHovering = false;
+let isOnGame   = true; // homepage = dot cursor, elsewhere = mouse cursor
+const HOME_SECTION = document.getElementById('home');
+
+document.addEventListener('mousemove', e => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+  // Use elementFromPoint to precisely detect if cursor is over the game canvas
+  const el = document.elementFromPoint(mouseX, mouseY);
+  isOnGame = el === canvas || HOME_SECTION.contains(el);
+  // Footer and nav always use dot cursor too
+  if (el && (el.closest("footer") || el.closest("header"))) isOnGame = true;
+});
+
+document.querySelectorAll('a, button, .nav-link').forEach(el => {
+  el.addEventListener('mouseenter', () => { isHovering = true; });
+  el.addEventListener('mouseleave', () => { isHovering = false; });
+});
+
+// Click ripple + cursor pop
+document.addEventListener('click', e => {
+  // Only show ripple outside game area
+  if (isOnGame) return;
+  const ripple = document.createElement('div');
+  ripple.className = 'click-ripple';
+  const size = isHovering ? 32 : 20;
+  ripple.style.cssText = `
+    width:${size}px; height:${size}px;
+    left:${e.clientX}px; top:${e.clientY}px;
+    border: 2px solid #FFB742;
+    background: rgba(255,183,66,0.15);
+  `;
+  document.body.appendChild(ripple);
+  setTimeout(() => ripple.remove(), 520);
+});
+
+// ── Cursor state ────────────────────────────────────────────
+// Body lags behind cursor; head points toward cursor direction
+let bodyX = -100, bodyY = -100;       // smoothed body position
+let curAngle = 0, targetAngle = 0;    // facing angle in radians
+let legPhase = 0;                     // animation cycle for running legs
+let lastBodyX = -100, lastBodyY = -100;
+let cursorScale = 2, targetScale = 2;
+
+// Draw directional pixel mouse — matches game drawMouse exactly
+function drawMouseCursor(P, angle, moving) {
+  const MOUSE_BODY  = '#FFB742';
+  const MOUSE_DARK  = '#DA6628';
+  const MOUSE_INNER = '#FFD4A8';
+  const MOUSE_EYE   = '#181818';
+  const MOUSE_HL    = '#FFF8E0';
+
+  // centred pixel helper
+  function p(rx, ry, w, h, col) {
+    cursorCtx.fillStyle = col;
+    cursorCtx.fillRect(Math.round(rx - w/2), Math.round(ry - h/2), Math.round(w), Math.round(h));
+  }
+
+  cursorCtx.save();
+  cursorCtx.rotate(angle);
+
+  const hS = P * 8;
+
+  // ── Tail — 3 dots trailing behind (left = back when facing right) ──
+  const arc = moving ? Math.sin(legPhase * 1.4) * P * 2.5 : P * 2.0;
+  const tb  = -hS/2 - P;
+  p(tb - P*1, arc * 0.3, P*2,   P*2,   MOUSE_DARK);
+  p(tb - P*4, arc * 0.9, P*1.5, P*1.5, MOUSE_BODY);
+  p(tb - P*7, arc * 0.4, P,     P,     MOUSE_BODY);
+
+  // ── Ears — upper and lower, behind head center (matching game) ──
+  const earSize  = P * 3;
+  const earInner = P * 2;
+  const earX     = -P * 1;
+  const earTopY  = -P * 4.5;
+  const earBotY  =  P * 4.5;
+  p(earX, earTopY, earSize, earSize, MOUSE_BODY);
+  p(earX, earBotY, earSize, earSize, MOUSE_BODY);
+  p(earX - earSize/2, earTopY, P, earSize, MOUSE_DARK);
+  p(earX - earSize/2, earBotY, P, earSize, MOUSE_DARK);
+  p(earX + P*0.3, earTopY, earInner, earInner, MOUSE_INNER);
+  p(earX + P*0.3, earBotY, earInner, earInner, MOUSE_INNER);
+
+  // ── Head body ──
+  p(0, 0, hS, hS, MOUSE_BODY);
+  p( P*2.5,  P*2.5, P*5, P,   MOUSE_DARK);
+  p( P*2.5,  P*2.5, P,   P*5, MOUSE_DARK);
+  p(-P*2,   -P*2,   P*3, P,   MOUSE_HL);
+  p(-P*2,   -P*2,   P,   P*3, MOUSE_HL);
+
+  // ── Eyes ──
+  p(P*1.5, -P*1.8, P*1.5, P*1.5, MOUSE_EYE);
+  p(P*1.5,  P*1.8, P*1.5, P*1.5, MOUSE_EYE);
+  p(P*1.8, -P*2.1, P, P, MOUSE_HL);
+  p(P*1.8,  P*1.5, P, P, MOUSE_HL);
+
+  // ── Nose ──
+  p(P*3.5, 0, P*1.5, P*1.5, MOUSE_DARK);
+
+  // ── Whiskers ──
+  cursorCtx.fillStyle = 'rgba(136,136,140,0.6)';
+  cursorCtx.fillRect(Math.round(P*3.2 - P*1.5), Math.round(-P*0.3), Math.round(P*3), 1);
+  cursorCtx.fillRect(Math.round(P*3.2 - P*1.5), Math.round( P*0.8), Math.round(P*3), 1);
+
+  cursorCtx.restore();
+}
+
+// Cursor animation loop
+function cursorLoop() {
+  cursorCtx.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
+  cursorCtx.imageSmoothingEnabled = false;
+
+  targetScale = isHovering ? 2.8 : 2;
+  cursorScale += (targetScale - cursorScale) * 0.18;
+
+  if (isOnGame) {
+    // Homepage: simple brand dot
+    cursorCtx.fillStyle = isHovering ? '#DA6628' : '#FFB742';
+    const r = isHovering ? 12 : 5;
+    cursorCtx.globalAlpha = isHovering ? 0.7 : 1;
+    cursorCtx.beginPath();
+    cursorCtx.arc(mouseX, mouseY, r, 0, Math.PI * 2);
+    cursorCtx.fill();
+    cursorCtx.globalAlpha = 1;
+  } else {
+    // Body smoothly follows cursor with lag
+    bodyX += (mouseX - bodyX) * 0.22;
+    bodyY += (mouseY - bodyY) * 0.22;
+
+    // Velocity from body movement
+    const vx = bodyX - lastBodyX;
+    const vy = bodyY - lastBodyY;
+    const speed = Math.sqrt(vx*vx + vy*vy);
+    const moving = speed > 0.4;
+    lastBodyX = bodyX;
+    lastBodyY = bodyY;
+
+    // Update facing angle toward cursor (from body position)
+    const dx = mouseX - bodyX;
+    const dy = mouseY - bodyY;
+    if (Math.abs(dx) > 1 || Math.abs(dy) > 1) {
+      targetAngle = Math.atan2(dy, dx);
+    }
+    // Smooth angle interpolation (shortest path)
+    let da = targetAngle - curAngle;
+    while (da >  Math.PI) da -= Math.PI * 2;
+    while (da < -Math.PI) da += Math.PI * 2;
+    curAngle += da * 0.25;
+
+    // Advance leg animation when moving
+    if (moving) legPhase += 0.28;
+
+    cursorCtx.save();
+    cursorCtx.translate(Math.round(bodyX), Math.round(bodyY));
+    drawMouseCursor(cursorScale, curAngle, moving);
+    cursorCtx.restore();
+  }
+  requestAnimationFrame(cursorLoop);
+}
+cursorLoop();
+
+function scrollToTop(e) { e.preventDefault(); window.scrollTo({top:0}); }
+
+// ── Canvas Setup ────────────────────────────────────────────
+const canvas  = document.getElementById('gameCanvas');
+const ctx     = canvas.getContext('2d');
+const NAV_H   = 60;
+const CELL    = 28;
+let COLS, ROWS;
+
+function resize() {
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+  COLS = Math.floor(canvas.width  / CELL);
+  ROWS = Math.floor(canvas.height / CELL);
+}
+window.addEventListener('resize', () => {
+  resize();
+  // Snap all snake segments back into the new grid bounds
+  if (snake.length > 0) {
+    snake.forEach(s => {
+      s.x = Math.max(0, Math.min(COLS - 1, ((s.x % COLS) + COLS) % COLS));
+      s.y = Math.max(0, Math.min(ROWS - 1, ((s.y % ROWS) + ROWS) % ROWS));
+    });
+  }
+  if (!gameStarted) autoDemo();
+});
+resize();
+
+// ── Forbidden zones (HUD areas — no beans/candies allowed) ──
+// Returns true if grid cell (gx,gy) overlaps any UI element
+function isForbidden(gx, gy) {
+  // Nav bar — just the top 2 rows
+  const NAV_ROWS = Math.ceil(NAV_H / CELL);
+  if (gy < NAV_ROWS) return true;
+
+  // Score block — col 1-4, rows just after nav for ~3 rows (score text height)
+  // left: 40px padding = ~col 1; width ~120px = ~4 cols; height ~70px = ~2-3 rows
+  const scoreColStart = 1;
+  const scoreColEnd   = Math.ceil((40 + 130) / CELL);
+  const scoreRowEnd   = NAV_ROWS + Math.ceil(80 / CELL);
+  if (gx >= scoreColStart && gx <= scoreColEnd && gy >= NAV_ROWS && gy < scoreRowEnd) return true;
+
+  // Hint — bottom 2 rows only (hint text is 1 line ~20px + 40px bottom padding)
+  if (gy >= ROWS - 2) return true;
+
+  // Bean label row — 1 cell directly below any bean
+  if (expBeans.some(e => e.x === gx && e.y + 1 === gy)) return true;
+
+  return false;
+}
+
+// ── Colors ──────────────────────────────────────────────────
+const WHITE  = '#FEFEFE';
+const GREY_L = '#A8B0B2';
+const GREY_M = '#88888C';
+const BLACK  = '#181818';
+const BRAND  = '#FFB742';
+const EFF1   = '#DA6628';
+const EFF2   = '#F3FF97';
+
+// ── Experience Data ─────────────────────────────────────────
+const EXPERIENCES = [
+  {
+    id: 'ora', label: 'ORA',
+    tag: 'Experience Unlocked',
+    title: 'Creative Lead',
+    company: 'ORA Protocol',
+    period: 'Jun 2024 — Feb 2025 · 9 mos',
+    desc: 'Art direction & design leadership for a cutting-edge Web3 protocol. Built visual identity and brand system from the ground up.',
+    pts: 10,
+    url: 'https://ora.io',
+    color: '#00F6FF',
+  },
+  {
+    id: 'helpurr', label: 'AI',
+    tag: 'Experience Unlocked',
+    title: 'Product Designer',
+    company: 'Helpurr — AI Cat Pain Detector',
+    period: 'Oct 2025 — Feb 2026 · 5 mos',
+    desc: 'AI-powered cat pain detection using computer vision. Led end-to-end product design and UX strategy.',
+    pts: 10,
+    url: 'https://helpurr.com',
+    color: '#C0FFEE',
+  },
+  {
+    id: 'meed', label: 'MEED',
+    tag: 'Experience Unlocked',
+    title: 'Senior Designer',
+    company: 'Meed Loyalty',
+    period: 'Jun 2022 — Jul 2024 · 2 yrs',
+    desc: 'UI/UX, design systems, 3D assets for Web3 loyalty platform. Hackathon winner ×2 (Moralis x Google, Cronos Labs).',
+    pts: 10,
+    url: 'https://meed.com',
+    color: '#F87C56',
+  },
+  {
+    id: 'hamartia', label: 'GAME',
+    tag: 'Project Unlocked',
+    title: 'Game Project',
+    company: 'Hamartia',
+    period: '2023 — 2024',
+    desc: 'Game design, art direction and visual development for Hamartia.',
+    pts: 10,
+    url: '#hamartia',
+    color: '#FF4444',
+  },
+  {
+    id: 'cheddar', label: 'CHEDDAR',
+    tag: 'Project Unlocked',
+    title: 'Art Director',
+    company: 'Cheddar Verse',
+    period: '2023',
+    desc: 'Visual identity and world-building for Cheddar Verse metaverse project.',
+    pts: 10,
+    url: '#cheddar',
+    color: '#FFBF56',
+  },
+  {
+    id: 'debox', label: 'DEBOX',
+    tag: 'Experience Unlocked',
+    title: 'Designer',
+    company: 'DeBox',
+    period: '2022 — 2023',
+    desc: 'Product design and visual identity for DeBox community platform.',
+    pts: 10,
+    url: '#debox',
+    color: '#00C454',
+  },
+];
+
+// ── Game State ───────────────────────────────────────────────
+let snake       = [];
+let dir         = { x: 1, y: 0 };
+let nextDir     = { x: 1, y: 0 };
+let candies     = [];
+let expBeans    = [];
+let score       = 0;
+let gameStarted = false; // false = auto demo mode
+let gameLoop;
+let unlockedExp = new Set(); // tracks which popups have been shown
+let popupOpen   = false;
+let beanWatchdog = null; // 5s interval to guarantee bean count
+
+// Auto-wander AI
+let autoTarget  = null;
+let autoTimer   = 0;
+
+// ── Helpers ──────────────────────────────────────────────────
+function ri(max) { return Math.floor(Math.random() * max); }
+function gridX(col) { return col * CELL + CELL / 2; }
+function gridY(row) { return row * CELL + CELL / 2; }
+
+function occupied(pos) {
+  return isForbidden(pos.x, pos.y)
+    || snake.some(s => s.x === pos.x && s.y === pos.y)
+    || candies.some(c => c.x === pos.x && c.y === pos.y)
+    || expBeans.some(e => e.x === pos.x && e.y === pos.y)
+    || expBeans.some(e => e.x === pos.x && e.y + 1 === pos.y);
+}
+
+function safeSpawn() {
+  let pos, tries = 0;
+  do {
+    pos = { x: ri(COLS), y: ri(ROWS) };
+    tries++;
+  } while (occupied(pos) && tries < 200);
+  return pos;
+}
+
+// ── Init ─────────────────────────────────────────────────────
+function initGame() {
+  const cx = Math.floor(COLS / 2);
+  const cy = Math.floor(ROWS / 2);
+  snake = [
+    { x: cx,     y: cy },
+    { x: cx - 1, y: cy },
+    { x: cx - 2, y: cy },
+    { x: cx - 3, y: cy },
+  ];
+  dir     = { x: 1, y: 0 };
+  nextDir = { x: 1, y: 0 };
+  score   = 0;
+  candies = [];
+  expBeans = [];
+  unlockedExp = new Set();
+  updateScore(0);
+
+  for (let i = 0; i < candyInitial(); i++) spawnCandy();
+  spawnExpBeans(); // initial fill
+
+  clearInterval(gameLoop);
+  gameLoop = setInterval(tick, gameStarted ? 140 : 200);
+  startBeanWatchdog();
+}
+
+// Candy size: 70% small(+1), 10% medium(+5), 20% large(+10)
+function spawnCandy() {
+  const pos = safeSpawn();
+  const r = Math.random();
+  const size = r < 0.70 ? 1 : r < 0.80 ? 5 : 10;
+  candies.push({ ...pos, size });
+}
+
+function candyTarget()  { return Math.floor(COLS * ROWS * 0.12); } // 12% maintain
+function candyInitial() { return Math.floor(COLS * ROWS * 0.16); } // 16% initial
+
+function maintainCandies() {
+  const target = candyTarget();
+  if (candies.length < target) {
+    const toAdd = target - candies.length;
+    for (let i = 0; i < toAdd; i++) spawnCandy();
+  }
+}
+
+const MAX_EXP_BEANS = 5;
+
+function safeSpawnBean(excludeBeans) {
+  // excludeBeans: list of beans already planned this batch (not yet in expBeans)
+  const allBeans = [...expBeans, ...(excludeBeans || [])];
+  let pos, tries = 0;
+  do {
+    pos = { x: ri(COLS), y: ri(ROWS - 2) };
+    tries++;
+    if (tries > 500) {
+      // Last resort: scan every cell
+      for (let gy = 2; gy < ROWS - 2; gy++) {
+        for (let gx = 0; gx < COLS; gx++) {
+          const p = {x: gx, y: gy};
+          if (!isForbidden(gx, gy) && !isForbidden(gx, gy+1)
+            && !snake.some(s => s.x===gx && s.y===gy)
+            && !candies.some(c => c.x===gx && c.y===gy)
+            && !allBeans.some(e => e.x===gx && (e.y===gy || e.y+1===gy || e.y===gy+1))
+          ) return p;
+        }
+      }
+      return pos; // give up, return whatever
+    }
+  } while (
+    isForbidden(pos.x, pos.y) ||
+    isForbidden(pos.x, pos.y + 1) ||
+    snake.some(s => s.x===pos.x && s.y===pos.y) ||
+    candies.some(c => c.x===pos.x && c.y===pos.y) ||
+    allBeans.some(e => e.x===pos.x && (e.y===pos.y || e.y+1===pos.y || e.y===pos.y+1))
+  );
+  return pos;
+}
+
+function spawnExpBeans() {
+  // Always pick from ALL projects randomly — allow revisits
+  const onScreen = new Set(expBeans.map(e => e.exp.id));
+  // Pool: all projects not currently on screen
+  let pool = EXPERIENCES.filter(exp => !onScreen.has(exp.id));
+  if (pool.length === 0) pool = [...EXPERIENCES]; // all on screen — unlikely but safe
+
+  // Shuffle
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+
+  const needed = Math.max(0, MAX_EXP_BEANS - expBeans.length);
+  const toAdd  = pool.slice(0, needed);
+  const newBeans = [];
+
+  toAdd.forEach(exp => {
+    const pos = safeSpawnBean(newBeans);
+    const bean = { ...pos, exp };
+    newBeans.push(bean);
+    expBeans.push(bean);
+  });
+}
+
+function maintainExpBeans() {
+  if (expBeans.length < MAX_EXP_BEANS) spawnExpBeans();
+}
+
+let oobTimer = null; // out-of-bounds timer
+
+function startBeanWatchdog() {
+  if (beanWatchdog) clearInterval(beanWatchdog);
+  beanWatchdog = setInterval(() => {
+    if (!popupOpen && expBeans.length < MAX_EXP_BEANS) {
+      spawnExpBeans();
+      draw();
+    }
+  }, 5000);
+}
+
+function checkSnakeInBounds() {
+  if (!gameStarted || snake.length === 0) { oobTimer = null; return; }
+  const h = snake[0];
+  if (h.x < 0 || h.x >= COLS || h.y < 0 || h.y >= ROWS) {
+    if (!oobTimer) {
+      oobTimer = setTimeout(() => {
+        // Still out of bounds after 1s — teleport to opposite edge
+        if (snake.length > 0) {
+          const head = snake[0];
+          // Wrap to opposite side based on exit direction
+          const nx = ((head.x % COLS) + COLS) % COLS;
+          const ny = ((head.y % ROWS) + ROWS) % ROWS;
+          // Shift whole snake so head lands at (nx, ny)
+          const dx = nx - head.x;
+          const dy = ny - head.y;
+          snake.forEach(s => { s.x += dx; s.y += dy; });
+          // Clamp all segments
+          snake.forEach(s => {
+            s.x = Math.max(0, Math.min(COLS - 1, s.x));
+            s.y = Math.max(0, Math.min(ROWS - 1, s.y));
+          });
+        }
+        oobTimer = null;
+        draw();
+      }, 1000);
+    }
+  } else {
+    if (oobTimer) { clearTimeout(oobTimer); oobTimer = null; }
+  }
+}
+
+// ── Tick ─────────────────────────────────────────────────────
+function tick() {
+  if (popupOpen) return;
+
+  // Guard: if snake head is out of bounds (e.g. after resize), teleport back to centre
+  if (snake.length > 0) {
+    const h = snake[0];
+    if (h.x < 0 || h.x >= COLS || h.y < 0 || h.y >= ROWS) {
+      snake.forEach(s => {
+        s.x = ((s.x % COLS) + COLS) % COLS;
+        s.y = ((s.y % ROWS) + ROWS) % ROWS;
+      });
+    }
+  }
+
+  if (!gameStarted) {
+    autoSteer();
+  }
+
+  dir = nextDir;
+  const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+
+  // Wrap (no walls)
+  head.x = (head.x + COLS) % COLS;
+  head.y = (head.y + ROWS) % ROWS;
+
+  // Self collision only in player mode
+  if (gameStarted && snake.some(s => s.x === head.x && s.y === head.y)) {
+    initGame(); return;
+  }
+
+  snake.unshift(head);
+
+  // Eat candy
+  const ci = candies.findIndex(c => c.x === head.x && c.y === head.y);
+  if (ci !== -1) {
+    score += candies[ci].size;
+    floatScore('+' + candies[ci].size, head.x, head.y);
+    candies.splice(ci, 1);
+    maintainCandies(); // refill if below 12%
+    updateScore(score);
+  } else {
+    // Eat exp bean
+    const ei = expBeans.findIndex(e => e.x === head.x && e.y === head.y);
+    if (ei !== -1) {
+      const exp = expBeans[ei].exp;
+      score += exp.pts;
+      expBeans.splice(ei, 1);
+      unlockedExp.add(exp.id);
+      updateScore(score);
+      showPopup(exp);
+      // Grow snake
+    } else {
+      snake.pop();
+    }
+  }
+  // Always maintain beans at 5 every tick
+  maintainExpBeans();
+
+  checkSnakeInBounds();
+  draw();
+}
+
+// ── Mouse hover push beans (when not playing) ───────────────
+let hoverGridX = -1, hoverGridY = -1;
+canvas.addEventListener('mousemove', e => {
+  if (gameStarted) return; // only in auto/idle mode
+  const rect = canvas.getBoundingClientRect();
+  hoverGridX = Math.floor((e.clientX - rect.left) / CELL);
+  hoverGridY = Math.floor((e.clientY - rect.top)  / CELL);
+  pushBeansFromMouse();
+});
+canvas.addEventListener('mouseleave', () => { hoverGridX = -1; hoverGridY = -1; });
+
+
+function cellFreeForBean(gx, gy, excludeBean) {
+  if (isForbidden(gx, gy)) return false;
+  if (isForbidden(gx, gy + 1)) return false; // label row
+  if (gx < 0 || gx >= COLS || gy < 0 || gy >= ROWS - 1) return false;
+  if (snake.some(s => s.x === gx && s.y === gy)) return false;
+  if (candies.some(c => c.x === gx && c.y === gy)) return false;
+  if (expBeans.some(e => e !== excludeBean && (
+    (e.x === gx && e.y === gy) ||         // same cell
+    (e.x === gx && e.y + 1 === gy) ||     // other bean's label on this cell
+    (e.x === gx && e.y === gy + 1)        // this bean's label on other bean
+  ))) return false;
+  return true;
+}
+
+function cellFreeForCandy(gx, gy) {
+  if (isForbidden(gx, gy)) return false;
+  if (gx < 0 || gx >= COLS || gy < 0 || gy >= ROWS) return false;
+  if (snake.some(s => s.x === gx && s.y === gy)) return false;
+  if (candies.some(c => c.x === gx && c.y === gy)) return false;
+  if (expBeans.some(e => e.x === gx && (e.y === gy || e.y + 1 === gy))) return false;
+  return true;
+}
+
+function pushBeansFromMouse() {
+  if (hoverGridX < 0) return;
+  const PUSH_RADIUS = 3;
+
+  expBeans.forEach(bean => {
+    const dx = bean.x - hoverGridX;
+    const dy = bean.y - hoverGridY;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    if (dist < PUSH_RADIUS && dist > 0) {
+      const nx = dx / dist;
+      const ny = dy / dist;
+      // Try push direction first, then scan outward for safe cell
+      const rawX = Math.round(bean.x + nx * (PUSH_RADIUS - dist + 1));
+      const rawY = Math.round(bean.y + ny * (PUSH_RADIUS - dist + 1));
+      if (cellFreeForBean(rawX, rawY, bean)) {
+        bean.x = rawX; bean.y = rawY;
+      } else {
+        // Scan in expanding rings for nearest free cell
+        for (let r = 1; r <= 5; r++) {
+          let found = false;
+          for (let ox2 = -r; ox2 <= r && !found; ox2++) {
+            for (let oy2 = -r; oy2 <= r && !found; oy2++) {
+              if (Math.abs(ox2) !== r && Math.abs(oy2) !== r) continue;
+              const tx = rawX + ox2, ty = rawY + oy2;
+              if (cellFreeForBean(tx, ty, bean)) {
+                bean.x = tx; bean.y = ty; found = true;
+              }
+            }
+          }
+          if (found) break;
+        }
+      }
+    }
+  });
+
+  candies.forEach(candy => {
+    const dx = candy.x - hoverGridX;
+    const dy = candy.y - hoverGridY;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    if (dist < 2 && dist > 0) {
+      const nx = dx / dist;
+      const ny = dy / dist;
+      const rawX = Math.round(candy.x + nx * 2);
+      const rawY = Math.round(candy.y + ny * 2);
+      if (cellFreeForCandy(rawX, rawY)) {
+        candy.x = rawX; candy.y = rawY;
+      } else {
+        for (let r = 1; r <= 4; r++) {
+          let found = false;
+          for (let ox2 = -r; ox2 <= r && !found; ox2++) {
+            for (let oy2 = -r; oy2 <= r && !found; oy2++) {
+              if (Math.abs(ox2) !== r && Math.abs(oy2) !== r) continue;
+              const tx = rawX + ox2, ty = rawY + oy2;
+              if (cellFreeForCandy(tx, ty)) {
+                candy.x = tx; candy.y = ty; found = true;
+              }
+            }
+          }
+          if (found) break;
+        }
+      }
+    }
+  });
+  draw();
+}
+
+// ── Auto-wander AI ───────────────────────────────────────────
+function autoSteer() {
+  autoTimer--;
+  if (autoTimer > 0) return;
+  autoTimer = ri(6) + 3;
+
+  // Pick a random target: candy or exp bean
+  const targets = [...candies, ...expBeans.map(e => e)];
+  if (targets.length && Math.random() > 0.3) {
+    const t = targets[ri(targets.length)];
+    const tx = t.x, ty = t.y;
+    const hx = snake[0].x, hy = snake[0].y;
+
+    // Wrap-aware delta
+    let dx = tx - hx;
+    let dy = ty - hy;
+    if (Math.abs(dx) > COLS / 2) dx = -Math.sign(dx) * (COLS - Math.abs(dx));
+    if (Math.abs(dy) > ROWS / 2) dy = -Math.sign(dy) * (ROWS - Math.abs(dy));
+
+    const candidates = [];
+    if (Math.abs(dx) >= Math.abs(dy)) {
+      candidates.push({ x: Math.sign(dx) || 1, y: 0 });
+      candidates.push({ x: 0, y: Math.sign(dy) || 1 });
+    } else {
+      candidates.push({ x: 0, y: Math.sign(dy) || 1 });
+      candidates.push({ x: Math.sign(dx) || 1, y: 0 });
+    }
+    for (const c of candidates) {
+      if (c.x !== -dir.x || c.y !== -dir.y) { nextDir = c; break; }
+    }
+  } else {
+    // Random turn
+    const options = [
+      {x:1,y:0},{x:-1,y:0},{x:0,y:1},{x:0,y:-1}
+    ].filter(d => d.x !== -dir.x || d.y !== -dir.y);
+    nextDir = options[ri(options.length)];
+  }
+}
+
+// ── Pixel helpers ─────────────────────────────────────────────
+// Draw a pixel-art rectangle (snapped to pixel grid)
+function px(x, y, w, h, color) {
+  ctx.fillStyle = color;
+  ctx.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h));
+}
+
+// ── Draw ─────────────────────────────────────────────────────
+function draw() {
+  // Disable anti-aliasing for crisp pixels
+  ctx.imageSmoothingEnabled = false;
+
+  // Background — white
+  ctx.fillStyle = WHITE;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // 8-bit dot grid
+  for (let c = 0; c < COLS; c++) {
+    for (let r = 0; r < ROWS; r++) {
+      px(c * CELL + CELL / 2 - 1, r * CELL + CELL / 2 - 1, 2, 2, 'rgba(136,136,140,0.15)');
+    }
+  }
+
+  // ── Exp beans — 8-bit star/diamond pixel sprite ──
+  expBeans.forEach(e => {
+    const ox = e.x * CELL;
+    const oy = e.y * CELL;
+    const S  = CELL;  // tile size
+    const P  = Math.max(2, Math.round(S / 10)); // pixel unit
+
+    // Pixel-art diamond sprite (scales with cell)
+    const col = e.exp.color;
+    const dark = col + 'bb';
+
+    // Row pattern for a diamond (5-wide at widest, 9 rows for S=28)
+    // We'll use a 9×9 pixel sprite scaled up
+    const sprite = [
+      [0,0,0,1,0,0,0],
+      [0,0,1,1,1,0,0],
+      [0,1,1,2,1,1,0],
+      [1,1,2,2,2,1,1],
+      [0,1,1,2,1,1,0],
+      [0,0,1,1,1,0,0],
+      [0,0,0,1,0,0,0],
+    ];
+    const sprW = sprite[0].length;
+    const sprH = sprite.length;
+    const ps   = Math.max(2, Math.floor(S / sprW));
+    const offX = ox + Math.floor((S - sprW * ps) / 2);
+    const offY = oy + Math.floor((S - sprH * ps) / 2);
+
+    sprite.forEach((row, ry) => {
+      row.forEach((cell, rx) => {
+        if (cell === 0) return;
+        px(offX + rx * ps, offY + ry * ps, ps, ps, cell === 2 ? WHITE : col);
+      });
+    });
+
+    // Label below bean — drawn at row+1, centred, 10px min
+    ctx.fillStyle = GREY_M;
+    ctx.font = "bold 10px 'DM Mono', monospace";
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    ctx.fillText(e.exp.label, ox + S / 2, oy + S + 2);
+  });
+
+  // ── Candies — pixel squares ──
+  candies.forEach(c => {
+    const ox = c.x * CELL;
+    const oy = c.y * CELL;
+    const S  = CELL;
+
+    if (c.size === 1) {
+      // tiny 4×4 dot
+      const p = Math.max(2, Math.round(S * 0.18));
+      px(ox + S/2 - p, oy + S/2 - p, p*2, p*2, GREY_L);
+    } else if (c.size === 5) {
+      // medium pixel circle (3×3 sprite)
+      const p = Math.max(2, Math.round(S * 0.14));
+      const m = [
+        [0,1,0],
+        [1,1,1],
+        [0,1,0],
+      ];
+      const offX = ox + Math.floor(S/2) - p*1.5;
+      const offY = oy + Math.floor(S/2) - p*1.5;
+      m.forEach((row,ry) => row.forEach((v,rx) => {
+        if(v) px(offX + rx*p, offY + ry*p, p, p, GREY_M);
+      }));
+    } else {
+      // big candy — 5×5 star pixel
+      const p = Math.max(2, Math.round(S * 0.12));
+      const star = [
+        [0,0,1,0,0],
+        [0,1,1,1,0],
+        [1,1,1,1,1],
+        [0,1,1,1,0],
+        [0,0,1,0,0],
+      ];
+      const offX = ox + Math.floor(S/2) - p*2.5;
+      const offY = oy + Math.floor(S/2) - p*2.5;
+      star.forEach((row,ry) => row.forEach((v,rx) => {
+        if(v) px(offX + rx*p, offY + ry*p, p, p, BRAND);
+      }));
+    }
+  });
+
+  // ── Snake body — pixel squares ──
+  for (let i = snake.length - 1; i >= 1; i--) {
+    const seg = snake[i];
+    const ox  = seg.x * CELL;
+    const oy  = seg.y * CELL;
+    const S   = CELL;
+    const pad = Math.round(S * 0.22);
+    const t   = i / snake.length;
+    const alpha = Math.max(0.2, 1 - t * 0.65);
+    // Orange body fading to lighter
+    ctx.fillStyle = `rgba(255,183,66,${alpha})`;
+    ctx.fillRect(ox + pad, oy + pad, S - pad*2, S - pad*2);
+    // Dark pixel border (top-left only for 8-bit depth feel)
+    ctx.fillStyle = `rgba(218,102,40,${alpha * 0.6})`;
+    ctx.fillRect(ox + pad, oy + pad, S - pad*2, 2);
+    ctx.fillRect(ox + pad, oy + pad, 2, S - pad*2);
+  }
+
+  // ── Mouse head ──
+  drawMouse(snake[0], dir);
+}
+
+// 8-bit pixel mouse — full orange body, round ears, directional face
+function drawMouse(pos, d) {
+  const ox = pos.x * CELL;
+  const oy = pos.y * CELL;
+  const S  = CELL;
+
+  // Pixel unit — scale with cell size
+  const P = Math.max(2, Math.floor(S / 10));
+
+  // We'll draw on a virtual 10×10 pixel canvas, then blit
+  // Colors
+  const MOUSE_BODY  = BRAND;        // #FFB742 orange
+  const MOUSE_DARK  = EFF1;         // #DA6628 shading
+  const MOUSE_EAR   = BRAND;        // same orange
+  const MOUSE_INNER = '#FFD4A8';    // light inner ear
+  const MOUSE_EYE   = BLACK;
+  const MOUSE_NOSE  = EFF1;
+  const MOUSE_HL    = '#FFF8E0';    // highlight
+
+  // Rotation: translate to center, rotate, draw relative to center
+  const cx = ox + S / 2;
+  const cy = oy + S / 2;
+
+  let angle = 0;
+  if (d.x === 1)  angle = 0;
+  if (d.x === -1) angle = Math.PI;
+  if (d.y === -1) angle = -Math.PI / 2;
+  if (d.y === 1)  angle = Math.PI / 2;
+
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(angle);
+
+  // Helper: draw pixel relative to center (pixel-snapped)
+  const p = (rx, ry, w, h, col) => {
+    px(Math.round(rx - w/2), Math.round(ry - h/2), Math.round(w), Math.round(h), col);
+  };
+
+  // ── Ears (at top-left of head when facing right) ──
+  const earSize  = P * 3;
+  const earInner = P * 2;
+  const earX     = -P * 1;    // behind the head center
+  const earTopY  = -P * 4.5;  // upper ear
+  const earBotY  =  P * 4.5;  // lower ear
+
+  // Outer ear
+  p(earX, earTopY, earSize, earSize, MOUSE_EAR);
+  p(earX, earBotY, earSize, earSize, MOUSE_EAR);
+  // Dark border pixels
+  p(earX - earSize/2, earTopY, P, earSize, MOUSE_DARK);
+  p(earX - earSize/2, earBotY, P, earSize, MOUSE_DARK);
+  // Inner ear (pink/light)
+  p(earX + P*0.3, earTopY, earInner, earInner, MOUSE_INNER);
+  p(earX + P*0.3, earBotY, earInner, earInner, MOUSE_INNER);
+
+  // ── Head body — pixel square with rounded feel ──
+  const hSize = P * 8;
+  p(0, 0, hSize, hSize, MOUSE_BODY);
+
+  // Shading: dark bottom-right pixels for depth
+  p(P*2.5,  P*2.5, P*5, P,   MOUSE_DARK); // bottom shadow
+  p(P*2.5,  P*2.5, P,   P*5, MOUSE_DARK); // right shadow (mirrored for depth)
+
+  // Highlight top-left
+  p(-P*2, -P*2, P*3, P, MOUSE_HL);
+  p(-P*2, -P*2, P,   P*3, MOUSE_HL);
+
+  // ── Face (facing right = +x) ──
+  // Eyes: two pixel squares
+  p(P*1.5, -P*1.8, P*1.5, P*1.5, MOUSE_EYE);
+  p(P*1.5,  P*1.8, P*1.5, P*1.5, MOUSE_EYE);
+  // Eye highlights
+  p(P*1.8, -P*2.1, P, P, MOUSE_HL);
+  p(P*1.8,  P*1.5, P, P, MOUSE_HL);
+
+  // Nose — 2×2 pixel at front
+  p(P*3.5, 0, P*1.5, P*1.5, MOUSE_NOSE);
+
+  // Whiskers — thin 1px lines either side of nose
+  ctx.fillStyle = GREY_M + 'aa';
+  ctx.fillRect(Math.round(P*3.2), Math.round(-P*0.3), Math.round(P*3), 1);
+  ctx.fillRect(Math.round(P*3.2), Math.round( P*0.8), Math.round(P*3), 1);
+
+  ctx.restore();
+}
+
+// ── Score floater ────────────────────────────────────────────
+function floatScore(text, col, row) {
+  const el = document.createElement('div');
+  el.className = 'score-float';
+  el.textContent = text;
+  el.style.left = (gridX(col)) + 'px';
+  el.style.top  = (gridY(row)) + 'px';
+  document.getElementById('home').appendChild(el);
+  setTimeout(() => el.remove(), 800);
+}
+
+function updateScore(val) {
+  const el = document.getElementById('pts-value');
+  el.textContent = String(val).padStart(3, '0');
+  el.classList.add('flash');
+  setTimeout(() => el.classList.remove('flash'), 300);
+}
+
+// ── Popup ────────────────────────────────────────────────────
+function showPopup(exp) {
+  popupOpen = true;
+  isOnGame  = true; // keep dot cursor while popup is over homepage
+  document.getElementById('popup-tag').textContent    = exp.tag;
+  document.getElementById('popup-title').textContent  = exp.title;
+  document.getElementById('popup-company').textContent = exp.company;
+  document.getElementById('popup-period').textContent = exp.period;
+  document.getElementById('popup-desc').textContent   = exp.desc;
+  document.getElementById('popup-pts').textContent    = '+' + exp.pts + ' pts';
+  document.getElementById('popup-view-btn').href      = exp.url;
+  document.getElementById('popup').classList.add('active');
+}
+
+function closePopup() {
+  popupOpen = false;
+  document.getElementById('popup').classList.remove('active');
+  // Force spawn + redraw immediately — tick() was blocked while popup was open
+  spawnExpBeans();
+  draw();
+}
+
+// ── Pause toggle ─────────────────────────────────────────────
+function setHintState(playing) {
+  const hint = document.getElementById('hint');
+  if (playing) {
+    hint.textContent = 'playing  ·  space / click  pause';
+    hint.classList.add('playing');
+  } else {
+    hint.textContent = '↑ ↓ ← →  play  ·  space / click  pause';
+    hint.classList.remove('playing');
+  }
+}
+
+function togglePause() {
+  if (popupOpen) return;
+
+  if (gameStarted) {
+    // Player mode → hand back to auto-wander
+    gameStarted = false;
+    clearInterval(gameLoop);
+    gameLoop = setInterval(tick, 200);
+    setHintState(false);
+  } else {
+    // Auto-wander → player mode
+    gameStarted = true;
+    clearInterval(gameLoop);
+    gameLoop = setInterval(tick, 140);
+    setHintState(true);
+  }
+}
+
+// ── Controls ─────────────────────────────────────────────────
+const DIRS = {
+  ArrowUp:    {x:0,y:-1}, ArrowDown:  {x:0,y:1},
+  ArrowLeft:  {x:-1,y:0}, ArrowRight: {x:1,y:0},
+  w:{x:0,y:-1}, s:{x:0,y:1}, a:{x:-1,y:0}, d:{x:1,y:0},
+  W:{x:0,y:-1}, S:{x:0,y:1}, A:{x:-1,y:0}, D:{x:1,y:0},
+};
+
+document.addEventListener('keydown', e => {
+  // Space = pause/resume toggle
+  if (e.key === ' ' || e.code === 'Space') {
+    e.preventDefault();
+    togglePause();
+    return;
+  }
+  if (DIRS[e.key]) {
+    e.preventDefault();
+    const nd = DIRS[e.key];
+    if (nd.x !== -dir.x || nd.y !== -dir.y) {
+      nextDir = nd;
+      if (!gameStarted) {
+        gameStarted = true;
+        setHintState(true);
+        clearInterval(gameLoop);
+        gameLoop = setInterval(tick, 140);
+      }
+    }
+  }
+});
+
+// Click on canvas = pause toggle (only direct canvas clicks)
+canvas.addEventListener('click', e => {
+  if (popupOpen) return;
+  if (e.target !== canvas) return;
+  togglePause();
+});
+
+// Touch
+let touchStart = null;
+document.addEventListener('touchstart', e => { touchStart = e.touches[0]; }, {passive:true});
+document.addEventListener('touchend', e => {
+  if (!touchStart) return;
+  const dx = e.changedTouches[0].clientX - touchStart.clientX;
+  const dy = e.changedTouches[0].clientY - touchStart.clientY;
+  const dist = Math.sqrt(dx*dx + dy*dy);
+  // Tap (no swipe) = pause
+  if (dist < 10) { togglePause(); touchStart = null; return; }
+  let nd;
+  if (Math.abs(dx) > Math.abs(dy)) nd = dx > 0 ? {x:1,y:0} : {x:-1,y:0};
+  else nd = dy > 0 ? {x:0,y:1} : {x:0,y:-1};
+  if (nd.x !== -dir.x || nd.y !== -dir.y) {
+    nextDir = nd;
+    if (!gameStarted) {
+      gameStarted = true;
+      setHintState(true);
+      clearInterval(gameLoop);
+      gameLoop = setInterval(tick, 140);
+    }
+  }
+  touchStart = null;
+});
+
+// ── Password Modal ────────────────────────────────────────────
+const LE_SOCIAL_PASSWORD = 'mialyk2024'; // change this to real password
+
+function showPasswordModal(e) {
+  e.preventDefault();
+  document.getElementById('pw-input').value = '';
+  document.getElementById('pw-error').textContent = '';
+  document.getElementById('pw-input').classList.remove('error');
+  document.getElementById('pw-modal').classList.add('active');
+  setTimeout(() => document.getElementById('pw-input').focus(), 100);
+}
+
+function closePwModal() {
+  document.getElementById('pw-modal').classList.remove('active');
+}
+
+function checkPassword() {
+  const val = document.getElementById('pw-input').value;
+  if (val === LE_SOCIAL_PASSWORD) {
+    closePwModal();
+    // Navigate to Le.social project — update URL when ready
+    window.open('#le-social', '_self');
+  } else {
+    document.getElementById('pw-input').classList.add('error');
+    document.getElementById('pw-error').textContent = '✕ Incorrect password';
+    document.getElementById('pw-input').value = '';
+    setTimeout(() => {
+      document.getElementById('pw-input').classList.remove('error');
+    }, 1500);
+  }
+}
+
+// Close modal on backdrop click
+document.getElementById('pw-modal').addEventListener('click', function(e) {
+  if (e.target === this) closePwModal();
+});
+
+// ── Start ────────────────────────────────────────────────────
+function autoDemo() {
+  initGame();
+}
+autoDemo();
+</script>
+</body>
+</html>
