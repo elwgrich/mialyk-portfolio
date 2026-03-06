@@ -126,6 +126,7 @@ Fixed `560 × 520px`, 3-section flex column:
 |---|---|
 | Nav height | 60px |
 | Nav / footer padding | 40px horizontal |
+| Page content max-width | 1200px centered on all pages except index.html |
 | Footer | White bg, top border divider |
 | Popup backdrop | `rgba(24,24,24,0.4)` + `blur(4px)` |
 | Popup entry | scale `0.92→1` + `translateY 16→0`, spring easing |
