@@ -1,4 +1,4 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -55,7 +55,7 @@ body {
   color: var(--black);
   font-family: 'DM Mono', monospace;
   font-weight: var(--fw-reg);
-  font-size: var(--fs-16);
+  font-size: var(--fs-12);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   cursor: none;
@@ -401,8 +401,8 @@ canvas#gameCanvas {
 
 
 
-/* ?Â€?Â€ Button system ??3 sizes ?Â€?Â€ */
-/* ?Â€?Â€ 8-bit pixel arrow (?? ?Â€?Â€ */
+/* ?€?€ Button system ??3 sizes ?€?€ */
+/* ?€?€ 8-bit pixel arrow (?? ?€?€ */
 .pixel-arrow {
   display: inline-block;
   width: 10px; height: 10px;
@@ -424,7 +424,7 @@ canvas#gameCanvas {
 .pixel-arrow::after  { top: 0; right: 0; width: 2px; height: 8px; }
 /* diagonal dots via box-shadow on ::before */
 
-/* ?Â€?Â€ Button base ??reset everything ?Â€?Â€ */
+/* ?€?€ Button base ??reset everything ?€?€ */
 .btn {
   font-family: 'DM Mono', monospace;
   font-weight: var(--fw-reg);
@@ -450,12 +450,12 @@ canvas#gameCanvas {
 }
 .btn:hover { background: var(--black); color: var(--white); }
 
-/* ?Â€?Â€ 3 sizes ??fixed height guarantees visual consistency ?Â€?Â€ */
+/* ?€?€ 3 sizes ??fixed height guarantees visual consistency ?€?€ */
 .btn--sm { font-size: var(--fs-10); padding: 0 16px; height: 36px; }
 .btn--md { font-size: var(--fs-12); padding: 0 24px; height: 44px; width: 172px; }
 .btn--lg { font-size: var(--fs-12); padding: 0 32px; height: 52px; }
 
-/* ?Â€?Â€ Variants ?Â€?Â€ */
+/* ?€?€ Variants ?€?€ */
 .btn.primary {
   background: var(--brand);
   border-color: var(--brand);
@@ -520,7 +520,7 @@ footer {
   pointer-events: none;
 }
 
-/* ?Â€?Â€ Pixel art icons ??inline SVG rects, colour via currentColor ?Â€?Â€ */
+/* ?€?€ Pixel art icons ??inline SVG rects, colour via currentColor ?€?€ */
 .pxi {
   display: inline-block;
   width: 16px; height: 16px;
@@ -628,14 +628,14 @@ footer {
 
 <!-- HEADER -->
 <header>
-  <a href="https://github.com/elwgrich/mialyk-portfolio" class="nav-logo" aria-label="Open mialyk GitHub repository">
+  <a href="index.html" class="nav-logo">
     mialyk<span class="slash">//</span><sub>creative lead</sub>
   </a>
   <nav>
     <div class="nav-item">
       <a href="#" class="nav-link">Projects</a>
       <div class="nav-dropdown">
-        <a href="#" class="dropdown-item"><span class="dropdown-dot"></span>Helpurr</a>
+        <a href="/helpurr.html" class="dropdown-item"><span class="dropdown-dot"></span>Helpurr</a>
         <a href="#" class="dropdown-item dropdown-locked" onclick="showPasswordModal(event)"><span class="dropdown-dot"></span>Le.social <svg class="pxi pxi--sm" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
   <rect x="8" y="4" width="8" height="2"/><rect x="6" y="6" width="2" height="4"/>
   <rect x="16" y="6" width="2" height="4"/><rect x="4" y="10" width="16" height="2"/>
@@ -643,16 +643,16 @@ footer {
   <rect x="4" y="20" width="16" height="2"/>
   <rect x="10" y="14" width="4" height="2"/><rect x="11" y="16" width="2" height="2"/>
  style="margin-left:4px;opacity:0.5"></svg></a>
-        <a href="#" class="dropdown-item"><span class="dropdown-dot"></span>ORA</a>
-        <a href="#" class="dropdown-item"><span class="dropdown-dot"></span>Meed</a>
-        <a href="#" class="dropdown-item"><span class="dropdown-dot"></span>DeBox</a>
-        <a href="#" class="dropdown-item"><span class="dropdown-dot"></span>Cheddar Verse</a>
-        <a href="#" class="dropdown-item"><span class="dropdown-dot"></span>Illustration</a>
-        <a href="#" class="dropdown-item"><span class="dropdown-dot"></span>VFX</a>
-        <a href="#" class="dropdown-item"><span class="dropdown-dot"></span>Hamartia <span style="font-size:10px;color:var(--grey-m)">Game</span></a>
+        <a href="/ora.html" class="dropdown-item"><span class="dropdown-dot"></span>ORA</a>
+        <a href="/meed.html" class="dropdown-item"><span class="dropdown-dot"></span>Meed</a>
+        <a href="/debox.html" class="dropdown-item"><span class="dropdown-dot"></span>DeBox</a>
+        <a href="/cheddar.html" class="dropdown-item"><span class="dropdown-dot"></span>Cheddar Verse</a>
+        <a href="/illustration.html" class="dropdown-item"><span class="dropdown-dot"></span>Illustration</a>
+        <a href="/vfx.html" class="dropdown-item"><span class="dropdown-dot"></span>VFX</a>
+        <a href="/hamartia.html" class="dropdown-item"><span class="dropdown-dot"></span>Hamartia <span style="font-size:10px;color:var(--grey-m)">Game</span></a>
       </div>
     </div>
-    <a href="#about" class="nav-link">About</a>
+    <a href="about.html" class="nav-link">About</a>
   </nav>
 </header>
 
@@ -665,7 +665,7 @@ footer {
     <div id="pts-value">000</div>
   </div>
 
-  <div id="hint">???????? play &nbsp;ç¹š&nbsp; space / click  pause</div>
+  <div id="hint">press any arrow key to play &nbsp;//&nbsp; space / click pause</div>
 </section>
 
 <!-- EXPERIENCE POPUP -->
@@ -685,14 +685,14 @@ footer {
     <!-- TOP: snap to top -->
     <div class="popup-top">
       <div class="popup-tag" id="popup-tag">Experience Unlocked</div>
-      <div class="popup-title" id="popup-title">??/div>
-      <div class="popup-company" id="popup-company">??/div>
-      <div class="popup-period" id="popup-period">??/div>
+      <div class="popup-title" id="popup-title"></div>
+      <div class="popup-company" id="popup-company"></div>
+      <div class="popup-period" id="popup-period"></div>
     </div>
 
     <!-- MIDDLE: auto padding, grows equally -->
     <div class="popup-mid">
-      <div class="popup-desc" id="popup-desc">??/div>
+      <div class="popup-desc" id="popup-desc"></div>
       <div class="popup-pts" id="popup-pts">+10 pts</div>
     </div>
 
@@ -718,7 +718,7 @@ footer {
     <input class="pw-input" type="password" id="pw-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkPassword()">
     <div class="pw-error" id="pw-error"></div>
     <div class="pw-btns">
-      <button class="btn btn--sm primary" onclick="checkPassword()">Enter ??/button>
+      <button class="btn btn--sm primary" onclick="checkPassword()">Enter</button>
       <button class="btn btn--sm" onclick="closePwModal()">Cancel</button>
     </div>
   </div>
@@ -726,7 +726,7 @@ footer {
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-copy">ç©¢ 2026 <span>mialyk</span> ??All rights reserved</div>
+  <div class="footer-copy">2026 <span>mialyk</span> // All rights reserved</div>
   <div class="footer-socials">
 
     <!-- LinkedIn -->
@@ -748,7 +748,7 @@ footer {
      GAME SCRIPT
      ============================================================ -->
 <script>
-// ?Â€?Â€ Mouse Cursor Canvas ?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€
+// ?€?€ Mouse Cursor Canvas ?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
 const cursorCanvas = document.getElementById('cursor-canvas');
 const cursorCtx    = cursorCanvas.getContext('2d');
 cursorCanvas.width  = window.innerWidth;
@@ -795,7 +795,7 @@ document.addEventListener('click', e => {
   setTimeout(() => ripple.remove(), 520);
 });
 
-// ?Â€?Â€ Cursor state ?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€
+// ?€?€ Cursor state ?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
 // Body lags behind cursor; head points toward cursor direction
 let bodyX = -100, bodyY = -100;       // smoothed body position
 let curAngle = 0, targetAngle = 0;    // facing angle in radians
@@ -822,14 +822,14 @@ function drawMouseCursor(P, angle, moving) {
 
   const hS = P * 8;
 
-  // ?Â€?Â€ Tail ??3 dots trailing behind (left = back when facing right) ?Â€?Â€
+  // ?€?€ Tail ??3 dots trailing behind (left = back when facing right) ?€?€
   const arc = moving ? Math.sin(legPhase * 1.4) * P * 2.5 : P * 2.0;
   const tb  = -hS/2 - P;
   p(tb - P*1, arc * 0.3, P*2,   P*2,   MOUSE_DARK);
   p(tb - P*4, arc * 0.9, P*1.5, P*1.5, MOUSE_BODY);
   p(tb - P*7, arc * 0.4, P,     P,     MOUSE_BODY);
 
-  // ?Â€?Â€ Ears ??upper and lower, behind head center (matching game) ?Â€?Â€
+  // ?€?€ Ears ??upper and lower, behind head center (matching game) ?€?€
   const earSize  = P * 3;
   const earInner = P * 2;
   const earX     = -P * 1;
@@ -842,23 +842,23 @@ function drawMouseCursor(P, angle, moving) {
   p(earX + P*0.3, earTopY, earInner, earInner, MOUSE_INNER);
   p(earX + P*0.3, earBotY, earInner, earInner, MOUSE_INNER);
 
-  // ?Â€?Â€ Head body ?Â€?Â€
+  // ?€?€ Head body ?€?€
   p(0, 0, hS, hS, MOUSE_BODY);
   p( P*2.5,  P*2.5, P*5, P,   MOUSE_DARK);
   p( P*2.5,  P*2.5, P,   P*5, MOUSE_DARK);
   p(-P*2,   -P*2,   P*3, P,   MOUSE_HL);
   p(-P*2,   -P*2,   P,   P*3, MOUSE_HL);
 
-  // ?Â€?Â€ Eyes ?Â€?Â€
+  // ?€?€ Eyes ?€?€
   p(P*1.5, -P*1.8, P*1.5, P*1.5, MOUSE_EYE);
   p(P*1.5,  P*1.8, P*1.5, P*1.5, MOUSE_EYE);
   p(P*1.8, -P*2.1, P, P, MOUSE_HL);
   p(P*1.8,  P*1.5, P, P, MOUSE_HL);
 
-  // ?Â€?Â€ Nose ?Â€?Â€
+  // ?€?€ Nose ?€?€
   p(P*3.5, 0, P*1.5, P*1.5, MOUSE_DARK);
 
-  // ?Â€?Â€ Whiskers ?Â€?Â€
+  // ?€?€ Whiskers ?€?€
   cursorCtx.fillStyle = 'rgba(136,136,140,0.6)';
   cursorCtx.fillRect(Math.round(P*3.2 - P*1.5), Math.round(-P*0.3), Math.round(P*3), 1);
   cursorCtx.fillRect(Math.round(P*3.2 - P*1.5), Math.round( P*0.8), Math.round(P*3), 1);
@@ -922,7 +922,7 @@ cursorLoop();
 
 function scrollToTop(e) { e.preventDefault(); window.scrollTo({top:0}); }
 
-// ?Â€?Â€ Canvas Setup ?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€
+// ?€?€ Canvas Setup ?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
 const canvas  = document.getElementById('gameCanvas');
 const ctx     = canvas.getContext('2d');
 const NAV_H   = 60;
@@ -948,7 +948,7 @@ window.addEventListener('resize', () => {
 });
 resize();
 
-// ?Â€?Â€ Forbidden zones (HUD areas ??no beans/candies allowed) ?Â€?Â€
+// ?€?€ Forbidden zones (HUD areas ??no beans/candies allowed) ?€?€
 // Returns true if grid cell (gx,gy) overlaps any UI element
 function isForbidden(gx, gy) {
   // Nav bar ??just the top 2 rows
@@ -971,7 +971,7 @@ function isForbidden(gx, gy) {
   return false;
 }
 
-// ?Â€?Â€ Colors ?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€
+// ?€?€ Colors ?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
 const WHITE  = '#FEFEFE';
 const GREY_L = '#A8B0B2';
 const GREY_M = '#88888C';
@@ -980,14 +980,14 @@ const BRAND  = '#FFB742';
 const EFF1   = '#DA6628';
 const EFF2   = '#F3FF97';
 
-// ?Â€?Â€ Experience Data ?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€
+// ?€?€ Experience Data ?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
 const EXPERIENCES = [
   {
     id: 'ora', label: 'ORA',
     tag: 'Experience Unlocked',
     title: 'Creative Lead',
     company: 'ORA Protocol',
-    period: 'Jun 2024 ??Feb 2025 ç¹š 9 mos',
+    period: 'Jun 2024 - Feb 2025 // 9 mos',
     desc: 'Art direction & design leadership for a cutting-edge Web3 protocol. Built visual identity and brand system from the ground up.',
     pts: 50,
     url: 'https://ora.io',
@@ -997,8 +997,8 @@ const EXPERIENCES = [
     id: 'helpurr', label: 'AI',
     tag: 'Experience Unlocked',
     title: 'Product Designer',
-    company: 'Helpurr ??AI Cat Pain Detector',
-    period: 'Oct 2025 ??Feb 2026 ç¹š 5 mos',
+    company: 'Helpurr // AI Cat Pain Detector',
+    period: 'Oct 2025 - Feb 2026 // 5 mos',
     desc: 'AI-powered cat pain detection using computer vision. Led end-to-end product design and UX strategy.',
     pts: 50,
     url: 'https://helpurr.com',
@@ -1009,8 +1009,8 @@ const EXPERIENCES = [
     tag: 'Experience Unlocked',
     title: 'Senior Designer',
     company: 'Meed Loyalty',
-    period: 'Jun 2022 ??Jul 2024 ç¹š 2 yrs',
-    desc: 'UI/UX, design systems, 3D assets for Web3 loyalty platform. Hackathon winner ?2 (Moralis x Google, Cronos Labs).',
+    period: 'Jun 2022 - Jul 2024 // 2 yrs',
+    desc: 'UI/UX, design systems, 3D assets for Web3 loyalty platform. Hackathon winner #2 (Moralis x Google, Cronos Labs).',
     pts: 50,
     url: 'https://meed.com',
     color: '#F87C56',
@@ -1020,10 +1020,10 @@ const EXPERIENCES = [
     tag: 'Project Unlocked',
     title: 'Game Project',
     company: 'Hamartia',
-    period: '2023 ??2024',
+    period: '2023 - 2024',
     desc: 'Game design, art direction and visual development for Hamartia.',
     pts: 50,
-    url: '#hamartia',
+    url: '/hamartia.html',
     color: '#FF4444',
   },
   {
@@ -1034,7 +1034,7 @@ const EXPERIENCES = [
     period: '2023',
     desc: 'Visual identity and world-building for Cheddar Verse metaverse project.',
     pts: 50,
-    url: '#cheddar',
+    url: '/cheddar.html',
     color: '#FFBF56',
   },
   {
@@ -1042,10 +1042,10 @@ const EXPERIENCES = [
     tag: 'Experience Unlocked',
     title: 'Designer',
     company: 'DeBox',
-    period: '2022 ??2023',
+    period: '2022 - 2023',
     desc: 'Product design and visual identity for DeBox community platform.',
     pts: 50,
-    url: '#debox',
+    url: '/debox.html',
     color: '#00C454',
   },
   {
@@ -1053,10 +1053,10 @@ const EXPERIENCES = [
     tag: 'Project Unlocked',
     title: 'Creative Director',
     company: 'Le.social',
-    period: '2023 ??2024',
-    desc: 'Brand identity and product design for Le.social ??a curated social platform.',
+    period: '2023 - 2024',
+    desc: 'Brand identity and product design for Le.social // a curated social platform.',
     pts: 50,
-    url: '#lesocial',
+    url: '/lesocial.html',
     color: '#03442D',
   },
   {
@@ -1064,10 +1064,10 @@ const EXPERIENCES = [
     tag: 'Project Unlocked',
     title: 'Illustrator',
     company: 'Illustration',
-    period: '2020 ??Present',
+    period: '2020 - Present',
     desc: 'Personal illustration work spanning character design, editorial, and world-building.',
     pts: 50,
-    url: '#illustration',
+    url: '/illustration.html',
     color: '#88888C',
   },
   {
@@ -1075,15 +1075,15 @@ const EXPERIENCES = [
     tag: 'Project Unlocked',
     title: 'VFX Artist',
     company: 'VFX',
-    period: '2021 ??2023',
+    period: '2021 - 2023',
     desc: 'Motion graphics and visual effects for film and digital media projects.',
     pts: 50,
-    url: '#vfx',
+    url: '/vfx.html',
     color: '#181818',
   },
 ];
 
-// ?Â€?Â€ Game State ?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€
+// ?€?€ Game State ?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
 let snake       = [];
 let dir         = { x: 1, y: 0 };
 let nextDir     = { x: 1, y: 0 };
@@ -1100,7 +1100,7 @@ let beanWatchdog = null; // 5s interval to guarantee bean count
 let autoTarget  = null;
 let autoTimer   = 0;
 
-// ?Â€?Â€ Helpers ?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€
+// ?€?€ Helpers ?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
 function ri(max) { return Math.floor(Math.random() * max); }
 function gridX(col) { return col * CELL + CELL / 2; }
 function gridY(row) { return row * CELL + CELL / 2; }
@@ -1122,7 +1122,7 @@ function safeSpawn() {
   return pos;
 }
 
-// ?Â€?Â€ Init ?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€
+// ?€?€ Init ?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
 function initGame() {
   const cx = Math.floor(COLS / 2);
   const cy = Math.floor(ROWS / 2);
@@ -1271,7 +1271,7 @@ function checkSnakeInBounds() {
   }
 }
 
-// ?Â€?Â€ Tick ?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€
+// ?€?€ Tick ?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
 function tick() {
   if (popupOpen) return;
 
@@ -1334,7 +1334,7 @@ function tick() {
   draw();
 }
 
-// ?Â€?Â€ Mouse hover push beans (when not playing) ?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€
+// ?€?€ Mouse hover push beans (when not playing) ?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
 let hoverGridX = -1, hoverGridY = -1;
 canvas.addEventListener('mousemove', e => {
   if (gameStarted) return; // only in auto/idle mode
@@ -1435,7 +1435,7 @@ function pushBeansFromMouse() {
   draw();
 }
 
-// ?Â€?Â€ Auto-wander AI ?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€
+// ?€?€ Auto-wander AI ?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
 function autoSteer() {
   autoTimer--;
   if (autoTimer > 0) return;
@@ -1474,14 +1474,14 @@ function autoSteer() {
   }
 }
 
-// ?Â€?Â€ Pixel helpers ?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€
+// ?€?€ Pixel helpers ?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
 // Draw a pixel-art rectangle (snapped to pixel grid)
 function px(x, y, w, h, color) {
   ctx.fillStyle = color;
   ctx.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h));
 }
 
-// ?Â€?Â€ Draw ?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€
+// ?€?€ Draw ?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
 function draw() {
   // Disable anti-aliasing for crisp pixels
   ctx.imageSmoothingEnabled = false;
@@ -1497,7 +1497,7 @@ function draw() {
     }
   }
 
-  // ?Â€?Â€ Exp beans ??8-bit star/diamond pixel sprite ?Â€?Â€
+  // ?€?€ Exp beans ??8-bit star/diamond pixel sprite ?€?€
   expBeans.forEach(e => {
     const ox = e.x * CELL;
     const oy = e.y * CELL;
@@ -1540,7 +1540,7 @@ function draw() {
     ctx.fillText(e.exp.label, ox + S / 2, oy + S + 2);
   });
 
-  // ?Â€?Â€ Candies ??pixel squares ?Â€?Â€
+  // ?€?€ Candies ??pixel squares ?€?€
   // size -0% / -25% / -50% from original; all colours #DCE0E2 lightened
   candies.forEach(c => {
     const ox = c.x * CELL;
@@ -1582,7 +1582,7 @@ function draw() {
     }
   });
 
-  // ?Â€?Â€ Snake body ??pixel squares ?Â€?Â€
+  // ?€?€ Snake body ??pixel squares ?€?€
   for (let i = snake.length - 1; i >= 1; i--) {
     const seg = snake[i];
     const ox  = seg.x * CELL;
@@ -1600,7 +1600,7 @@ function draw() {
     ctx.fillRect(ox + pad, oy + pad, 2, S - pad*2);
   }
 
-  // ?Â€?Â€ Mouse head ?Â€?Â€
+  // ?€?€ Mouse head ?€?€
   drawMouse(snake[0], dir);
 }
 
@@ -1642,7 +1642,7 @@ function drawMouse(pos, d) {
     px(Math.round(rx - w/2), Math.round(ry - h/2), Math.round(w), Math.round(h), col);
   };
 
-  // ?Â€?Â€ Ears (at top-left of head when facing right) ?Â€?Â€
+  // ?€?€ Ears (at top-left of head when facing right) ?€?€
   const earSize  = P * 3;
   const earInner = P * 2;
   const earX     = -P * 1;    // behind the head center
@@ -1659,7 +1659,7 @@ function drawMouse(pos, d) {
   p(earX + P*0.3, earTopY, earInner, earInner, MOUSE_INNER);
   p(earX + P*0.3, earBotY, earInner, earInner, MOUSE_INNER);
 
-  // ?Â€?Â€ Head body ??pixel square with rounded feel ?Â€?Â€
+  // ?€?€ Head body ??pixel square with rounded feel ?€?€
   const hSize = P * 8;
   p(0, 0, hSize, hSize, MOUSE_BODY);
 
@@ -1671,7 +1671,7 @@ function drawMouse(pos, d) {
   p(-P*2, -P*2, P*3, P, MOUSE_HL);
   p(-P*2, -P*2, P,   P*3, MOUSE_HL);
 
-  // ?Â€?Â€ Face (facing right = +x) ?Â€?Â€
+  // ?€?€ Face (facing right = +x) ?€?€
   // Eyes: two pixel squares
   p(P*1.5, -P*1.8, P*1.5, P*1.5, MOUSE_EYE);
   p(P*1.5,  P*1.8, P*1.5, P*1.5, MOUSE_EYE);
@@ -1690,7 +1690,7 @@ function drawMouse(pos, d) {
   ctx.restore();
 }
 
-// ?Â€?Â€ Score floater ?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€
+// ?€?€ Score floater ?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
 function floatScore(text, col, row) {
   const el = document.createElement('div');
   el.className = 'score-float';
@@ -1708,7 +1708,7 @@ function updateScore(val) {
   setTimeout(() => el.classList.remove('flash'), 300);
 }
 
-// ?Â€?Â€ Popup ?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€
+// ?€?€ Popup ?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
 function showPopup(exp) {
   popupOpen = true;
   isOnGame  = true; // keep dot cursor while popup is over homepage
@@ -1730,14 +1730,14 @@ function closePopup() {
   draw();
 }
 
-// ?Â€?Â€ Pause toggle ?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€
+// ?€?€ Pause toggle ?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
 function setHintState(playing) {
   const hint = document.getElementById('hint');
   if (playing) {
-    hint.textContent = 'playing  ç¹š  space / click  pause';
+    hint.textContent = 'playing // space / click pause';
     hint.classList.add('playing');
   } else {
-    hint.textContent = '???????? play  ç¹š  space / click  pause';
+    hint.textContent = 'press any arrow key to play // space / click pause';
     hint.classList.remove('playing');
   }
 }
@@ -1760,7 +1760,7 @@ function togglePause() {
   }
 }
 
-// ?Â€?Â€ Controls ?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€
+// ?€?€ Controls ?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
 const DIRS = {
   ArrowUp:    {x:0,y:-1}, ArrowDown:  {x:0,y:1},
   ArrowLeft:  {x:-1,y:0}, ArrowRight: {x:1,y:0},
@@ -1822,7 +1822,7 @@ document.addEventListener('touchend', e => {
   touchStart = null;
 });
 
-// ?Â€?Â€ Password Modal ?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€
+// ?€?€ Password Modal ?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
 const LE_SOCIAL_PASSWORD = 'mialyk2024'; // change this to real password
 
 function showPasswordModal(e) {
@@ -1843,10 +1843,10 @@ function checkPassword() {
   if (val === LE_SOCIAL_PASSWORD) {
     closePwModal();
     // Navigate to Le.social project ??update URL when ready
-    window.open('#le-social', '_self');
+    window.location.href = '/lesocial.html';
   } else {
     document.getElementById('pw-input').classList.add('error');
-    document.getElementById('pw-error').textContent = '??Incorrect password';
+    document.getElementById('pw-error').textContent = 'Incorrect password';
     document.getElementById('pw-input').value = '';
     setTimeout(() => {
       document.getElementById('pw-input').classList.remove('error');
@@ -1859,7 +1859,7 @@ document.getElementById('pw-modal').addEventListener('click', function(e) {
   if (e.target === this) closePwModal();
 });
 
-// ?Â€?Â€ Start ?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€?Â€
+// ?€?€ Start ?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
 function autoDemo() {
   initGame();
 }
