@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -20,7 +20,7 @@
   --effect1: #DA6628;
   --effect2: #F3FF97;
 
-  /* Typography scale — min 10px */
+  /* Typography scale ??min 10px */
   --fs-48: clamp(36px, 5vw, 48px);
   --fs-36: clamp(28px, 4vw, 36px);
   --fs-24: clamp(20px, 2.5vw, 24px);
@@ -261,7 +261,7 @@ canvas#gameCanvas {
 }
 
 /* ============================================================
-   POPUP SYSTEM — 3 sizes: sm / md / lg
+   POPUP SYSTEM ??3 sizes: sm / md / lg
    ============================================================ */
 
 /* Overlay (shared) */
@@ -401,8 +401,8 @@ canvas#gameCanvas {
 
 
 
-/* ── Button system — 3 sizes ── */
-/* ── 8-bit pixel arrow (↗) ── */
+/* ?? Button system ??3 sizes ?? */
+/* ?? 8-bit pixel arrow (?? ?? */
 .pixel-arrow {
   display: inline-block;
   width: 10px; height: 10px;
@@ -418,13 +418,13 @@ canvas#gameCanvas {
   background: currentColor;
   image-rendering: pixelated;
 }
-/* horizontal bar — top */
+/* horizontal bar ??top */
 .pixel-arrow::before { top: 0; right: 0; width: 8px; height: 2px; }
-/* vertical bar — right */
+/* vertical bar ??right */
 .pixel-arrow::after  { top: 0; right: 0; width: 2px; height: 8px; }
 /* diagonal dots via box-shadow on ::before */
 
-/* ── Button base — reset everything ── */
+/* ?? Button base ??reset everything ?? */
 .btn {
   font-family: 'DM Mono', monospace;
   font-weight: var(--fw-reg);
@@ -450,12 +450,12 @@ canvas#gameCanvas {
 }
 .btn:hover { background: var(--black); color: var(--white); }
 
-/* ── 3 sizes — fixed height guarantees visual consistency ── */
+/* ?? 3 sizes ??fixed height guarantees visual consistency ?? */
 .btn--sm { font-size: var(--fs-10); padding: 0 16px; height: 36px; }
 .btn--md { font-size: var(--fs-12); padding: 0 24px; height: 44px; width: 172px; }
 .btn--lg { font-size: var(--fs-12); padding: 0 32px; height: 52px; }
 
-/* ── Variants ── */
+/* ?? Variants ?? */
 .btn.primary {
   background: var(--brand);
   border-color: var(--brand);
@@ -520,7 +520,7 @@ footer {
   pointer-events: none;
 }
 
-/* ── Pixel art icons — inline SVG rects, colour via currentColor ── */
+/* ?? Pixel art icons ??inline SVG rects, colour via currentColor ?? */
 .pxi {
   display: inline-block;
   width: 16px; height: 16px;
@@ -543,7 +543,7 @@ footer {
 .dropdown-locked:hover { opacity: 1; }
 .lock-icon { font-size: 10px; margin-left: 4px; }
 
-/* Password Modal — sm size */
+/* Password Modal ??sm size */
 #pw-modal {
   display: none;
   position: fixed;
@@ -628,7 +628,7 @@ footer {
 
 <!-- HEADER -->
 <header>
-  <a href="#home" class="nav-logo" onclick="scrollToTop(event)">
+  <a href="https://github.com/elwgrich/mialyk-portfolio" class="nav-logo" aria-label="Open mialyk GitHub repository">
     mialyk<span class="slash">//</span><sub>creative lead</sub>
   </a>
   <nav>
@@ -665,7 +665,7 @@ footer {
     <div id="pts-value">000</div>
   </div>
 
-  <div id="hint">↑ ↓ ← →  play &nbsp;·&nbsp; space / click  pause</div>
+  <div id="hint">???????? play &nbsp;繚&nbsp; space / click  pause</div>
 </section>
 
 <!-- EXPERIENCE POPUP -->
@@ -685,14 +685,14 @@ footer {
     <!-- TOP: snap to top -->
     <div class="popup-top">
       <div class="popup-tag" id="popup-tag">Experience Unlocked</div>
-      <div class="popup-title" id="popup-title">—</div>
-      <div class="popup-company" id="popup-company">—</div>
-      <div class="popup-period" id="popup-period">—</div>
+      <div class="popup-title" id="popup-title">??/div>
+      <div class="popup-company" id="popup-company">??/div>
+      <div class="popup-period" id="popup-period">??/div>
     </div>
 
     <!-- MIDDLE: auto padding, grows equally -->
     <div class="popup-mid">
-      <div class="popup-desc" id="popup-desc">—</div>
+      <div class="popup-desc" id="popup-desc">??/div>
       <div class="popup-pts" id="popup-pts">+10 pts</div>
     </div>
 
@@ -718,7 +718,7 @@ footer {
     <input class="pw-input" type="password" id="pw-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkPassword()">
     <div class="pw-error" id="pw-error"></div>
     <div class="pw-btns">
-      <button class="btn btn--sm primary" onclick="checkPassword()">Enter ▶</button>
+      <button class="btn btn--sm primary" onclick="checkPassword()">Enter ??/button>
       <button class="btn btn--sm" onclick="closePwModal()">Cancel</button>
     </div>
   </div>
@@ -726,7 +726,7 @@ footer {
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-copy">© 2026 <span>mialyk</span> — All rights reserved</div>
+  <div class="footer-copy">穢 2026 <span>mialyk</span> ??All rights reserved</div>
   <div class="footer-socials">
 
     <!-- LinkedIn -->
@@ -748,7 +748,7 @@ footer {
      GAME SCRIPT
      ============================================================ -->
 <script>
-// ── Mouse Cursor Canvas ─────────────────────────────────────
+// ?? Mouse Cursor Canvas ?????????????????????????????????????
 const cursorCanvas = document.getElementById('cursor-canvas');
 const cursorCtx    = cursorCanvas.getContext('2d');
 cursorCanvas.width  = window.innerWidth;
@@ -795,7 +795,7 @@ document.addEventListener('click', e => {
   setTimeout(() => ripple.remove(), 520);
 });
 
-// ── Cursor state ────────────────────────────────────────────
+// ?? Cursor state ????????????????????????????????????????????
 // Body lags behind cursor; head points toward cursor direction
 let bodyX = -100, bodyY = -100;       // smoothed body position
 let curAngle = 0, targetAngle = 0;    // facing angle in radians
@@ -803,7 +803,7 @@ let legPhase = 0;                     // animation cycle for running legs
 let lastBodyX = -100, lastBodyY = -100;
 let cursorScale = 2, targetScale = 2;
 
-// Draw directional pixel mouse — matches game drawMouse exactly
+// Draw directional pixel mouse ??matches game drawMouse exactly
 function drawMouseCursor(P, angle, moving) {
   const MOUSE_BODY  = '#FFB742';
   const MOUSE_DARK  = '#DA6628';
@@ -822,14 +822,14 @@ function drawMouseCursor(P, angle, moving) {
 
   const hS = P * 8;
 
-  // ── Tail — 3 dots trailing behind (left = back when facing right) ──
+  // ?? Tail ??3 dots trailing behind (left = back when facing right) ??
   const arc = moving ? Math.sin(legPhase * 1.4) * P * 2.5 : P * 2.0;
   const tb  = -hS/2 - P;
   p(tb - P*1, arc * 0.3, P*2,   P*2,   MOUSE_DARK);
   p(tb - P*4, arc * 0.9, P*1.5, P*1.5, MOUSE_BODY);
   p(tb - P*7, arc * 0.4, P,     P,     MOUSE_BODY);
 
-  // ── Ears — upper and lower, behind head center (matching game) ──
+  // ?? Ears ??upper and lower, behind head center (matching game) ??
   const earSize  = P * 3;
   const earInner = P * 2;
   const earX     = -P * 1;
@@ -842,23 +842,23 @@ function drawMouseCursor(P, angle, moving) {
   p(earX + P*0.3, earTopY, earInner, earInner, MOUSE_INNER);
   p(earX + P*0.3, earBotY, earInner, earInner, MOUSE_INNER);
 
-  // ── Head body ──
+  // ?? Head body ??
   p(0, 0, hS, hS, MOUSE_BODY);
   p( P*2.5,  P*2.5, P*5, P,   MOUSE_DARK);
   p( P*2.5,  P*2.5, P,   P*5, MOUSE_DARK);
   p(-P*2,   -P*2,   P*3, P,   MOUSE_HL);
   p(-P*2,   -P*2,   P,   P*3, MOUSE_HL);
 
-  // ── Eyes ──
+  // ?? Eyes ??
   p(P*1.5, -P*1.8, P*1.5, P*1.5, MOUSE_EYE);
   p(P*1.5,  P*1.8, P*1.5, P*1.5, MOUSE_EYE);
   p(P*1.8, -P*2.1, P, P, MOUSE_HL);
   p(P*1.8,  P*1.5, P, P, MOUSE_HL);
 
-  // ── Nose ──
+  // ?? Nose ??
   p(P*3.5, 0, P*1.5, P*1.5, MOUSE_DARK);
 
-  // ── Whiskers ──
+  // ?? Whiskers ??
   cursorCtx.fillStyle = 'rgba(136,136,140,0.6)';
   cursorCtx.fillRect(Math.round(P*3.2 - P*1.5), Math.round(-P*0.3), Math.round(P*3), 1);
   cursorCtx.fillRect(Math.round(P*3.2 - P*1.5), Math.round( P*0.8), Math.round(P*3), 1);
@@ -922,7 +922,7 @@ cursorLoop();
 
 function scrollToTop(e) { e.preventDefault(); window.scrollTo({top:0}); }
 
-// ── Canvas Setup ────────────────────────────────────────────
+// ?? Canvas Setup ????????????????????????????????????????????
 const canvas  = document.getElementById('gameCanvas');
 const ctx     = canvas.getContext('2d');
 const NAV_H   = 60;
@@ -948,30 +948,30 @@ window.addEventListener('resize', () => {
 });
 resize();
 
-// ── Forbidden zones (HUD areas — no beans/candies allowed) ──
+// ?? Forbidden zones (HUD areas ??no beans/candies allowed) ??
 // Returns true if grid cell (gx,gy) overlaps any UI element
 function isForbidden(gx, gy) {
-  // Nav bar — just the top 2 rows
+  // Nav bar ??just the top 2 rows
   const NAV_ROWS = Math.ceil(NAV_H / CELL);
   if (gy < NAV_ROWS) return true;
 
-  // Score block — col 1-4, rows just after nav for ~3 rows (score text height)
+  // Score block ??col 1-4, rows just after nav for ~3 rows (score text height)
   // left: 40px padding = ~col 1; width ~120px = ~4 cols; height ~70px = ~2-3 rows
   const scoreColStart = 1;
   const scoreColEnd   = Math.ceil((40 + 130) / CELL);
   const scoreRowEnd   = NAV_ROWS + Math.ceil(80 / CELL);
   if (gx >= scoreColStart && gx <= scoreColEnd && gy >= NAV_ROWS && gy < scoreRowEnd) return true;
 
-  // Hint — bottom 2 rows only (hint text is 1 line ~20px + 40px bottom padding)
+  // Hint ??bottom 2 rows only (hint text is 1 line ~20px + 40px bottom padding)
   if (gy >= ROWS - 2) return true;
 
-  // Bean label row — 1 cell directly below any bean
+  // Bean label row ??1 cell directly below any bean
   if (expBeans.some(e => e.x === gx && e.y + 1 === gy)) return true;
 
   return false;
 }
 
-// ── Colors ──────────────────────────────────────────────────
+// ?? Colors ??????????????????????????????????????????????????
 const WHITE  = '#FEFEFE';
 const GREY_L = '#A8B0B2';
 const GREY_M = '#88888C';
@@ -980,14 +980,14 @@ const BRAND  = '#FFB742';
 const EFF1   = '#DA6628';
 const EFF2   = '#F3FF97';
 
-// ── Experience Data ─────────────────────────────────────────
+// ?? Experience Data ?????????????????????????????????????????
 const EXPERIENCES = [
   {
     id: 'ora', label: 'ORA',
     tag: 'Experience Unlocked',
     title: 'Creative Lead',
     company: 'ORA Protocol',
-    period: 'Jun 2024 — Feb 2025 · 9 mos',
+    period: 'Jun 2024 ??Feb 2025 繚 9 mos',
     desc: 'Art direction & design leadership for a cutting-edge Web3 protocol. Built visual identity and brand system from the ground up.',
     pts: 50,
     url: 'https://ora.io',
@@ -997,8 +997,8 @@ const EXPERIENCES = [
     id: 'helpurr', label: 'AI',
     tag: 'Experience Unlocked',
     title: 'Product Designer',
-    company: 'Helpurr — AI Cat Pain Detector',
-    period: 'Oct 2025 — Feb 2026 · 5 mos',
+    company: 'Helpurr ??AI Cat Pain Detector',
+    period: 'Oct 2025 ??Feb 2026 繚 5 mos',
     desc: 'AI-powered cat pain detection using computer vision. Led end-to-end product design and UX strategy.',
     pts: 50,
     url: 'https://helpurr.com',
@@ -1009,8 +1009,8 @@ const EXPERIENCES = [
     tag: 'Experience Unlocked',
     title: 'Senior Designer',
     company: 'Meed Loyalty',
-    period: 'Jun 2022 — Jul 2024 · 2 yrs',
-    desc: 'UI/UX, design systems, 3D assets for Web3 loyalty platform. Hackathon winner ×2 (Moralis x Google, Cronos Labs).',
+    period: 'Jun 2022 ??Jul 2024 繚 2 yrs',
+    desc: 'UI/UX, design systems, 3D assets for Web3 loyalty platform. Hackathon winner ?2 (Moralis x Google, Cronos Labs).',
     pts: 50,
     url: 'https://meed.com',
     color: '#F87C56',
@@ -1020,7 +1020,7 @@ const EXPERIENCES = [
     tag: 'Project Unlocked',
     title: 'Game Project',
     company: 'Hamartia',
-    period: '2023 — 2024',
+    period: '2023 ??2024',
     desc: 'Game design, art direction and visual development for Hamartia.',
     pts: 50,
     url: '#hamartia',
@@ -1042,7 +1042,7 @@ const EXPERIENCES = [
     tag: 'Experience Unlocked',
     title: 'Designer',
     company: 'DeBox',
-    period: '2022 — 2023',
+    period: '2022 ??2023',
     desc: 'Product design and visual identity for DeBox community platform.',
     pts: 50,
     url: '#debox',
@@ -1053,8 +1053,8 @@ const EXPERIENCES = [
     tag: 'Project Unlocked',
     title: 'Creative Director',
     company: 'Le.social',
-    period: '2023 — 2024',
-    desc: 'Brand identity and product design for Le.social — a curated social platform.',
+    period: '2023 ??2024',
+    desc: 'Brand identity and product design for Le.social ??a curated social platform.',
     pts: 50,
     url: '#lesocial',
     color: '#03442D',
@@ -1064,7 +1064,7 @@ const EXPERIENCES = [
     tag: 'Project Unlocked',
     title: 'Illustrator',
     company: 'Illustration',
-    period: '2020 — Present',
+    period: '2020 ??Present',
     desc: 'Personal illustration work spanning character design, editorial, and world-building.',
     pts: 50,
     url: '#illustration',
@@ -1075,7 +1075,7 @@ const EXPERIENCES = [
     tag: 'Project Unlocked',
     title: 'VFX Artist',
     company: 'VFX',
-    period: '2021 — 2023',
+    period: '2021 ??2023',
     desc: 'Motion graphics and visual effects for film and digital media projects.',
     pts: 50,
     url: '#vfx',
@@ -1083,7 +1083,7 @@ const EXPERIENCES = [
   },
 ];
 
-// ── Game State ───────────────────────────────────────────────
+// ?? Game State ???????????????????????????????????????????????
 let snake       = [];
 let dir         = { x: 1, y: 0 };
 let nextDir     = { x: 1, y: 0 };
@@ -1100,7 +1100,7 @@ let beanWatchdog = null; // 5s interval to guarantee bean count
 let autoTarget  = null;
 let autoTimer   = 0;
 
-// ── Helpers ──────────────────────────────────────────────────
+// ?? Helpers ??????????????????????????????????????????????????
 function ri(max) { return Math.floor(Math.random() * max); }
 function gridX(col) { return col * CELL + CELL / 2; }
 function gridY(row) { return row * CELL + CELL / 2; }
@@ -1122,7 +1122,7 @@ function safeSpawn() {
   return pos;
 }
 
-// ── Init ─────────────────────────────────────────────────────
+// ?? Init ?????????????????????????????????????????????????????
 function initGame() {
   const cx = Math.floor(COLS / 2);
   const cy = Math.floor(ROWS / 2);
@@ -1201,7 +1201,7 @@ function safeSpawnBean(excludeBeans) {
 }
 
 function spawnExpBeans() {
-  // Each project appears at most once — no duplicates ever
+  // Each project appears at most once ??no duplicates ever
   const onScreen = new Set(expBeans.map(e => e.exp.id));
   // Pool: only projects NOT currently on screen
   let pool = EXPERIENCES.filter(exp => !onScreen.has(exp.id));
@@ -1246,7 +1246,7 @@ function checkSnakeInBounds() {
   if (h.x < 0 || h.x >= COLS || h.y < 0 || h.y >= ROWS) {
     if (!oobTimer) {
       oobTimer = setTimeout(() => {
-        // Still out of bounds after 1s — teleport to opposite edge
+        // Still out of bounds after 1s ??teleport to opposite edge
         if (snake.length > 0) {
           const head = snake[0];
           // Wrap to opposite side based on exit direction
@@ -1271,7 +1271,7 @@ function checkSnakeInBounds() {
   }
 }
 
-// ── Tick ─────────────────────────────────────────────────────
+// ?? Tick ?????????????????????????????????????????????????????
 function tick() {
   if (popupOpen) return;
 
@@ -1327,14 +1327,14 @@ function tick() {
       snake.pop();
     }
   }
-  // Always maintain beans — one per project, no duplicates
+  // Always maintain beans ??one per project, no duplicates
   maintainExpBeans();
 
   checkSnakeInBounds();
   draw();
 }
 
-// ── Mouse hover push beans (when not playing) ───────────────
+// ?? Mouse hover push beans (when not playing) ???????????????
 let hoverGridX = -1, hoverGridY = -1;
 canvas.addEventListener('mousemove', e => {
   if (gameStarted) return; // only in auto/idle mode
@@ -1435,7 +1435,7 @@ function pushBeansFromMouse() {
   draw();
 }
 
-// ── Auto-wander AI ───────────────────────────────────────────
+// ?? Auto-wander AI ???????????????????????????????????????????
 function autoSteer() {
   autoTimer--;
   if (autoTimer > 0) return;
@@ -1474,19 +1474,19 @@ function autoSteer() {
   }
 }
 
-// ── Pixel helpers ─────────────────────────────────────────────
+// ?? Pixel helpers ?????????????????????????????????????????????
 // Draw a pixel-art rectangle (snapped to pixel grid)
 function px(x, y, w, h, color) {
   ctx.fillStyle = color;
   ctx.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h));
 }
 
-// ── Draw ─────────────────────────────────────────────────────
+// ?? Draw ?????????????????????????????????????????????????????
 function draw() {
   // Disable anti-aliasing for crisp pixels
   ctx.imageSmoothingEnabled = false;
 
-  // Background — white
+  // Background ??white
   ctx.fillStyle = WHITE;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -1497,7 +1497,7 @@ function draw() {
     }
   }
 
-  // ── Exp beans — 8-bit star/diamond pixel sprite ──
+  // ?? Exp beans ??8-bit star/diamond pixel sprite ??
   expBeans.forEach(e => {
     const ox = e.x * CELL;
     const oy = e.y * CELL;
@@ -1509,7 +1509,7 @@ function draw() {
     const dark = col + 'bb';
 
     // Row pattern for a diamond (5-wide at widest, 9 rows for S=28)
-    // We'll use a 9×9 pixel sprite scaled up
+    // We'll use a 9?9 pixel sprite scaled up
     const sprite = [
       [0,0,0,1,0,0,0],
       [0,0,1,1,1,0,0],
@@ -1532,7 +1532,7 @@ function draw() {
       });
     });
 
-    // Label below bean — drawn at row+1, centred, 10px min
+    // Label below bean ??drawn at row+1, centred, 10px min
     ctx.fillStyle = GREY_M;
     ctx.font = "bold 10px 'DM Mono', monospace";
     ctx.textAlign = 'center';
@@ -1540,7 +1540,7 @@ function draw() {
     ctx.fillText(e.exp.label, ox + S / 2, oy + S + 2);
   });
 
-  // ── Candies — pixel squares ──
+  // ?? Candies ??pixel squares ??
   // size -0% / -25% / -50% from original; all colours #DCE0E2 lightened
   candies.forEach(c => {
     const ox = c.x * CELL;
@@ -1548,11 +1548,11 @@ function draw() {
     const S  = CELL;
 
     if (c.size === 1) {
-      // small — 50% of original (S*0.18 * 0.5)
+      // small ??50% of original (S*0.18 * 0.5)
       const p = Math.max(1, Math.round(S * 0.09));
       px(ox + S/2 - p, oy + S/2 - p, p*2, p*2, '#DCE0E2');
     } else if (c.size === 5) {
-      // medium cross — 25% smaller (S*0.14 * 0.75)
+      // medium cross ??25% smaller (S*0.14 * 0.75)
       const p = Math.max(1, Math.round(S * 0.105));
       const m = [
         [0,1,0],
@@ -1565,7 +1565,7 @@ function draw() {
         if(v) px(offX + rx*p, offY + ry*p, p, p, '#C9CDCE');
       }));
     } else {
-      // large star — original size (S*0.12)
+      // large star ??original size (S*0.12)
       const p = Math.max(1, Math.round(S * 0.12));
       const star = [
         [0,0,1,0,0],
@@ -1582,7 +1582,7 @@ function draw() {
     }
   });
 
-  // ── Snake body — pixel squares ──
+  // ?? Snake body ??pixel squares ??
   for (let i = snake.length - 1; i >= 1; i--) {
     const seg = snake[i];
     const ox  = seg.x * CELL;
@@ -1600,20 +1600,20 @@ function draw() {
     ctx.fillRect(ox + pad, oy + pad, 2, S - pad*2);
   }
 
-  // ── Mouse head ──
+  // ?? Mouse head ??
   drawMouse(snake[0], dir);
 }
 
-// 8-bit pixel mouse — full orange body, round ears, directional face
+// 8-bit pixel mouse ??full orange body, round ears, directional face
 function drawMouse(pos, d) {
   const ox = pos.x * CELL;
   const oy = pos.y * CELL;
   const S  = CELL;
 
-  // Pixel unit — scale with cell size
+  // Pixel unit ??scale with cell size
   const P = Math.max(2, Math.floor(S / 10));
 
-  // We'll draw on a virtual 10×10 pixel canvas, then blit
+  // We'll draw on a virtual 10?10 pixel canvas, then blit
   // Colors
   const MOUSE_BODY  = BRAND;        // #FFB742 orange
   const MOUSE_DARK  = EFF1;         // #DA6628 shading
@@ -1642,7 +1642,7 @@ function drawMouse(pos, d) {
     px(Math.round(rx - w/2), Math.round(ry - h/2), Math.round(w), Math.round(h), col);
   };
 
-  // ── Ears (at top-left of head when facing right) ──
+  // ?? Ears (at top-left of head when facing right) ??
   const earSize  = P * 3;
   const earInner = P * 2;
   const earX     = -P * 1;    // behind the head center
@@ -1659,7 +1659,7 @@ function drawMouse(pos, d) {
   p(earX + P*0.3, earTopY, earInner, earInner, MOUSE_INNER);
   p(earX + P*0.3, earBotY, earInner, earInner, MOUSE_INNER);
 
-  // ── Head body — pixel square with rounded feel ──
+  // ?? Head body ??pixel square with rounded feel ??
   const hSize = P * 8;
   p(0, 0, hSize, hSize, MOUSE_BODY);
 
@@ -1671,7 +1671,7 @@ function drawMouse(pos, d) {
   p(-P*2, -P*2, P*3, P, MOUSE_HL);
   p(-P*2, -P*2, P,   P*3, MOUSE_HL);
 
-  // ── Face (facing right = +x) ──
+  // ?? Face (facing right = +x) ??
   // Eyes: two pixel squares
   p(P*1.5, -P*1.8, P*1.5, P*1.5, MOUSE_EYE);
   p(P*1.5,  P*1.8, P*1.5, P*1.5, MOUSE_EYE);
@@ -1679,10 +1679,10 @@ function drawMouse(pos, d) {
   p(P*1.8, -P*2.1, P, P, MOUSE_HL);
   p(P*1.8,  P*1.5, P, P, MOUSE_HL);
 
-  // Nose — 2×2 pixel at front
+  // Nose ??2?2 pixel at front
   p(P*3.5, 0, P*1.5, P*1.5, MOUSE_NOSE);
 
-  // Whiskers — thin 1px lines either side of nose
+  // Whiskers ??thin 1px lines either side of nose
   ctx.fillStyle = GREY_M + 'aa';
   ctx.fillRect(Math.round(P*3.2), Math.round(-P*0.3), Math.round(P*3), 1);
   ctx.fillRect(Math.round(P*3.2), Math.round( P*0.8), Math.round(P*3), 1);
@@ -1690,7 +1690,7 @@ function drawMouse(pos, d) {
   ctx.restore();
 }
 
-// ── Score floater ────────────────────────────────────────────
+// ?? Score floater ????????????????????????????????????????????
 function floatScore(text, col, row) {
   const el = document.createElement('div');
   el.className = 'score-float';
@@ -1708,7 +1708,7 @@ function updateScore(val) {
   setTimeout(() => el.classList.remove('flash'), 300);
 }
 
-// ── Popup ────────────────────────────────────────────────────
+// ?? Popup ????????????????????????????????????????????????????
 function showPopup(exp) {
   popupOpen = true;
   isOnGame  = true; // keep dot cursor while popup is over homepage
@@ -1725,19 +1725,19 @@ function showPopup(exp) {
 function closePopup() {
   popupOpen = false;
   document.getElementById('popup').classList.remove('active');
-  // Force spawn + redraw immediately — tick() was blocked while popup was open
+  // Force spawn + redraw immediately ??tick() was blocked while popup was open
   spawnExpBeans();
   draw();
 }
 
-// ── Pause toggle ─────────────────────────────────────────────
+// ?? Pause toggle ?????????????????????????????????????????????
 function setHintState(playing) {
   const hint = document.getElementById('hint');
   if (playing) {
-    hint.textContent = 'playing  ·  space / click  pause';
+    hint.textContent = 'playing  繚  space / click  pause';
     hint.classList.add('playing');
   } else {
-    hint.textContent = '↑ ↓ ← →  play  ·  space / click  pause';
+    hint.textContent = '???????? play  繚  space / click  pause';
     hint.classList.remove('playing');
   }
 }
@@ -1746,13 +1746,13 @@ function togglePause() {
   if (popupOpen) return;
 
   if (gameStarted) {
-    // Player mode → hand back to auto-wander
+    // Player mode ??hand back to auto-wander
     gameStarted = false;
     clearInterval(gameLoop);
     gameLoop = setInterval(tick, 200);
     setHintState(false);
   } else {
-    // Auto-wander → player mode
+    // Auto-wander ??player mode
     gameStarted = true;
     clearInterval(gameLoop);
     gameLoop = setInterval(tick, 140);
@@ -1760,7 +1760,7 @@ function togglePause() {
   }
 }
 
-// ── Controls ─────────────────────────────────────────────────
+// ?? Controls ?????????????????????????????????????????????????
 const DIRS = {
   ArrowUp:    {x:0,y:-1}, ArrowDown:  {x:0,y:1},
   ArrowLeft:  {x:-1,y:0}, ArrowRight: {x:1,y:0},
@@ -1822,7 +1822,7 @@ document.addEventListener('touchend', e => {
   touchStart = null;
 });
 
-// ── Password Modal ────────────────────────────────────────────
+// ?? Password Modal ????????????????????????????????????????????
 const LE_SOCIAL_PASSWORD = 'mialyk2024'; // change this to real password
 
 function showPasswordModal(e) {
@@ -1842,11 +1842,11 @@ function checkPassword() {
   const val = document.getElementById('pw-input').value;
   if (val === LE_SOCIAL_PASSWORD) {
     closePwModal();
-    // Navigate to Le.social project — update URL when ready
+    // Navigate to Le.social project ??update URL when ready
     window.open('#le-social', '_self');
   } else {
     document.getElementById('pw-input').classList.add('error');
-    document.getElementById('pw-error').textContent = '✕ Incorrect password';
+    document.getElementById('pw-error').textContent = '??Incorrect password';
     document.getElementById('pw-input').value = '';
     setTimeout(() => {
       document.getElementById('pw-input').classList.remove('error');
@@ -1859,7 +1859,7 @@ document.getElementById('pw-modal').addEventListener('click', function(e) {
   if (e.target === this) closePwModal();
 });
 
-// ── Start ────────────────────────────────────────────────────
+// ?? Start ????????????????????????????????????????????????????
 function autoDemo() {
   initGame();
 }
@@ -1867,3 +1867,5 @@ autoDemo();
 </script>
 </body>
 </html>
+
+
