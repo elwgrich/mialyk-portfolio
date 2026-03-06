@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hamartia — mialyk</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --white:   #FEFEFE;
+  --grey-l:  #A8B0B2;
+  --grey-m:  #88888C;
+  --black:   #181818;
+  --brand:   #FFB742;
+  --effect1: #DA6628;
+  --effect2: #F3FF97;
+  --accent:  #FF4444;
+  --fs-16: 16px; --fs-12: 12px; --fs-10: 10px;
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'DM Mono',monospace;
+  font-size:var(--fs-12);
+  background:var(--white); /* 70% white */
+  color:var(--black);
+  cursor:none;
+  overflow-x:hidden;
+}
+
+/* ── CURSOR ── */
+#cur-dot{position:fixed;pointer-events:none;z-index:9999;width:5px;height:5px;border-radius:50%;background:var(--brand);transform:translate(-50%,-50%);}
+#cur-ring{position:fixed;pointer-events:none;z-index:9998;width:12px;height:12px;border-radius:50%;border:1.5px solid var(--brand);transform:translate(-50%,-50%);transition:width .25s,height .25s;}
+
+/* ── HEADER ── */
+header{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:60px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;
+  background:var(--white);
+  border-bottom:1px solid rgba(24,24,24,0.1);
+}
+.nav-logo{font-family:'DM Mono',monospace;font-size:var(--fs-16);font-weight:500;color:var(--black);text-decoration:none;}
+.nav-logo .slash{color:var(--brand);}
+.nav-logo sub{font-size:var(--fs-10);color:var(--grey-m);position:relative;top:2px;}
+nav{display:flex;align-items:center;gap:32px;}
+.nav-item{position:relative;}
+.nav-link{font-size:var(--fs-12);color:var(--grey-m);text-decoration:none;letter-spacing:.02em;position:relative;padding-bottom:2px;}
+.nav-link::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:1px;background:var(--black);transform:scaleX(0);transform-origin:left;transition:transform .2s ease-out;}
+.nav-link:hover,.nav-link.active{color:var(--black);}
+.nav-link:hover::after,.nav-link.active::after{transform:scaleX(1);}
+.nav-dropdown{position:absolute;top:calc(100% + 16px);left:-16px;background:var(--white);border:1px solid rgba(24,24,24,0.1);padding:8px 0;min-width:180px;opacity:0;pointer-events:none;transform:translateY(-4px);transition:opacity .15s,transform .15s;}
+.nav-item:hover .nav-dropdown{opacity:1;pointer-events:all;transform:translateY(0);}
+.dropdown-item{display:flex;align-items:center;gap:8px;padding:8px 16px;font-size:var(--fs-12);color:var(--grey-m);text-decoration:none;transition:color .15s,background .15s;}
+.dropdown-item:hover{color:var(--black);background:rgba(24,24,24,0.03);}
+.dropdown-dot{width:4px;height:4px;border-radius:50%;background:var(--grey-l);flex-shrink:0;}
+.dropdown-item.active .dropdown-dot{background:var(--accent);}
+.dropdown-locked{opacity:.5;}
+.pxi{display:inline-block;} .pxi--sm{width:14px;height:14px;} .pxi--md{width:18px;height:18px;}
+
+/* ── HERO ── */
+.hero{
+  margin-top:60px;padding:64px 40px 52px;
+  border-bottom:1px solid rgba(24,24,24,0.1);
+  background:var(--white);position:relative;overflow:hidden;
+}
+/* subtle pixel grid — white surface, just texture */
+.hero::after{content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(24,24,24,0.018) 1px,transparent 1px),linear-gradient(90deg,rgba(24,24,24,0.018) 1px,transparent 1px);
+  background-size:8px 8px;}
+.hero-inner{max-width:1200px;margin:0 auto;position:relative;z-index:1;}
+.hero-eyebrow{display:flex;align-items:center;gap:12px;font-size:var(--fs-10);color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:20px;}
+.hero-eyebrow::before{content:'';width:16px;height:2px;background:var(--accent);display:block;}
+.hero-year{font-family:'Press Start 2P',monospace;font-size:9px;color:var(--grey-m);border:1px solid rgba(24,24,24,0.15);padding:4px 10px;}
+h1{font-family:'Press Start 2P',monospace;font-size:clamp(26px,4.5vw,50px);line-height:1.35;margin-bottom:32px;color:var(--black);}
+h1 .accent{color:var(--accent);}
+.hero-meta{display:flex;gap:48px;flex-wrap:wrap;}
+.meta-item{display:flex;flex-direction:column;gap:4px;}
+.meta-label{font-size:var(--fs-10);color:var(--grey-l);text-transform:uppercase;letter-spacing:.1em;}
+.meta-value{font-size:var(--fs-12);color:var(--black);}
+
+/* ── SECTION LABEL ── */
+.slabel{font-family:'Press Start 2P',monospace;font-size:var(--fs-10);color:var(--grey-l);letter-spacing:.08em;text-transform:uppercase;margin-bottom:24px;display:flex;align-items:center;gap:12px;}
+.slabel::after{content:'';flex:1;height:1px;background:rgba(24,24,24,0.1);}
+
+/* ── STATS ── */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid rgba(24,24,24,0.1);border-top:none;}
+.stat-cell{padding:28px 24px;border-right:1px solid rgba(24,24,24,0.1);background:var(--white);transition:background .2s;}
+.stat-cell:last-child{border-right:none;}
+.stat-cell:hover{background:#F8F7F4;}
+.stat-num{font-family:'Press Start 2P',monospace;font-size:clamp(16px,2vw,22px);color:var(--accent);margin-bottom:8px;display:block;}
+.stat-desc{font-size:var(--fs-10);color:var(--grey-m);line-height:1.6;text-transform:uppercase;letter-spacing:.06em;}
+
+/* ── TICKER ── */
+.ticker-wrap{border-top:1px solid rgba(24,24,24,0.1);border-bottom:1px solid rgba(24,24,24,0.1);height:32px;overflow:hidden;display:flex;align-items:center;background:var(--white);}
+.ticker-label{font-family:'Press Start 2P',monospace;font-size:7px;color:var(--black);background:var(--brand);height:100%;padding:0 14px;display:flex;align-items:center;flex-shrink:0;letter-spacing:.06em;}
+.ticker-track{flex:1;overflow:hidden;}
+.ticker-inner{display:flex;animation:ticker 34s linear infinite;white-space:nowrap;}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ticker-item{font-size:var(--fs-10);color:var(--grey-m);padding:0 28px;flex-shrink:0;}
+.ticker-item em{color:var(--black);font-style:normal;}
+.ticker-sep{color:var(--brand);}
+
+/* ── MAIN ── */
+.psection{max-width:1200px;margin:0 auto;padding:72px 40px;}
+
+/* ══ STREAMER UI ══ */
+.streamer-ui{display:grid;grid-template-columns:1fr 260px;border:1px solid rgba(24,24,24,0.12);background:var(--white);}
+@media(max-width:768px){.streamer-ui{grid-template-columns:1fr;}}
+
+/* win chrome — brand orange titlebar (art rule: brand as warmth) */
+.win-bar{display:flex;align-items:center;justify-content:space-between;padding:0 10px;height:24px;
+  background:var(--brand); /* brand 20% — key UI chrome */ 
+  font-family:'Press Start 2P',monospace;font-size:7px;color:var(--black);flex-shrink:0;}
+.win-bar.dark{background:var(--black);color:var(--white);}
+.win-controls{display:flex;gap:4px;}
+.win-btn{width:12px;height:12px;border:1px solid rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center;font-size:7px;color:rgba(0,0,0,0.5);cursor:none;font-family:'DM Mono',monospace;}
+.win-btn:hover{background:rgba(0,0,0,0.1);}
+.win-btn.dark-btn{border-color:rgba(255,255,255,0.25);color:rgba(255,255,255,0.5);}
+.win-btn.dark-btn:hover{background:rgba(255,255,255,0.1);}
+
+/* player */
+.player-panel{display:flex;flex-direction:column;border-right:1px solid rgba(24,24,24,0.1);background:var(--white);}
+.menu-bar{display:flex;gap:16px;height:22px;padding:0 12px;border-bottom:1px solid rgba(24,24,24,0.08);align-items:center;background:#F5F4F0;}
+.menu-item{font-size:var(--fs-10);color:var(--grey-m);cursor:none;transition:color .15s;}
+.menu-item:hover{color:var(--black);}
+
+.video-area{flex:1;background:#0C0C0C;position:relative;overflow:hidden;min-height:230px;}
+.video-area::after{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.06) 3px,rgba(0,0,0,0.06) 4px);}
+.live-badge{position:absolute;top:10px;left:10px;z-index:2;background:var(--accent);color:var(--white);font-family:'Press Start 2P',monospace;font-size:7px;padding:4px 8px;display:flex;align-items:center;gap:5px;}
+.live-dot{width:5px;height:5px;border-radius:50%;background:var(--white);animation:blink 1.2s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.video-content{width:100%;height:100%;display:flex;align-items:center;justify-content:center;}
+.video-overlay{position:absolute;bottom:0;left:0;right:0;z-index:2;background:linear-gradient(transparent,rgba(0,0,0,0.7));padding:20px 14px 10px;}
+.video-title-px{font-family:'Press Start 2P',monospace;font-size:8px;color:var(--white);line-height:1.5;}
+.video-sub-px{font-size:var(--fs-10);color:rgba(255,255,255,0.45);margin-top:3px;}
+
+.ctrl-bar{height:34px;border-top:1px solid rgba(24,24,24,0.08);display:flex;align-items:center;padding:0 12px;gap:10px;background:var(--white);}
+.ctrl-btn{font-size:13px;color:var(--grey-m);cursor:none;user-select:none;transition:color .15s;}
+.ctrl-btn:hover{color:var(--black);}
+.progress-bar{flex:1;height:3px;background:rgba(24,24,24,0.1);position:relative;}
+.progress-fill{position:absolute;left:0;top:0;bottom:0;background:var(--accent);width:35%;}
+.progress-head{position:absolute;top:50%;right:0;transform:translate(50%,-50%);width:7px;height:7px;background:var(--accent);}
+.time-lbl{font-size:var(--fs-10);color:var(--grey-m);white-space:nowrap;}
+
+.ch-bar{padding:10px 14px;border-top:1px solid rgba(24,24,24,0.06);display:flex;justify-content:space-between;align-items:center;background:var(--white);}
+.ch-name{font-family:'Press Start 2P',monospace;font-size:8px;color:var(--black);}
+.ch-sub{font-size:var(--fs-10);color:var(--grey-m);margin-top:3px;}
+.viewer-num{font-family:'Press Start 2P',monospace;font-size:10px;color:var(--brand);display:block;text-align:right;}
+.viewer-lbl{font-size:var(--fs-10);color:var(--grey-m);}
+
+/* chat */
+.chat-panel{display:flex;flex-direction:column;background:var(--white);}
+.chat-topbar{height:22px;border-bottom:1px solid rgba(24,24,24,0.08);display:flex;align-items:center;padding:0 10px;gap:6px;background:#F5F4F0;}
+.chat-lbl{font-size:var(--fs-10);color:var(--grey-m);}
+.chat-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);animation:blink 1.2s infinite;}
+.chat-messages{flex:1;overflow:hidden;position:relative;}
+.chat-scroll{display:flex;flex-direction:column;will-change:transform;}
+.chat-msg{display:flex;gap:6px;padding:5px 10px;font-size:9px;line-height:1.5;}
+.chat-msg:hover{background:rgba(24,24,24,0.03);}
+.chat-msg.hl{background:rgba(255,183,66,0.08);}/* brand highlight not red */
+.chat-user{font-family:'Press Start 2P',monospace;font-size:6px;flex-shrink:0;padding-top:2px;}
+.chat-text{color:var(--grey-m);}
+.chat-text em{color:var(--black);font-style:normal;}
+.u1{color:var(--accent)}.u2{color:var(--brand)}.u3{color:var(--grey-m)}.u4{color:var(--effect1)}.u5{color:var(--grey-l)}.u6{color:var(--accent)}
+.chat-foot{height:38px;border-top:1px solid rgba(24,24,24,0.08);display:flex;align-items:center;padding:0 8px;gap:6px;background:var(--white);}
+.chat-input{flex:1;height:24px;border:1px solid rgba(24,24,24,0.15);padding:0 8px;font-family:'DM Mono',monospace;font-size:var(--fs-10);background:var(--white);outline:none;color:var(--grey-l);}
+.chat-send{height:24px;padding:0 10px;background:var(--brand);color:var(--black);font-family:'Press Start 2P',monospace;font-size:6px;border:none;cursor:none;transition:background .15s;}
+.chat-send:hover{background:var(--effect1);color:var(--white);}
+
+/* ══ ART WINDOW TRIGGER BUTTONS ══ */
+.art-triggers{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:36px;}
+.art-trigger-btn{
+  border:1px solid rgba(24,24,24,0.12);
+  background:var(--white);
+  padding:0;
+  cursor:none;
+  text-align:left;
+  transition:border-color .15s;
+  display:flex;flex-direction:column;
+}
+.art-trigger-btn:hover{border-color:var(--brand);}
+.art-trigger-btn:hover .atb-bar{background:var(--brand);}
+.atb-bar{display:flex;align-items:center;justify-content:space-between;height:24px;padding:0 10px;background:var(--black);transition:background .15s;}
+.atb-title{font-family:'Press Start 2P',monospace;font-size:7px;color:var(--white);}
+.atb-bar-brand .atb-title{color:var(--black);}
+.atb-open{font-size:var(--fs-10);color:rgba(255,255,255,0.5);}
+.atb-preview{width:100%;aspect-ratio:16/7;background:#0C0C0C;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;}
+.atb-preview::after{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.05) 2px,rgba(0,0,0,0.05) 3px);}
+.atb-preview-label{font-family:'Press Start 2P',monospace;font-size:8px;color:rgba(255,183,66,0.5);text-align:center;}
+.atb-footer{padding:8px 12px;border-top:1px solid rgba(24,24,24,0.06);display:flex;justify-content:space-between;}
+.atb-desc{font-size:var(--fs-10);color:var(--grey-m);}
+.atb-tag{font-family:'Press Start 2P',monospace;font-size:7px;color:var(--brand);}
+
+/* ══ DRAGGABLE POPUPS ══ */
+.dw{
+  position:fixed;z-index:600;
+  border:1px solid rgba(24,24,24,0.15);
+  background:var(--white);
+  box-shadow:6px 6px 0 rgba(24,24,24,0.07);
+  display:none;
+}
+.dw.open{display:block;}
+/* popup spring entry */
+.dw.entering{animation:popIn .35s var(--spring) forwards;}
+@keyframes popIn{from{opacity:0;transform:scale(.92) translateY(16px)}to{opacity:1;transform:scale(1) translateY(0)}}
+
+.dw-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  height:28px;padding:0 12px;
+  background:var(--brand); /* brand titlebar per art rules */
+  cursor:move;user-select:none;
+}
+.dw-title{font-family:'Press Start 2P',monospace;font-size:8px;color:var(--black);}
+.dw-controls{display:flex;gap:4px;}
+.dw-btn{width:14px;height:14px;border:1px solid rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center;font-size:8px;color:rgba(0,0,0,0.5);cursor:none;font-family:'DM Mono',monospace;background:none;transition:background .12s;}
+.dw-btn:hover{background:rgba(0,0,0,0.12);}
+
+/* ── ENVIRONMENT POPUP ── */
+#env-popup{width:700px;top:80px;left:50%;transform:translateX(-50%);}
+.env-inner{display:flex;height:500px;}
+
+/* location list */
+.loc-list{width:160px;border-right:1px solid rgba(24,24,24,0.1);display:flex;flex-direction:column;flex-shrink:0;background:var(--white);}
+.loc-item{
+  padding:14px 16px;border-bottom:1px solid rgba(24,24,24,0.07);
+  font-size:var(--fs-10);color:var(--grey-m);cursor:none;
+  transition:background .15s,color .15s;
+  display:flex;flex-direction:column;gap:3px;
+}
+.loc-item:hover{background:#F8F7F4;color:var(--black);}
+.loc-item.active{background:rgba(255,183,66,0.1);color:var(--black);}
+.loc-item.active .loc-dot{background:var(--brand);}
+.loc-dot{width:5px;height:5px;background:var(--grey-l);border-radius:50%;margin-bottom:2px;}
+.loc-name{font-size:var(--fs-12);color:inherit;line-height:1.3;}
+.loc-sub{font-size:9px;color:var(--grey-l);}
+
+/* image display */
+.env-display{flex:1;background:#0D0D0D;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.env-display::after{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.06) 3px,rgba(0,0,0,0.06) 4px);}
+.env-img{width:100%;height:100%;object-fit:cover;display:none;transition:opacity .25s;}
+.env-img.active{display:block;animation:fadeIn .3s ease-out;}
+.env-placeholder{text-align:center;}
+.env-placeholder-label{font-family:'Press Start 2P',monospace;font-size:9px;color:rgba(255,183,66,0.5);margin-bottom:8px;display:block;}
+.env-placeholder-sub{font-size:var(--fs-10);color:rgba(255,255,255,0.2);}
+
+/* location SVG art placeholders */
+.loc-art{width:100%;height:100%;position:absolute;top:0;left:0;display:none;}
+.loc-art.active{display:block;}
+
+.env-caption{position:absolute;bottom:0;left:0;right:0;z-index:2;background:linear-gradient(transparent,rgba(0,0,0,0.75));padding:20px 20px 12px;}
+.env-cap-name{font-family:'Press Start 2P',monospace;font-size:9px;color:var(--white);margin-bottom:4px;}
+.env-cap-sub{font-size:var(--fs-10);color:rgba(255,255,255,0.45);}
+
+/* loc counter */
+.env-counter{position:absolute;top:12px;right:12px;z-index:2;font-family:'Press Start 2P',monospace;font-size:8px;color:var(--brand);background:rgba(0,0,0,0.6);padding:4px 8px;}
+
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* ── CHARACTER POPUP ── */
+#char-popup{width:560px;top:100px;left:calc(50% + 80px);}
+.char-inner{display:flex;flex-direction:column;height:520px;}
+
+/* character grid */
+.char-grid-wrap{padding:16px;border-bottom:1px solid rgba(24,24,24,0.08);}
+.char-grid-label{font-size:var(--fs-10);color:var(--grey-m);margin-bottom:10px;letter-spacing:.06em;text-transform:uppercase;}
+.char-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
+.char-icon{
+  width:100%;aspect-ratio:1;
+  background:#0D0D0D;
+  border:1px solid rgba(24,24,24,0.1);
+  display:flex;align-items:center;justify-content:center;
+  cursor:none;transition:border-color .15s,background .15s;
+  position:relative;overflow:hidden;
+}
+.char-icon:hover{border-color:var(--brand);background:#1A1A1A;}
+.char-icon.active{border-color:var(--brand);background:rgba(255,183,66,0.1);}
+.char-icon.active .char-icon-inner{color:var(--brand);}
+.char-icon-inner{font-family:'Press Start 2P',monospace;font-size:7px;color:var(--grey-m);text-align:center;line-height:1.4;}
+.char-icon-num{font-size:6px;color:var(--grey-l);display:block;margin-top:2px;}
+
+/* character display */
+.char-display{flex:1;display:flex;overflow:hidden;}
+.char-img-area{width:200px;flex-shrink:0;background:#0D0D0D;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.char-img-area::after{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.06) 3px,rgba(0,0,0,0.06) 4px);}
+.char-art{width:100%;height:100%;object-fit:cover;display:none;}
+.char-art.active{display:block;animation:fadeIn .25s ease-out;}
+.char-art-placeholder{text-align:center;}
+.char-art-placeholder-label{font-family:'Press Start 2P',monospace;font-size:7px;color:rgba(255,183,66,0.45);margin-bottom:6px;display:block;}
+.char-art-placeholder-sub{font-size:9px;color:rgba(255,255,255,0.2);}
+
+.char-info{flex:1;padding:20px;border-left:1px solid rgba(24,24,24,0.08);background:var(--white);overflow:hidden;}
+.char-id{font-family:'Press Start 2P',monospace;font-size:8px;color:var(--brand);margin-bottom:6px;}
+.char-name-display{font-family:'Press Start 2P',monospace;font-size:13px;color:var(--black);line-height:1.4;margin-bottom:12px;}
+.char-role-tag{display:inline-block;font-size:var(--fs-10);color:var(--grey-m);border:1px solid rgba(24,24,24,0.15);padding:3px 10px;margin-bottom:16px;}
+.char-desc{font-size:var(--fs-10);color:var(--grey-m);line-height:1.8;}
+.char-stat-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(24,24,24,0.05);font-size:var(--fs-10);}
+.char-stat-row:first-of-type{border-top:1px solid rgba(24,24,24,0.05);}
+.char-stat-key{color:var(--grey-m);}
+.char-stat-val{color:var(--black);}
+
+/* ── PLAY DEMO POPUP ── */
+#demo-popup{width:220px;bottom:88px;right:36px;position:fixed;z-index:500;border:1px solid rgba(24,24,24,0.15);background:var(--white);box-shadow:4px 4px 0 rgba(24,24,24,0.07);}
+.demo-bar{display:flex;align-items:center;justify-content:space-between;height:24px;padding:0 10px;background:var(--brand);cursor:move;}
+.demo-title{font-family:'Press Start 2P',monospace;font-size:7px;color:var(--black);}
+.demo-x{background:none;border:none;color:rgba(0,0,0,0.5);font-size:12px;cursor:none;font-family:'DM Mono',monospace;}
+.demo-x:hover{color:var(--black);}
+.demo-body{padding:14px;}
+.demo-icon{width:32px;height:32px;background:var(--black);display:flex;align-items:center;justify-content:center;font-family:'Press Start 2P',monospace;font-size:8px;color:var(--brand);margin-bottom:10px;}
+.demo-name{font-family:'Press Start 2P',monospace;font-size:8px;color:var(--black);margin-bottom:6px;}
+.demo-desc{font-size:var(--fs-10);color:var(--grey-m);line-height:1.7;margin-bottom:12px;}
+.demo-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;}
+.demo-tag{font-size:9px;padding:3px 7px;border:1px solid rgba(24,24,24,0.15);color:var(--grey-m);}
+/* btn--md per art rules: 44px h, 172px w, 12px font */
+.demo-cta{display:flex;align-items:center;justify-content:center;height:44px;width:100%;
+  background:var(--brand);color:var(--black);
+  font-family:'Press Start 2P',monospace;font-size:8px;
+  text-decoration:none;letter-spacing:.05em;transition:background .15s;}
+.demo-cta:hover{background:var(--effect1);color:var(--white);}
+.demo-foot{text-align:center;padding:6px;font-size:var(--fs-10);color:var(--grey-m);border-top:1px solid rgba(24,24,24,0.06);cursor:none;transition:color .15s;}
+.demo-foot:hover{color:var(--black);}
+
+/* ── CREDITS ── */
+.credits-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;padding-top:48px;border-top:1px solid rgba(24,24,24,0.1);margin-top:64px;}
+@media(max-width:768px){.credits-grid{grid-template-columns:1fr;gap:32px;}}
+.role-list{display:flex;flex-direction:column;}
+.role-row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(24,24,24,0.06);font-size:var(--fs-12);}
+.role-row:first-of-type{border-top:1px solid rgba(24,24,24,0.06);}
+.role-key{color:var(--grey-m);}
+.tools-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+.tool-tag{font-size:var(--fs-10);padding:6px 12px;border:1px solid rgba(24,24,24,0.15);color:var(--grey-m);transition:border-color .15s,color .15s;}
+.tool-tag:hover{border-color:var(--brand);color:var(--black);}
+
+/* ── FOOTER ── */
+footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:28px 40px;display:flex;align-items:center;justify-content:space-between;}
+.footer-copy{font-size:var(--fs-12);color:var(--grey-m);}
+.footer-copy span{color:var(--black);}
+.footer-socials{display:flex;gap:20px;align-items:center;}
+.social-link{color:var(--grey-m);transition:color .15s;display:flex;}
+.social-link:hover{color:var(--black);}
+
+/* ── PW MODAL ── */
+#pw-modal{position:fixed;inset:0;z-index:1000;background:rgba(24,24,24,0.4);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;}
+#pw-modal.active{display:flex;}
+#pw-inner{background:var(--white);padding:32px;width:360px;}
+.pw-title{font-family:'Press Start 2P',monospace;font-size:var(--fs-12);margin-bottom:12px;display:flex;align-items:center;}
+.pw-sub{font-size:var(--fs-10);color:var(--grey-m);margin-bottom:20px;line-height:1.6;}
+.pw-input{width:100%;height:44px;border:1px solid rgba(24,24,24,0.2);padding:0 12px;font-family:'DM Mono',monospace;font-size:var(--fs-12);outline:none;background:var(--white);transition:border-color .15s;}
+.pw-input:focus{border-color:var(--black);}
+.pw-input.error{border-color:var(--accent);}
+.pw-error{font-size:var(--fs-10);color:var(--accent);margin-top:8px;min-height:16px;}
+.pw-btns{display:flex;gap:8px;margin-top:16px;}
+.btn{font-family:'DM Mono',monospace;font-size:var(--fs-10);appearance:none;border:1px solid rgba(24,24,24,0.2);background:transparent;color:var(--black);cursor:none;letter-spacing:.04em;transition:background .15s,color .15s,border-color .15s;}
+.btn--sm{height:36px;padding:0 16px;}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:var(--black);}
+.btn.primary:hover{background:var(--effect1);border-color:var(--effect1);color:var(--white);}
+.btn:not(.primary):hover{background:var(--black);color:var(--white);border-color:var(--black);}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .5s ease-out,transform .5s ease-out;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* modal backdrop (env + char) */
+#popup-backdrop{position:fixed;inset:0;z-index:590;background:rgba(24,24,24,0.4);backdrop-filter:blur(4px);display:none;}
+#popup-backdrop.active{display:block;}
+</style>
+</head>
+<body>
+
+<div id="cur-dot"></div>
+<div id="cur-ring"></div>
+
+<!-- ══ HEADER ══ -->
+<header>
+  <a href="/" class="nav-logo">mialyk<span class="slash">//</span><sub>creative lead</sub></a>
+  <nav>
+    <div class="nav-item">
+      <a href="#" class="nav-link active">Projects</a>
+      <div class="nav-dropdown">
+        <a href="/helpurr.html" class="dropdown-item"><span class="dropdown-dot"></span>Helpurr</a>
+        <a href="#" class="dropdown-item dropdown-locked" onclick="showPasswordModal(event)">
+          <span class="dropdown-dot"></span>Le.social
+          <svg class="pxi pxi--sm" viewBox="0 0 24 24" fill="currentColor" style="margin-left:4px;opacity:.5">
+            <rect x="8" y="4" width="8" height="2"/><rect x="6" y="6" width="2" height="4"/><rect x="16" y="6" width="2" height="4"/><rect x="4" y="10" width="16" height="2"/><rect x="4" y="10" width="2" height="10"/><rect x="18" y="10" width="2" height="10"/><rect x="4" y="20" width="16" height="2"/><rect x="10" y="14" width="4" height="2"/><rect x="11" y="16" width="2" height="2"/>
+          </svg>
+        </a>
+        <a href="/ora.html" class="dropdown-item"><span class="dropdown-dot"></span>ORA</a>
+        <a href="/meed.html" class="dropdown-item"><span class="dropdown-dot"></span>Meed</a>
+        <a href="/debox.html" class="dropdown-item"><span class="dropdown-dot"></span>DeBox</a>
+        <a href="/cheddar.html" class="dropdown-item"><span class="dropdown-dot"></span>Cheddar Verse</a>
+        <a href="/illustration.html" class="dropdown-item"><span class="dropdown-dot"></span>Illustration</a>
+        <a href="/vfx.html" class="dropdown-item"><span class="dropdown-dot"></span>VFX</a>
+        <a href="/hamartia.html" class="dropdown-item active"><span class="dropdown-dot"></span>Hamartia <span style="font-size:10px;color:var(--grey-m)">Game</span></a>
+      </div>
+    </div>
+    <a href="/about.html" class="nav-link">About</a>
+  </nav>
+</header>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Game Project<span class="hero-year">2019</span></div>
+    <h1>HAM<span class="accent">ART</span>IA</h1>
+    <div class="hero-meta">
+      <div class="meta-item"><span class="meta-label">Type</span><span class="meta-value">2D Horror Survival Dialogue</span></div>
+      <div class="meta-item"><span class="meta-label">Role</span><span class="meta-value">Solo Developer</span></div>
+      <div class="meta-item"><span class="meta-label">Engine</span><span class="meta-value">RPG Maker</span></div>
+      <div class="meta-item"><span class="meta-label">Theme</span><span class="meta-value">School Violence · Survival</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div style="max-width:1200px;margin:0 auto;padding:0 40px;">
+  <div class="stats-row reveal">
+    <div class="stat-cell"><span class="stat-num">13</span><span class="stat-desc">Survivors trapped</span></div>
+    <div class="stat-cell"><span class="stat-num">01</span><span class="stat-desc">Initiator to find</span></div>
+    <div class="stat-cell"><span class="stat-num">2D</span><span class="stat-desc">Dialogue + mini-game</span></div>
+    <div class="stat-cell"><span class="stat-num">∞</span><span class="stat-desc">Paths of survival</span></div>
+  </div>
+</div>
+
+<!-- TICKER -->
+<div class="ticker-wrap reveal">
+  <div class="ticker-label">HAMARTIA</div>
+  <div class="ticker-track"><div class="ticker-inner">
+    <span class="ticker-item"><em>2D Horror Survival Dialogue</em><span class="ticker-sep"> · </span></span>
+    <span class="ticker-item">High-school culture festival<span class="ticker-sep"> · </span></span>
+    <span class="ticker-item"><em>13 survivors · 1 initiator · 0 mercy</em><span class="ticker-sep"> · </span></span>
+    <span class="ticker-item">Dialogue trees + mini-games<span class="ticker-sep"> · </span></span>
+    <span class="ticker-item">Asian communal culture &amp; school bullying<span class="ticker-sep"> · </span></span>
+    <span class="ticker-item"><em>Blood · Sacrifice · Survival</em><span class="ticker-sep"> · </span></span>
+    <span class="ticker-item">Solo developed · 2019<span class="ticker-sep"> · </span></span>
+    <span class="ticker-item">Humanity and survival — what will be real?<span class="ticker-sep"> · </span></span>
+    <!-- dupe -->
+    <span class="ticker-item"><em>2D Horror Survival Dialogue</em><span class="ticker-sep"> · </span></span>
+    <span class="ticker-item">High-school culture festival<span class="ticker-sep"> · </span></span>
+    <span class="ticker-item"><em>13 survivors · 1 initiator · 0 mercy</em><span class="ticker-sep"> · </span></span>
+    <span class="ticker-item">Dialogue trees + mini-games<span class="ticker-sep"> · </span></span>
+    <span class="ticker-item">Asian communal culture &amp; school bullying<span class="ticker-sep"> · </span></span>
+    <span class="ticker-item"><em>Blood · Sacrifice · Survival</em><span class="ticker-sep"> · </span></span>
+    <span class="ticker-item">Solo developed · 2019<span class="ticker-sep"> · </span></span>
+    <span class="ticker-item">Humanity and survival — what will be real?<span class="ticker-sep"> · </span></span>
+  </div></div>
+</div>
+
+<!-- ══ MAIN ══ -->
+<div class="psection">
+  <div class="slabel">Project Demo</div>
+
+  <!-- STREAMER UI -->
+  <div class="streamer-ui reveal">
+    <!-- PLAYER -->
+    <div class="player-panel">
+      <div class="win-bar">
+        <span>hamartia_trailer.mp4</span>
+        <div class="win-controls">
+          <div class="win-btn">─</div><div class="win-btn">□</div><div class="win-btn">✕</div>
+        </div>
+      </div>
+      <div class="menu-bar">
+        <span class="menu-item">File</span><span class="menu-item">Edit</span><span class="menu-item">View</span><span class="menu-item">Playback</span><span class="menu-item">Tools</span>
+      </div>
+      <div class="video-area">
+        <div class="live-badge"><div class="live-dot"></div>LIVE</div>
+        <div class="video-content">
+          <svg width="280" height="170" viewBox="0 0 280 170" style="image-rendering:pixelated;opacity:.7;">
+            <rect width="280" height="170" fill="#080808"/>
+            <rect x="22" y="8" width="2" height="2" fill="#fff" opacity=".35"/>
+            <rect x="70" y="16" width="2" height="2" fill="#fff" opacity=".25"/>
+            <rect x="120" y="6" width="2" height="2" fill="#fff" opacity=".4"/>
+            <rect x="180" y="14" width="2" height="2" fill="#fff" opacity=".3"/>
+            <rect x="240" y="10" width="2" height="2" fill="#fff" opacity=".35"/>
+            <rect x="90" y="28" width="2" height="2" fill="#fff" opacity=".2"/>
+            <rect x="200" y="24" width="2" height="2" fill="#fff" opacity=".25"/>
+            <rect x="250" y="18" width="10" height="10" fill="#C8D0D2" opacity=".6"/>
+            <rect x="252" y="18" width="3" height="3" fill="#080808" opacity=".6"/>
+            <rect x="10" y="72" width="260" height="78" fill="#181818"/>
+            <rect x="10" y="68" width="260" height="6" fill="#222"/>
+            <rect x="10" y="62" width="260" height="8" fill="#1A1A1A"/>
+            <rect x="22" y="80" width="22" height="16" fill="#FF4444" opacity=".55"/>
+            <rect x="52" y="80" width="22" height="16" fill="#1A1A1A"/>
+            <rect x="82" y="80" width="22" height="16" fill="#FF4444" opacity=".2"/>
+            <rect x="112" y="80" width="22" height="16" fill="#1A1A1A"/>
+            <rect x="142" y="80" width="22" height="16" fill="#FF4444" opacity=".8"/>
+            <rect x="172" y="80" width="22" height="16" fill="#1A1A1A"/>
+            <rect x="202" y="80" width="22" height="16" fill="#FF4444" opacity=".4"/>
+            <rect x="232" y="80" width="22" height="16" fill="#1A1A1A"/>
+            <rect x="118" y="106" width="44" height="44" fill="#0D0D0D"/>
+            <rect x="126" y="114" width="8" height="8" fill="#222"/>
+            <rect x="146" y="114" width="8" height="8" fill="#222"/>
+            <rect x="72" y="143" width="4" height="4" fill="#FF4444" opacity=".85"/>
+            <rect x="84" y="141" width="7" height="2" fill="#FF4444" opacity=".65"/>
+            <rect x="100" y="144" width="4" height="4" fill="#FF4444" opacity=".9"/>
+            <rect x="150" y="142" width="10" height="2" fill="#FF4444" opacity=".7"/>
+            <rect x="190" y="143" width="5" height="4" fill="#FF4444" opacity=".6"/>
+            <rect x="0" y="148" width="280" height="22" fill="#0C0C0C"/>
+            <rect x="0" y="146" width="280" height="4" fill="#161616"/>
+          </svg>
+        </div>
+        <div class="video-overlay">
+          <div class="video-title-px">CULTURE FESTIVAL — DAY 01</div>
+          <div class="video-sub-px">Hamartia · Game Trailer · 2019</div>
+        </div>
+      </div>
+      <div class="ctrl-bar">
+        <span class="ctrl-btn">⏮</span>
+        <span class="ctrl-btn" id="play-btn">▶</span>
+        <span class="ctrl-btn">⏭</span>
+        <div class="progress-bar"><div class="progress-fill" id="pfill"></div><div class="progress-head" id="phead"></div></div>
+        <span class="time-lbl">00:35 / 01:42</span>
+        <span class="ctrl-btn">🔊</span>
+      </div>
+      <div class="ch-bar">
+        <div><div class="ch-name">HAMARTIA</div><div class="ch-sub">mialyk · 2019 · Horror Survival</div></div>
+        <div><span class="viewer-num">2,599</span><span class="viewer-lbl">watching</span></div>
+      </div>
+    </div>
+
+    <!-- CHAT -->
+    <div class="chat-panel">
+      <div class="win-bar"><span>Live Chat</span><div class="win-controls"><div class="win-btn">─</div><div class="win-btn">✕</div></div></div>
+      <div class="chat-topbar"><div class="chat-dot"></div><span class="chat-lbl">LIVE CHAT</span></div>
+      <div class="chat-messages"><div class="chat-scroll" id="chat-scroll">
+        <div class="chat-msg hl"><span class="chat-user u1">ghost_✦</span><span class="chat-text">pixel art is <em>insane</em></span></div>
+        <div class="chat-msg"><span class="chat-user u2">yuki99</span><span class="chat-text">who is the initiator??</span></div>
+        <div class="chat-msg"><span class="chat-user u3">anon_404</span><span class="chat-text"><em>so unsettling</em> love it</span></div>
+        <div class="chat-msg"><span class="chat-user u4">nxr_m</span><span class="chat-text">school bg gorgeous 😭</span></div>
+        <div class="chat-msg"><span class="chat-user u5">sleepy✦</span><span class="chat-text">RPG Maker never looked this good</span></div>
+        <div class="chat-msg hl"><span class="chat-user u1">ghost_✦</span><span class="chat-text">13 chars all hand drawn?!</span></div>
+        <div class="chat-msg"><span class="chat-user u6">red_thr</span><span class="chat-text"><em>blood festival vibes</em> omg</span></div>
+        <div class="chat-msg"><span class="chat-user u2">yuki99</span><span class="chat-text">played demo 3x already</span></div>
+        <div class="chat-msg"><span class="chat-user u3">anon_404</span><span class="chat-text">solo dev?? respect 🙏</span></div>
+        <div class="chat-msg"><span class="chat-user u4">nxr_m</span><span class="chat-text">char design 🤌</span></div>
+        <div class="chat-msg hl"><span class="chat-user u5">sleepy✦</span><span class="chat-text">cannot figure out who did it</span></div>
+        <div class="chat-msg"><span class="chat-user u1">ghost_✦</span><span class="chat-text">radio mechanic so clever</span></div>
+        <div class="chat-msg"><span class="chat-user u2">yuki99</span><span class="chat-text">hits different after midnight</span></div>
+        <div class="chat-msg"><span class="chat-user u6">red_thr</span><span class="chat-text"><em>humanity vs survival</em> 💀</span></div>
+        <div class="chat-msg"><span class="chat-user u3">anon_404</span><span class="chat-text">bullying theme is so real</span></div>
+        <div class="chat-msg"><span class="chat-user u4">nxr_m</span><span class="chat-text">full release when??</span></div>
+      </div></div>
+      <div class="chat-foot">
+        <input class="chat-input" type="text" placeholder="Send a comment..." readonly>
+        <button class="chat-send">▶</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ ART TRIGGER BUTTONS ══ -->
+  <div class="art-triggers reveal">
+
+    <!-- ENV TRIGGER -->
+    <button class="art-trigger-btn" onclick="openEnv()">
+      <div class="atb-bar">
+        <span class="atb-title">environment_art.exe</span>
+        <span class="atb-open">Open ↗</span>
+      </div>
+      <div class="atb-preview">
+        <svg width="240" height="100" viewBox="0 0 240 100" style="image-rendering:pixelated;opacity:.8;">
+          <rect width="240" height="100" fill="#0A0A0A"/>
+          <rect x="10" y="30" width="220" height="55" fill="#181818"/>
+          <rect x="10" y="27" width="220" height="5" fill="#222"/>
+          <rect x="20" y="38" width="18" height="12" fill="#FF4444" opacity=".5"/>
+          <rect x="46" y="38" width="18" height="12" fill="#111"/>
+          <rect x="72" y="38" width="18" height="12" fill="#FF4444" opacity=".25"/>
+          <rect x="98" y="38" width="18" height="12" fill="#111"/>
+          <rect x="124" y="38" width="18" height="12" fill="#FF4444" opacity=".7"/>
+          <rect x="150" y="38" width="18" height="12" fill="#111"/>
+          <rect x="176" y="38" width="18" height="12" fill="#FF4444" opacity=".35"/>
+          <rect x="100" y="58" width="40" height="27" fill="#0D0D0D"/>
+          <rect x="0" y="82" width="240" height="18" fill="#0C0C0C"/>
+          <rect x="50" y="78" width="4" height="4" fill="#FF4444" opacity=".8"/>
+          <rect x="130" y="79" width="6" height="2" fill="#FF4444" opacity=".6"/>
+          <!-- location dots -->
+          <rect x="108" y="68" width="4" height="4" fill="#FFB742" opacity=".9"/>
+          <rect x="52" y="44" width="4" height="4" fill="#FFB742" opacity=".6"/>
+          <rect x="30" y="70" width="4" height="4" fill="#FFB742" opacity=".5"/>
+          <rect x="185" y="42" width="4" height="4" fill="#FFB742" opacity=".7"/>
+          <rect x="160" y="72" width="4" height="4" fill="#FFB742" opacity=".55"/>
+          <rect x="72" y="38" width="4" height="4" fill="#FFB742" opacity=".65"/>
+        </svg>
+      </div>
+      <div class="atb-footer">
+        <span class="atb-desc">6 locations · Interactive map</span>
+        <span class="atb-tag">ENV</span>
+      </div>
+    </button>
+
+    <!-- CHAR TRIGGER -->
+    <button class="art-trigger-btn" onclick="openChar()">
+      <div class="atb-bar">
+        <span class="atb-title">character_select.exe</span>
+        <span class="atb-open">Open ↗</span>
+      </div>
+      <div class="atb-preview">
+        <!-- 13 mini character icons preview -->
+        <svg width="240" height="100" viewBox="0 0 240 100" style="image-rendering:pixelated;opacity:.8;">
+          <rect width="240" height="100" fill="#0A0A0A"/>
+          <rect x="10" y="20" width="220" height="60" fill="#111"/>
+          <!-- 13 char icons in a row -->
+          <rect x="16" y="28" width="14" height="14" fill="#222"/><rect x="17" y="29" width="12" height="8" fill="#333"/><rect x="20" y="33" width="2" height="2" fill="#FFB742"/>
+          <rect x="34" y="28" width="14" height="14" fill="#222"/><rect x="35" y="29" width="12" height="8" fill="#2a1a1a"/><rect x="38" y="33" width="2" height="2" fill="#FF4444"/>
+          <rect x="52" y="28" width="14" height="14" fill="#222"/><rect x="53" y="29" width="12" height="8" fill="#1a2a1a"/><rect x="56" y="33" width="2" height="2" fill="#88888C"/>
+          <rect x="70" y="28" width="14" height="14" fill="#222"/><rect x="71" y="29" width="12" height="8" fill="#1a1a2a"/><rect x="74" y="33" width="2" height="2" fill="#A8B0B2"/>
+          <rect x="88" y="28" width="14" height="14" fill="#222"/><rect x="89" y="29" width="12" height="8" fill="#2a2a1a"/><rect x="92" y="33" width="2" height="2" fill="#FFB742"/>
+          <rect x="106" y="28" width="14" height="14" fill="#FFB742" opacity=".15"/><rect x="107" y="29" width="12" height="8" fill="#333"/><rect x="110" y="33" width="2" height="2" fill="#FFB742"/>
+          <rect x="124" y="28" width="14" height="14" fill="#222"/><rect x="125" y="29" width="12" height="8" fill="#2a1a2a"/><rect x="128" y="33" width="2" height="2" fill="#FF4444"/>
+          <rect x="16" y="50" width="14" height="14" fill="#222"/><rect x="17" y="51" width="12" height="8" fill="#1a2a2a"/>
+          <rect x="34" y="50" width="14" height="14" fill="#222"/><rect x="35" y="51" width="12" height="8" fill="#2a1a1a"/>
+          <rect x="52" y="50" width="14" height="14" fill="#222"/><rect x="53" y="51" width="12" height="8" fill="#111"/>
+          <rect x="70" y="50" width="14" height="14" fill="#222"/><rect x="71" y="51" width="12" height="8" fill="#1a1a1a"/>
+          <rect x="88" y="50" width="14" height="14" fill="#222"/><rect x="89" y="51" width="12" height="8" fill="#2a2a1a"/>
+          <rect x="106" y="50" width="14" height="14" fill="#222"/><rect x="107" y="51" width="12" height="8" fill="#1a2a1a"/>
+          <!-- big char preview area -->
+          <rect x="148" y="20" width="82" height="60" fill="#0D0D0D"/>
+          <rect x="148" y="20" width="82" height="60" fill="#111"/>
+          <rect x="168" y="30" width="42" height="50" fill="#1A1A1A"/>
+          <rect x="176" y="32" width="26" height="30" fill="#222"/>
+          <rect x="181" y="36" width="4" height="4" fill="#A8B0B2" opacity=".4"/>
+          <rect x="191" y="36" width="4" height="4" fill="#A8B0B2" opacity=".4"/>
+        </svg>
+      </div>
+      <div class="atb-footer">
+        <span class="atb-desc">13 survivors · Character select</span>
+        <span class="atb-tag">CHAR</span>
+      </div>
+    </button>
+  </div>
+
+  <!-- CREDITS -->
+  <div class="credits-grid reveal">
+    <div>
+      <div class="slabel">Credits</div>
+      <div class="role-list">
+        <div class="role-row"><span class="role-key">Concept &amp; Direction</span><span>mialyk</span></div>
+        <div class="role-row"><span class="role-key">Character Design</span><span>mialyk</span></div>
+        <div class="role-row"><span class="role-key">Location / Environment</span><span>mialyk</span></div>
+        <div class="role-row"><span class="role-key">Narrative &amp; Dialogue</span><span>mialyk</span></div>
+        <div class="role-row"><span class="role-key">Game Development</span><span>mialyk</span></div>
+        <div class="role-row"><span class="role-key">Year</span><span>2019</span></div>
+        <div class="role-row"><span class="role-key">Platform</span><span>itch.io</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="slabel">Tools</div>
+      <div class="tools-grid">
+        <span class="tool-tag">RPG Maker</span>
+        <span class="tool-tag">Photoshop</span>
+        <span class="tool-tag">Illustrator</span>
+        <span class="tool-tag">Aseprite</span>
+        <span class="tool-tag">Clip Studio Paint</span>
+        <span class="tool-tag">Audacity</span>
+      </div>
+    </div>
+  </div>
+</div><!-- /psection -->
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-copy">© 2026 <span>mialyk</span> — All rights reserved</div>
+  <div class="footer-socials">
+    <a href="https://www.linkedin.com/in/mia-lyk" target="_blank" class="social-link" title="LinkedIn"><svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+    <a href="https://www.instagram.com/mia_lyk" target="_blank" class="social-link" title="Instagram"><svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></a>
+    <a href="https://www.artstation.com/mialyk" target="_blank" class="social-link" title="ArtStation"><svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor"><path d="M0 17.723l2.027 3.505h.001a2.424 2.424 0 0 0 2.164 1.333h13.457l-2.792-4.838H0zm24 .025c0-.484-.143-.935-.388-1.314L15.728 2.728a2.424 2.424 0 0 0-2.164-1.333H9.419L21.598 22.54l1.92-3.325c.378-.637.482-.919.482-1.467zm-11.129-3.462L7.428 4.858l-5.444 9.428h10.887z"/></svg></a>
+    <a href="https://x.com/elwgrich/" target="_blank" class="social-link" title="X"><svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.213 5.567 5.95-5.567zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+  </div>
+</footer>
+
+<!-- ══ BACKDROP ══ -->
+<div id="popup-backdrop" onclick="closeAllPopups()"></div>
+
+<!-- ══ ENVIRONMENT POPUP ══ -->
+<div class="dw" id="env-popup">
+  <div class="dw-bar" id="env-drag">
+    <span class="dw-title">environment_art.exe</span>
+    <div class="dw-controls">
+      <div class="dw-btn" onclick="closeEnv()">─</div>
+      <div class="dw-btn" onclick="closeEnv()">✕</div>
+    </div>
+  </div>
+  <div class="env-inner">
+    <!-- Location list -->
+    <div class="loc-list">
+      <div class="loc-item active" onclick="selectLoc(0,this)">
+        <div class="loc-dot"></div>
+        <span class="loc-name">School Gate</span>
+        <span class="loc-sub">Main Entrance</span>
+      </div>
+      <div class="loc-item" onclick="selectLoc(1,this)">
+        <div class="loc-dot"></div>
+        <span class="loc-name">Playground</span>
+        <span class="loc-sub">Sports Court</span>
+      </div>
+      <div class="loc-item" onclick="selectLoc(2,this)">
+        <div class="loc-dot"></div>
+        <span class="loc-name">School Exterior</span>
+        <span class="loc-sub">Outside Wall</span>
+      </div>
+      <div class="loc-item" onclick="selectLoc(3,this)">
+        <div class="loc-dot"></div>
+        <span class="loc-name">Student Council</span>
+        <span class="loc-sub">President's Office</span>
+      </div>
+      <div class="loc-item" onclick="selectLoc(4,this)">
+        <div class="loc-dot"></div>
+        <span class="loc-name">Mystery Club</span>
+        <span class="loc-sub">Forbidden Room</span>
+      </div>
+      <div class="loc-item" onclick="selectLoc(5,this)">
+        <div class="loc-dot"></div>
+        <span class="loc-name">F5 Corridor</span>
+        <span class="loc-sub">5th Floor Hall</span>
+      </div>
+    </div>
+    <!-- Display area -->
+    <div class="env-display" id="env-display">
+      <div class="env-counter" id="env-counter">01 / 06</div>
+
+      <!-- Each location placeholder art (swap img tags for real images) -->
+      <!-- LOC 0: 學校大門 -->
+      <div class="loc-art active" id="loc-art-0">
+        <svg width="100%" height="100%" viewBox="0 0 540 500" preserveAspectRatio="xMidYMid slice" style="image-rendering:pixelated;">
+          <rect width="540" height="500" fill="#080808"/>
+          <!-- gate silhouette -->
+          <rect x="190" y="120" width="160" height="260" fill="#141414"/>
+          <rect x="190" y="110" width="160" height="16" fill="#1E1E1E"/>
+          <rect x="220" y="100" width="100" height="14" fill="#252525"/>
+          <rect x="240" y="88" width="60" height="14" fill="#2a2a2a"/>
+          <!-- gate pillars -->
+          <rect x="185" y="120" width="20" height="270" fill="#1A1A1A"/>
+          <rect x="335" y="120" width="20" height="270" fill="#1A1A1A"/>
+          <!-- gate doors -->
+          <rect x="208" y="135" width="60" height="230" fill="#111"/>
+          <rect x="272" y="135" width="60" height="230" fill="#111"/>
+          <!-- gate bars -->
+          <rect x="213" y="140" width="4" height="220" fill="#1C1C1C"/>
+          <rect x="223" y="140" width="4" height="220" fill="#1C1C1C"/>
+          <rect x="233" y="140" width="4" height="220" fill="#1C1C1C"/>
+          <rect x="243" y="140" width="4" height="220" fill="#1C1C1C"/>
+          <rect x="253" y="140" width="4" height="220" fill="#1C1C1C"/>
+          <rect x="277" y="140" width="4" height="220" fill="#1C1C1C"/>
+          <rect x="287" y="140" width="4" height="220" fill="#1C1C1C"/>
+          <rect x="297" y="140" width="4" height="220" fill="#1C1C1C"/>
+          <rect x="307" y="140" width="4" height="220" fill="#1C1C1C"/>
+          <rect x="317" y="140" width="4" height="220" fill="#1C1C1C"/>
+          <!-- name plate -->
+          <rect x="220" y="220" width="100" height="40" fill="#1A1A1A"/>
+          <rect x="225" y="224" width="90" height="32" fill="#111"/>
+          <!-- blood drip -->
+          <rect x="256" y="220" width="4" height="30" fill="#FF4444" opacity=".6"/>
+          <rect x="270" y="220" width="4" height="20" fill="#FF4444" opacity=".4"/>
+          <!-- ground -->
+          <rect x="0" y="380" width="540" height="120" fill="#0C0C0C"/>
+          <rect x="0" y="376" width="540" height="6" fill="#141414"/>
+          <!-- blood pool -->
+          <rect x="200" y="378" width="140" height="6" fill="#FF4444" opacity=".3"/>
+          <!-- stars -->
+          <rect x="30" y="20" width="2" height="2" fill="#fff" opacity=".3"/>
+          <rect x="80" y="40" width="2" height="2" fill="#fff" opacity=".2"/>
+          <rect x="420" y="15" width="2" height="2" fill="#fff" opacity=".35"/>
+          <rect x="500" y="50" width="2" height="2" fill="#fff" opacity=".25"/>
+          <rect x="150" y="35" width="2" height="2" fill="#fff" opacity=".2"/>
+          <!-- school text accent -->
+          <rect x="228" y="228" width="6" height="2" fill="#FF4444" opacity=".5"/>
+          <rect x="240" y="228" width="6" height="2" fill="#FF4444" opacity=".5"/>
+          <rect x="252" y="228" width="6" height="2" fill="#FF4444" opacity=".5"/>
+        </svg>
+      </div>
+
+      <!-- LOC 1: 操場 -->
+      <div class="loc-art" id="loc-art-1">
+        <svg width="100%" height="100%" viewBox="0 0 540 500" preserveAspectRatio="xMidYMid slice" style="image-rendering:pixelated;">
+          <rect width="540" height="500" fill="#080808"/>
+          <!-- ground / court -->
+          <rect x="0" y="300" width="540" height="200" fill="#0E0E0E"/>
+          <rect x="0" y="296" width="540" height="6" fill="#161616"/>
+          <!-- court markings -->
+          <rect x="100" y="300" width="2" height="180" fill="#1A1A1A"/>
+          <rect x="440" y="300" width="2" height="180" fill="#1A1A1A"/>
+          <rect x="100" y="380" width="340" height="2" fill="#1A1A1A"/>
+          <rect x="260" y="300" width="2" height="180" fill="#1A1A1A"/>
+          <!-- circle -->
+          <rect x="240" y="378" width="20" height="4" fill="#1A1A1A"/>
+          <rect x="256" y="374" width="4" height="4" fill="#1A1A1A"/>
+          <rect x="280" y="374" width="4" height="4" fill="#1A1A1A"/>
+          <!-- goal posts -->
+          <rect x="110" y="240" width="6" height="70" fill="#1E1E1E"/>
+          <rect x="70" y="240" width="50" height="6" fill="#1E1E1E"/>
+          <rect x="70" y="240" width="6" height="60" fill="#1E1E1E"/>
+          <rect x="424" y="240" width="6" height="70" fill="#1E1E1E"/>
+          <rect x="424" y="240" width="50" height="6" fill="#1E1E1E"/>
+          <rect x="468" y="240" width="6" height="60" fill="#1E1E1E"/>
+          <!-- school building back -->
+          <rect x="60" y="100" width="420" height="200" fill="#121212"/>
+          <rect x="60" y="96" width="420" height="6" fill="#1A1A1A"/>
+          <!-- windows -->
+          <rect x="80" y="115" width="18" height="14" fill="#1E1E1E"/>
+          <rect x="110" y="115" width="18" height="14" fill="#FF4444" opacity=".3"/>
+          <rect x="140" y="115" width="18" height="14" fill="#1E1E1E"/>
+          <rect x="170" y="115" width="18" height="14" fill="#1E1E1E"/>
+          <rect x="200" y="115" width="18" height="14" fill="#FF4444" opacity=".5"/>
+          <rect x="230" y="115" width="18" height="14" fill="#1E1E1E"/>
+          <rect x="320" y="115" width="18" height="14" fill="#1E1E1E"/>
+          <rect x="350" y="115" width="18" height="14" fill="#FF4444" opacity=".2"/>
+          <rect x="380" y="115" width="18" height="14" fill="#1E1E1E"/>
+          <rect x="410" y="115" width="18" height="14" fill="#1E1E1E"/>
+          <rect x="440" y="115" width="18" height="14" fill="#FF4444" opacity=".6"/>
+          <!-- blood on court -->
+          <rect x="200" y="305" width="40" height="4" fill="#FF4444" opacity=".4"/>
+          <rect x="280" y="310" width="20" height="4" fill="#FF4444" opacity=".3"/>
+          <rect x="150" y="320" width="8" height="8" fill="#FF4444" opacity=".5"/>
+          <!-- stars -->
+          <rect x="40" y="20" width="2" height="2" fill="#fff" opacity=".3"/>
+          <rect x="480" y="30" width="2" height="2" fill="#fff" opacity=".25"/>
+        </svg>
+      </div>
+
+      <!-- LOC 2: 學校外 -->
+      <div class="loc-art" id="loc-art-2">
+        <svg width="100%" height="100%" viewBox="0 0 540 500" preserveAspectRatio="xMidYMid slice" style="image-rendering:pixelated;">
+          <rect width="540" height="500" fill="#060608"/>
+          <!-- sky buildings behind -->
+          <rect x="0" y="150" width="80" height="230" fill="#0E0E10"/>
+          <rect x="20" y="120" width="40" height="30" fill="#0E0E10"/>
+          <rect x="460" y="130" width="80" height="250" fill="#0E0E10"/>
+          <rect x="470" y="100" width="50" height="32" fill="#0E0E10"/>
+          <!-- city lights in back buildings -->
+          <rect x="28" y="135" width="6" height="5" fill="#FFB742" opacity=".25"/>
+          <rect x="40" y="145" width="6" height="5" fill="#FFB742" opacity=".2"/>
+          <rect x="475" y="120" width="6" height="5" fill="#FFB742" opacity=".3"/>
+          <rect x="492" y="140" width="6" height="5" fill="#FFB742" opacity=".2"/>
+          <!-- main school exterior wall -->
+          <rect x="80" y="140" width="380" height="250" fill="#141416"/>
+          <rect x="80" y="136" width="380" height="6" fill="#1C1C1E"/>
+          <!-- windows large -->
+          <rect x="100" y="160" width="50" height="60" fill="#0D0D0D"/>
+          <rect x="164" y="160" width="50" height="60" fill="#FF4444" opacity=".15"/>
+          <rect x="228" y="160" width="50" height="60" fill="#0D0D0D"/>
+          <rect x="292" y="160" width="50" height="60" fill="#FF4444" opacity=".35"/>
+          <rect x="356" y="160" width="50" height="60" fill="#0D0D0D"/>
+          <!-- window row 2 -->
+          <rect x="100" y="240" width="50" height="60" fill="#FF4444" opacity=".08"/>
+          <rect x="164" y="240" width="50" height="60" fill="#0D0D0D"/>
+          <rect x="228" y="240" width="50" height="60" fill="#0D0D0D"/>
+          <rect x="292" y="240" width="50" height="60" fill="#FF4444" opacity=".2"/>
+          <rect x="356" y="240" width="50" height="60" fill="#0D0D0D"/>
+          <!-- main door -->
+          <rect x="226" y="310" width="88" height="80" fill="#0A0A0A"/>
+          <rect x="234" y="318" width="34" height="70" fill="#0D0D0D"/>
+          <rect x="272" y="318" width="34" height="70" fill="#0D0D0D"/>
+          <!-- sidewalk -->
+          <rect x="0" y="388" width="540" height="112" fill="#0C0C0C"/>
+          <rect x="0" y="384" width="540" height="6" fill="#141414"/>
+          <!-- blood trail leading in -->
+          <rect x="230" y="386" width="80" height="4" fill="#FF4444" opacity=".4"/>
+          <rect x="240" y="382" width="60" height="6" fill="#FF4444" opacity=".25"/>
+          <rect x="252" y="370" width="36" height="14" fill="#FF4444" opacity=".15"/>
+          <!-- moon -->
+          <rect x="480" y="30" width="14" height="14" fill="#C0C8CA" opacity=".6"/>
+          <rect x="484" y="30" width="4" height="4" fill="#060608" opacity=".6"/>
+          <!-- stars -->
+          <rect x="60" y="20" width="2" height="2" fill="#fff" opacity=".3"/>
+          <rect x="200" y="35" width="2" height="2" fill="#fff" opacity=".2"/>
+          <rect x="350" y="18" width="2" height="2" fill="#fff" opacity=".35"/>
+        </svg>
+      </div>
+
+      <!-- LOC 3: 學生會長室 -->
+      <div class="loc-art" id="loc-art-3">
+        <svg width="100%" height="100%" viewBox="0 0 540 500" preserveAspectRatio="xMidYMid slice" style="image-rendering:pixelated;">
+          <rect width="540" height="500" fill="#0A0A08"/>
+          <!-- room walls floor -->
+          <rect x="60" y="80" width="420" height="320" fill="#141412"/>
+          <!-- floor -->
+          <rect x="60" y="360" width="420" height="40" fill="#111110"/>
+          <!-- floor tiles -->
+          <rect x="60" y="360" width="420" height="1" fill="#1A1A18"/>
+          <rect x="60" y="370" width="420" height="1" fill="#1A1A18"/>
+          <rect x="60" y="380" width="420" height="1" fill="#1A1A18"/>
+          <rect x="120" y="360" width="1" height="40" fill="#1A1A18"/>
+          <rect x="180" y="360" width="1" height="40" fill="#1A1A18"/>
+          <rect x="240" y="360" width="1" height="40" fill="#1A1A18"/>
+          <rect x="300" y="360" width="1" height="40" fill="#1A1A18"/>
+          <rect x="360" y="360" width="1" height="40" fill="#1A1A18"/>
+          <rect x="420" y="360" width="1" height="40" fill="#1A1A18"/>
+          <!-- big desk -->
+          <rect x="160" y="260" width="220" height="80" fill="#1C1C1A"/>
+          <rect x="160" y="256" width="220" height="6" fill="#242420"/>
+          <!-- desk items: nameplate, papers -->
+          <rect x="200" y="266" width="80" height="16" fill="#111"/>
+          <rect x="204" y="268" width="72" height="12" fill="#191917"/>
+          <rect x="350" y="264" width="20" height="30" fill="#111"/>
+          <rect x="352" y="266" width="16" height="26" fill="#161614"/>
+          <rect x="170" y="270" width="24" height="4" fill="#FF4444" opacity=".3"/>
+          <rect x="170" y="276" width="16" height="4" fill="#FF4444" opacity=".2"/>
+          <!-- president chair -->
+          <rect x="236" y="180" width="68" height="90" fill="#1A1A18"/>
+          <rect x="236" y="176" width="68" height="8" fill="#222220"/>
+          <rect x="240" y="190" width="60" height="60" fill="#161614"/>
+          <!-- bookshelf left -->
+          <rect x="70" y="90" width="60" height="270" fill="#171714"/>
+          <rect x="74" y="96" width="52" height="18" fill="#111"/>
+          <rect x="74" y="120" width="52" height="18" fill="#111"/>
+          <rect x="74" y="144" width="52" height="18" fill="#111"/>
+          <rect x="74" y="168" width="52" height="18" fill="#FF4444" opacity=".2"/>
+          <rect x="74" y="192" width="52" height="18" fill="#111"/>
+          <rect x="74" y="216" width="52" height="18" fill="#111"/>
+          <rect x="74" y="240" width="52" height="18" fill="#FF4444" opacity=".15"/>
+          <!-- notice board -->
+          <rect x="350" y="90" width="110" height="150" fill="#1A1814"/>
+          <rect x="355" y="95" width="100" height="140" fill="#141210"/>
+          <!-- notices with red -->
+          <rect x="360" y="100" width="40" height="28" fill="#111"/>
+          <rect x="360" y="102" width="40" height="2" fill="#FF4444" opacity=".5"/>
+          <rect x="406" y="100" width="40" height="28" fill="#111"/>
+          <rect x="360" y="136" width="40" height="28" fill="#111"/>
+          <rect x="406" y="136" width="40" height="28" fill="#111"/>
+          <rect x="406" y="138" width="40" height="2" fill="#FF4444" opacity=".4"/>
+          <rect x="360" y="172" width="86" height="14" fill="#FF4444" opacity=".15"/>
+          <!-- blood on desk -->
+          <rect x="260" y="256" width="30" height="4" fill="#FF4444" opacity=".5"/>
+          <rect x="270" y="252" width="10" height="6" fill="#FF4444" opacity=".35"/>
+        </svg>
+      </div>
+
+      <!-- LOC 4: 神秘社 -->
+      <div class="loc-art" id="loc-art-4">
+        <svg width="100%" height="100%" viewBox="0 0 540 500" preserveAspectRatio="xMidYMid slice" style="image-rendering:pixelated;">
+          <rect width="540" height="500" fill="#080808"/>
+          <!-- dark room -->
+          <rect x="40" y="60" width="460" height="360" fill="#0D0D0D"/>
+          <!-- occult circle on floor -->
+          <rect x="0" y="380" width="540" height="120" fill="#0C0C0C"/>
+          <rect x="195" y="350" width="150" height="2" fill="#FF4444" opacity=".4"/>
+          <rect x="265" y="280" width="2" height="72" fill="#FF4444" opacity=".4"/>
+          <rect x="210" y="295" width="100" height="2" fill="#FF4444" opacity=".3"/>
+          <rect x="215" y="320" width="4" height="4" fill="#FF4444" opacity=".6"/>
+          <rect x="315" y="320" width="4" height="4" fill="#FF4444" opacity=".6"/>
+          <rect x="265" y="280" width="4" height="4" fill="#FF4444" opacity=".7"/>
+          <rect x="240" y="336" width="4" height="4" fill="#FF4444" opacity=".5"/>
+          <rect x="290" y="336" width="4" height="4" fill="#FF4444" opacity=".5"/>
+          <!-- altar table -->
+          <rect x="190" y="220" width="160" height="60" fill="#141414"/>
+          <rect x="190" y="216" width="160" height="6" fill="#1C1C1C"/>
+          <!-- candles -->
+          <rect x="205" y="190" width="8" height="30" fill="#1E1E1E"/>
+          <rect x="207" y="186" width="4" height="6" fill="#FFB742" opacity=".8"/>
+          <rect x="206" y="182" width="6" height="6" fill="#FFB742" opacity=".3"/>
+          <rect x="345" y="190" width="8" height="30" fill="#1E1E1E"/>
+          <rect x="347" y="186" width="4" height="6" fill="#FFB742" opacity=".8"/>
+          <rect x="346" y="182" width="6" height="6" fill="#FFB742" opacity=".3"/>
+          <rect x="265" y="185" width="8" height="35" fill="#1E1E1E"/>
+          <rect x="267" y="181" width="4" height="6" fill="#FFB742" opacity=".9"/>
+          <rect x="266" y="177" width="6" height="6" fill="#FFB742" opacity=".4"/>
+          <!-- book on altar -->
+          <rect x="242" y="222" width="56" height="40" fill="#111"/>
+          <rect x="248" y="226" width="44" height="32" fill="#0D0D0D"/>
+          <rect x="250" y="230" width="40" height="2" fill="#FF4444" opacity=".4"/>
+          <rect x="250" y="236" width="40" height="2" fill="#FF4444" opacity=".3"/>
+          <rect x="250" y="242" width="30" height="2" fill="#FF4444" opacity=".25"/>
+          <!-- pentagrams on wall -->
+          <rect x="80" y="100" width="60" height="60" fill="#111"/>
+          <rect x="100" y="120" width="20" height="2" fill="#FF4444" opacity=".5"/>
+          <rect x="105" y="108" width="10" height="24" fill="#FF4444" opacity=".4"/>
+          <rect x="88" y="118" width="24" height="10" fill="#FF4444" opacity=".35"/>
+          <rect x="400" y="100" width="60" height="60" fill="#111"/>
+          <rect x="420" y="120" width="20" height="2" fill="#FF4444" opacity=".5"/>
+          <rect x="425" y="108" width="10" height="24" fill="#FF4444" opacity=".4"/>
+          <rect x="408" y="118" width="24" height="10" fill="#FF4444" opacity=".35"/>
+          <!-- ambient candle light -->
+          <rect x="0" y="0" width="540" height="500" fill="#FF4444" opacity=".015"/>
+        </svg>
+      </div>
+
+      <!-- LOC 5: F5走廊 -->
+      <div class="loc-art" id="loc-art-5">
+        <svg width="100%" height="100%" viewBox="0 0 540 500" preserveAspectRatio="xMidYMid slice" style="image-rendering:pixelated;">
+          <rect width="540" height="500" fill="#070707"/>
+          <!-- corridor perspective -->
+          <!-- floor -->
+          <rect x="0" y="350" width="540" height="150" fill="#0C0C0C"/>
+          <rect x="0" y="346" width="540" height="6" fill="#141414"/>
+          <!-- floor tiles perspective -->
+          <rect x="0" y="360" width="540" height="1" fill="#141414"/>
+          <rect x="0" y="380" width="540" height="1" fill="#141414"/>
+          <rect x="0" y="400" width="540" height="1" fill="#141414"/>
+          <rect x="0" y="420" width="540" height="1" fill="#141414"/>
+          <rect x="0" y="440" width="540" height="1" fill="#141414"/>
+          <!-- perspective lines -->
+          <rect x="80" y="350" width="1" height="150" fill="#141414"/>
+          <rect x="160" y="350" width="1" height="150" fill="#141414"/>
+          <rect x="270" y="350" width="1" height="150" fill="#141414"/>
+          <rect x="380" y="350" width="1" height="150" fill="#141414"/>
+          <rect x="460" y="350" width="1" height="150" fill="#141414"/>
+          <!-- ceiling -->
+          <rect x="0" y="0" width="540" height="100" fill="#0C0C0C"/>
+          <rect x="0" y="98" width="540" height="4" fill="#141414"/>
+          <!-- ceiling lights (flickering feel) -->
+          <rect x="120" y="40" width="40" height="8" fill="#1A1A14"/>
+          <rect x="123" y="42" width="34" height="4" fill="#FFB742" opacity=".25"/>
+          <rect x="280" y="40" width="40" height="8" fill="#1A1A14"/>
+          <rect x="283" y="42" width="34" height="4" fill="#FFB742" opacity=".15"/><!-- dim/broken -->
+          <rect x="440" y="40" width="40" height="8" fill="#1A1A14"/>
+          <rect x="443" y="42" width="34" height="4" fill="#FFB742" opacity=".3"/>
+          <!-- lockers left -->
+          <rect x="0" y="100" width="70" height="250" fill="#141414"/>
+          <rect x="4" y="105" width="62" height="50" fill="#111"/>
+          <rect x="4" y="160" width="62" height="50" fill="#111"/>
+          <rect x="4" y="215" width="62" height="50" fill="#111"/>
+          <rect x="4" y="270" width="62" height="50" fill="#111"/>
+          <rect x="30" y="128" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="30" y="183" width="6" height="6" fill="#1A1A1A"/>
+          <rect x="30" y="238" width="6" height="6" fill="#1A1A1A"/>
+          <!-- locker blood -->
+          <rect x="4" y="155" width="62" height="6" fill="#FF4444" opacity=".2"/>
+          <rect x="24" y="105" width="4" height="50" fill="#FF4444" opacity=".15"/>
+          <!-- lockers right -->
+          <rect x="470" y="100" width="70" height="250" fill="#141414"/>
+          <rect x="474" y="105" width="62" height="50" fill="#111"/>
+          <rect x="474" y="160" width="62" height="50" fill="#111"/>
+          <rect x="474" y="215" width="62" height="50" fill="#111"/>
+          <rect x="474" y="270" width="62" height="50" fill="#111"/>
+          <rect x="500" y="128" width="6" height="6" fill="#1A1A1A"/>
+          <!-- corridor end door -->
+          <rect x="220" y="150" width="100" height="200" fill="#0D0D0D"/>
+          <rect x="228" y="158" width="40" height="184" fill="#0A0A0A"/>
+          <rect x="272" y="158" width="40" height="184" fill="#0A0A0A"/>
+          <rect x="265" y="240" width="8" height="8" fill="#141414"/>
+          <!-- blood trail on floor -->
+          <rect x="240" y="348" width="60" height="6" fill="#FF4444" opacity=".5"/>
+          <rect x="250" y="340" width="40" height="10" fill="#FF4444" opacity=".35"/>
+          <rect x="255" y="325" width="30" height="18" fill="#FF4444" opacity=".2"/>
+          <rect x="260" y="300" width="20" height="28" fill="#FF4444" opacity=".12"/>
+          <!-- handprint on locker -->
+          <rect x="10" y="130" width="14" height="18" fill="#FF4444" opacity=".3"/>
+          <rect x="12" y="128" width="2" height="4" fill="#FF4444" opacity=".3"/>
+          <rect x="16" y="127" width="2" height="4" fill="#FF4444" opacity=".3"/>
+          <rect x="20" y="128" width="2" height="4" fill="#FF4444" opacity=".3"/>
+        </svg>
+      </div>
+
+      <div class="env-caption" id="env-caption">
+        <div class="env-cap-name" id="env-cap-name">學校大門 — School Gate</div>
+        <div class="env-cap-sub" id="env-cap-sub">The sealed entrance. No one leaves.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CHARACTER POPUP ══ -->
+<div class="dw" id="char-popup">
+  <div class="dw-bar" id="char-drag">
+    <span class="dw-title">character_select.exe</span>
+    <div class="dw-controls">
+      <div class="dw-btn" onclick="closeChar()">─</div>
+      <div class="dw-btn" onclick="closeChar()">✕</div>
+    </div>
+  </div>
+  <div class="char-inner">
+    <!-- icon grid -->
+    <div class="char-grid-wrap">
+      <div class="char-grid-label">SELECT SURVIVOR — 13 / 13</div>
+      <div class="char-grid" id="char-grid">
+        <!-- 13 chars -->
+        <div class="char-icon active" onclick="selectChar(0,this)"><div class="char-icon-inner">梅<span class="char-icon-num">01</span></div></div>
+        <div class="char-icon" onclick="selectChar(1,this)"><div class="char-icon-inner">海<span class="char-icon-num">02</span></div></div>
+        <div class="char-icon" onclick="selectChar(2,this)"><div class="char-icon-inner">晴<span class="char-icon-num">03</span></div></div>
+        <div class="char-icon" onclick="selectChar(3,this)"><div class="char-icon-inner">凜<span class="char-icon-num">04</span></div></div>
+        <div class="char-icon" onclick="selectChar(4,this)"><div class="char-icon-inner">黎<span class="char-icon-num">05</span></div></div>
+        <div class="char-icon" onclick="selectChar(5,this)"><div class="char-icon-inner">影<span class="char-icon-num">06</span></div></div>
+        <div class="char-icon" onclick="selectChar(6,this)"><div class="char-icon-inner">鳶<span class="char-icon-num">07</span></div></div>
+        <div class="char-icon" onclick="selectChar(7,this)"><div class="char-icon-inner">珊<span class="char-icon-num">08</span></div></div>
+        <div class="char-icon" onclick="selectChar(8,this)"><div class="char-icon-inner">弦<span class="char-icon-num">09</span></div></div>
+        <div class="char-icon" onclick="selectChar(9,this)"><div class="char-icon-inner">蘭<span class="char-icon-num">10</span></div></div>
+        <div class="char-icon" onclick="selectChar(10,this)"><div class="char-icon-inner">戒<span class="char-icon-num">11</span></div></div>
+        <div class="char-icon" onclick="selectChar(11,this)"><div class="char-icon-inner">羽<span class="char-icon-num">12</span></div></div>
+        <div class="char-icon" onclick="selectChar(12,this)"><div class="char-icon-inner">絶<span class="char-icon-num">13</span></div></div>
+      </div>
+    </div>
+    <!-- display -->
+    <div class="char-display">
+      <div class="char-img-area" id="char-img-area">
+        <div class="char-art-placeholder" id="char-placeholder">
+          <span class="char-art-placeholder-label">CHARACTER ART</span>
+          <span class="char-art-placeholder-sub">Replace with your images</span>
+        </div>
+      </div>
+      <div class="char-info">
+        <div class="char-id" id="char-id">SURVIVOR #01</div>
+        <div class="char-name-display" id="char-name">梅</div>
+        <div class="char-role-tag" id="char-role">Class President</div>
+        <div class="char-stat-row"><span class="char-stat-key">Status</span><span class="char-stat-val" id="cs-status">Alive</span></div>
+        <div class="char-stat-row"><span class="char-stat-key">Location</span><span class="char-stat-val" id="cs-loc">Unknown</span></div>
+        <div class="char-stat-row"><span class="char-stat-key">Suspicion</span><span class="char-stat-val" id="cs-sus" style="color:var(--accent)">High</span></div>
+        <div class="char-desc" id="char-desc" style="margin-top:12px;">Add character description here. Replace with your character's backstory, role in the school, and secrets.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PLAY DEMO POPUP ══ -->
+<div id="demo-popup">
+  <div class="demo-bar" id="demo-drag">
+    <span class="demo-title">▶ Play Demo</span>
+    <button class="demo-x" onclick="document.getElementById('demo-popup').style.display='none'">✕</button>
+  </div>
+  <div id="demo-inner">
+    <div class="demo-body">
+      <div class="demo-icon">HA</div>
+      <div class="demo-name">HAMARTIA</div>
+      <div class="demo-desc">2D horror survival. Find the initiator. 13 survivors — only truth saves you.</div>
+      <div class="demo-tags"><span class="demo-tag">Horror</span><span class="demo-tag">Dialogue</span><span class="demo-tag">RPG</span><span class="demo-tag">2019</span></div>
+      <a href="https://mialyk.itch.io/hamartia" target="_blank" class="demo-cta">PLAY ON ITCH.IO ↗</a>
+    </div>
+    <div class="demo-foot" onclick="toggleDemo()">▲ minimise</div>
+  </div>
+</div>
+
+<!-- PW MODAL -->
+<div id="pw-modal">
+  <div id="pw-inner">
+    <div class="pw-title">
+      <svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor" style="margin-right:8px;">
+        <rect x="8" y="4" width="8" height="2"/><rect x="6" y="6" width="2" height="4"/><rect x="16" y="6" width="2" height="4"/><rect x="4" y="10" width="16" height="2"/><rect x="4" y="10" width="2" height="10"/><rect x="18" y="10" width="2" height="10"/><rect x="4" y="20" width="16" height="2"/><rect x="10" y="14" width="4" height="2"/><rect x="11" y="16" width="2" height="2"/>
+      </svg> Le.social
+    </div>
+    <div class="pw-sub">This project is password protected.<br>Enter password to view.</div>
+    <input class="pw-input" type="password" id="pw-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkPassword()">
+    <div class="pw-error" id="pw-error"></div>
+    <div class="pw-btns">
+      <button class="btn btn--sm primary" onclick="checkPassword()">Enter ▶</button>
+      <button class="btn btn--sm" onclick="closePwModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CURSOR
+const CD=document.getElementById('cur-dot'),CR=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function lp(){CD.style.left=mx+'px';CD.style.top=my+'px';rx+=(mx-rx)*0.18;ry+=(my-ry)*0.18;CR.style.left=rx+'px';CR.style.top=ry+'px';requestAnimationFrame(lp);})();
+
+// ── CHAT INFINITE LOOP (JS-driven, no gap)
+(function initChat(){
+  const scroll = document.getElementById('chat-scroll');
+  if(!scroll) return;
+  // Clone all messages and append so we have 2x
+  const msgs = Array.from(scroll.children);
+  msgs.forEach(m => scroll.appendChild(m.cloneNode(true)));
+
+  let offset = 0;
+  const speed = 0.4; // px per frame — adjust for pace
+  function tick(){
+    offset += speed;
+    const half = scroll.scrollHeight / 2;
+    if(offset >= half) offset = 0; // instant reset at exact halfway — seamless
+    scroll.style.transform = 'translateY(-' + offset + 'px)';
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+
+// ── REVEAL
+document.querySelectorAll('.reveal').forEach(el=>{
+  new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.07}).observe(el);
+});
+
+// ── PLAY BTN
+let playing=false;
+document.getElementById('play-btn').onclick=()=>{playing=!playing;document.getElementById('play-btn').textContent=playing?'⏸':'▶';};
+let prog=35;
+setInterval(()=>{if(playing){prog=(prog+0.08)%100;document.getElementById('pfill').style.width=prog+'%';}},100);
+
+// ── DEMO POPUP DRAG
+makeDraggable(document.getElementById('demo-popup'),document.getElementById('demo-drag'));
+let demoMini=false;
+function toggleDemo(){
+  demoMini=!demoMini;
+  document.querySelector('.demo-body').style.display=demoMini?'none':'block';
+  document.querySelector('.demo-foot').textContent=demoMini?'▼ restore':'▲ minimise';
+}
+
+// ── POPUP BACKDROP
+function openPopupBackdrop(){document.getElementById('popup-backdrop').classList.add('active');}
+function closePopupBackdrop(){document.getElementById('popup-backdrop').classList.remove('active');}
+function closeAllPopups(){closeEnv();closeChar();}
+
+// ── ENV POPUP
+const locations=[
+  {name:'School Gate — Main Entrance',sub:'The sealed entrance. No one leaves.'},
+  {name:'Playground — Sports Court',sub:'Where the first body was found.'},
+  {name:'School Exterior — Outside Wall',sub:'The city beyond the walls. Unreachable.'},
+  {name:'Student Council — President\'s Office',sub:'Locked from the inside. Bloodstained desk.'},
+  {name:'Mystery Club — Forbidden Room',sub:'Forbidden rituals. The altar still burns.'},
+  {name:'F5 Corridor — 5th Floor Hall',sub:'The last place she was seen alive.'},
+];
+let currentLoc=0;
+
+function openEnv(){
+  const p=document.getElementById('env-popup');
+  p.classList.add('open','entering');
+  setTimeout(()=>p.classList.remove('entering'),400);
+  p.style.left=Math.max(0,(window.innerWidth-700)/2)+'px';
+  p.style.top='80px';
+  p.style.transform='none';
+}
+function closeEnv(){
+  document.getElementById('env-popup').classList.remove('open');
+  if(!document.getElementById('char-popup').classList.contains('open'))closePopupBackdrop();
+}
+function selectLoc(idx,el){
+  document.querySelectorAll('.loc-item').forEach(i=>i.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.loc-art').forEach(a=>a.classList.remove('active'));
+  document.getElementById('loc-art-'+idx).classList.add('active');
+  document.getElementById('env-cap-name').textContent=locations[idx].name;
+  document.getElementById('env-cap-sub').textContent=locations[idx].sub;
+  document.getElementById('env-counter').textContent='0'+(idx+1)+' / 06';
+  currentLoc=idx;
+}
+
+makeDraggable(document.getElementById('env-popup'),document.getElementById('env-drag'));
+
+// ── CHAR POPUP
+const characters=[
+  {id:'SURVIVOR #01',name:'梅',role:'Class President',status:'Alive',loc:'Student Council',sus:'High',desc:'Calm and calculating. She knows more than she lets on. The council room was her domain — now it\'s a crime scene.'},
+  {id:'SURVIVOR #02',name:'海',role:'Track Captain',status:'Alive',loc:'Playground',sus:'Medium',desc:'Fast on his feet. Claims he saw nothing. His alibi places him on the track — but the track is covered in blood.'},
+  {id:'SURVIVOR #03',name:'晴',role:'Art Club Member',status:'Alive',loc:'Unknown',sus:'Low',desc:'Quiet and withdrawn. Her sketchbook is missing. Some pages were torn out before the chaos began.'},
+  {id:'SURVIVOR #04',name:'凜',role:'Mystery Club Lead',status:'Alive',loc:'Mystery Club',sus:'High',desc:'She founded the Mystery Club. The ritual circle in the clubroom is her design. She denies its significance.'},
+  {id:'SURVIVOR #05',name:'黎',role:'Transfer Student',status:'Alive',loc:'F5 Corridor',sus:'Medium',desc:'Arrived three weeks ago. Nobody knows where she came from. She was the last person seen in F5 corridor.'},
+  {id:'SURVIVOR #06',name:'影',role:'Unknown',status:'Alive',loc:'Unknown',sus:'Critical',desc:'No school records. No homeroom. Nobody knows how she got in. She should not be here.'},
+  {id:'SURVIVOR #07',name:'鳶',role:'Drama Club Lead',status:'Alive',loc:'School Gate',sus:'Low',desc:'Theatrical and dramatic. She staged plays about death and guilt. This time the stage is real.'},
+  {id:'SURVIVOR #08',name:'珊',role:'School Nurse Aide',status:'Alive',loc:'Infirmary',sus:'Medium',desc:'She has access to every medicine cabinet. The injuries on the victims match pharmaceutical knowledge.'},
+  {id:'SURVIVOR #09',name:'弦',role:'Music Room Regular',status:'Alive',loc:'Unknown',sus:'Low',desc:'She was playing violin when the explosion happened. Or so she says. The music room was empty.'},
+  {id:'SURVIVOR #10',name:'蘭',role:'Treasurer',status:'Alive',loc:'Student Council',sus:'Medium',desc:'Found the financial irregularities two weeks before the incident. She told no one. Now she wishes she had.'},
+  {id:'SURVIVOR #11',name:'戒',role:'Discipline Committee',status:'Alive',loc:'School Exterior',sus:'Low',desc:'Rule-follower. By-the-book. But someone like that would know exactly how to break every rule undetected.'},
+  {id:'SURVIVOR #12',name:'羽',role:'Library Committee',status:'Alive',loc:'Unknown',sus:'Medium',desc:'She spent every lunch in the library reading about cold cases. She\'s been preparing for something.'},
+  {id:'SURVIVOR #13',name:'絶',role:'???',status:'Alive',loc:'???',sus:'???',desc:'The thirteenth survivor has no name in any school record. Her presence here defies explanation.'},
+];
+
+function openChar(){
+  const p=document.getElementById('char-popup');
+  p.classList.add('open','entering');
+  setTimeout(()=>p.classList.remove('entering'),400);
+  p.style.left=Math.max(0,(window.innerWidth-560)/2+60)+'px';
+  p.style.top='100px';
+}
+function closeChar(){
+  document.getElementById('char-popup').classList.remove('open');
+  if(!document.getElementById('env-popup').classList.contains('open'))closePopupBackdrop();
+}
+function selectChar(idx,el){
+  document.querySelectorAll('.char-icon').forEach(i=>i.classList.remove('active'));
+  el.classList.add('active');
+  const c=characters[idx];
+  document.getElementById('char-id').textContent=c.id;
+  document.getElementById('char-name').textContent=c.name;
+  document.getElementById('char-role').textContent=c.role;
+  document.getElementById('cs-status').textContent=c.status;
+  document.getElementById('cs-loc').textContent=c.loc;
+  const sus=document.getElementById('cs-sus');
+  sus.textContent=c.sus;
+  sus.style.color=c.sus==='High'||c.sus==='Critical'?'var(--accent)':c.sus==='Medium'?'var(--brand)':'var(--grey-m)';
+  document.getElementById('char-desc').textContent=c.desc;
+}
+
+makeDraggable(document.getElementById('char-popup'),document.getElementById('char-drag'));
+
+// ── GENERIC DRAG
+function makeDraggable(el,handle){
+  let drag=false,ox=0,oy=0;
+  handle.addEventListener('mousedown',e=>{
+    drag=true;
+    const r=el.getBoundingClientRect();
+    ox=e.clientX-r.left;oy=e.clientY-r.top;
+    el.style.right='auto';el.style.bottom='auto';
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove',e=>{
+    if(!drag)return;
+    el.style.left=Math.max(0,Math.min(window.innerWidth-el.offsetWidth,e.clientX-ox))+'px';
+    el.style.top=Math.max(0,Math.min(window.innerHeight-el.offsetHeight,e.clientY-oy))+'px';
+  });
+  document.addEventListener('mouseup',()=>drag=false);
+}
+
+// ── SCROLL-TRIGGERED AUTO-OPEN (fires once streamer-ui scrolls past viewport)
+let envOpened=false, charOpened=false;
+(function setupScrollTrigger(){
+  const streamer=document.querySelector('.streamer-ui');
+  if(!streamer) return;
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      // fires when streamer leaves viewport (bottom scrolled past)
+      if(!e.isIntersecting && !envOpened && window.scrollY > 100){
+        envOpened=true;
+        obs.disconnect();
+        // open env
+        const ep=document.getElementById('env-popup');
+        ep.classList.add('open','entering');
+        ep.style.left='40px';
+        ep.style.top='90px';
+        ep.style.transform='none';
+        setTimeout(()=>ep.classList.remove('entering'),400);
+        // open char 5s later
+        setTimeout(()=>{
+          if(charOpened) return;
+          charOpened=true;
+          const cp=document.getElementById('char-popup');
+          cp.classList.add('open','entering');
+          cp.style.left=Math.max(0,window.innerWidth-560-40)+'px';
+          cp.style.top='110px';
+          setTimeout(()=>cp.classList.remove('entering'),400);
+        },5000);
+      }
+    });
+  },{threshold:0});
+  obs.observe(streamer);
+})();
+
+// ── PASSWORD
+const PW='mialyk2024';
+function showPasswordModal(e){e.preventDefault();document.getElementById('pw-input').value='';document.getElementById('pw-error').textContent='';document.getElementById('pw-input').classList.remove('error');document.getElementById('pw-modal').classList.add('active');setTimeout(()=>document.getElementById('pw-input').focus(),100);}
+function closePwModal(){document.getElementById('pw-modal').classList.remove('active');}
+function checkPassword(){const v=document.getElementById('pw-input').value;if(v===PW){closePwModal();window.location.href='/lesocial.html';}else{document.getElementById('pw-input').classList.add('error');document.getElementById('pw-error').textContent='✕ Incorrect password';document.getElementById('pw-input').value='';setTimeout(()=>document.getElementById('pw-input').classList.remove('error'),1500);}}
+document.getElementById('pw-modal').addEventListener('click',function(e){if(e.target===this)closePwModal();});
+</script>
+</body>
+</html>
