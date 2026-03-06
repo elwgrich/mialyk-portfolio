@@ -979,6 +979,46 @@ const BLACK  = '#181818';
 const BRAND  = '#FFB742';
 const EFF1   = '#DA6628';
 const EFF2   = '#F3FF97';
+const popupViewBtn = document.getElementById('popup-view-btn');
+const popupPtsEl = document.getElementById('popup-pts');
+const popupArrowIcon = ' <svg class="pxi pxi--sm" style="margin-top:3.4px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" xmlns="http://www.w3.org/2000/svg"><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
+const ABOUT_POPUP = {
+  tag: 'Seal Encounter',
+  title: 'About',
+  company: 'mia the seal',
+  period: 'Creative lead profile',
+  desc: 'The seal caught the yellow mouse. Open About to see the profile, skill tree, and contact links.',
+  pts: 0,
+  url: 'about.html',
+  buttonLabel: 'Open About',
+  newTab: false,
+};
+const sealEnemySprite = new Image();
+const sealEnemyCanvas = document.createElement('canvas');
+const sealEnemyCtx = sealEnemyCanvas.getContext('2d');
+let sealEnemyReady = false;
+sealEnemySprite.onload = function() {
+  sealEnemyCanvas.width = sealEnemySprite.naturalWidth;
+  sealEnemyCanvas.height = sealEnemySprite.naturalHeight;
+  sealEnemyCtx.clearRect(0, 0, sealEnemyCanvas.width, sealEnemyCanvas.height);
+  sealEnemyCtx.drawImage(sealEnemySprite, 0, 0);
+  const img = sealEnemyCtx.getImageData(0, 0, sealEnemyCanvas.width, sealEnemyCanvas.height);
+  const data = img.data;
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i];
+    const g = data[i + 1];
+    const b = data[i + 2];
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    if (max > 205 && max - min < 22) {
+      data[i + 3] = 0;
+    }
+  }
+  sealEnemyCtx.putImageData(img, 0, 0);
+  sealEnemyReady = true;
+  draw();
+};
+sealEnemySprite.src = 'assets/images/Token/mia_seal.png';
 
 // ?€?€ Experience Data ?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
 const EXPERIENCES = [
@@ -1099,6 +1139,8 @@ let beanWatchdog = null; // 5s interval to guarantee bean count
 // Auto-wander AI
 let autoTarget  = null;
 let autoTimer   = 0;
+let sealEnemy   = null;
+let sealMoveTimer = 0;
 
 // ?€?€ Helpers ?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
 function ri(max) { return Math.floor(Math.random() * max); }
@@ -1110,7 +1152,8 @@ function occupied(pos) {
     || snake.some(s => s.x === pos.x && s.y === pos.y)
     || candies.some(c => c.x === pos.x && c.y === pos.y)
     || expBeans.some(e => e.x === pos.x && e.y === pos.y)
-    || expBeans.some(e => e.x === pos.x && e.y + 1 === pos.y);
+    || expBeans.some(e => e.x === pos.x && e.y + 1 === pos.y)
+    || (sealEnemy && sealEnemy.x === pos.x && sealEnemy.y === pos.y);
 }
 
 function safeSpawn() {
@@ -1123,6 +1166,92 @@ function safeSpawn() {
 }
 
 // ?€?€ Init ?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
+function wrapDelta(from, to, size) {
+  let delta = to - from;
+  if (Math.abs(delta) > size / 2) delta = -Math.sign(delta) * (size - Math.abs(delta));
+  return delta;
+}
+
+function safeSpawnSealEnemy() {
+  let pos;
+  let tries = 0;
+  do {
+    pos = { x: ri(COLS), y: Math.max(2, ri(ROWS - 2)) };
+    tries++;
+  } while (
+    tries < 300 && (
+      isForbidden(pos.x, pos.y) ||
+      snake.some(s => s.x === pos.x && s.y === pos.y) ||
+      candies.some(c => c.x === pos.x && c.y === pos.y) ||
+      expBeans.some(e => e.x === pos.x && (e.y === pos.y || e.y + 1 === pos.y)) ||
+      Math.abs(wrapDelta(pos.x, snake[0].x, COLS)) + Math.abs(wrapDelta(pos.y, snake[0].y, ROWS)) < 8
+    )
+  );
+  return pos;
+}
+
+function sealCellFree(gx, gy, allowHead) {
+  if (isForbidden(gx, gy)) return false;
+  if (gx < 0 || gx >= COLS || gy < 0 || gy >= ROWS) return false;
+  const body = allowHead ? snake.slice(1) : snake;
+  if (body.some(s => s.x === gx && s.y === gy)) return false;
+  if (candies.some(c => c.x === gx && c.y === gy)) return false;
+  if (sealEnemy && sealEnemy.x === gx && sealEnemy.y === gy) return false;
+  if (expBeans.some(e => e.x === gx && (e.y === gy || e.y + 1 === gy))) return false;
+  return true;
+}
+
+function spawnSealEnemy() {
+  sealEnemy = safeSpawnSealEnemy();
+  sealMoveTimer = 0;
+}
+
+function moveSealEnemy() {
+  if (!gameStarted || !sealEnemy || snake.length === 0) return;
+  sealMoveTimer--;
+  if (sealMoveTimer > 0) return;
+  sealMoveTimer = 2;
+
+  const head = snake[0];
+  const dx = wrapDelta(sealEnemy.x, head.x, COLS);
+  const dy = wrapDelta(sealEnemy.y, head.y, ROWS);
+  const candidates = [];
+
+  if (Math.abs(dx) >= Math.abs(dy)) {
+    if (dx !== 0) candidates.push({ x: sealEnemy.x + Math.sign(dx), y: sealEnemy.y });
+    if (dy !== 0) candidates.push({ x: sealEnemy.x, y: sealEnemy.y + Math.sign(dy) });
+  } else {
+    if (dy !== 0) candidates.push({ x: sealEnemy.x, y: sealEnemy.y + Math.sign(dy) });
+    if (dx !== 0) candidates.push({ x: sealEnemy.x + Math.sign(dx), y: sealEnemy.y });
+  }
+
+  [
+    { x: sealEnemy.x + 1, y: sealEnemy.y },
+    { x: sealEnemy.x - 1, y: sealEnemy.y },
+    { x: sealEnemy.x, y: sealEnemy.y + 1 },
+    { x: sealEnemy.x, y: sealEnemy.y - 1 }
+  ].forEach(option => candidates.push(option));
+
+  for (const option of candidates) {
+    const nx = (option.x + COLS) % COLS;
+    const ny = (option.y + ROWS) % ROWS;
+    if (sealCellFree(nx, ny, true)) {
+      sealEnemy = { x: nx, y: ny };
+      break;
+    }
+  }
+
+  if (sealEnemy.x === head.x && sealEnemy.y === head.y) {
+    showAboutPopup();
+  }
+}
+
+function showAboutPopup() {
+  if (popupOpen) return;
+  spawnSealEnemy();
+  showPopup(ABOUT_POPUP);
+}
+
 function initGame() {
   const cx = Math.floor(COLS / 2);
   const cy = Math.floor(ROWS / 2);
@@ -1138,10 +1267,13 @@ function initGame() {
   candies = [];
   expBeans = [];
   unlockedExp = new Set();
+  sealEnemy = null;
+  sealMoveTimer = 0;
   updateScore(0);
 
   for (let i = 0; i < candyInitial(); i++) spawnCandy();
   spawnExpBeans(); // initial fill
+  spawnSealEnemy();
 
   clearInterval(gameLoop);
   gameLoop = setInterval(tick, gameStarted ? 140 : 200);
@@ -1304,6 +1436,12 @@ function tick() {
 
   snake.unshift(head);
 
+  if (gameStarted && sealEnemy && head.x === sealEnemy.x && head.y === sealEnemy.y) {
+    showAboutPopup();
+    draw();
+    return;
+  }
+
   // Eat candy
   const ci = candies.findIndex(c => c.x === head.x && c.y === head.y);
   if (ci !== -1) {
@@ -1329,6 +1467,11 @@ function tick() {
   }
   // Always maintain beans ??one per project, no duplicates
   maintainExpBeans();
+  moveSealEnemy();
+  if (popupOpen) {
+    draw();
+    return;
+  }
 
   checkSnakeInBounds();
   draw();
@@ -1352,6 +1495,7 @@ function cellFreeForBean(gx, gy, excludeBean) {
   if (gx < 0 || gx >= COLS || gy < 0 || gy >= ROWS - 1) return false;
   if (snake.some(s => s.x === gx && s.y === gy)) return false;
   if (candies.some(c => c.x === gx && c.y === gy)) return false;
+  if (sealEnemy && sealEnemy.x === gx && sealEnemy.y === gy) return false;
   if (expBeans.some(e => e !== excludeBean && (
     (e.x === gx && e.y === gy) ||         // same cell
     (e.x === gx && e.y + 1 === gy) ||     // other bean's label on this cell
@@ -1365,6 +1509,7 @@ function cellFreeForCandy(gx, gy) {
   if (gx < 0 || gx >= COLS || gy < 0 || gy >= ROWS) return false;
   if (snake.some(s => s.x === gx && s.y === gy)) return false;
   if (candies.some(c => c.x === gx && c.y === gy)) return false;
+  if (sealEnemy && sealEnemy.x === gx && sealEnemy.y === gy) return false;
   if (expBeans.some(e => e.x === gx && (e.y === gy || e.y + 1 === gy))) return false;
   return true;
 }
@@ -1582,6 +1727,8 @@ function draw() {
     }
   });
 
+  drawSealEnemy();
+
   // ?€?€ Snake body ??pixel squares ?€?€
   for (let i = snake.length - 1; i >= 1; i--) {
     const seg = snake[i];
@@ -1691,6 +1838,22 @@ function drawMouse(pos, d) {
 }
 
 // ?€?€ Score floater ?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
+function drawSealEnemy() {
+  if (!sealEnemy) return;
+  const size = Math.max(CELL * 1.9, 42);
+  const dx = sealEnemy.x * CELL + CELL / 2 - size / 2;
+  const dy = sealEnemy.y * CELL + CELL / 2 - size / 2;
+
+  if (sealEnemyReady) {
+    ctx.drawImage(sealEnemyCanvas, dx, dy, size, size);
+    return;
+  }
+
+  const shell = Math.max(12, CELL * 0.8);
+  px(dx + size * 0.2, dy + size * 0.32, shell, shell, WHITE);
+  px(dx + size * 0.38, dy + size * 0.62, shell * 0.9, Math.max(6, CELL * 0.18), EFF1);
+}
+
 function floatScore(text, col, row) {
   const el = document.createElement('div');
   el.className = 'score-float';
@@ -1717,8 +1880,11 @@ function showPopup(exp) {
   document.getElementById('popup-company').textContent = exp.company;
   document.getElementById('popup-period').textContent = exp.period;
   document.getElementById('popup-desc').textContent   = exp.desc;
-  document.getElementById('popup-pts').textContent    = '+' + exp.pts + ' pts';
-  document.getElementById('popup-view-btn').href      = exp.url;
+  popupPtsEl.style.display = exp.pts ? 'block' : 'none';
+  popupPtsEl.textContent    = exp.pts ? '+' + exp.pts + ' pts' : '';
+  popupViewBtn.href = exp.url;
+  popupViewBtn.target = exp.newTab === false ? '_self' : '_blank';
+  popupViewBtn.innerHTML = (exp.buttonLabel || 'View Project') + popupArrowIcon;
   document.getElementById('popup').classList.add('active');
 }
 
@@ -1867,5 +2033,4 @@ autoDemo();
 </script>
 </body>
 </html>
-
 

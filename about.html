@@ -86,9 +86,9 @@ main{padding-top:calc(var(--nav-h) + 80px);padding-bottom:120px;max-width:1100px
 
 /* CHARACTER CARD */
 .char-card{border:1px solid rgba(24,24,24,0.1);padding:32px;position:relative;background:var(--white);}
-.char-card::before{content:'player elwgrich';position:absolute;top:-1px;left:24px;background:var(--brand);color:var(--black);font-family:var(--font-brand);font-size:8px;padding:4px 10px;letter-spacing:0.1em;}
+.char-card::before{content:'mia the seal';position:absolute;top:-1px;left:24px;background:var(--brand);color:var(--black);font-family:var(--font-brand);font-size:8px;padding:4px 10px;letter-spacing:0.1em;}
 .char-canvas-wrap{display:flex;justify-content:center;align-items:center;margin-bottom:24px;padding:20px 0;border-bottom:1px solid rgba(24,24,24,0.08);}
-#char-canvas{image-rendering:pixelated;display:block;}
+#char-video{display:block;width:180px;height:240px;object-fit:contain;}
 .char-stats{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
 .stat-label{font-size:var(--fs-10);color:var(--grey-l);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;}
 .stat-value{font-size:var(--fs-12);color:var(--black);}
@@ -121,7 +121,7 @@ main{padding-top:calc(var(--nav-h) + 80px);padding-bottom:120px;max-width:1100px
 .skills-section{margin-bottom:120px;}
 .skills-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px 80px;}
 .skill-cat-label{font-size:var(--fs-10);font-weight:var(--fw-light);color:var(--brand);letter-spacing:0.16em;text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:8px;}
-.skill-cat-label::before{content:'??;font-size:8px;}
+.skill-cat-label::before{content:'';display:inline-block;width:14px;height:1px;background:var(--brand);}
 .skill-item{margin-bottom:16px;opacity:0;transform:translateX(-8px);transition:opacity 0.4s ease,transform 0.4s ease;}
 .skill-item.visible{opacity:1;transform:translateX(0);}
 .skill-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;}
@@ -199,7 +199,7 @@ footer{background:var(--white);color:var(--grey-m);padding:32px 40px;display:fle
       </div>
     </div>
     <div class="char-card">
-      <div class="char-canvas-wrap"><canvas id="char-canvas" width="180" height="240"></canvas></div>
+      <div class="char-canvas-wrap"><video id="char-video" width="180" height="240" autoplay loop muted playsinline><source src="assets/images/About/Mia_theseal_rotation.mp4" type="video/mp4"></video></div>
       <div class="char-stats">
         <div class="stat-row"><div class="stat-label">Token</div><div class="stat-value" style="color:var(--brand);font-family:var(--font-brand);">elwgrich</div></div>
         <div class="stat-row"><div class="stat-label">Level</div><div class="stat-value" id="level-count">000</div></div>
@@ -384,7 +384,7 @@ footer{background:var(--white);color:var(--grey-m);padding:32px 40px;display:fle
     <input class="pw-input" type="password" id="pw-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkPassword()">
     <div class="pw-error" id="pw-error"></div>
     <div class="pw-btns">
-      <button class="btn btn--sm primary" onclick="checkPassword()">Enter ??/button>
+      <button class="btn btn--sm primary" onclick="checkPassword()">Enter</button>
       <button class="btn btn--sm" onclick="closePwModal()">Cancel</button>
     </div>
   </div>
@@ -410,184 +410,9 @@ function drawBg(){bgCtx.clearRect(0,0,bgCanvas.width,bgCanvas.height);const C=28
 drawBg();
 window.addEventListener('resize',()=>{bgCanvas.width=window.innerWidth;bgCanvas.height=window.innerHeight;drawBg();});
 
-// CHARACTER CANVAS
-const charCanvas=document.getElementById('char-canvas');
-const charCtx=charCanvas.getContext('2d');
-charCtx.imageSmoothingEnabled=false;
-let charAnim=0;
-let blinkTimer=0,blinkDuration=0,blinkNext=Math.floor(Math.random()*150)+80;
-let earTwitchTimer=0,earTwitchNext=Math.floor(Math.random()*200)+120;
-let whiskerPhase=0;
-
-function drawChar(){
-  charCtx.clearRect(0,0,180,240);
-  const S=6;
-
-  // GRID: canvas 30cols x 40rows (180x240px)
-  // Ears up 2 rows vs before ??top at row 4
-  //
-  // HEAD:     cols 7-20 (14w), rows 6-15 (10h)
-  // EAR-L:    cols 0-7  (8w),  rows 4-11 (8h)  ??right edge = head left col 7, NO overlap
-  // EAR-R:    cols 20-27(8w),  rows 4-11 (8h)  ??left edge = head right col 20, NO overlap
-  // HEADBAND: row 9
-  // EYES:     rows 10-12 (mid-ear 4-11 = row 7-8 mid, but eyes mid-head = row 10-12)
-  // NOSE:     row 13
-  // SCARF:    rows 15-16
-  // BODY:     cols 7-21 (left=head left 7, right=head right+1=21), rows 17-26
-  //           bottom-left arc 3 blocks, no far-left bottom line
-  // ARMS:     cols 5-6 (L) / 22-23 (R), rows 18-22
-  // TAIL:     cols 22-29, rows 18-25
-
-  const W  ='#FFFFFF';
-  const BK ='#222222';
-  const CR ='#FFDDCC';
-  const OR ='#FF6600';
-  const ORD='#CC4400';
-  const PK ='#FFB0B0';
-  const GR ='#CCCCCC';
-
-  function b(c,r,col){ charCtx.fillStyle=col; charCtx.fillRect(c*S,r*S,S,S); }
-  function row(c1,c2,r,col){ for(let c=c1;c<=c2;c++) b(c,r,col); }
-  function col(r1,r2,c,col){ for(let r=r1;r<=r2;r++) b(c,r,col); }
-  function rect(c1,r1,c2,r2,col){ for(let r=r1;r<=r2;r++) row(c1,c2,r,col); }
-
-  const bob=Math.round(Math.sin(charAnim*0.04)*1.5);
-
-  blinkTimer++;
-  let blink=false;
-  if(blinkTimer>=blinkNext){
-    blinkDuration++;
-    blink=blinkDuration<=4;
-    if(blinkDuration>6){blinkTimer=0;blinkDuration=0;blinkNext=100+Math.floor(Math.random()*160);}
-  }
-  earTwitchTimer++;
-  let leOff=0;
-  if(earTwitchTimer>=earTwitchNext){
-    leOff=Math.round(Math.sin((earTwitchTimer-earTwitchNext)*0.7)*-1); // upward
-    if(earTwitchTimer-earTwitchNext>16){earTwitchTimer=0;earTwitchNext=140+Math.floor(Math.random()*200);}
-  }
-  whiskerPhase+=0.045;
-  const ww=Math.round(Math.sin(whiskerPhase));
-
-  charCtx.save();
-  charCtx.translate(0, bob);
-
-  // TAIL (draw first - behind body)
-  const ts=Math.round(Math.sin(charAnim*0.055)*1);
-  rect(22,20,23,24,GR);
-  b(22,19,BK); b(23,19,BK);
-  b(24,20,BK); b(24,21,BK); b(24,22,BK); b(24,23,BK); b(24,24,BK);
-  b(22,25,BK); b(23,25,BK);
-  // upper fork
-  b(24,18+ts,GR); b(25,17+ts,GR); b(26,16+ts,GR); b(27,16+ts,GR);
-  b(25,18+ts,GR); b(26,17+ts,GR);
-  b(25,16+ts,BK); b(27,15+ts,BK); b(28,16+ts,BK); b(28,17+ts,BK);
-  b(28,18+ts,BK); b(27,19+ts,BK); b(26,19+ts,BK); b(25,19+ts,BK); b(24,17+ts,BK);
-  b(27,16+ts,W);
-  // lower fork
-  b(24,26-ts,GR); b(25,27-ts,GR); b(26,28-ts,GR); b(27,28-ts,GR);
-  b(25,26-ts,GR); b(26,27-ts,GR);
-  b(25,28-ts,BK); b(27,29-ts,BK); b(28,28-ts,BK); b(28,27-ts,BK);
-  b(28,26-ts,BK); b(27,25-ts,BK); b(26,25-ts,BK); b(25,25-ts,BK); b(24,27-ts,BK);
-  b(27,28-ts,W);
-
-  // BODY (cols 7-21, rows 17-26)
-  rect(7,17,21,26,W);
-  row(8,20,17,BK); b(7,17,BK); b(21,17,BK);  // top
-  col(18,25,21,BK);                             // right
-  col(18,22,7,BK);                              // left straight rows 18-22
-  b(7,23,BK); b(8,24,BK); b(9,25,BK);          // left arc 3 steps
-  b(7,24,W); b(7,25,W); b(7,26,W);             // clear arc corners
-  b(8,25,W); b(8,26,W); b(9,26,W);
-  row(10,20,26,BK); b(21,26,BK);               // bottom (no left corner)
-  // belly bump
-  row(12,17,27,W); b(12,27,BK); b(17,27,BK);
-  row(13,16,27,W); row(12,17,27,BK);
-
-  // ARMS
-  rect(5,18,6,22,W);
-  row(5,6,17,BK); row(5,6,23,BK);
-  col(18,22,4,BK); b(4,17,BK); b(4,23,BK);
-  b(7,17,BK); b(7,23,BK);
-
-  rect(22,18,23,22,W);
-  row(22,23,17,BK); row(22,23,23,BK);
-  col(18,22,24,BK); b(24,17,BK); b(24,23,BK);
-  b(21,17,BK); b(21,23,BK);
-
-  // SCARF (rows 15-16, cols 7-20)
-  row(7,20,15,OR); row(7,20,16,ORD);
-  row(7,20,14,BK);
-  b(6,15,BK); b(6,16,BK); b(21,15,BK); b(21,16,BK);
-  b(21,14,OR); b(22,14,OR);
-  b(21,15,OR); b(22,15,OR); b(23,15,OR);
-  b(22,16,OR); b(23,16,OR);
-  b(20,14,BK); b(23,14,BK); b(24,15,BK); b(24,16,BK);
-  b(23,17,BK); b(22,17,BK); b(21,17,BK);
-
-  // HEAD (cols 7-20, rows 6-15, 14w x 10h)
-  rect(8,7,19,14,W);
-  row(8,19,6,W); b(7,6,BK); b(20,6,BK);
-  row(7,20,6,BK); row(7,20,15,BK);
-  col(7,14,7,BK); col(7,14,20,BK);
-  b(7,7,BK); b(20,7,BK);
-  // cheeks
-  b(8,11,PK); b(9,11,PK); b(8,12,PK); b(9,12,PK);
-  b(18,11,PK); b(19,11,PK); b(18,12,PK); b(19,12,PK);
-
-  // HEADBAND (row 9)
-  row(8,19,9,OR); b(7,9,BK); b(20,9,BK);
-  b(20,8,OR); b(21,8,OR); b(21,9,OR); b(22,9,OR); b(21,10,OR); b(20,10,ORD);
-  b(19,8,BK); b(22,8,BK); b(23,9,BK); b(23,10,BK); b(22,11,BK); b(21,11,BK); b(20,11,BK);
-
-  // EARS 8x8, up 2 rows (rows 4-11), no overlap with head
-  // LEFT ear: cols 0-7 (right edge col7 = head left edge col7, share outline)
-  //   ??draw cols 0-6 white, col 7 is head outline so skip
-  const eT = 4; // ears start row 4 (2 rows higher than before)
-  rect(0,eT+leOff,6,eT+7+leOff,W);           // cols 0-6 (not 7 to avoid overlap)
-  rect(2,eT+1+leOff,5,eT+5+leOff,CR);
-  row(0,6,eT+leOff,BK);                       // top
-  row(0,6,eT+7+leOff,BK);                     // bottom
-  col(eT+1+leOff,eT+6+leOff,0,BK);           // left
-  col(eT+1+leOff,eT+6+leOff,6,BK);           // right (col 6, not 7)
-
-  // RIGHT ear: cols 21-27 (left edge col21 = head right+1, no overlap)
-  rect(21,eT,27,eT+7,W);
-  rect(23,eT+1,26,eT+5,CR);
-  row(21,27,eT,BK);
-  row(21,27,eT+7,BK);
-  col(eT+1,eT+6,21,BK);
-  col(eT+1,eT+6,27,BK);
-
-  // EYES rows 10-12
-  if(blink){
-    charCtx.fillStyle=BK;
-    charCtx.fillRect(9*S,11*S+2,3*S,2);
-    charCtx.fillRect(16*S,11*S+2,3*S,2);
-  } else {
-    rect(9,10,11,12,BK); b(9,10,W); b(10,10,W); b(9,11,W);
-    rect(16,10,18,12,BK); b(16,10,W); b(17,10,W); b(16,11,W);
-  }
-
-  // NOSE
-  b(13,13,BK); b(14,13,BK);
-
-  // WHISKERS
-  charCtx.strokeStyle=BK; charCtx.globalAlpha=0.22; charCtx.lineWidth=1;
-  const wy=13*S+3;
-  charCtx.beginPath(); charCtx.moveTo(3*S,wy+ww*2);   charCtx.lineTo(10*S,wy+ww);   charCtx.stroke();
-  charCtx.beginPath(); charCtx.moveTo(3*S,wy+5-ww*2); charCtx.lineTo(10*S,wy+3-ww); charCtx.stroke();
-  charCtx.beginPath(); charCtx.moveTo(24*S,wy+ww*2);  charCtx.lineTo(17*S,wy+ww);   charCtx.stroke();
-  charCtx.beginPath(); charCtx.moveTo(24*S,wy+5-ww*2);charCtx.lineTo(17*S,wy+3-ww); charCtx.stroke();
-  charCtx.globalAlpha=1;
-
-  charCtx.restore();
-  charAnim++;
-  requestAnimationFrame(drawChar);
-}
-
-drawChar();
-
+// CHARACTER VIDEO
+const charVideo=document.getElementById('char-video');
+if(charVideo){charVideo.play().catch(function(){});}
 
 // LEVEL COUNTER
 let lv=0; const lvEl=document.getElementById('level-count');
@@ -670,7 +495,7 @@ function checkPassword(){
   if(val===LE_SOCIAL_PASSWORD){closePwModal();window.location.href='/lesocial.html';}
   else{
     document.getElementById('pw-input').classList.add('error');
-    document.getElementById('pw-error').textContent='??Incorrect password';
+    document.getElementById('pw-error').textContent='Incorrect password';
     document.getElementById('pw-input').value='';
     setTimeout(()=>document.getElementById('pw-input').classList.remove('error'),1500);
   }
@@ -708,4 +533,7 @@ document.querySelectorAll('.section-header,.exp-card,.skill-item,.contact-item')
 </script>
 </body>
 </html>
+
+
+
 
