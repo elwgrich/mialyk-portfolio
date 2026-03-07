@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -19,6 +19,16 @@
   --brand:   #FFB742;
   --effect1: #DA6628;
   --effect2: #F3FF97;
+  --cyan: #00e6c8;
+  --cyan-soft: rgba(0,230,200,0.12);
+  --panel: rgba(254,254,254,0.94);
+  --line-soft: rgba(24,24,24,0.08);
+  --line-mid: rgba(24,24,24,0.14);
+  --line-strong: rgba(24,24,24,0.22);
+  --shadow-soft: 0 18px 60px rgba(24,24,24,0.08);
+  --shadow-node: 10px 10px 0 rgba(255,183,66,0.08);
+  --node-offset: 30px;
+  --node-offset-hover: 34px;
 
   /* Typography scale - min 10px */
   --fs-48: clamp(36px, 5vw, 48px);
@@ -92,8 +102,9 @@ header {
   position: fixed;
   top: 0; left: 0; right: 0;
   height: var(--nav-h);
-  background: var(--white);
-  border-bottom: 1px solid rgba(24,24,24,0.08);
+  background: rgba(254,254,254,0.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line-soft);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -126,7 +137,7 @@ header {
 nav {
   display: flex;
   align-items: center;
-  gap: 36px;
+  gap: 28px;
 }
 
 .nav-link {
@@ -134,7 +145,7 @@ nav {
   font-weight: var(--fw-reg);
   color: var(--grey-m);
   text-decoration: none;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   position: relative;
   transition: color 0.2s;
@@ -144,7 +155,7 @@ nav {
   position: absolute;
   bottom: -2px; left: 0;
   width: 0; height: 1px;
-  background: var(--brand);
+  background: var(--cyan);
   transition: width 0.3s cubic-bezier(0.4,0,0.2,1);
 }
 .nav-link:hover { color: var(--black); }
@@ -154,18 +165,18 @@ nav {
 .nav-item { position: relative; }
 .nav-dropdown {
   position: absolute;
-  top: calc(100% + 16px);
+  top: calc(100% + 14px);
   left: 50%;
   transform: translateX(-50%);
-  background: var(--white);
-  border: 1px solid rgba(24,24,24,0.1);
+  background: var(--panel);
+  border: 1px solid var(--line-mid);
   min-width: 180px;
   padding: 8px 0;
   opacity: 0;
   visibility: hidden;
   transform: translateX(-50%) translateY(-8px);
   transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
-  box-shadow: 0 8px 32px rgba(24,24,24,0.08);
+  box-shadow: 0 16px 40px rgba(24,24,24,0.08);
 }
 .nav-item:hover .nav-dropdown {
   opacity: 1;
@@ -182,7 +193,7 @@ nav {
   transition: background 0.15s, color 0.15s;
   white-space: nowrap;
 }
-.dropdown-item:hover { background: rgba(255,183,66,0.08); color: var(--black); }
+.dropdown-item:hover { background: rgba(0,230,200,0.10); color: var(--black); }
 .dropdown-dot {
   display: inline-block;
   width: 5px; height: 5px;
@@ -191,7 +202,6 @@ nav {
   margin-right: 10px;
   vertical-align: middle;
 }
-
 /* ============================================================
    MAIN GAME AREA
    ============================================================ */
@@ -199,8 +209,13 @@ nav {
   position: relative;
   width: 100vw;
   height: 100vh;
+  min-height: 760px;
   overflow: hidden;
   background: var(--white);
+  isolation: isolate;
+}
+#home::before {
+  content: none;
 }
 
 canvas#gameCanvas {
@@ -209,57 +224,293 @@ canvas#gameCanvas {
   top: 0; left: 0;
   width: 100%;
   height: 100%;
+  z-index: 0;
+}
+
+#node-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6;
 }
 
 /* Game UI overlay */
 #game-ui {
   position: absolute;
-  top: calc(var(--nav-h) + 20px);
+  top: calc(var(--nav-h) + 24px);
   left: 40px;
   pointer-events: none;
   z-index: 10;
+  width: min(360px, calc(100vw - 80px));
 }
+
+.hud-shell {
+  background: var(--panel);
+  border: 1px solid var(--line-mid);
+  padding: 22px 22px 20px;
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(10px);
+}
+
+.hud-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--fs-10);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--grey-m);
+  margin-bottom: 18px;
+}
+.hud-eyebrow::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background: var(--brand);
+  box-shadow: 2px 2px 0 rgba(218,102,40,0.55);
+}
+
+.hud-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.hud-mode {
+  flex-shrink: 0;
+  padding: 8px 10px 7px;
+  border: 1px solid rgba(255,183,66,0.26);
+  background: rgba(255,183,66,0.08);
+  font-size: var(--fs-10);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--black);
+  line-height: 1.4;
+}
+
 #pts-label {
-  font-family: 'DM Mono', monospace;
-  font-size: var(--fs-12);
-  font-weight: var(--fw-light);
-  color: var(--grey-l);
-  letter-spacing: 0.1em;
+  font-size: var(--fs-10);
+  font-weight: var(--fw-reg);
+  color: var(--grey-m);
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 #pts-value {
   font-family: 'Press Start 2P', monospace;
   font-weight: var(--fw-bold);
-  font-size: var(--fs-24);
+  font-size: clamp(20px, 3vw, 28px);
   color: var(--black);
-  line-height: 1.4;
+  line-height: 1.3;
+  letter-spacing: 0.08em;
   transition: color 0.2s;
 }
 #pts-value.flash { color: var(--brand); }
 
-#hint {
+.hud-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.hud-block {
+  min-height: 68px;
+  border: 1px solid var(--line-soft);
+  background: rgba(254,254,254,0.88);
+  padding: 12px 12px 10px;
+}
+
+.hud-block--wide {
+  grid-column: 1 / -1;
+  min-height: 82px;
+}
+
+.hud-k {
+  font-size: var(--fs-10);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--grey-l);
+  margin-bottom: 8px;
+}
+
+.hud-v {
+  color: var(--black);
+  font-size: var(--fs-12);
+  line-height: 1.45;
+}
+
+.hud-sub {
+  color: var(--grey-m);
+  font-size: var(--fs-10);
+  line-height: 1.5;
+  margin-top: 6px;
+}
+
+.project-node {
   position: absolute;
-  bottom: 40px;
+  width: 28px;
+  height: 28px;
+  transform: translate(-50%, -50%);
+  border: none;
+  padding: 0;
+  background: transparent;
+  color: var(--black);
+  cursor: none;
+  pointer-events: auto;
+  appearance: none;
+}
+.project-node__badge {
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--line-mid);
+  background: rgba(254,254,254,0.96);
+  box-shadow: 4px 4px 0 rgba(24,24,24,0.04);
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+.project-node__glyph {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  transform: translate(-50%, -50%);
+  background: var(--brand);
+}
+.project-node[data-icon='signal'] .project-node__glyph {
+  box-shadow: 6px 0 0 var(--cyan), 0 6px 0 var(--cyan), 6px 6px 0 var(--brand);
+}
+.project-node[data-icon='spark'] .project-node__glyph {
+  box-shadow: 0 -6px 0 var(--cyan), 0 6px 0 var(--cyan), -6px 0 0 var(--brand), 6px 0 0 var(--brand);
+}
+.project-node[data-icon='stack'] .project-node__glyph {
+  box-shadow: 0 -6px 0 var(--cyan), 0 6px 0 var(--grey-m), 6px 0 0 var(--brand);
+}
+.project-node[data-icon='frame'] .project-node__glyph {
+  box-shadow: -6px -6px 0 var(--cyan), 6px -6px 0 var(--brand), -6px 6px 0 var(--brand), 6px 6px 0 var(--cyan);
+}
+.project-node[data-icon='orbit'] .project-node__glyph {
+  box-shadow: -6px 0 0 var(--cyan), 6px 0 0 var(--cyan), 0 -6px 0 var(--brand), 0 6px 0 var(--grey-m);
+}
+.project-node__label {
+  position: absolute;
+  top: 34px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: var(--fs-12);
-  color: var(--grey-l);
+  font-size: var(--fs-10);
   letter-spacing: 0.12em;
   text-transform: uppercase;
+  color: rgba(136,136,140,0.82);
+  opacity: 0.68;
   white-space: nowrap;
+  transition: color 0.18s ease, opacity 0.18s ease;
+}
+.project-node__tooltip {
+  position: absolute;
+  left: 36px;
+  top: 50%;
+  transform: translateY(-50%) translateX(6px);
+  min-width: 120px;
+  padding: 8px 10px 8px 12px;
+  border: 1px solid var(--line-soft);
+  background: var(--panel);
+  box-shadow: 10px 10px 0 rgba(24,24,24,0.05);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
+  text-align: left;
+}
+.project-node__tooltip::before {
+  content: '';
+  position: absolute;
+  left: -18px;
+  top: 50%;
+  width: 18px;
+  height: 1px;
+  background: rgba(168,176,178,0.4);
+}
+.project-node__tooltip-title {
+  display: block;
+  font-family: var(--font-body);
+  font-size: var(--fs-10);
+  line-height: 1.6;
+  color: var(--black);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.project-node__tooltip-meta {
+  display: block;
+  margin-top: 4px;
+  font-size: var(--fs-10);
+  line-height: 1.45;
+  color: var(--grey-m);
+}
+.project-node--left .project-node__tooltip {
+  left: auto;
+  right: 36px;
+  transform: translateY(-50%) translateX(-6px);
+}
+.project-node--left .project-node__tooltip::before {
+  left: auto;
+  right: -18px;
+}
+.project-node:hover .project-node__badge,
+.project-node:focus-visible .project-node__badge,
+.project-node.is-active .project-node__badge {
+  border-color: rgba(0,230,200,0.45);
+  background: rgba(0,230,200,0.10);
+  box-shadow: 0 0 0 1px rgba(255,183,66,0.20), 6px 6px 0 rgba(0,230,200,0.08);
+  transform: translateY(-2px);
+  outline: none;
+}
+.project-node:hover .project-node__label,
+.project-node:focus-visible .project-node__label,
+.project-node.is-active .project-node__label {
+  color: var(--black);
+  opacity: 1;
+}
+.project-node:hover .project-node__tooltip,
+.project-node:focus-visible .project-node__tooltip,
+.project-node.is-active .project-node__tooltip {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+  border-color: rgba(0,230,200,0.28);
+}
+.project-node--left:hover .project-node__tooltip,
+.project-node--left:focus-visible .project-node__tooltip,
+.project-node--left.is-active .project-node__tooltip {
+  transform: translateY(-50%) translateX(0);
+}
+
+#hint {
+  position: absolute;
+  bottom: 34px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(100vw - 48px);
+  padding: 12px 18px;
+  border: 1px solid var(--line-soft);
+  background: var(--panel);
+  box-shadow: 0 12px 40px rgba(24,24,24,0.05);
+  font-size: var(--fs-10);
+  color: var(--grey-m);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: center;
   pointer-events: none;
   z-index: 10;
   animation: fadeHint 1.5s ease-in-out infinite alternate;
-  transition: color 0.3s;
+  transition: color 0.3s, border-color 0.3s, background 0.3s;
 }
 @keyframes fadeHint { from { opacity: 0.3; } to { opacity: 0.9; } }
 #hint.hidden { display: none; }
 #hint.playing {
-  color: var(--brand);
+  color: var(--black);
+  border-color: rgba(255,183,66,0.45);
+  background: rgba(255,183,66,0.08);
   animation: none;
   opacity: 1;
 }
-
 /* ============================================================
    POPUP SYSTEM: 3 sizes (sm / md / lg)
    ============================================================ */
@@ -294,11 +545,12 @@ canvas#gameCanvas {
 
 /* Size tokens */
 .popup-window--sm { max-width: 360px; padding: 32px; }
-.popup-window--md { max-width: 560px; padding: 48px; }
+.popup-window--md { max-width: 560px; min-height: 420px; padding: 40px; }
 .popup-window--lg { max-width: 760px; padding: 64px; }
 
 /* Legacy IDs mapped to system */
 #popup { display: none; position: fixed; inset: 0;
+  padding: 24px;
   background: rgba(24,24,24,0.4); backdrop-filter: blur(4px);
   z-index: 600; align-items: center; justify-content: center; }
 #popup.active { display: flex; }
@@ -307,36 +559,39 @@ canvas#gameCanvas {
   border: 1px solid rgba(24,24,24,0.12);
   width: 560px;
   max-width: 90vw;
-  min-height: 520px;
-  height: 520px;
+  height: 420px;
+  min-height: 420px;
   position: relative;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
   box-shadow: 0 24px 80px rgba(24,24,24,0.12);
   animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
   overflow: hidden;
 }
 
 .popup-top {
-  padding: 48px 48px 0;
+  padding: 36px 40px 0;
   flex-shrink: 0;
 }
 
 .popup-mid {
-  flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: 0 48px;
+  justify-content: flex-start;
+  padding: 14px 40px 0;
+  overflow-y: auto;
 }
 
 .popup-btns {
-  flex-shrink: 0;
-  height: 160px;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   gap: 12px;
+  min-height: 104px;
+  padding: 16px 40px 28px;
+  border-top: 1px solid var(--line-soft);
+  background: rgba(254,254,254,0.96);
 }
 
 .popup-tag {
@@ -378,15 +633,15 @@ canvas#gameCanvas {
   font-weight: var(--fw-light);
   color: var(--grey-l);
   letter-spacing: 0.08em;
-  margin-bottom: 24px;
+  margin-bottom: 18px;
 }
 
 .popup-desc {
   font-size: var(--fs-12);
   font-weight: var(--fw-light);
   color: var(--grey-m);
-  line-height: 1.9;
-  margin-bottom: 24px;
+  line-height: 1.8;
+  margin-bottom: 14px;
   width: 100%;
   word-break: break-word;
 }
@@ -396,7 +651,7 @@ canvas#gameCanvas {
   font-size: var(--fs-12);
   font-weight: var(--fw-bold);
   color: var(--brand);
-  margin-bottom: 28px;
+  margin-bottom: 0;
 }
 
 
@@ -431,7 +686,7 @@ canvas#gameCanvas {
   font-size: var(--fs-12);
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  padding: 12px 24px;        /* md default */
+  padding: 12px 24px;
   border: 1px solid var(--black);
   background: transparent;
   color: var(--black);
@@ -446,9 +701,16 @@ canvas#gameCanvas {
   -webkit-appearance: none;
   appearance: none;
   margin: 0;
-  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
-.btn:hover { background: var(--black); color: var(--white); }
+.btn:hover,
+.btn:focus-visible {
+  background: rgba(0,230,200,0.10);
+  border-color: rgba(0,230,200,0.48);
+  color: var(--black);
+  box-shadow: 4px 4px 0 rgba(0,230,200,0.08);
+  outline: none;
+}
 
 /* 3 sizes: fixed height guarantees visual consistency */
 .btn--sm { font-size: var(--fs-10); padding: 0 16px; height: 36px; }
@@ -461,7 +723,13 @@ canvas#gameCanvas {
   border-color: var(--brand);
   color: var(--black);
 }
-.btn.primary:hover { background: var(--effect1); border-color: var(--effect1); color: var(--white); }
+.btn.primary:hover,
+.btn.primary:focus-visible {
+  background: var(--cyan);
+  border-color: var(--cyan);
+  color: var(--black);
+  box-shadow: 4px 4px 0 rgba(0,230,200,0.14);
+}
 
 .popup-close {
   position: absolute;
@@ -474,7 +742,8 @@ canvas#gameCanvas {
   transition: color 0.2s;
   background: none; border: none;
 }
-.popup-close:hover { color: var(--black); }
+.popup-close:hover,
+.popup-close:focus-visible { color: var(--cyan); outline: none; }
 
 /* ============================================================
    FOOTER
@@ -511,7 +780,8 @@ footer {
   text-decoration: none;
   font-size: var(--fs-12);
 }
-.social-link:hover { color: var(--brand); }
+.social-link:hover,
+.social-link:focus-visible { color: var(--cyan); outline: none; }
 .social-link svg {
   width: var(--icon-sm);
   height: var(--icon-sm);
@@ -591,7 +861,7 @@ footer {
   transition: border-color 0.2s;
   letter-spacing: 0.1em;
 }
-.pw-input:focus { border-color: var(--brand); }
+.pw-input:focus { border-color: var(--cyan); }
 .pw-input.error { border-color: var(--effect1); }
 .pw-error {
   font-size: var(--fs-10);
@@ -618,6 +888,127 @@ footer {
 @keyframes floatUp {
   from { opacity: 1; transform: translateY(0); }
   to   { opacity: 0; transform: translateY(-40px); }
+}
+@media (max-width: 900px) {
+  :root {
+    --node-offset: 22px;
+    --node-offset-hover: 26px;
+  }
+
+  header {
+    padding: 0 20px;
+  }
+
+  nav {
+    gap: 18px;
+  }
+
+  #home::before {
+  content: none;
+}
+
+  #game-ui {
+    top: calc(var(--nav-h) + 18px);
+    left: 20px;
+    width: min(320px, calc(100vw - 40px));
+  }
+
+  .hud-shell {
+    padding: 18px;
+  }
+
+  .hud-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hud-block--wide {
+    grid-column: auto;
+  }
+
+  .project-node__label {
+    display: none;
+  }
+
+  .project-node__tooltip {
+    min-width: 108px;
+    padding: 8px 9px 8px 10px;
+  }
+
+  #hint {
+    bottom: 18px;
+    padding: 10px 14px;
+  }
+}
+
+@media (max-width: 640px) {
+  #popup {
+    padding: 16px;
+  }
+
+  #popup-inner {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    min-height: 0;
+    max-height: calc(100vh - 32px);
+  }
+
+  .popup-top {
+    padding: 28px 22px 0;
+  }
+
+  .popup-mid {
+    padding: 12px 22px 0;
+  }
+
+  .popup-btns {
+    min-height: 0;
+    padding: 18px 22px 22px;
+  }
+
+  .btn--md {
+    width: 100%;
+  }
+
+  header {
+    padding: 0 16px;
+  }
+
+  .nav-logo sub {
+    display: none;
+  }
+
+  nav {
+    gap: 14px;
+  }
+
+  .nav-dropdown {
+    left: auto;
+    right: 0;
+    transform: translateY(-8px);
+  }
+
+  .nav-item:hover .nav-dropdown {
+    transform: translateY(0);
+  }
+
+  #game-ui {
+    left: 16px;
+    width: calc(100vw - 32px);
+  }
+
+  .hud-top {
+    flex-direction: column;
+  }
+
+  .project-node__tooltip {
+    min-width: 94px;
+    padding: 7px 8px 7px 10px;
+  }
+
+    .project-node__tooltip-title {
+    font-size: var(--fs-10);
+  }
 }
 </style>
 </head>
@@ -659,15 +1050,38 @@ footer {
 <!-- HOME: SNAKE GAME -->
 <section id="home">
   <canvas id="gameCanvas"></canvas>
+  <div id="node-layer" aria-label="Project map"></div>
 
   <div id="game-ui">
-    <div id="pts-label">score</div>
-    <div id="pts-value">000</div>
+    <div class="hud-shell">
+      <div class="hud-eyebrow">Clean Pixel Explorer</div>
+      <div class="hud-top">
+        <div>
+          <div id="pts-label">score</div>
+          <div id="pts-value">000</div>
+        </div>
+        <div class="hud-mode" id="hud-mode">auto roam</div>
+      </div>
+      <div class="hud-grid">
+        <div class="hud-block">
+          <div class="hud-k">status</div>
+          <div class="hud-v" id="hud-status">scanning map</div>
+        </div>
+        <div class="hud-block">
+          <div class="hud-k">nodes live</div>
+          <div class="hud-v" id="hud-project-count">09 online</div>
+        </div>
+        <div class="hud-block hud-block--wide">
+          <div class="hud-k">selected project</div>
+          <div class="hud-v" id="hud-selected">Hover or collect a node</div>
+          <div class="hud-sub" id="hud-selected-meta">Curated portfolio map online</div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div id="hint">press any arrow key to play &nbsp;//&nbsp; press Space or click to pause</div>
+  <div id="hint">arrow keys to explore // space or click to switch modes</div>
 </section>
-
 <!-- EXPERIENCE POPUP -->
 <div id="popup">
   <div id="popup-inner">
@@ -754,8 +1168,21 @@ const cursorCtx    = cursorCanvas.getContext('2d');
 cursorCanvas.width  = window.innerWidth;
 cursorCanvas.height = window.innerHeight;
 window.addEventListener('resize', () => {
-  cursorCanvas.width  = window.innerWidth;
-  cursorCanvas.height = window.innerHeight;
+  resize();
+  if (snake.length > 0) {
+    snake.forEach(s => {
+      s.x = Math.max(0, Math.min(COLS - 1, ((s.x % COLS) + COLS) % COLS));
+      s.y = Math.max(0, Math.min(ROWS - 1, ((s.y % ROWS) + ROWS) % ROWS));
+    });
+  }
+  if (!gameStarted) {
+    autoDemo();
+    return;
+  }
+  syncBeanLayout();
+  renderProjectNodes();
+  updateHud();
+  draw();
 });
 
 let mouseX = -100, mouseY = -100;
@@ -803,65 +1230,52 @@ let legPhase = 0;                     // animation cycle for running legs
 let lastBodyX = -100, lastBodyY = -100;
 let cursorScale = 2, targetScale = 2;
 
-// Draw directional pixel mouse - matches game drawMouse exactly
+// Draw directional pixel ratseal - matches game drawMouse exactly
 function drawMouseCursor(P, angle, moving) {
-  const MOUSE_BODY  = '#FFB742';
-  const MOUSE_DARK  = '#DA6628';
-  const MOUSE_INNER = '#FFD4A8';
-  const MOUSE_EYE   = '#181818';
-  const MOUSE_HL    = '#FFF8E0';
+  const RAT_BODY = '#FFB742';
+  const RAT_SHADE = '#DA6628';
+  const RAT_EAR = '#FFD4A8';
+  const RAT_OUTLINE = '#181818';
+  const RAT_HL = '#FFF8E0';
+  const RAT_TAIL = '#A8B0B2';
+  const RAT_NOSE = '#FEFEFE';
 
-  // centred pixel helper
   function p(rx, ry, w, h, col) {
     cursorCtx.fillStyle = col;
-    cursorCtx.fillRect(Math.round(rx - w/2), Math.round(ry - h/2), Math.round(w), Math.round(h));
+    cursorCtx.fillRect(Math.round(rx - w / 2), Math.round(ry - h / 2), Math.round(w), Math.round(h));
   }
 
   cursorCtx.save();
   cursorCtx.rotate(angle);
 
-  const hS = P * 8;
+  const tailArc = moving ? Math.sin(legPhase * 1.4) * P * 1.6 : P * 1.1;
+  p(-P * 10.5, tailArc * 0.15, P * 2, P * 2, RAT_TAIL);
+  p(-P * 13.2, tailArc * 0.7, P * 1.5, P * 1.5, RAT_TAIL);
+  p(-P * 7.4, -P * 4.8, P * 3, P * 3, RAT_OUTLINE);
+  p(-P * 7.4, P * 4.8, P * 3, P * 3, RAT_OUTLINE);
+  p(-P * 7.0, -P * 4.4, P * 2, P * 2, RAT_EAR);
+  p(-P * 7.0, P * 4.4, P * 2, P * 2, RAT_EAR);
+  p(-P * 6.7, -P * 4.2, P, P, RAT_HL);
+  p(-P * 6.7, P * 4.2, P, P, RAT_HL);
 
-  // - Tail - 3 dots trailing behind (left = back when facing right) -
-  const arc = moving ? Math.sin(legPhase * 1.4) * P * 2.5 : P * 2.0;
-  const tb  = -hS/2 - P;
-  p(tb - P*1, arc * 0.3, P*2,   P*2,   MOUSE_DARK);
-  p(tb - P*4, arc * 0.9, P*1.5, P*1.5, MOUSE_BODY);
-  p(tb - P*7, arc * 0.4, P,     P,     MOUSE_BODY);
+  p(-P * 0.6, 0, P * 11, P * 9, RAT_OUTLINE);
+  p(-P * 0.4, 0, P * 9, P * 7, RAT_BODY);
+  p(P * 1.4, P * 2.0, P * 4.5, P, RAT_SHADE);
+  p(P * 1.4, P * 2.0, P, P * 4, RAT_SHADE);
+  p(-P * 2.4, -P * 2.0, P * 3, P, RAT_HL);
+  p(-P * 2.4, -P * 2.0, P, P * 3, RAT_HL);
 
-  // - Ears - upper and lower, behind head center (matching game) -
-  const earSize  = P * 3;
-  const earInner = P * 2;
-  const earX     = -P * 1;
-  const earTopY  = -P * 4.5;
-  const earBotY  =  P * 4.5;
-  p(earX, earTopY, earSize, earSize, MOUSE_BODY);
-  p(earX, earBotY, earSize, earSize, MOUSE_BODY);
-  p(earX - earSize/2, earTopY, P, earSize, MOUSE_DARK);
-  p(earX - earSize/2, earBotY, P, earSize, MOUSE_DARK);
-  p(earX + P*0.3, earTopY, earInner, earInner, MOUSE_INNER);
-  p(earX + P*0.3, earBotY, earInner, earInner, MOUSE_INNER);
+  p(P * 1.2, -P * 1.8, P, P * 1.4, RAT_OUTLINE);
+  p(P * 1.2, P * 1.8, P, P * 1.4, RAT_OUTLINE);
+  p(P * 1.5, -P * 2.0, P * 0.7, P * 0.7, RAT_HL);
+  p(P * 1.5, P * 1.5, P * 0.7, P * 0.7, RAT_HL);
+  p(P * 4.0, 0, P * 2.2, P * 2.2, RAT_OUTLINE);
+  p(P * 4.2, 0, P * 1.6, P * 1.6, RAT_NOSE);
+  p(P * 5.0, 0, P, P, RAT_SHADE);
 
-  // - Head body -
-  p(0, 0, hS, hS, MOUSE_BODY);
-  p( P*2.5,  P*2.5, P*5, P,   MOUSE_DARK);
-  p( P*2.5,  P*2.5, P,   P*5, MOUSE_DARK);
-  p(-P*2,   -P*2,   P*3, P,   MOUSE_HL);
-  p(-P*2,   -P*2,   P,   P*3, MOUSE_HL);
-
-  // - Eyes -
-  p(P*1.5, -P*1.8, P*1.5, P*1.5, MOUSE_EYE);
-  p(P*1.5,  P*1.8, P*1.5, P*1.5, MOUSE_EYE);
-  p(P*1.8, -P*2.1, P, P, MOUSE_HL);
-  p(P*1.8,  P*1.5, P, P, MOUSE_HL);
-
-  // - Nose -
-  p(P*3.5, 0, P*1.5, P*1.5, MOUSE_DARK);
-
-  // - Whiskers -
   cursorCtx.fillStyle = 'rgba(136,136,140,0.6)';
-  cursorCtx.fillRect(Math.round(P*3.2 - P*1.5), Math.round(-P*0.3), Math.round(P*3), 1);
-  cursorCtx.fillRect(Math.round(P*3.2 - P*1.5), Math.round( P*0.8), Math.round(P*3), 1);
+  cursorCtx.fillRect(Math.round(P * 2.8), Math.round(-P * 0.9), Math.round(P * 3), 1);
+  cursorCtx.fillRect(Math.round(P * 2.8), Math.round(P * 1.2), Math.round(P * 3), 1);
 
   cursorCtx.restore();
 }
@@ -876,7 +1290,7 @@ function cursorLoop() {
 
   if (isOnGame) {
     // Homepage: simple brand dot
-    cursorCtx.fillStyle = isHovering ? '#DA6628' : '#FFB742';
+    cursorCtx.fillStyle = isHovering ? '#00e6c8' : '#FFB742';
     const r = isHovering ? 12 : 5;
     cursorCtx.globalAlpha = isHovering ? 0.7 : 1;
     cursorCtx.beginPath();
@@ -937,36 +1351,37 @@ function resize() {
 }
 window.addEventListener('resize', () => {
   resize();
-  // Snap all snake segments back into the new grid bounds
   if (snake.length > 0) {
     snake.forEach(s => {
       s.x = Math.max(0, Math.min(COLS - 1, ((s.x % COLS) + COLS) % COLS));
       s.y = Math.max(0, Math.min(ROWS - 1, ((s.y % ROWS) + ROWS) % ROWS));
     });
   }
-  if (!gameStarted) autoDemo();
+  if (!gameStarted) {
+    autoDemo();
+    return;
+  }
+  syncBeanLayout();
+  renderProjectNodes();
+  updateHud();
+  draw();
 });
 resize();
 
 // Forbidden zones (HUD areas; no beans/candies allowed)
 // Returns true if grid cell (gx,gy) overlaps any UI element
 function isForbidden(gx, gy) {
-  // Nav bar - just the top 2 rows
   const NAV_ROWS = Math.ceil(NAV_H / CELL);
   if (gy < NAV_ROWS) return true;
 
-  // Score block - col 1-4, rows just after nav for ~3 rows (score text height)
-  // left: 40px padding = ~col 1; width ~120px = ~4 cols; height ~70px = ~2-3 rows
-  const scoreColStart = 1;
-  const scoreColEnd   = Math.ceil((40 + 130) / CELL);
-  const scoreRowEnd   = NAV_ROWS + Math.ceil(80 / CELL);
-  if (gx >= scoreColStart && gx <= scoreColEnd && gy >= NAV_ROWS && gy < scoreRowEnd) return true;
+  const hudLeft = window.innerWidth <= 640 ? 16 : window.innerWidth <= 900 ? 20 : 40;
+  const hudWidth = window.innerWidth <= 900 ? Math.min(window.innerWidth - hudLeft * 2, 320) : 360;
+  const hudHeight = window.innerWidth <= 900 ? 214 : 176;
+  const hudColEnd = Math.ceil((hudLeft + hudWidth) / CELL);
+  const hudRowEnd = NAV_ROWS + Math.ceil((24 + hudHeight) / CELL);
+  if (gx >= 0 && gx <= hudColEnd && gy >= NAV_ROWS && gy < hudRowEnd) return true;
 
-  // Hint - bottom 2 rows only (hint text is 1 line ~20px + 40px bottom padding)
-  if (gy >= ROWS - 2) return true;
-
-  // Bean label row - 1 cell directly below any bean
-  if (expBeans.some(e => e.x === gx && e.y + 1 === gy)) return true;
+  if (gy >= ROWS - 3) return true;
 
   return false;
 }
@@ -979,104 +1394,146 @@ const BLACK  = '#181818';
 const BRAND  = '#FFB742';
 const EFF1   = '#DA6628';
 const EFF2   = '#F3FF97';
+const CYAN   = '#00e6c8';
 const popupViewBtn = document.getElementById('popup-view-btn');
 const popupPtsEl = document.getElementById('popup-pts');
+const nodeLayer = document.getElementById('node-layer');
+const hudModeEl = document.getElementById('hud-mode');
+const hudStatusEl = document.getElementById('hud-status');
+const hudProjectCountEl = document.getElementById('hud-project-count');
+const hudSelectedEl = document.getElementById('hud-selected');
+const hudSelectedMetaEl = document.getElementById('hud-selected-meta');
 const popupArrowIcon = ' <svg class="pxi pxi--sm" style="margin-top:3.4px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" xmlns="http://www.w3.org/2000/svg"><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
 const ABOUT_POPUP = {
-  tag: 'White Mouse Seal Encounter',
+  tag: 'Seal Encounter',
   title: 'About',
-  company: 'Mouse Seal',
-  period: 'A creative person building something fun',
-  desc: 'The white mouse caught the yellow mouse. Open About to see the profile, skill tree, and contact links.',
+  company: 'Explorer Log',
+  period: 'The studio behind the map',
+  desc: 'The white seal found the ratseal explorer. Open About to see the profile, skill tree, and contact links.',
   pts: 0,
   url: 'about.html',
   buttonLabel: 'Open About',
   newTab: false,
 };
-// Chaser enemy uses the code-drawn white mouse sprite.
 
+const PROJECT_LAYOUTS = {
+  desktop: {
+    lesocial:     { x: 0.20, y: 0.36 },
+    debox:        { x: 0.23, y: 0.63 },
+    illustration: { x: 0.42, y: 0.24 },
+    vfx:          { x: 0.44, y: 0.56 },
+    ora:          { x: 0.66, y: 0.22 },
+    helpurr:      { x: 0.81, y: 0.38 },
+    meed:         { x: 0.61, y: 0.49 },
+    cheddar:      { x: 0.60, y: 0.74 },
+    hamartia:     { x: 0.80, y: 0.68 },
+  },
+  compact: {
+    illustration: { x: 0.28, y: 0.26 },
+    ora:          { x: 0.74, y: 0.24 },
+    lesocial:     { x: 0.22, y: 0.41 },
+    helpurr:      { x: 0.76, y: 0.41 },
+    meed:         { x: 0.28, y: 0.56 },
+    debox:        { x: 0.74, y: 0.56 },
+    vfx:          { x: 0.24, y: 0.72 },
+    cheddar:      { x: 0.76, y: 0.72 },
+    hamartia:     { x: 0.50, y: 0.84 },
+  }
+};
 
-// Experience Data
+const PROJECT_LINKS = [
+  ['lesocial', 'ora'],
+  ['lesocial', 'helpurr'],
+  ['ora', 'meed'],
+  ['ora', 'debox'],
+  ['meed', 'cheddar'],
+  ['meed', 'hamartia'],
+  ['helpurr', 'illustration'],
+  ['illustration', 'vfx'],
+  ['cheddar', 'illustration'],
+  ['hamartia', 'vfx'],
+];
+
 const EXPERIENCES = [
   {
     id: 'ora', label: 'ORA',
     tag: 'Experience Unlocked',
     title: 'Creative Lead',
     company: 'ORA Protocol',
-    period: 'Jun 2024 - Feb 2025 · Full-time',
+    period: 'Jun 2024 - Feb 2025 // Full-time',
     desc: 'Built ORA\'s visual identity and brand system from zero. Led art direction for Chain Reaction, Token Launches, and ETH - AI initiatives - videos, products, merchandise.',
     pts: 50,
     url: 'https://ora.io',
-    color: '#00F6FF',
+    color: BRAND,
   },
   {
-    id: 'helpurr', label: 'AI',
+    id: 'helpurr', label: 'HELPURR',
     tag: 'Experience Unlocked',
-    title: 'Early',
-    company: 'Helpurr - AI Pet Care',
+    title: 'Brand Builder',
+    company: 'Helpurr',
     period: '2025 - 2026',
     desc: 'Early team member shaping the art direction and brand identity for an AI-powered pet care app. Built the visual language from zero - character design, UI aesthetic, and brand system for Helpurr\'s launch.',
     pts: 50,
     url: 'https://helpurr.com',
-    color: '#C0FFEE',
+    color: BRAND,
   },
   {
     id: 'meed', label: 'MEED',
     tag: 'Experience Unlocked',
     title: 'Senior Designer',
     company: 'Meed (ex-Super Ultra)',
-    period: 'Jun 2022 - Jul 2024 · Full-time',
+    period: 'Jun 2022 - Jul 2024 // Full-time',
     desc: 'Designed Meed\'s AI-enhanced digital rewards platform - web app and dashboard. Built hype casual mobile games and co-designed "Skysurfer". Won Moralis - Google & Cronos Labs hackathons.',
     pts: 50,
     url: 'https://meed.com',
-    color: '#F87C56',
+    color: BRAND,
   },
   {
-    id: 'hamartia', label: 'GAME',
+    id: 'hamartia', label: 'HAMARTIA',
     tag: 'Project Unlocked',
-    title: 'Hamartia',
-    company: 'Game Project',
+    title: 'Game Project',
+    company: 'Hamartia',
     period: '2023 - 2024',
     desc: 'Game design, art direction and visual development for Hamartia.',
     pts: 50,
     url: '/hamartia.html',
-    color: '#FF4444',
+    color: BRAND,
   },
   {
     id: 'cheddar', label: 'CHEDDAR',
     tag: 'Project Unlocked',
     title: '2D / 3D Artist',
     company: 'Cheddar Verse',
-    period: 'Jan 2021 - May 2022 · Full-time',
+    period: 'Jan 2021 - May 2022 // Full-time',
     desc: 'Branding for NFT projects "Cheddar Verse", 3D assets for blind box, illustrations for social media.',
     pts: 50,
     url: '/cheddar.html',
-    color: '#FFBF56',
+    color: BRAND,
   },
   {
     id: 'debox', label: 'DEBOX',
     tag: 'Experience Unlocked',
-    title: 'community manager',
+    title: 'Community Manager',
     company: 'DeBox',
     period: '2022 - 2023',
-    desc: 'Grew DeBox HK community from 0 to 2600 in 4 months. Hosted Twitter Spaces, Member meetups, and organised 1st IRL event & Happy Hour.',
+    desc: 'Grew DeBox HK community from 0 to 2600 in 4 months. Hosted Twitter Spaces, member meetups, and organised the first IRL event and happy hour.',
     pts: 50,
     url: '/debox.html',
-    color: '#00C454',
+    color: BRAND,
   },
   {
-    id: 'lesocial', label: 'LE.SOC',
+    id: 'lesocial', label: 'LE.SOCIAL',
     tag: 'Project Unlocked',
     title: 'Builder',
     company: 'Le.social',
-    period: '2025 - 2026 · Self-initiated',
+    period: '2025 - 2026 // Self-initiated',
     desc: 'Conceived and built Le.social - the best tool for your social name card. A passion project exploring digital identity, minimal design, and how people present themselves online.',
     pts: 50,
     url: '/lesocial.html',
-    color: '#03442D',
+    color: BRAND,
   },
   {
-    id: 'illustration', label: 'ILLUST',
+    id: 'illustration', label: 'ILLUST.',
     tag: 'Project Unlocked',
     title: 'Illustrator',
     company: 'Illustration',
@@ -1084,7 +1541,7 @@ const EXPERIENCES = [
     desc: 'Personal illustration work spanning character design, editorial, and world-building.',
     pts: 50,
     url: '/illustration.html',
-    color: '#88888C',
+    color: BRAND,
   },
   {
     id: 'vfx', label: 'VFX',
@@ -1095,7 +1552,7 @@ const EXPERIENCES = [
     desc: 'Motion graphics and visual effects for film and digital media projects.',
     pts: 50,
     url: '/vfx.html',
-    color: '#181818',
+    color: BRAND,
   },
 ];
 
@@ -1111,6 +1568,8 @@ let gameLoop;
 let unlockedExp = new Set(); // tracks which popups have been shown
 let popupOpen   = false;
 let beanWatchdog = null; // 5s interval to guarantee bean count
+let selectedExpId = null;
+const projectNodeEls = new Map();
 
 // Auto-wander AI
 let autoTarget  = null;
@@ -1123,13 +1582,175 @@ const SEAL_SIZE_CELLS = 2;
 function ri(max) { return Math.floor(Math.random() * max); }
 function gridX(col) { return col * CELL + CELL / 2; }
 function gridY(row) { return row * CELL + CELL / 2; }
+function clamp(value, min, max) { return Math.max(min, Math.min(max, value)); }
+function isCompactMap() { return window.innerWidth <= 900; }
+function getExperience(id) { return EXPERIENCES.find(exp => exp.id === id); }
+function getNodeIcon(id) {
+  const icons = {
+    ora: 'signal',
+    helpurr: 'spark',
+    meed: 'stack',
+    hamartia: 'frame',
+    cheddar: 'orbit',
+    debox: 'signal',
+    lesocial: 'frame',
+    illustration: 'spark',
+    vfx: 'stack',
+  };
+  return icons[id] || 'signal';
+}
+
+function projectAnchorFor(expId) {
+  const map = isCompactMap() ? PROJECT_LAYOUTS.compact : PROJECT_LAYOUTS.desktop;
+  const point = map[expId] || { x: 0.5, y: 0.5 };
+  const minX = isCompactMap() ? 3 : 4;
+  const maxX = Math.max(minX, COLS - 4);
+  const minY = Math.ceil((NAV_H + (isCompactMap() ? 170 : 120)) / CELL);
+  const maxY = Math.max(minY, ROWS - (isCompactMap() ? 5 : 4));
+  return {
+    x: clamp(Math.round(point.x * (COLS - 1)), minX, maxX),
+    y: clamp(Math.round(point.y * (ROWS - 1)), minY, maxY),
+  };
+}
+
+function beanSlotAvailable(gx, gy, planned = [], excludeId = null) {
+  if (gx < 0 || gx >= COLS || gy < 0 || gy >= ROWS - 1) return false;
+  if (isForbidden(gx, gy) || isForbidden(gx, gy + 1)) return false;
+  if (snake.some(s => s.x === gx && s.y === gy)) return false;
+  if (candies.some(c => Math.abs(c.x - gx) <= 1 && Math.abs(c.y - gy) <= 1)) return false;
+  if (sealOccupies(gx, gy)) return false;
+  const allBeans = [...expBeans, ...planned];
+  if (allBeans.some(e => e.exp.id !== excludeId && Math.abs(e.x - gx) <= 2 && Math.abs(e.y - gy) <= 1)) return false;
+  return true;
+}
+
+function findCuratedBeanPosition(exp, planned = []) {
+  const anchor = projectAnchorFor(exp.id);
+  if (beanSlotAvailable(anchor.x, anchor.y, planned, exp.id)) return anchor;
+
+  for (let radius = 1; radius <= 5; radius++) {
+    for (let dx = -radius; dx <= radius; dx++) {
+      for (let dy = -radius; dy <= radius; dy++) {
+        if (Math.abs(dx) !== radius && Math.abs(dy) !== radius) continue;
+        const tx = anchor.x + dx;
+        const ty = anchor.y + dy;
+        if (beanSlotAvailable(tx, ty, planned, exp.id)) {
+          return { x: tx, y: ty };
+        }
+      }
+    }
+  }
+
+  return anchor;
+}
+
+function syncBeanLayout() {
+  const planned = [];
+  expBeans = expBeans.map(bean => {
+    const pos = findCuratedBeanPosition(bean.exp, planned);
+    const next = { ...pos, exp: bean.exp };
+    planned.push(next);
+    return next;
+  });
+}
+
+function updateHud() {
+  hudModeEl.textContent = gameStarted ? 'manual control' : 'auto roam';
+  hudStatusEl.textContent = popupOpen ? 'project focus' : gameStarted ? 'explorer active' : 'map scanning';
+  hudProjectCountEl.textContent = `${String(expBeans.length).padStart(2, '0')} curated`;
+
+  const exp = selectedExpId ? getExperience(selectedExpId) : null;
+  if (exp) {
+    hudSelectedEl.textContent = exp.label;
+    hudSelectedMetaEl.textContent = `${exp.title} // ${exp.company}`;
+  } else {
+    hudSelectedEl.textContent = 'Hover or collect a node';
+    hudSelectedMetaEl.textContent = gameStarted
+      ? 'Explorer ratseal moving through the archive'
+      : 'Curated portfolio map online';
+  }
+}
+
+function createProjectNode(exp) {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'project-node';
+  button.dataset.icon = getNodeIcon(exp.id);
+  button.setAttribute('aria-label', `${exp.label}, ${exp.title}, ${exp.company}`);
+  button.innerHTML = `
+    <span class="project-node__badge" aria-hidden="true">
+      <span class="project-node__glyph"></span>
+    </span>
+    <span class="project-node__label">${exp.label}</span>
+    <span class="project-node__tooltip" role="presentation">
+      <span class="project-node__tooltip-title">${exp.label}</span>
+      <span class="project-node__tooltip-meta">${exp.title} // ${exp.company}</span>
+    </span>
+  `;
+
+  button.addEventListener('mouseenter', () => {
+    isHovering = true;
+    setSelectedProject(exp.id);
+  });
+  button.addEventListener('mouseleave', () => {
+    isHovering = false;
+    if (!popupOpen && selectedExpId === exp.id) setSelectedProject(null);
+  });
+  button.addEventListener('focus', () => setSelectedProject(exp.id));
+  button.addEventListener('blur', () => {
+    if (!popupOpen && selectedExpId === exp.id) setSelectedProject(null);
+  });
+  button.addEventListener('click', event => {
+    event.stopPropagation();
+    setSelectedProject(exp.id);
+    showPopup(exp);
+  });
+  return button;
+}
+
+function renderProjectNodes() {
+  if (!nodeLayer) return;
+
+  const visibleIds = new Set(expBeans.map(bean => bean.exp.id));
+  projectNodeEls.forEach((el, id) => {
+    if (!visibleIds.has(id)) {
+      el.remove();
+      projectNodeEls.delete(id);
+    }
+  });
+
+  expBeans.forEach(bean => {
+    let el = projectNodeEls.get(bean.exp.id);
+    if (!el) {
+      el = createProjectNode(bean.exp);
+      projectNodeEls.set(bean.exp.id, el);
+      nodeLayer.appendChild(el);
+    }
+
+    const x = gridX(bean.x);
+    const y = gridY(bean.y);
+    const alignLeft = x > canvas.width * (isCompactMap() ? 0.56 : 0.68);
+    el.classList.toggle('project-node--left', alignLeft);
+    el.classList.toggle('is-active', bean.exp.id === selectedExpId);
+    el.style.left = `${x}px`;
+    el.style.top = `${y}px`;
+  });
+}
+
+function setSelectedProject(expOrId) {
+  const nextId = typeof expOrId === 'string' ? expOrId : expOrId?.id || null;
+  const changed = selectedExpId !== nextId;
+  selectedExpId = nextId;
+  updateHud();
+  renderProjectNodes();
+  if (changed && typeof draw === 'function') draw();
+}
 
 function occupied(pos) {
   return isForbidden(pos.x, pos.y)
     || snake.some(s => s.x === pos.x && s.y === pos.y)
     || candies.some(c => c.x === pos.x && c.y === pos.y)
-    || expBeans.some(e => e.x === pos.x && e.y === pos.y)
-    || expBeans.some(e => e.x === pos.x && e.y + 1 === pos.y)
+    || nearProjectAnchor(pos.x, pos.y, 1)
     || sealOccupies(pos.x, pos.y);
 }
 
@@ -1258,11 +1879,16 @@ function initGame() {
   unlockedExp = new Set();
   sealEnemy = null;
   sealMoveTimer = 0;
+  selectedExpId = null;
+  projectNodeEls.forEach(el => el.remove());
+  projectNodeEls.clear();
   updateScore(0);
 
   for (let i = 0; i < candyInitial(); i++) spawnCandy();
-  spawnExpBeans(); // initial fill
+  spawnExpBeans();
   spawnSealEnemy();
+  updateHud();
+  renderProjectNodes();
 
   clearInterval(gameLoop);
   gameLoop = setInterval(tick, gameStarted ? 140 : 200);
@@ -1277,8 +1903,8 @@ function spawnCandy() {
   candies.push({ ...pos, size });
 }
 
-function candyTarget()  { return Math.floor(COLS * ROWS * 0.12); } // 12% maintain
-function candyInitial() { return Math.floor(COLS * ROWS * 0.16); } // 16% initial
+function candyTarget()  { return Math.floor(COLS * ROWS * 0.06); } // 6% maintain
+function candyInitial() { return Math.floor(COLS * ROWS * 0.08); } // 8% initial
 
 function maintainCandies() {
   const target = candyTarget();
@@ -1288,65 +1914,31 @@ function maintainCandies() {
   }
 }
 
-const MAX_EXP_BEANS = EXPERIENCES.length; // one bean per project, no duplicates
-
-function safeSpawnBean(excludeBeans) {
-  // excludeBeans: list of beans already planned this batch (not yet in expBeans)
-  const allBeans = [...expBeans, ...(excludeBeans || [])];
-  let pos, tries = 0;
-  do {
-    pos = { x: ri(COLS), y: ri(ROWS - 2) };
-    tries++;
-    if (tries > 500) {
-      // Last resort: scan every cell
-      for (let gy = 2; gy < ROWS - 2; gy++) {
-        for (let gx = 0; gx < COLS; gx++) {
-          const p = {x: gx, y: gy};
-          if (!isForbidden(gx, gy) && !isForbidden(gx, gy+1)
-            && !snake.some(s => s.x===gx && s.y===gy)
-            && !candies.some(c => c.x===gx && c.y===gy)
-            && !allBeans.some(e => e.x===gx && (e.y===gy || e.y+1===gy || e.y===gy+1))
-          ) return p;
-        }
-      }
-      return pos; // give up, return whatever
-    }
-  } while (
-    isForbidden(pos.x, pos.y) ||
-    isForbidden(pos.x, pos.y + 1) ||
-    snake.some(s => s.x===pos.x && s.y===pos.y) ||
-    candies.some(c => c.x===pos.x && c.y===pos.y) ||
-    allBeans.some(e => e.x===pos.x && (e.y===pos.y || e.y+1===pos.y || e.y===pos.y+1))
-  );
-  return pos;
-}
+const MAX_EXP_BEANS = EXPERIENCES.length;
 
 function spawnExpBeans() {
-  // Each project appears at most once - no duplicates ever
-  const onScreen = new Set(expBeans.map(e => e.exp.id));
-  // Pool: only projects NOT currently on screen
-  let pool = EXPERIENCES.filter(exp => !onScreen.has(exp.id));
+  const onScreen = new Set(expBeans.map(bean => bean.exp.id));
+  const planned = [];
 
-  // Shuffle pool
-  for (let i = pool.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [pool[i], pool[j]] = [pool[j], pool[i]];
-  }
-
-  const needed = Math.max(0, MAX_EXP_BEANS - expBeans.length);
-  const toAdd  = pool.slice(0, needed); // never more than missing slots
-  const newBeans = [];
-
-  toAdd.forEach(exp => {
-    const pos = safeSpawnBean(newBeans);
+  EXPERIENCES.forEach(exp => {
+    if (onScreen.has(exp.id)) return;
+    const pos = findCuratedBeanPosition(exp, planned);
     const bean = { ...pos, exp };
-    newBeans.push(bean);
+    planned.push(bean);
     expBeans.push(bean);
   });
+
+  renderProjectNodes();
+  updateHud();
 }
 
 function maintainExpBeans() {
-  if (expBeans.length < MAX_EXP_BEANS) spawnExpBeans();
+  if (expBeans.length < MAX_EXP_BEANS) {
+    spawnExpBeans();
+  } else {
+    renderProjectNodes();
+    updateHud();
+  }
 }
 
 let oobTimer = null; // out-of-bounds timer
@@ -1466,30 +2058,28 @@ function tick() {
   draw();
 }
 
-// Mouse hover push beans (when not playing)
+// Mouse hover push candies only (when not playing)
 let hoverGridX = -1, hoverGridY = -1;
 canvas.addEventListener('mousemove', e => {
-  if (gameStarted) return; // only in auto/idle mode
+  if (gameStarted) return;
   const rect = canvas.getBoundingClientRect();
   hoverGridX = Math.floor((e.clientX - rect.left) / CELL);
-  hoverGridY = Math.floor((e.clientY - rect.top)  / CELL);
+  hoverGridY = Math.floor((e.clientY - rect.top) / CELL);
   pushBeansFromMouse();
 });
 canvas.addEventListener('mouseleave', () => { hoverGridX = -1; hoverGridY = -1; });
 
+function nearProjectAnchor(gx, gy, padding = 1) {
+  return expBeans.some(e => Math.abs(e.x - gx) <= padding && Math.abs(e.y - gy) <= padding);
+}
 
 function cellFreeForBean(gx, gy, excludeBean) {
-  if (isForbidden(gx, gy)) return false;
-  if (isForbidden(gx, gy + 1)) return false; // label row
+  if (isForbidden(gx, gy) || isForbidden(gx, gy + 1)) return false;
   if (gx < 0 || gx >= COLS || gy < 0 || gy >= ROWS - 1) return false;
   if (snake.some(s => s.x === gx && s.y === gy)) return false;
-  if (candies.some(c => c.x === gx && c.y === gy)) return false;
+  if (candies.some(c => Math.abs(c.x - gx) <= 1 && Math.abs(c.y - gy) <= 1)) return false;
   if (sealOccupies(gx, gy)) return false;
-  if (expBeans.some(e => e !== excludeBean && (
-    (e.x === gx && e.y === gy) ||         // same cell
-    (e.x === gx && e.y + 1 === gy) ||     // other bean's label on this cell
-    (e.x === gx && e.y === gy + 1)        // this bean's label on other bean
-  ))) return false;
+  if (expBeans.some(e => e !== excludeBean && Math.abs(e.x - gx) <= 2 && Math.abs(e.y - gy) <= 1)) return false;
   return true;
 }
 
@@ -1499,76 +2089,31 @@ function cellFreeForCandy(gx, gy) {
   if (snake.some(s => s.x === gx && s.y === gy)) return false;
   if (candies.some(c => c.x === gx && c.y === gy)) return false;
   if (sealOccupies(gx, gy)) return false;
-  if (expBeans.some(e => e.x === gx && (e.y === gy || e.y + 1 === gy))) return false;
+  if (nearProjectAnchor(gx, gy, 1)) return false;
   return true;
 }
 
 function pushBeansFromMouse() {
   if (hoverGridX < 0) return;
-  const PUSH_RADIUS = 3;
-
-  expBeans.forEach(bean => {
-    const dx = bean.x - hoverGridX;
-    const dy = bean.y - hoverGridY;
-    const dist = Math.sqrt(dx*dx + dy*dy);
-    if (dist < PUSH_RADIUS && dist > 0) {
-      const nx = dx / dist;
-      const ny = dy / dist;
-      // Try push direction first, then scan outward for safe cell
-      const rawX = Math.round(bean.x + nx * (PUSH_RADIUS - dist + 1));
-      const rawY = Math.round(bean.y + ny * (PUSH_RADIUS - dist + 1));
-      if (cellFreeForBean(rawX, rawY, bean)) {
-        bean.x = rawX; bean.y = rawY;
-      } else {
-        // Scan in expanding rings for nearest free cell
-        for (let r = 1; r <= 5; r++) {
-          let found = false;
-          for (let ox2 = -r; ox2 <= r && !found; ox2++) {
-            for (let oy2 = -r; oy2 <= r && !found; oy2++) {
-              if (Math.abs(ox2) !== r && Math.abs(oy2) !== r) continue;
-              const tx = rawX + ox2, ty = rawY + oy2;
-              if (cellFreeForBean(tx, ty, bean)) {
-                bean.x = tx; bean.y = ty; found = true;
-              }
-            }
-          }
-          if (found) break;
-        }
-      }
-    }
-  });
 
   candies.forEach(candy => {
     const dx = candy.x - hoverGridX;
     const dy = candy.y - hoverGridY;
-    const dist = Math.sqrt(dx*dx + dy*dy);
-    if (dist < 2 && dist > 0) {
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < 1.5 && dist > 0) {
       const nx = dx / dist;
       const ny = dy / dist;
-      const rawX = Math.round(candy.x + nx * 2);
-      const rawY = Math.round(candy.y + ny * 2);
+      const rawX = Math.round(candy.x + nx);
+      const rawY = Math.round(candy.y + ny);
       if (cellFreeForCandy(rawX, rawY)) {
-        candy.x = rawX; candy.y = rawY;
-      } else {
-        for (let r = 1; r <= 4; r++) {
-          let found = false;
-          for (let ox2 = -r; ox2 <= r && !found; ox2++) {
-            for (let oy2 = -r; oy2 <= r && !found; oy2++) {
-              if (Math.abs(ox2) !== r && Math.abs(oy2) !== r) continue;
-              const tx = rawX + ox2, ty = rawY + oy2;
-              if (cellFreeForCandy(tx, ty)) {
-                candy.x = tx; candy.y = ty; found = true;
-              }
-            }
-          }
-          if (found) break;
-        }
+        candy.x = rawX;
+        candy.y = rawY;
       }
     }
   });
+
   draw();
 }
-
 // Auto-wander AI
 function autoSteer() {
   autoTimer--;
@@ -1609,98 +2154,124 @@ function autoSteer() {
 }
 
 // Pixel helpers
-// Draw a pixel-art rectangle (snapped to pixel grid)
 function px(x, y, w, h, color) {
   ctx.fillStyle = color;
   ctx.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h));
 }
 
-// Draw
-function draw() {
-  // Disable anti-aliasing for crisp pixels
-  ctx.imageSmoothingEnabled = false;
+function noiseAt(x, y) {
+  const value = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453;
+  return value - Math.floor(value);
+}
 
-  // Background - white
+function drawBackgroundNoise() {
+  for (let c = 0; c < COLS; c++) {
+    for (let r = 0; r < ROWS; r++) {
+      if (isForbidden(c, r)) continue;
+      const n = noiseAt(c, r);
+      const pxX = c * CELL + CELL / 2 - 1;
+      const pxY = r * CELL + CELL / 2 - 1;
+
+      if ((c + r) % 2 === 0 && n < 0.36) {
+        px(pxX, pxY, 2, 2, 'rgba(136,136,140,0.09)');
+      } else if ((c + r) % 3 === 0 && n > 0.84 && n < 0.88) {
+        px(pxX - 1, pxY, 4, 1, 'rgba(168,176,178,0.10)');
+        px(pxX, pxY - 1, 1, 4, 'rgba(168,176,178,0.10)');
+      }
+    }
+  }
+}
+
+function drawPixelTrack(x1, y1, x2, y2, color) {
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const steps = Math.max(1, Math.ceil(Math.max(Math.abs(dx), Math.abs(dy)) / 6));
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;
+    px(x1 + dx * t - 1, y1 + dy * t - 1, 2, 2, color);
+  }
+}
+
+function drawNodePaths() {
+  PROJECT_LINKS.forEach(([fromId, toId]) => {
+    const from = expBeans.find(bean => bean.exp.id === fromId);
+    const to = expBeans.find(bean => bean.exp.id === toId);
+    if (!from || !to) return;
+
+    const active = selectedExpId && (selectedExpId === fromId || selectedExpId === toId);
+    const color = active ? 'rgba(0,230,200,0.24)' : 'rgba(168,176,178,0.22)';
+    const startX = gridX(from.x);
+    const startY = gridY(from.y);
+    const endX = gridX(to.x);
+    const endY = gridY(to.y);
+    const bendX = startX + Math.round(((endX - startX) * 0.5) / CELL) * CELL;
+
+    drawPixelTrack(startX, startY, bendX, startY, color);
+    drawPixelTrack(bendX, startY, bendX, endY, color);
+    drawPixelTrack(bendX, endY, endX, endY, color);
+  });
+}
+
+function drawPopupConnection() {
+  if (!popupOpen || !selectedExpId) return;
+  const bean = expBeans.find(item => item.exp.id === selectedExpId);
+  if (!bean) return;
+
+  const startX = gridX(bean.x);
+  const startY = gridY(bean.y);
+  const popupHalf = Math.min(280, Math.floor(canvas.width * 0.22));
+  const targetX = startX < canvas.width / 2 ? canvas.width / 2 - popupHalf : canvas.width / 2 + popupHalf;
+  const targetY = canvas.height / 2 - 42;
+
+  drawPixelTrack(startX, startY, targetX, startY, 'rgba(0,230,200,0.28)');
+  drawPixelTrack(targetX, startY, targetX, targetY, 'rgba(255,183,66,0.20)');
+}
+
+function drawProjectAnchor(bean) {
+  const centerX = gridX(bean.x);
+  const centerY = gridY(bean.y);
+  const P = Math.max(2, Math.floor(CELL / 10));
+  const active = selectedExpId === bean.exp.id;
+  const halo = active ? 'rgba(0,230,200,0.14)' : 'rgba(168,176,178,0.08)';
+
+  px(centerX - P * 3, centerY - P * 3, P * 6, P * 6, halo);
+  if (active) {
+    px(centerX - P * 4, centerY, P * 8, 1, 'rgba(0,230,200,0.28)');
+    px(centerX, centerY - P * 4, 1, P * 8, 'rgba(255,183,66,0.22)');
+  }
+}
+
+function draw() {
+  ctx.imageSmoothingEnabled = false;
   ctx.fillStyle = WHITE;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // 8-bit dot grid
-  for (let c = 0; c < COLS; c++) {
-    for (let r = 0; r < ROWS; r++) {
-      px(c * CELL + CELL / 2 - 1, r * CELL + CELL / 2 - 1, 2, 2, 'rgba(136,136,140,0.15)');
-    }
-  }
+  drawBackgroundNoise();
+  drawNodePaths();
+  drawPopupConnection();
 
-  // Exp beans: 8-bit star/diamond pixel sprite
-  expBeans.forEach(e => {
-    const ox = e.x * CELL;
-    const oy = e.y * CELL;
-    const S  = CELL;  // tile size
-    const P  = Math.max(2, Math.round(S / 10)); // pixel unit
-
-    // Pixel-art diamond sprite (scales with cell)
-    const col = e.exp.color;
-    const dark = col + 'bb';
-
-    // Row pattern for a diamond (5-wide at widest, 9 rows for S=28)
-    // We'll use a 9x9 pixel sprite scaled up
-    const sprite = [
-      [0,0,0,1,0,0,0],
-      [0,0,1,1,1,0,0],
-      [0,1,1,2,1,1,0],
-      [1,1,2,2,2,1,1],
-      [0,1,1,2,1,1,0],
-      [0,0,1,1,1,0,0],
-      [0,0,0,1,0,0,0],
-    ];
-    const sprW = sprite[0].length;
-    const sprH = sprite.length;
-    const ps   = Math.max(2, Math.floor(S / sprW));
-    const offX = ox + Math.floor((S - sprW * ps) / 2);
-    const offY = oy + Math.floor((S - sprH * ps) / 2);
-
-    sprite.forEach((row, ry) => {
-      row.forEach((cell, rx) => {
-        if (cell === 0) return;
-        px(offX + rx * ps, offY + ry * ps, ps, ps, cell === 2 ? WHITE : col);
-      });
-    });
-
-    // Label below bean - drawn at row+1, centred, 10px min
-    ctx.fillStyle = GREY_M;
-    ctx.font = "bold 10px 'DM Mono', monospace";
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'top';
-    ctx.fillText(e.exp.label, ox + S / 2, oy + S + 2);
-  });
-
-  // Candies: pixel squares
-  // size -0% / -25% / -50% from original; all colours #DCE0E2 lightened
   candies.forEach(c => {
     const ox = c.x * CELL;
     const oy = c.y * CELL;
-    const S  = CELL;
+    const S = CELL;
 
     if (c.size === 1) {
-      // small - 50% of original (S*0.18 * 0.5)
-      const p = Math.max(1, Math.round(S * 0.09));
-      px(ox + S/2 - p, oy + S/2 - p, p*2, p*2, '#DCE0E2');
+      const p = Math.max(1, Math.round(S * 0.08));
+      px(ox + S / 2 - p, oy + S / 2 - p, p * 2, p * 2, 'rgba(220,224,226,0.82)');
     } else if (c.size === 5) {
-      // medium cross - 25% smaller (S*0.14 * 0.75)
-      const p = Math.max(1, Math.round(S * 0.105));
-      const m = [
+      const p = Math.max(1, Math.round(S * 0.1));
+      const cross = [
         [0,1,0],
         [1,1,1],
         [0,1,0],
       ];
-      const offX = ox + Math.floor(S/2) - p*1.5;
-      const offY = oy + Math.floor(S/2) - p*1.5;
-      m.forEach((row,ry) => row.forEach((v,rx) => {
-        if(v) px(offX + rx*p, offY + ry*p, p, p, '#C9CDCE');
+      const offX = ox + Math.floor(S / 2) - p * 1.5;
+      const offY = oy + Math.floor(S / 2) - p * 1.5;
+      cross.forEach((row, ry) => row.forEach((v, rx) => {
+        if (v) px(offX + rx * p, offY + ry * p, p, p, 'rgba(201,205,206,0.78)');
       }));
     } else {
-      // large star - original size (S*0.12)
-      const p = Math.max(1, Math.round(S * 0.12));
+      const p = Math.max(1, Math.round(S * 0.11));
       const star = [
         [0,0,1,0,0],
         [0,1,1,1,0],
@@ -1708,124 +2279,99 @@ function draw() {
         [0,1,1,1,0],
         [0,0,1,0,0],
       ];
-      const offX = ox + Math.floor(S/2) - p*2.5;
-      const offY = oy + Math.floor(S/2) - p*2.5;
-      star.forEach((row,ry) => row.forEach((v,rx) => {
-        if(v) px(offX + rx*p, offY + ry*p, p, p, '#FFB742');
+      const offX = ox + Math.floor(S / 2) - p * 2.5;
+      const offY = oy + Math.floor(S / 2) - p * 2.5;
+      star.forEach((row, ry) => row.forEach((v, rx) => {
+        if (v) px(offX + rx * p, offY + ry * p, p, p, 'rgba(255,183,66,0.55)');
       }));
     }
   });
 
+  expBeans.forEach(drawProjectAnchor);
   drawSealEnemy();
 
-  // Snake body: pixel squares
   for (let i = snake.length - 1; i >= 1; i--) {
     const seg = snake[i];
-    const ox  = seg.x * CELL;
-    const oy  = seg.y * CELL;
-    const S   = CELL;
-    const pad = Math.round(S * 0.22);
-    const t   = i / snake.length;
-    const alpha = Math.max(0.2, 1 - t * 0.65);
-    // Orange body fading to lighter
+    const ox = seg.x * CELL;
+    const oy = seg.y * CELL;
+    const S = CELL;
+    const pad = Math.round(S * 0.36);
+    const t = i / snake.length;
+    const alpha = Math.max(0.08, 0.24 - t * 0.14);
     ctx.fillStyle = `rgba(255,183,66,${alpha})`;
-    ctx.fillRect(ox + pad, oy + pad, S - pad*2, S - pad*2);
-    // Dark pixel border (top-left only for 8-bit depth feel)
-    ctx.fillStyle = `rgba(218,102,40,${alpha * 0.6})`;
-    ctx.fillRect(ox + pad, oy + pad, S - pad*2, 2);
-    ctx.fillRect(ox + pad, oy + pad, 2, S - pad*2);
+    ctx.fillRect(ox + pad, oy + pad, S - pad * 2, S - pad * 2);
+    ctx.fillStyle = `rgba(218,102,40,${alpha * 0.55})`;
+    ctx.fillRect(ox + pad, oy + pad, S - pad * 2, 2);
+    ctx.fillRect(ox + pad, oy + pad, 2, S - pad * 2);
   }
 
-  // Mouse head
-  drawMouse(snake[0], dir);
+  if (snake[0]) drawMouse(snake[0], dir);
+  renderProjectNodes();
 }
 
-// 8-bit pixel mouse - full orange body, round ears, directional face
 function drawMouse(pos, d) {
   const ox = pos.x * CELL;
   const oy = pos.y * CELL;
-  const S  = CELL;
-
-  // Pixel unit - scale with cell size
+  const S = CELL;
   const P = Math.max(2, Math.floor(S / 10));
-
-  // We'll draw on a virtual 10x10 pixel canvas, then blit
-  // Colors
-  const MOUSE_BODY  = BRAND;        // #FFB742 orange
-  const MOUSE_DARK  = EFF1;         // #DA6628 shading
-  const MOUSE_EAR   = BRAND;        // same orange
-  const MOUSE_INNER = '#FFD4A8';    // light inner ear
-  const MOUSE_EYE   = BLACK;
-  const MOUSE_NOSE  = EFF1;
-  const MOUSE_HL    = '#FFF8E0';    // highlight
-
-  // Rotation: translate to center, rotate, draw relative to center
   const cx = ox + S / 2;
   const cy = oy + S / 2;
 
   let angle = 0;
-  if (d.x === 1)  angle = 0;
+  if (d.x === 1) angle = 0;
   if (d.x === -1) angle = Math.PI;
   if (d.y === -1) angle = -Math.PI / 2;
-  if (d.y === 1)  angle = Math.PI / 2;
+  if (d.y === 1) angle = Math.PI / 2;
+
+  px(cx - P * 4, cy + P * 4, P * 8, P, 'rgba(255,183,66,0.24)');
 
   ctx.save();
   ctx.translate(cx, cy);
   ctx.rotate(angle);
 
-  // Helper: draw pixel relative to center (pixel-snapped)
   const p = (rx, ry, w, h, col) => {
-    px(Math.round(rx - w/2), Math.round(ry - h/2), Math.round(w), Math.round(h), col);
+    px(Math.round(rx - w / 2), Math.round(ry - h / 2), Math.round(w), Math.round(h), col);
   };
 
-  // Ears (at top-left of head when facing right)
-  const earSize  = P * 3;
-  const earInner = P * 2;
-  const earX     = -P * 1;    // behind the head center
-  const earTopY  = -P * 4.5;  // upper ear
-  const earBotY  =  P * 4.5;  // lower ear
+  const RAT_BODY = BRAND;
+  const RAT_SHADE = EFF1;
+  const RAT_OUTLINE = BLACK;
+  const RAT_EAR = '#FFD4A8';
+  const RAT_HL = '#FFF8E0';
+  const RAT_TAIL = GREY_L;
+  const RAT_NOSE = WHITE;
 
-  // Outer ear
-  p(earX, earTopY, earSize, earSize, MOUSE_EAR);
-  p(earX, earBotY, earSize, earSize, MOUSE_EAR);
-  // Dark border pixels
-  p(earX - earSize/2, earTopY, P, earSize, MOUSE_DARK);
-  p(earX - earSize/2, earBotY, P, earSize, MOUSE_DARK);
-  // Inner ear (pink/light)
-  p(earX + P*0.3, earTopY, earInner, earInner, MOUSE_INNER);
-  p(earX + P*0.3, earBotY, earInner, earInner, MOUSE_INNER);
+  p(-P * 6.2, 0, P * 2, P * 2, RAT_TAIL);
+  p(-P * 8.6, P * 1.1, P * 1.5, P * 1.5, RAT_TAIL);
 
-  // Head body: pixel square with rounded feel
-  const hSize = P * 8;
-  p(0, 0, hSize, hSize, MOUSE_BODY);
+  p(-P * 4.2, -P * 4.2, P * 2.5, P * 2.5, RAT_OUTLINE);
+  p(-P * 4.2, P * 4.2, P * 2.5, P * 2.5, RAT_OUTLINE);
+  p(-P * 4.0, -P * 4.0, P * 2, P * 2, RAT_EAR);
+  p(-P * 4.0, P * 4.0, P * 2, P * 2, RAT_EAR);
+  p(-P * 3.8, -P * 3.8, P, P, RAT_HL);
+  p(-P * 3.8, P * 3.8, P, P, RAT_HL);
 
-  // Shading: dark bottom-right pixels for depth
-  p(P*2.5,  P*2.5, P*5, P,   MOUSE_DARK); // bottom shadow
-  p(P*2.5,  P*2.5, P,   P*5, MOUSE_DARK); // right shadow (mirrored for depth)
+  p(-P * 0.4, 0, P * 10, P * 8, RAT_OUTLINE);
+  p(-P * 0.2, 0, P * 8, P * 6, RAT_BODY);
+  p(P * 1.3, P * 1.7, P * 4, P, RAT_SHADE);
+  p(P * 1.3, P * 1.7, P, P * 3.5, RAT_SHADE);
+  p(-P * 2.0, -P * 1.8, P * 3, P, RAT_HL);
+  p(-P * 2.0, -P * 1.8, P, P * 3, RAT_HL);
 
-  // Highlight top-left
-  p(-P*2, -P*2, P*3, P, MOUSE_HL);
-  p(-P*2, -P*2, P,   P*3, MOUSE_HL);
+  p(P * 1.0, -P * 1.5, P, P * 1.4, RAT_OUTLINE);
+  p(P * 1.0, P * 1.5, P, P * 1.4, RAT_OUTLINE);
+  p(P * 1.2, -P * 1.8, P * 0.7, P * 0.7, RAT_HL);
+  p(P * 1.2, P * 1.2, P * 0.7, P * 0.7, RAT_HL);
+  p(P * 3.2, 0, P * 2, P * 2, RAT_OUTLINE);
+  p(P * 3.4, 0, P * 1.4, P * 1.4, RAT_NOSE);
+  p(P * 4.0, 0, P, P, RAT_SHADE);
 
-  // Face (facing right = +x)
-  // Eyes: two pixel squares
-  p(P*1.5, -P*1.8, P*1.5, P*1.5, MOUSE_EYE);
-  p(P*1.5,  P*1.8, P*1.5, P*1.5, MOUSE_EYE);
-  // Eye highlights
-  p(P*1.8, -P*2.1, P, P, MOUSE_HL);
-  p(P*1.8,  P*1.5, P, P, MOUSE_HL);
-
-  // Nose - 2x2 pixel at front
-  p(P*3.5, 0, P*1.5, P*1.5, MOUSE_NOSE);
-
-  // Whiskers - thin 1px lines either side of nose
-  ctx.fillStyle = GREY_M + 'aa';
-  ctx.fillRect(Math.round(P*3.2), Math.round(-P*0.3), Math.round(P*3), 1);
-  ctx.fillRect(Math.round(P*3.2), Math.round( P*0.8), Math.round(P*3), 1);
+  ctx.fillStyle = 'rgba(136,136,140,0.7)';
+  ctx.fillRect(Math.round(P * 2.1), Math.round(-P * 0.8), Math.round(P * 3), 1);
+  ctx.fillRect(Math.round(P * 2.1), Math.round(P * 1.2), Math.round(P * 3), 1);
 
   ctx.restore();
 }
-
 // Score floater
 function drawSealEnemy() {
   if (!sealEnemy) return;
@@ -1913,12 +2459,14 @@ function updateScore(val) {
   el.textContent = String(val).padStart(3, '0');
   el.classList.add('flash');
   setTimeout(() => el.classList.remove('flash'), 300);
+  updateHud();
 }
 
 // Popup
 function showPopup(exp) {
   popupOpen = true;
-  isOnGame  = true; // keep dot cursor while popup is over homepage
+  isOnGame  = true;
+  setSelectedProject(exp);
   document.getElementById('popup-tag').textContent    = exp.tag;
   document.getElementById('popup-title').textContent  = exp.title;
   document.getElementById('popup-company').textContent = exp.company;
@@ -1930,26 +2478,27 @@ function showPopup(exp) {
   popupViewBtn.target = exp.newTab === false ? '_self' : '_blank';
   popupViewBtn.innerHTML = (exp.buttonLabel || 'View Project') + popupArrowIcon;
   document.getElementById('popup').classList.add('active');
+  updateHud();
 }
 
 function closePopup() {
   popupOpen = false;
   document.getElementById('popup').classList.remove('active');
-  // Force spawn + redraw immediately - tick() was blocked while popup was open
   spawnExpBeans();
-  draw();
+  setSelectedProject(null);
 }
 
 // Pause toggle
 function setHintState(playing) {
   const hint = document.getElementById('hint');
   if (playing) {
-    hint.textContent = 'playing // press Space or click to pause';
+    hint.textContent = 'manual control // space or click to switch';
     hint.classList.add('playing');
   } else {
-    hint.textContent = 'press any arrow key to play // press Space or click to pause';
+    hint.textContent = 'arrow keys to explore // space or click to switch modes';
     hint.classList.remove('playing');
   }
+  updateHud();
 }
 
 function togglePause() {

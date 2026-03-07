@@ -211,6 +211,14 @@ h1 .accent{color:var(--accent);}
 .atb-preview{width:100%;aspect-ratio:16/7;background:#0C0C0C;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;}
 .atb-preview::after{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.05) 2px,rgba(0,0,0,0.05) 3px);}
 .atb-preview-label{font-family:'Press Start 2P',monospace;font-size:8px;color:rgba(255,183,66,0.5);text-align:center;}
+.char-atb-preview-frame{display:grid;grid-template-columns:108px 1fr;gap:10px;width:100%;height:100%;padding:10px;position:relative;z-index:1;}
+.char-atb-icons{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;align-content:center;}
+.char-atb-icon{aspect-ratio:1;border:1px solid rgba(255,255,255,0.08);background:#111;overflow:hidden;display:flex;align-items:center;justify-content:center;font-family:'Press Start 2P',monospace;font-size:8px;color:rgba(255,183,66,0.72);}
+.char-atb-icon img{width:100%;height:100%;display:block;object-fit:cover;}
+.char-atb-icon.active{border-color:var(--brand);}
+.char-atb-main{border:1px solid rgba(255,255,255,0.08);background:#111;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.char-atb-main img{width:100%;height:100%;display:block;object-fit:contain;}
+.char-atb-main-placeholder{font-family:'Press Start 2P',monospace;font-size:12px;color:rgba(255,183,66,0.72);}
 .atb-footer{padding:8px 12px;border-top:1px solid rgba(24,24,24,0.06);display:flex;justify-content:space-between;}
 .atb-desc{font-size:var(--fs-10);color:var(--grey-m);}
 .atb-tag{font-family:'Press Start 2P',monospace;font-size:7px;color:var(--brand);}
@@ -282,15 +290,15 @@ h1 .accent{color:var(--accent);}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
 /* ── CHARACTER POPUP ── */
-#char-popup{width:560px;top:100px;left:calc(50% + 80px);}
-.char-inner{display:flex;flex-direction:column;height:520px;}
+#char-popup{width:min(800px,calc(100vw - 32px));top:100px;left:calc(50% + 80px);}
+.char-inner{display:flex;flex-direction:column;max-height:calc(100vh - 80px);}
 
 /* character grid */
 .char-grid-wrap{padding:24px;border-bottom:1px solid rgba(24,24,24,0.08);}
 .char-grid-label{font-size:var(--fs-10);color:var(--grey-m);margin-bottom:10px;letter-spacing:.06em;text-transform:uppercase;}
-.char-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
+.char-grid{display:grid;grid-template-columns:repeat(auto-fit,64px);gap:8px;justify-content:flex-start;}
 .char-icon{
-  width:100%;aspect-ratio:1;
+  width:64px;height:64px;
   background:#0D0D0D;
   border:1px solid rgba(24,24,24,0.1);
   display:flex;align-items:center;justify-content:center;
@@ -300,20 +308,27 @@ h1 .accent{color:var(--accent);}
 .char-icon:hover{border-color:var(--brand);background:#1A1A1A;}
 .char-icon.active{border-color:var(--brand);background:rgba(255,183,66,0.1);}
 .char-icon.active .char-icon-inner{color:var(--brand);}
+.char-icon.active .char-icon-badge{background:var(--brand);color:var(--black);}
+.char-icon-img{width:100%;height:100%;display:block;object-fit:cover;}
+.char-icon-badge{
+  position:absolute;right:4px;bottom:4px;z-index:1;
+  font-family:'Press Start 2P',monospace;font-size:6px;line-height:1;
+  color:var(--white);background:rgba(0,0,0,0.72);padding:3px 4px;
+}
 .char-icon-inner{font-family:'Press Start 2P',monospace;font-size:7px;color:var(--grey-m);text-align:center;line-height:1.4;}
 .char-icon-num{font-size:6px;color:var(--grey-l);display:block;margin-top:2px;}
 
 /* character display */
-.char-display{flex:1;display:flex;overflow:hidden;}
-.char-img-area{width:200px;flex-shrink:0;background:#0D0D0D;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.char-display{flex:1;display:flex;overflow:auto;}
+.char-img-area{width:520px;height:520px;flex-shrink:0;background:#0D0D0D;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:12px;}
 .char-img-area::after{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.06) 3px,rgba(0,0,0,0.06) 4px);}
-.char-art{width:100%;height:100%;object-fit:cover;display:none;}
+.char-art{width:100%;height:100%;object-fit:contain;display:none;position:relative;z-index:1;}
 .char-art.active{display:block;animation:fadeIn .25s ease-out;}
-.char-art-placeholder{text-align:center;}
+.char-art-placeholder{text-align:center;position:relative;z-index:1;}
 .char-art-placeholder-label{font-family:'Press Start 2P',monospace;font-size:7px;color:rgba(255,183,66,0.45);margin-bottom:6px;display:block;}
 .char-art-placeholder-sub{font-size:9px;color:rgba(255,255,255,0.2);}
 
-.char-info{flex:1;padding:24px;border-left:1px solid rgba(24,24,24,0.08);background:var(--white);overflow:hidden;}
+.char-info{flex:1;min-width:280px;padding:24px;border-left:1px solid rgba(24,24,24,0.08);background:var(--white);overflow:auto;}
 .char-id{font-family:'Press Start 2P',monospace;font-size:8px;color:var(--brand);margin-bottom:6px;}
 .char-name-display{font-family:'Press Start 2P',monospace;font-size:13px;color:var(--black);line-height:1.4;margin-bottom:12px;}
 .char-role-tag{display:inline-block;font-size:var(--fs-10);color:var(--grey-m);border:1px solid rgba(24,24,24,0.15);padding:3px 10px;margin-bottom:16px;}
@@ -330,7 +345,7 @@ h1 .accent{color:var(--accent);}
 .demo-x{background:none;border:none;color:rgba(0,0,0,0.5);font-size:12px;cursor:none;font-family:'DM Mono',monospace;}
 .demo-x:hover{color:var(--black);}
 .demo-body{padding:24px;}
-.demo-icon{width:32px;height:32px;background:var(--black);display:flex;align-items:center;justify-content:center;font-family:'Press Start 2P',monospace;font-size:8px;color:var(--brand);margin-bottom:10px;}
+.demo-icon{width:64px;height:64px;display:block;object-fit:contain;margin-bottom:10px;image-rendering:auto;}
 .demo-name{font-family:'Press Start 2P',monospace;font-size:8px;color:var(--black);margin-bottom:6px;}
 .demo-desc{font-size:var(--fs-10);color:var(--grey-m);line-height:1.7;margin-bottom:12px;}
 .demo-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;}
@@ -589,36 +604,9 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
         <span class="atb-title">character_select.exe</span>
         <span class="atb-open">Open ↗</span>
       </div>
-      <div class="atb-preview">
-        <!-- 13 mini character icons preview -->
-        <svg width="240" height="100" viewBox="0 0 240 100" style="image-rendering:pixelated;opacity:.8;">
-          <rect width="240" height="100" fill="#0A0A0A"/>
-          <rect x="10" y="20" width="220" height="60" fill="#111"/>
-          <!-- 13 char icons in a row -->
-          <rect x="16" y="28" width="14" height="14" fill="#222"/><rect x="17" y="29" width="12" height="8" fill="#333"/><rect x="20" y="33" width="2" height="2" fill="#FFB742"/>
-          <rect x="34" y="28" width="14" height="14" fill="#222"/><rect x="35" y="29" width="12" height="8" fill="#2a1a1a"/><rect x="38" y="33" width="2" height="2" fill="#FF4444"/>
-          <rect x="52" y="28" width="14" height="14" fill="#222"/><rect x="53" y="29" width="12" height="8" fill="#1a2a1a"/><rect x="56" y="33" width="2" height="2" fill="#88888C"/>
-          <rect x="70" y="28" width="14" height="14" fill="#222"/><rect x="71" y="29" width="12" height="8" fill="#1a1a2a"/><rect x="74" y="33" width="2" height="2" fill="#A8B0B2"/>
-          <rect x="88" y="28" width="14" height="14" fill="#222"/><rect x="89" y="29" width="12" height="8" fill="#2a2a1a"/><rect x="92" y="33" width="2" height="2" fill="#FFB742"/>
-          <rect x="106" y="28" width="14" height="14" fill="#FFB742" opacity=".15"/><rect x="107" y="29" width="12" height="8" fill="#333"/><rect x="110" y="33" width="2" height="2" fill="#FFB742"/>
-          <rect x="124" y="28" width="14" height="14" fill="#222"/><rect x="125" y="29" width="12" height="8" fill="#2a1a2a"/><rect x="128" y="33" width="2" height="2" fill="#FF4444"/>
-          <rect x="16" y="50" width="14" height="14" fill="#222"/><rect x="17" y="51" width="12" height="8" fill="#1a2a2a"/>
-          <rect x="34" y="50" width="14" height="14" fill="#222"/><rect x="35" y="51" width="12" height="8" fill="#2a1a1a"/>
-          <rect x="52" y="50" width="14" height="14" fill="#222"/><rect x="53" y="51" width="12" height="8" fill="#111"/>
-          <rect x="70" y="50" width="14" height="14" fill="#222"/><rect x="71" y="51" width="12" height="8" fill="#1a1a1a"/>
-          <rect x="88" y="50" width="14" height="14" fill="#222"/><rect x="89" y="51" width="12" height="8" fill="#2a2a1a"/>
-          <rect x="106" y="50" width="14" height="14" fill="#222"/><rect x="107" y="51" width="12" height="8" fill="#1a2a1a"/>
-          <!-- big char preview area -->
-          <rect x="148" y="20" width="82" height="60" fill="#0D0D0D"/>
-          <rect x="148" y="20" width="82" height="60" fill="#111"/>
-          <rect x="168" y="30" width="42" height="50" fill="#1A1A1A"/>
-          <rect x="176" y="32" width="26" height="30" fill="#222"/>
-          <rect x="181" y="36" width="4" height="4" fill="#A8B0B2" opacity=".4"/>
-          <rect x="191" y="36" width="4" height="4" fill="#A8B0B2" opacity=".4"/>
-        </svg>
-      </div>
+      <div class="atb-preview" id="char-atb-preview"></div>
       <div class="atb-footer">
-        <span class="atb-desc">13 survivors · Character select</span>
+        <span class="atb-desc" id="char-atb-desc">13 survivors // Character select</span>
         <span class="atb-tag">CHAR</span>
       </div>
     </button>
@@ -1050,9 +1038,10 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
     <!-- display -->
     <div class="char-display">
       <div class="char-img-area" id="char-img-area">
+        <img class="char-art" id="char-art" alt="Hamartia character art">
         <div class="char-art-placeholder" id="char-placeholder">
-          <span class="char-art-placeholder-label">CHARACTER ART</span>
-          <span class="char-art-placeholder-sub">Replace with your images</span>
+          <span class="char-art-placeholder-label">UNKNOWN CHARACTER</span>
+          <span class="char-art-placeholder-sub">？？？？</span>
         </div>
       </div>
       <div class="char-info">
@@ -1076,7 +1065,7 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
   </div>
   <div id="demo-inner">
     <div class="demo-body">
-      <div class="demo-icon">HA</div>
+      <img class="demo-icon" src="assets/images/HAMARTIA/hamartia logo.png" alt="Hamartia logo">
       <div class="demo-name">HAMARTIA</div>
       <div class="demo-desc">2D horror survival. Find the initiator. 13 survivors — only truth saves you.</div>
       <div class="demo-tags"><span class="demo-tag">Horror</span><span class="demo-tag">Dialogue</span><span class="demo-tag">RPG</span><span class="demo-tag">2020</span></div>
@@ -1372,6 +1361,74 @@ const characters=[
   {id:'SURVIVOR #12',name:'羽',role:'Library Committee',status:'Alive',loc:'Unknown',sus:'Medium',desc:'She spent every lunch in the library reading about cold cases. She\'s been preparing for something.'},
   {id:'SURVIVOR #13',name:'絶',role:'???',status:'Alive',loc:'???',sus:'???',desc:'The thirteenth survivor has no name in any school record. Her presence here defies explanation.'},
 ];
+const characterAssets=[
+  {label:'Eikawa',icon:'assets/images/HAMARTIA/character/output/icon-250/eikawa_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/eikawa_720x720.png'},
+  {label:'Funa',icon:'assets/images/HAMARTIA/character/output/icon-250/Funa_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/Funa_720x720.png'},
+  {label:'Hamada',icon:'assets/images/HAMARTIA/character/output/icon-250/hamada_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/hamada_720x720.png'},
+  {label:'Kekame',icon:'assets/images/HAMARTIA/character/output/icon-250/Kekame_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/Kekame_720x720.png'},
+  {label:'Matsue',icon:'assets/images/HAMARTIA/character/output/icon-250/matsue_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/matsue_720x720.png'},
+  {label:'Moriya',icon:'assets/images/HAMARTIA/character/output/icon-250/moriya_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/moriya_720x720.png'},
+  {label:'Reigo',icon:'assets/images/HAMARTIA/character/output/icon-250/Reigo_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/Reigo_720x720.png'},
+  {label:'Sasuga',icon:'assets/images/HAMARTIA/character/output/icon-250/SASUGA_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/SASUGA_720x720.png'},
+  {label:'Takakuwa',icon:'assets/images/HAMARTIA/character/output/icon-250/takakuwa_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/takakuwa_720x720.png'},
+  {label:'Yako',icon:'assets/images/HAMARTIA/character/output/icon-250/YAKO_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/YAKO_720x720.png'},
+  {label:'Yanagawa',icon:'assets/images/HAMARTIA/character/output/icon-250/yanagawa_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/yanagawa_720x720.png'},
+  {label:'Yurika',icon:'assets/images/HAMARTIA/character/output/icon-250/yurika_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/yurika_720x720.png'},
+];
+const unknownCharacter={label:'？？？？'};
+
+function renderCharTriggerPreview(activeIndex=0){
+  const triggerPreview=document.getElementById('char-atb-preview');
+  if(!triggerPreview)return;
+
+  const previewItems=[...characterAssets.slice(0,5),unknownCharacter];
+  const activeCharacter=characters[activeIndex]||characters[0];
+  const activeLabel=activeCharacter.displayName||activeCharacter.name;
+  const mainMarkup=activeCharacter.art
+    ? `<img src="${activeCharacter.art}" alt="${activeLabel} full character art">`
+    : `<div class="char-atb-main-placeholder">？？？？</div>`;
+
+  triggerPreview.innerHTML=`
+    <div class="char-atb-preview-frame">
+      <div class="char-atb-icons">
+        ${previewItems.map((item,idx)=>{
+          const isUnknown=idx===previewItems.length-1;
+          const isActive=isUnknown?activeIndex===12:(activeIndex===idx&&idx<5);
+          const activeClass=isActive?' active':'';
+          return item.icon
+            ? `<div class="char-atb-icon${activeClass}"><img src="${item.icon}" alt="${item.label} icon"></div>`
+            : `<div class="char-atb-icon${activeClass}">？？</div>`;
+        }).join('')}
+      </div>
+      <div class="char-atb-main">${mainMarkup}</div>
+    </div>
+  `;
+}
+
+function hydrateCharacterAssets(){
+  const charIcons=document.querySelectorAll('#char-grid .char-icon');
+  charIcons.forEach((iconEl,idx)=>{
+    const asset=characterAssets[idx];
+    if(asset){
+      characters[idx].displayName=asset.label;
+      characters[idx].icon=asset.icon;
+      characters[idx].art=asset.art;
+      iconEl.setAttribute('title',asset.label);
+      iconEl.innerHTML=`<img class="char-icon-img" src="${asset.icon}" alt="${asset.label} icon"><span class="char-icon-badge">${String(idx+1).padStart(2,'0')}</span>`;
+      return;
+    }
+
+    characters[idx].displayName=unknownCharacter.label;
+    characters[idx].name=unknownCharacter.label;
+    characters[idx].role='？？？？';
+    characters[idx].status='？？？？';
+    characters[idx].loc='？？？？';
+    characters[idx].sus='？？？？';
+    iconEl.innerHTML=`<div class="char-icon-inner">？？？？<span class="char-icon-num">${String(idx+1).padStart(2,'0')}</span></div>`;
+  });
+
+  renderCharTriggerPreview(0);
+}
 
 function openChar(){
   const p=document.getElementById('char-popup');
@@ -1387,8 +1444,12 @@ function selectChar(idx,el){
   document.querySelectorAll('.char-icon').forEach(i=>i.classList.remove('active'));
   el.classList.add('active');
   const c=characters[idx];
+  const displayName=c.displayName||c.name;
+  const charArt=document.getElementById('char-art');
+  const charPlaceholder=document.getElementById('char-placeholder');
+
   document.getElementById('char-id').textContent=c.id;
-  document.getElementById('char-name').textContent=c.name;
+  document.getElementById('char-name').textContent=displayName;
   document.getElementById('char-role').textContent=c.role;
   document.getElementById('cs-status').textContent=c.status;
   document.getElementById('cs-loc').textContent=c.loc;
@@ -1396,9 +1457,26 @@ function selectChar(idx,el){
   sus.textContent=c.sus;
   sus.style.color=c.sus==='High'||c.sus==='Critical'?'var(--accent)':c.sus==='Medium'?'var(--brand)':'var(--grey-m)';
   document.getElementById('char-desc').textContent=c.desc;
+
+  if(c.art){
+    charArt.src=c.art;
+    charArt.alt=`${displayName} full character art`;
+    charArt.classList.add('active');
+    charPlaceholder.style.display='none';
+  }else{
+    charArt.removeAttribute('src');
+    charArt.alt='Hamartia character art';
+    charArt.classList.remove('active');
+    charPlaceholder.style.display='block';
+  }
+
+  renderCharTriggerPreview(idx);
 }
 
 makeDraggable(document.getElementById('char-popup'),document.getElementById('char-drag'));
+hydrateCharacterAssets();
+const initialCharIcon=document.querySelector('#char-grid .char-icon');
+if(initialCharIcon)selectChar(0,initialCharIcon);
 
 // ── GENERIC DRAG
 function makeDraggable(el,handle){
