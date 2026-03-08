@@ -1651,6 +1651,7 @@ const projectNodeEls = new Map();
 // Auto-wander AI
 let autoTarget  = null;
 let autoTimer   = 0;
+let autoTargetRefresh = 0;
 let sealEnemy   = null;
 let sealMoveTimer = 0;
 let sealFacingLeft = false;
@@ -2073,7 +2074,7 @@ function moveSealEnemy() {
 
   if (!moved && candyBlocked) {
     setSealVisualState('blocked');
-    if (sealHitsHead(head)) {
+    if (!willCollectBean && sealHitsHead(head)) {
       triggerSealHit();
     }
     return;
@@ -2101,7 +2102,7 @@ function moveSealEnemy() {
     setSealVisualState('blocked');
   }
 
-  if (sealHitsHead(head)) {
+  if (!willCollectBean && sealHitsHead(head)) {
     triggerSealHit();
   }
 }
@@ -2135,6 +2136,9 @@ function initGame() {
   ];
   dir     = { x: 1, y: 0 };
   nextDir = { x: 1, y: 0 };
+  autoTarget = null;
+  autoTimer = 0;
+  autoTargetRefresh = 0;
   score   = 0;
   candies = [];
   expBeans = [];
@@ -2156,6 +2160,8 @@ function initGame() {
   userVisualFrame = 0;
   userVisualUntil = 0;
   selectedExpId = null;
+  if (oobTimer) { clearTimeout(oobTimer); oobTimer = null; }
+  oobState = null;
   projectNodeEls.forEach(el => el.remove());
   projectNodeEls.clear();
   updateScore(0);
@@ -2243,6 +2249,7 @@ function maintainExpBeans() {
 }
 
 let oobTimer = null; // out-of-bounds timer
+let oobState = null;
 
 function startBeanWatchdog() {
   if (beanWatchdog) clearInterval(beanWatchdog);
@@ -2257,6 +2264,7 @@ function startBeanWatchdog() {
 function checkSnakeInBounds() {
   if (!gameStarted || snake.length === 0) {
     if (oobTimer) { clearTimeout(oobTimer); oobTimer = null; }
+    oobState = null;
     return;
   }
 
@@ -2264,24 +2272,30 @@ function checkSnakeInBounds() {
   const outX = h.x < 0 || h.x >= COLS;
   const outY = h.y < 0 || h.y >= ROWS;
   if (outX || outY) {
+    if (!oobState) {
+      oobState = {
+        shiftX: h.x < 0 ? COLS : h.x >= COLS ? -COLS : 0,
+        shiftY: h.y < 0 ? ROWS : h.y >= ROWS ? -ROWS : 0
+      };
+    }
+
     if (!oobTimer) {
+      const state = oobState;
       oobTimer = setTimeout(() => {
         if (snake.length > 0) {
-          const head = snake[0];
-          const shiftX = head.x < 0 ? COLS : head.x >= COLS ? -COLS : 0;
-          const shiftY = head.y < 0 ? ROWS : head.y >= ROWS ? -ROWS : 0;
           snake.forEach(s => {
-            s.x += shiftX;
-            s.y += shiftY;
+            s.x += state.shiftX;
+            s.y += state.shiftY;
           });
         }
         oobTimer = null;
+        oobState = null;
         draw();
       }, 1000);
     }
-  } else if (oobTimer) {
-    clearTimeout(oobTimer);
-    oobTimer = null;
+  } else {
+    if (oobTimer) { clearTimeout(oobTimer); oobTimer = null; }
+    oobState = null;
   }
 }
 
@@ -2302,12 +2316,23 @@ function tick() {
   dir = nextDir;
   if (dir.x < 0) userFacingLeft = true;
   if (dir.x > 0) userFacingLeft = false;
-  const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+  let head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
 
-  if (gameStarted && isForbidden(head.x, head.y)) {
-    moveSealEnemy();
-    draw();
-    return;
+  if (!gameStarted && autoDirectionBlocked(dir)) {
+    const fallbackDir = pickAutoDirection([
+      { x: dir.y, y: dir.x },
+      { x: -dir.y, y: -dir.x }
+    ]);
+    if (!fallbackDir) {
+      moveSealEnemy();
+      draw();
+      return;
+    }
+    dir = fallbackDir;
+    nextDir = fallbackDir;
+    if (dir.x < 0) userFacingLeft = true;
+    if (dir.x > 0) userFacingLeft = false;
+    head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
   }
 
   const willCollectCandy = candies.some(c => c.x === head.x && c.y === head.y);
@@ -2325,7 +2350,7 @@ function tick() {
   snake.unshift(head);
   if (userVisualState === 'walking') setUserVisualState('walking');
 
-  if (sealHitsHead(head)) {
+  if (!willCollectBean && sealHitsHead(head)) {
     triggerSealHit();
     draw();
     return;
@@ -2425,42 +2450,100 @@ function pushBeansFromMouse() {
   draw();
 }
 // Auto-wander AI
+function autoDirectionBlocked(direction) {
+  if (!snake.length || !direction) return true;
+  const nx = snake[0].x + direction.x;
+  const ny = snake[0].y + direction.y;
+  if (nx < 0 || nx >= COLS || ny < 0 || ny >= ROWS) return true;
+  return isForbidden(nx, ny);
+}
+
+function autoTargetStillValid(target) {
+  if (!target) return false;
+  return candies.some(c => c.x === target.x && c.y === target.y)
+    || expBeans.some(bean => bean.x === target.x && bean.y === target.y);
+}
+
+function autoDistanceFromHead(x, y) {
+  const hx = snake[0].x;
+  const hy = snake[0].y;
+  return Math.abs(x - hx) + Math.abs(y - hy);
+}
+
+function chooseAutoTarget() {
+  const targets = [
+    ...expBeans.map(bean => ({ x: bean.x, y: bean.y })),
+    ...candies.map(candy => ({ x: candy.x, y: candy.y }))
+  ];
+  if (!targets.length) return null;
+  if (targets.length === 1) return targets[0];
+  const ranked = [...targets].sort((a, b) => autoDistanceFromHead(a.x, a.y) - autoDistanceFromHead(b.x, b.y));
+  const pool = ranked.slice(0, Math.min(4, ranked.length));
+  return pool[ri(pool.length)];
+}
+
+function buildAutoCandidates(target) {
+  if (!target || !snake.length) return [];
+  const hx = snake[0].x;
+  const hy = snake[0].y;
+  const dx = target.x - hx;
+  const dy = target.y - hy;
+  const candidates = [];
+
+  if (Math.abs(dx) >= Math.abs(dy)) {
+    if (dx !== 0) candidates.push({ x: Math.sign(dx), y: 0 });
+    if (dy !== 0) candidates.push({ x: 0, y: Math.sign(dy) });
+  } else {
+    if (dy !== 0) candidates.push({ x: 0, y: Math.sign(dy) });
+    if (dx !== 0) candidates.push({ x: Math.sign(dx), y: 0 });
+  }
+
+  if (dir.x !== 0 || dir.y !== 0) {
+    candidates.push({ x: dir.x, y: dir.y });
+  }
+
+  return candidates;
+}
+
+function pickAutoDirection(candidates = []) {
+  const seen = new Set();
+  const fallbackPool = [
+    { x: dir.x, y: dir.y },
+    { x: dir.y, y: dir.x },
+    { x: -dir.y, y: -dir.x },
+    { x: 1, y: 0 },
+    { x: -1, y: 0 },
+    { x: 0, y: 1 },
+    { x: 0, y: -1 }
+  ];
+
+  for (const option of [...candidates, ...fallbackPool]) {
+    if (!option) continue;
+    const key = `${option.x},${option.y}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    if (option.x === 0 && option.y === 0) continue;
+    if (option.x === -dir.x && option.y === -dir.y) continue;
+    if (!autoDirectionBlocked(option)) return option;
+  }
+
+  return null;
+}
+
 function autoSteer() {
   autoTimer--;
-  if (autoTimer > 0) return;
-  autoTimer = ri(6) + 3;
+  autoTargetRefresh--;
 
-  // Pick a random target: candy or exp bean
-  const targets = [...candies, ...expBeans.map(e => e)];
-  if (targets.length && Math.random() > 0.3) {
-    const t = targets[ri(targets.length)];
-    const tx = t.x, ty = t.y;
-    const hx = snake[0].x, hy = snake[0].y;
-
-    // Wrap-aware delta
-    let dx = tx - hx;
-    let dy = ty - hy;
-    if (Math.abs(dx) > COLS / 2) dx = -Math.sign(dx) * (COLS - Math.abs(dx));
-    if (Math.abs(dy) > ROWS / 2) dy = -Math.sign(dy) * (ROWS - Math.abs(dy));
-
-    const candidates = [];
-    if (Math.abs(dx) >= Math.abs(dy)) {
-      candidates.push({ x: Math.sign(dx) || 1, y: 0 });
-      candidates.push({ x: 0, y: Math.sign(dy) || 1 });
-    } else {
-      candidates.push({ x: 0, y: Math.sign(dy) || 1 });
-      candidates.push({ x: Math.sign(dx) || 1, y: 0 });
-    }
-    for (const c of candidates) {
-      if (c.x !== -dir.x || c.y !== -dir.y) { nextDir = c; break; }
-    }
-  } else {
-    // Random turn
-    const options = [
-      {x:1,y:0},{x:-1,y:0},{x:0,y:1},{x:0,y:-1}
-    ].filter(d => d.x !== -dir.x || d.y !== -dir.y);
-    nextDir = options[ri(options.length)];
+  if (!autoTargetStillValid(autoTarget) || autoTargetRefresh <= 0) {
+    autoTarget = chooseAutoTarget();
+    autoTargetRefresh = ri(10) + 10;
   }
+
+  if (autoTimer > 0) return;
+  autoTimer = ri(2) + 1;
+
+  const safeDir = pickAutoDirection(buildAutoCandidates(autoTarget));
+  if (safeDir) nextDir = safeDir;
 }
 
 // Pixel helpers
