@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hamartia — mialyk</title>
+<title>Hamartia ??mialyk</title>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -29,12 +29,12 @@ body{
   overflow-x:hidden;
 }
 
-/* ── CURSOR ── */
+/* ?? CURSOR ?? */
 #cursor-canvas{position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:9999;}
 .click-ripple{position:fixed;border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%) scale(0);animation:rippleOut 0.5s cubic-bezier(0.2,0.8,0.4,1) forwards;}
 @keyframes rippleOut{0%{transform:translate(-50%,-50%) scale(0);opacity:0.7;}100%{transform:translate(-50%,-50%) scale(4);opacity:0;}}
 
-/* ── HEADER ── */
+/* ?? HEADER ?? */
 header{
   position:fixed;top:0;left:0;right:0;z-index:200;
   height:60px;display:flex;align-items:center;justify-content:space-between;
@@ -67,16 +67,16 @@ nav{display:flex;align-items:center;gap:36px;}
 .dropdown-item:hover{color:var(--black);background:rgba(255,183,66,0.08);}
 .dropdown-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--brand);margin-right:10px;vertical-align:middle;}
 .dropdown-item.active .dropdown-dot{background:var(--accent);}
-.dropdown-locked{opacity:.5;}
+.dropdown-locked{opacity:.5;}.dropdown-locked:hover{opacity:1;}
 .pxi{display:inline-block;} .pxi--sm{width:14px;height:14px;} .pxi--md{width:18px;height:18px;}
 
-/* ── HERO ── */
+/* ?? HERO ?? */
 .hero{
   margin-top:60px;padding:32px 24px;
   border-bottom:1px solid rgba(24,24,24,0.1);
   background:var(--white);position:relative;overflow:hidden;
 }
-/* subtle pixel grid — white surface, just texture */
+/* subtle pixel grid ??white surface, just texture */
 .hero::after{content:'';position:absolute;inset:0;pointer-events:none;
   background-image:linear-gradient(rgba(24,24,24,0.018) 1px,transparent 1px),linear-gradient(90deg,rgba(24,24,24,0.018) 1px,transparent 1px);
   background-size:8px 8px;}
@@ -91,11 +91,11 @@ h1 .accent{color:var(--accent);}
 .meta-label{font-size:var(--fs-10);color:var(--grey-l);text-transform:uppercase;letter-spacing:.1em;}
 .meta-value{font-size:var(--fs-12);color:var(--black);}
 
-/* ── SECTION LABEL ── */
+/* ?? SECTION LABEL ?? */
 .slabel{font-family:'Press Start 2P',monospace;font-size:var(--fs-10);color:var(--grey-l);letter-spacing:.08em;text-transform:uppercase;margin-bottom:24px;display:flex;align-items:center;gap:12px;}
 .slabel::after{content:'';flex:1;height:1px;background:rgba(24,24,24,0.1);}
 
-/* ── STATS ── */
+/* ?? STATS ?? */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid rgba(24,24,24,0.1);border-top:none;}
 .stat-cell{padding:28px 24px;border-right:1px solid rgba(24,24,24,0.1);background:var(--white);transition:background .2s;}
 .stat-cell:last-child{border-right:none;}
@@ -103,7 +103,7 @@ h1 .accent{color:var(--accent);}
 .stat-num{font-family:'Press Start 2P',monospace;font-size:clamp(16px,2vw,22px);color:var(--accent);margin-bottom:8px;display:block;}
 .stat-desc{font-size:var(--fs-10);color:var(--grey-m);line-height:1.6;text-transform:uppercase;letter-spacing:.06em;}
 
-/* ── TICKER ── */
+/* ?? TICKER ?? */
 .ticker-wrap{border-top:1px solid rgba(24,24,24,0.1);border-bottom:1px solid rgba(24,24,24,0.1);height:32px;overflow:hidden;display:flex;align-items:center;background:var(--white);padding:0 24px;}
 .ticker-label{font-family:'Press Start 2P',monospace;font-size:7px;color:var(--black);background:var(--brand);height:100%;padding:0 14px;display:flex;align-items:center;flex-shrink:0;letter-spacing:.06em;}
 .ticker-track{flex:1;overflow:hidden;}
@@ -113,16 +113,16 @@ h1 .accent{color:var(--accent);}
 .ticker-item em{color:var(--black);font-style:normal;}
 .ticker-sep{color:var(--brand);}
 
-/* ── MAIN ── */
+/* ?? MAIN ?? */
 .psection{width:calc(100% - 48px);max-width:1200px;margin:0 auto;padding:24px 0 72px;display:flex;flex-direction:column;gap:36px;}
 
-/* ══ STREAMER UI ══ */
+/* ?? STREAMER UI ?? */
 .streamer-ui{display:grid;grid-template-columns:minmax(0,1fr) 260px;border:1px solid rgba(24,24,24,0.12);background:var(--white);align-items:start;width:100%;flex:1 1 auto;}
 @media(max-width:768px){.streamer-ui{grid-template-columns:1fr;}}
 
-/* win chrome — brand orange titlebar (art rule: brand as warmth) */
+/* win chrome ??brand orange titlebar (art rule: brand as warmth) */
 .win-bar{display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:24px;
-  background:var(--brand); /* brand 20% — key UI chrome */ 
+  background:var(--brand); /* brand 20% ??key UI chrome */ 
   font-family:'Press Start 2P',monospace;font-size:7px;color:var(--black);flex-shrink:0;}
 .win-bar.dark{background:var(--black);color:var(--white);}
 .win-controls{display:flex;gap:4px;}
@@ -191,7 +191,7 @@ h1 .accent{color:var(--accent);}
 .chat-send{height:28px;min-width:32px;padding:0 10px;flex-shrink:0;background:var(--brand);color:var(--black);font-family:'Press Start 2P',monospace;font-size:6px;border:none;cursor:none;transition:background .15s;}
 .chat-send:hover{background:var(--effect1);color:var(--white);}
 
-/* ══ ART WINDOW TRIGGER BUTTONS ══ */
+/* ?? ART WINDOW TRIGGER BUTTONS ?? */
 .art-triggers{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:0;width:100%;}
 .art-trigger-btn{
   border:1px solid rgba(24,24,24,0.12);
@@ -223,7 +223,7 @@ h1 .accent{color:var(--accent);}
 .atb-desc{font-size:var(--fs-10);color:var(--grey-m);}
 .atb-tag{font-family:'Press Start 2P',monospace;font-size:7px;color:var(--brand);}
 
-/* ══ DRAGGABLE POPUPS ══ */
+/* ?? DRAGGABLE POPUPS ?? */
 .dw{
   position:fixed;z-index:600;
   border:1px solid rgba(24,24,24,0.15);
@@ -248,7 +248,7 @@ h1 .accent{color:var(--accent);}
 .dw-btn{width:14px;height:14px;border:1px solid rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center;font-size:8px;color:rgba(0,0,0,0.5);cursor:none;font-family:'DM Mono',monospace;background:none;transition:background .12s;}
 .dw-btn:hover{background:rgba(0,0,0,0.12);}
 
-/* ── ENVIRONMENT POPUP ── */
+/* ?? ENVIRONMENT POPUP ?? */
 #env-popup{width:700px;top:80px;left:50%;transform:translateX(-50%);}
 .env-inner{display:flex;height:500px;}
 
@@ -289,7 +289,7 @@ h1 .accent{color:var(--accent);}
 
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
-/* ── CHARACTER POPUP ── */
+/* ?? CHARACTER POPUP ?? */
 #char-popup{width:min(800px,calc(100vw - 32px));top:100px;left:calc(50% + 80px);}
 .char-inner{display:flex;flex-direction:column;max-height:calc(100vh - 80px);}
 
@@ -338,7 +338,7 @@ h1 .accent{color:var(--accent);}
 .char-stat-key{color:var(--grey-m);}
 .char-stat-val{color:var(--black);}
 
-/* ── PLAY DEMO POPUP ── */
+/* ?? PLAY DEMO POPUP ?? */
 #demo-popup{width:220px;bottom:88px;right:36px;position:fixed;z-index:500;border:1px solid rgba(24,24,24,0.15);background:var(--white);box-shadow:4px 4px 0 rgba(24,24,24,0.07);}
 .demo-bar{display:flex;align-items:center;justify-content:space-between;height:24px;padding:0 10px;background:var(--brand);cursor:move;}
 .demo-title{font-family:'Press Start 2P',monospace;font-size:7px;color:var(--black);}
@@ -359,7 +359,7 @@ h1 .accent{color:var(--accent);}
 .demo-foot{text-align:center;padding:6px;font-size:var(--fs-10);color:var(--grey-m);border-top:1px solid rgba(24,24,24,0.06);cursor:none;transition:color .15s;}
 .demo-foot:hover{color:var(--black);}
 
-/* ── CREDITS ── */
+/* ?? CREDITS ?? */
 .credits-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;padding-top:48px;border-top:1px solid rgba(24,24,24,0.1);margin-top:64px;}
 @media(max-width:768px){.credits-grid{grid-template-columns:1fr;gap:32px;}}
 .role-list{display:flex;flex-direction:column;}
@@ -370,7 +370,7 @@ h1 .accent{color:var(--accent);}
 .tool-tag{font-size:var(--fs-10);padding:6px 12px;border:1px solid rgba(24,24,24,0.15);color:var(--grey-m);transition:border-color .15s,color .15s;}
 .tool-tag:hover{border-color:var(--brand);color:var(--black);}
 
-/* ── FOOTER ── */
+/* ?? FOOTER ?? */
 footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:32px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;font-size:var(--fs-12);letter-spacing:.08em;}
 .footer-copy{font-size:var(--fs-12);color:var(--grey-m);}
 .footer-copy span{color:var(--brand);}
@@ -388,7 +388,7 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
 .whitelist-head{font-family:'Press Start 2P',monospace;font-size:10px;color:var(--black);line-height:1.8;margin-bottom:10px;}
 .whitelist-copy{font-size:var(--fs-10);color:var(--grey-m);line-height:1.8;margin-bottom:18px;}
 .whitelist-cta{width:100%;height:36px;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;}
-/* ── PW MODAL ── */
+/* ?? PW MODAL ?? */
 #pw-modal{position:fixed;inset:0;z-index:1000;background:rgba(24,24,24,0.4);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;}
 #pw-modal.active{display:flex;}
 #pw-inner{background:var(--white);padding:32px;width:360px;}
@@ -418,7 +418,7 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
 
 <canvas id="cursor-canvas"></canvas>
 
-<!-- ══ HEADER ══ -->
+<!-- ?? HEADER ?? -->
 <header>
   <a href="index.html" class="nav-logo">mialyk<span class="slash">//</span><sub>creative lead</sub></a>
   <nav>
@@ -434,7 +434,6 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
         </a>
         <a href="ora.html" class="dropdown-item"><span class="dropdown-dot"></span>ORA</a>
         <a href="meed.html" class="dropdown-item"><span class="dropdown-dot"></span>Meed</a>
-        <a href="debox.html" class="dropdown-item"><span class="dropdown-dot"></span>DeBox</a>
         <a href="cheddar.html" class="dropdown-item"><span class="dropdown-dot"></span>Cheddar Verse</a>
         <a href="illustration.html" class="dropdown-item"><span class="dropdown-dot"></span>Illustration</a>
         <a href="vfx.html" class="dropdown-item"><span class="dropdown-dot"></span>VFX</a>
@@ -445,7 +444,7 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
   </nav>
 </header>
 
-<!-- ══ HERO ══ -->
+<!-- ?? HERO ?? -->
 <section class="hero">
   <div class="hero-inner">
     <div class="hero-eyebrow">Game Project<span class="hero-year">2020</span></div>
@@ -454,7 +453,7 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
       <div class="meta-item"><span class="meta-label">Type</span><span class="meta-value">2D Horror Survival Dialogue</span></div>
       <div class="meta-item"><span class="meta-label">Credit</span><span class="meta-value">All by mialyk</span></div>
       <div class="meta-item"><span class="meta-label">Engine</span><span class="meta-value">RPG Maker</span></div>
-      <div class="meta-item"><span class="meta-label">Theme</span><span class="meta-value">School Violence · Survival</span></div>
+      <div class="meta-item"><span class="meta-label">Theme</span><span class="meta-value">School Violence 繚 Survival</span></div>
       <div class="meta-item"><span class="meta-label">Tools</span><span class="meta-value">RPG Maker, adobe</span></div>
     </div>
   </div>
@@ -463,27 +462,27 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
 <div class="ticker-wrap reveal">
   <div class="ticker-label">HAMARTIA</div>
   <div class="ticker-track"><div class="ticker-inner">
-    <span class="ticker-item"><em>2D Horror Survival Dialogue</em><span class="ticker-sep"> · </span></span>
-    <span class="ticker-item">High-school culture festival<span class="ticker-sep"> · </span></span>
-    <span class="ticker-item"><em>13 survivors · 1 initiator · 0 mercy</em><span class="ticker-sep"> · </span></span>
-    <span class="ticker-item">Dialogue trees + mini-games<span class="ticker-sep"> · </span></span>
-    <span class="ticker-item">Asian communal culture &amp; school bullying<span class="ticker-sep"> · </span></span>
-    <span class="ticker-item"><em>Blood · Sacrifice · Survival</em><span class="ticker-sep"> · </span></span>
-    <span class="ticker-item">Solo developed · 2020<span class="ticker-sep"> · </span></span>
-    <span class="ticker-item">Humanity and survival — what will be real?<span class="ticker-sep"> · </span></span>
+    <span class="ticker-item"><em>2D Horror Survival Dialogue</em><span class="ticker-sep"> 繚 </span></span>
+    <span class="ticker-item">High-school culture festival<span class="ticker-sep"> 繚 </span></span>
+    <span class="ticker-item"><em>13 survivors 繚 1 initiator 繚 0 mercy</em><span class="ticker-sep"> 繚 </span></span>
+    <span class="ticker-item">Dialogue trees + mini-games<span class="ticker-sep"> 繚 </span></span>
+    <span class="ticker-item">Asian communal culture &amp; school bullying<span class="ticker-sep"> 繚 </span></span>
+    <span class="ticker-item"><em>Blood 繚 Sacrifice 繚 Survival</em><span class="ticker-sep"> 繚 </span></span>
+    <span class="ticker-item">Solo developed 繚 2020<span class="ticker-sep"> 繚 </span></span>
+    <span class="ticker-item">Humanity and survival ??what will be real?<span class="ticker-sep"> 繚 </span></span>
     <!-- dupe -->
-    <span class="ticker-item"><em>2D Horror Survival Dialogue</em><span class="ticker-sep"> · </span></span>
-    <span class="ticker-item">High-school culture festival<span class="ticker-sep"> · </span></span>
-    <span class="ticker-item"><em>13 survivors · 1 initiator · 0 mercy</em><span class="ticker-sep"> · </span></span>
-    <span class="ticker-item">Dialogue trees + mini-games<span class="ticker-sep"> · </span></span>
-    <span class="ticker-item">Asian communal culture &amp; school bullying<span class="ticker-sep"> · </span></span>
-    <span class="ticker-item"><em>Blood · Sacrifice · Survival</em><span class="ticker-sep"> · </span></span>
-    <span class="ticker-item">Solo developed · 2020<span class="ticker-sep"> · </span></span>
-    <span class="ticker-item">Humanity and survival — what will be real?<span class="ticker-sep"> · </span></span>
+    <span class="ticker-item"><em>2D Horror Survival Dialogue</em><span class="ticker-sep"> 繚 </span></span>
+    <span class="ticker-item">High-school culture festival<span class="ticker-sep"> 繚 </span></span>
+    <span class="ticker-item"><em>13 survivors 繚 1 initiator 繚 0 mercy</em><span class="ticker-sep"> 繚 </span></span>
+    <span class="ticker-item">Dialogue trees + mini-games<span class="ticker-sep"> 繚 </span></span>
+    <span class="ticker-item">Asian communal culture &amp; school bullying<span class="ticker-sep"> 繚 </span></span>
+    <span class="ticker-item"><em>Blood 繚 Sacrifice 繚 Survival</em><span class="ticker-sep"> 繚 </span></span>
+    <span class="ticker-item">Solo developed 繚 2020<span class="ticker-sep"> 繚 </span></span>
+    <span class="ticker-item">Humanity and survival ??what will be real?<span class="ticker-sep"> 繚 </span></span>
   </div></div>
 </div>
 
-<!-- ══ MAIN ══ -->
+<!-- ?? MAIN ?? -->
 <div class="psection">
 
   <!-- STREAMER UI -->
@@ -493,7 +492,7 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
   <div class="win-bar">
     <span>hamartia_trailer.mp4</span>
     <div class="win-controls">
-      <div class="win-btn">─</div><div class="win-btn">□</div><div class="win-btn">✕</div>
+      <div class="win-btn">?</div><div class="win-btn">??/div><div class="win-btn">??/div>
     </div>
   </div>
   <div class="menu-bar">
@@ -511,61 +510,61 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
       </iframe>
     </div>
     <div class="video-overlay">
-      <div class="video-title-px">CULTURE FESTIVAL — DAY 01</div>
-      <div class="video-sub-px">Hamartia · Game Trailer · 2020</div>
+      <div class="video-title-px">CULTURE FESTIVAL ??DAY 01</div>
+      <div class="video-sub-px">Hamartia 繚 Game Trailer 繚 2020</div>
     </div>
   </div>
   <div class="ctrl-bar">
-    <span class="ctrl-btn">⏮</span>
-    <span class="ctrl-btn" id="play-btn">⏸</span>
-    <span class="ctrl-btn">⏭</span>
+    <span class="ctrl-btn">??/span>
+    <span class="ctrl-btn" id="play-btn">??/span>
+    <span class="ctrl-btn">??/span>
     <div class="progress-bar"><div class="progress-fill" id="pfill"></div><div class="progress-head" id="phead"></div></div>
     <span class="time-lbl">00:35 / 01:42</span>
-    <span class="ctrl-btn" id="volume-btn">🔇</span>
+    <span class="ctrl-btn" id="volume-btn">??</span>
   </div>
   <div class="ch-bar">
-    <div><div class="ch-name">HAMARTIA</div><div class="ch-sub">mialyk · 2020 · Horror Survival</div></div>
+    <div><div class="ch-name">HAMARTIA</div><div class="ch-sub">mialyk 繚 2020 繚 Horror Survival</div></div>
     <div><span class="viewer-num" id="viewer-num">2,599</span><span class="viewer-lbl">watching</span></div>
   </div>
 </div>
 
 <!-- CHAT -->
     <div class="chat-panel">
-      <div class="win-bar"><span>Live Chat</span><div class="win-controls"><div class="win-btn">─</div><div class="win-btn">✕</div></div></div>
+      <div class="win-bar"><span>Live Chat</span><div class="win-controls"><div class="win-btn">?</div><div class="win-btn">??/div></div></div>
       <div class="chat-topbar"><div class="chat-dot"></div><span class="chat-lbl">LIVE CHAT</span></div>
       <div class="chat-messages"><div class="chat-scroll" id="chat-scroll">
-        <div class="chat-msg hl"><span class="chat-user u1">ghost_✦</span><span class="chat-text">pixel art is <em>insane</em></span></div>
+        <div class="chat-msg hl"><span class="chat-user u1">ghost_??/span><span class="chat-text">pixel art is <em>insane</em></span></div>
         <div class="chat-msg"><span class="chat-user u2">yuki99</span><span class="chat-text">who is the initiator??</span></div>
         <div class="chat-msg"><span class="chat-user u3">anon_404</span><span class="chat-text"><em>so unsettling</em> love it</span></div>
-        <div class="chat-msg"><span class="chat-user u4">nxr_m</span><span class="chat-text">school bg gorgeous 😭</span></div>
-        <div class="chat-msg"><span class="chat-user u5">sleepy✦</span><span class="chat-text">RPG Maker never looked this good</span></div>
-        <div class="chat-msg hl"><span class="chat-user u1">ghost_✦</span><span class="chat-text">13 chars all hand drawn?!</span></div>
+        <div class="chat-msg"><span class="chat-user u4">nxr_m</span><span class="chat-text">school bg gorgeous ?</span></div>
+        <div class="chat-msg"><span class="chat-user u5">sleepy??/span><span class="chat-text">RPG Maker never looked this good</span></div>
+        <div class="chat-msg hl"><span class="chat-user u1">ghost_??/span><span class="chat-text">13 chars all hand drawn?!</span></div>
         <div class="chat-msg"><span class="chat-user u6">red_thr</span><span class="chat-text"><em>blood festival vibes</em> omg</span></div>
         <div class="chat-msg"><span class="chat-user u2">yuki99</span><span class="chat-text">played demo 3x already</span></div>
-        <div class="chat-msg"><span class="chat-user u3">anon_404</span><span class="chat-text">solo dev?? respect 🙏</span></div>
-        <div class="chat-msg"><span class="chat-user u4">nxr_m</span><span class="chat-text">char design 🤌</span></div>
-        <div class="chat-msg hl"><span class="chat-user u5">sleepy✦</span><span class="chat-text">cannot figure out who did it</span></div>
-        <div class="chat-msg"><span class="chat-user u1">ghost_✦</span><span class="chat-text">radio mechanic so clever</span></div>
+        <div class="chat-msg"><span class="chat-user u3">anon_404</span><span class="chat-text">solo dev?? respect ??</span></div>
+        <div class="chat-msg"><span class="chat-user u4">nxr_m</span><span class="chat-text">char design ??</span></div>
+        <div class="chat-msg hl"><span class="chat-user u5">sleepy??/span><span class="chat-text">cannot figure out who did it</span></div>
+        <div class="chat-msg"><span class="chat-user u1">ghost_??/span><span class="chat-text">radio mechanic so clever</span></div>
         <div class="chat-msg"><span class="chat-user u2">yuki99</span><span class="chat-text">hits different after midnight</span></div>
-        <div class="chat-msg"><span class="chat-user u6">red_thr</span><span class="chat-text"><em>humanity vs survival</em> 💀</span></div>
+        <div class="chat-msg"><span class="chat-user u6">red_thr</span><span class="chat-text"><em>humanity vs survival</em> ??</span></div>
         <div class="chat-msg"><span class="chat-user u3">anon_404</span><span class="chat-text">bullying theme is so real</span></div>
         <div class="chat-msg"><span class="chat-user u4">nxr_m</span><span class="chat-text">full release when??</span></div>
       </div></div>
       <div class="chat-foot">
         <input class="chat-input" id="chat-comment-trigger" type="text" placeholder="Send a comment..." readonly>
-        <button class="chat-send" id="chat-send-trigger">▶</button>
+        <button class="chat-send" id="chat-send-trigger">??/button>
       </div>
     </div>
   </div>
 
-  <!-- ══ ART TRIGGER BUTTONS ══ -->
+  <!-- ?? ART TRIGGER BUTTONS ?? -->
   <div class="art-triggers reveal">
 
     <!-- ENV TRIGGER -->
     <button class="art-trigger-btn" onclick="openEnv()">
       <div class="atb-bar">
         <span class="atb-title">environment_art.exe</span>
-        <span class="atb-open">Open ↗</span>
+        <span class="atb-open">Open ??/span>
       </div>
       <div class="atb-preview">
         <svg width="240" height="100" viewBox="0 0 240 100" style="image-rendering:pixelated;opacity:.8;">
@@ -593,7 +592,7 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
         </svg>
       </div>
       <div class="atb-footer">
-        <span class="atb-desc">6 locations · Interactive map</span>
+        <span class="atb-desc">6 locations 繚 Interactive map</span>
         <span class="atb-tag">ENV</span>
       </div>
     </button>
@@ -602,7 +601,7 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
     <button class="art-trigger-btn" onclick="openChar()">
       <div class="atb-bar">
         <span class="atb-title">character_select.exe</span>
-        <span class="atb-open">Open ↗</span>
+        <span class="atb-open">Open ??/span>
       </div>
       <div class="atb-preview" id="char-atb-preview"></div>
       <div class="atb-footer">
@@ -613,7 +612,7 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
   </div>
 </div><!-- /psection -->
 
-<!-- ══ FOOTER ══ -->
+<!-- ?? FOOTER ?? -->
 <footer>
   <div class="footer-copy">2026 <span>mialyk</span> // All rights reserved</div>
   <div class="footer-socials">
@@ -624,16 +623,16 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
   </div>
 </footer>
 
-<!-- ══ BACKDROP ══ -->
+<!-- ?? BACKDROP ?? -->
 <div id="popup-backdrop" onclick="closeAllPopups()"></div>
 
-<!-- ══ ENVIRONMENT POPUP ══ -->
+<!-- ?? ENVIRONMENT POPUP ?? -->
 <div class="dw" id="env-popup">
   <div class="dw-bar" id="env-drag">
     <span class="dw-title">environment_art.exe</span>
     <div class="dw-controls">
-      <div class="dw-btn" onclick="closeEnv()">─</div>
-      <div class="dw-btn" onclick="closeEnv()">✕</div>
+      <div class="dw-btn" onclick="closeEnv()">?</div>
+      <div class="dw-btn" onclick="closeEnv()">??/div>
     </div>
   </div>
   <div class="env-inner">
@@ -675,7 +674,7 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
       <div class="env-counter" id="env-counter">01 / 06</div>
 
       <!-- Each location placeholder art (swap img tags for real images) -->
-      <!-- LOC 0: 學校大門 -->
+      <!-- LOC 0: 摮豢憭折? -->
       <div class="loc-art active" id="loc-art-0">
         <svg width="100%" height="100%" viewBox="0 0 540 500" preserveAspectRatio="xMidYMid slice" style="image-rendering:pixelated;">
           <rect width="540" height="500" fill="#080808"/>
@@ -725,7 +724,7 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
         </svg>
       </div>
 
-      <!-- LOC 1: 操場 -->
+      <!-- LOC 1: ? -->
       <div class="loc-art" id="loc-art-1">
         <svg width="100%" height="100%" viewBox="0 0 540 500" preserveAspectRatio="xMidYMid slice" style="image-rendering:pixelated;">
           <rect width="540" height="500" fill="#080808"/>
@@ -773,7 +772,7 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
         </svg>
       </div>
 
-      <!-- LOC 2: 學校外 -->
+      <!-- LOC 2: 摮豢憭?-->
       <div class="loc-art" id="loc-art-2">
         <svg width="100%" height="100%" viewBox="0 0 540 500" preserveAspectRatio="xMidYMid slice" style="image-rendering:pixelated;">
           <rect width="540" height="500" fill="#060608"/>
@@ -823,7 +822,7 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
         </svg>
       </div>
 
-      <!-- LOC 3: 學生會長室 -->
+      <!-- LOC 3: 摮貊??摰?-->
       <div class="loc-art" id="loc-art-3">
         <svg width="100%" height="100%" viewBox="0 0 540 500" preserveAspectRatio="xMidYMid slice" style="image-rendering:pixelated;">
           <rect width="540" height="500" fill="#0A0A08"/>
@@ -881,7 +880,7 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
         </svg>
       </div>
 
-      <!-- LOC 4: 神秘社 -->
+      <!-- LOC 4: 蟡?蝷?-->
       <div class="loc-art" id="loc-art-4">
         <svg width="100%" height="100%" viewBox="0 0 540 500" preserveAspectRatio="xMidYMid slice" style="image-rendering:pixelated;">
           <rect width="540" height="500" fill="#080808"/>
@@ -930,7 +929,7 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
         </svg>
       </div>
 
-      <!-- LOC 5: F5走廊 -->
+      <!-- LOC 5: F5韏啣? -->
       <div class="loc-art" id="loc-art-5">
         <svg width="100%" height="100%" viewBox="0 0 540 500" preserveAspectRatio="xMidYMid slice" style="image-rendering:pixelated;">
           <rect width="540" height="500" fill="#070707"/>
@@ -998,41 +997,41 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
       </div>
 
       <div class="env-caption" id="env-caption">
-        <div class="env-cap-name" id="env-cap-name">學校大門 — School Gate</div>
+        <div class="env-cap-name" id="env-cap-name">摮豢憭折? ??School Gate</div>
         <div class="env-cap-sub" id="env-cap-sub">The sealed entrance. No one leaves.</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══ CHARACTER POPUP ══ -->
+<!-- ?? CHARACTER POPUP ?? -->
 <div class="dw" id="char-popup">
   <div class="dw-bar" id="char-drag">
     <span class="dw-title">character_select.exe</span>
     <div class="dw-controls">
-      <div class="dw-btn" onclick="closeChar()">─</div>
-      <div class="dw-btn" onclick="closeChar()">✕</div>
+      <div class="dw-btn" onclick="closeChar()">?</div>
+      <div class="dw-btn" onclick="closeChar()">??/div>
     </div>
   </div>
   <div class="char-inner">
     <!-- icon grid -->
     <div class="char-grid-wrap">
-      <div class="char-grid-label">SELECT SURVIVOR — 13 / 13</div>
+      <div class="char-grid-label">SELECT SURVIVOR ??13 / 13</div>
       <div class="char-grid" id="char-grid">
         <!-- 13 chars -->
-        <div class="char-icon active" onclick="selectChar(0,this)"><div class="char-icon-inner">梅<span class="char-icon-num">01</span></div></div>
-        <div class="char-icon" onclick="selectChar(1,this)"><div class="char-icon-inner">海<span class="char-icon-num">02</span></div></div>
-        <div class="char-icon" onclick="selectChar(2,this)"><div class="char-icon-inner">晴<span class="char-icon-num">03</span></div></div>
-        <div class="char-icon" onclick="selectChar(3,this)"><div class="char-icon-inner">凜<span class="char-icon-num">04</span></div></div>
-        <div class="char-icon" onclick="selectChar(4,this)"><div class="char-icon-inner">黎<span class="char-icon-num">05</span></div></div>
-        <div class="char-icon" onclick="selectChar(5,this)"><div class="char-icon-inner">影<span class="char-icon-num">06</span></div></div>
-        <div class="char-icon" onclick="selectChar(6,this)"><div class="char-icon-inner">鳶<span class="char-icon-num">07</span></div></div>
-        <div class="char-icon" onclick="selectChar(7,this)"><div class="char-icon-inner">珊<span class="char-icon-num">08</span></div></div>
-        <div class="char-icon" onclick="selectChar(8,this)"><div class="char-icon-inner">弦<span class="char-icon-num">09</span></div></div>
-        <div class="char-icon" onclick="selectChar(9,this)"><div class="char-icon-inner">蘭<span class="char-icon-num">10</span></div></div>
-        <div class="char-icon" onclick="selectChar(10,this)"><div class="char-icon-inner">戒<span class="char-icon-num">11</span></div></div>
-        <div class="char-icon" onclick="selectChar(11,this)"><div class="char-icon-inner">羽<span class="char-icon-num">12</span></div></div>
-        <div class="char-icon" onclick="selectChar(12,this)"><div class="char-icon-inner">絶<span class="char-icon-num">13</span></div></div>
+        <div class="char-icon active" onclick="selectChar(0,this)"><div class="char-icon-inner">璇?span class="char-icon-num">01</span></div></div>
+        <div class="char-icon" onclick="selectChar(1,this)"><div class="char-icon-inner">瘚?span class="char-icon-num">02</span></div></div>
+        <div class="char-icon" onclick="selectChar(2,this)"><div class="char-icon-inner">??span class="char-icon-num">03</span></div></div>
+        <div class="char-icon" onclick="selectChar(3,this)"><div class="char-icon-inner">??span class="char-icon-num">04</span></div></div>
+        <div class="char-icon" onclick="selectChar(4,this)"><div class="char-icon-inner">暺?span class="char-icon-num">05</span></div></div>
+        <div class="char-icon" onclick="selectChar(5,this)"><div class="char-icon-inner">敶?span class="char-icon-num">06</span></div></div>
+        <div class="char-icon" onclick="selectChar(6,this)"><div class="char-icon-inner">曈?span class="char-icon-num">07</span></div></div>
+        <div class="char-icon" onclick="selectChar(7,this)"><div class="char-icon-inner">??span class="char-icon-num">08</span></div></div>
+        <div class="char-icon" onclick="selectChar(8,this)"><div class="char-icon-inner">撘?span class="char-icon-num">09</span></div></div>
+        <div class="char-icon" onclick="selectChar(9,this)"><div class="char-icon-inner">??span class="char-icon-num">10</span></div></div>
+        <div class="char-icon" onclick="selectChar(10,this)"><div class="char-icon-inner">??span class="char-icon-num">11</span></div></div>
+        <div class="char-icon" onclick="selectChar(11,this)"><div class="char-icon-inner">蝢?span class="char-icon-num">12</span></div></div>
+        <div class="char-icon" onclick="selectChar(12,this)"><div class="char-icon-inner">蝯?span class="char-icon-num">13</span></div></div>
       </div>
     </div>
     <!-- display -->
@@ -1041,12 +1040,12 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
         <img class="char-art" id="char-art" alt="Hamartia character art">
         <div class="char-art-placeholder" id="char-placeholder">
           <span class="char-art-placeholder-label">UNKNOWN CHARACTER</span>
-          <span class="char-art-placeholder-sub">？？？？</span>
+          <span class="char-art-placeholder-sub">嚗?嚗?</span>
         </div>
       </div>
       <div class="char-info">
         <div class="char-id" id="char-id">SURVIVOR #01</div>
-        <div class="char-name-display" id="char-name">梅</div>
+        <div class="char-name-display" id="char-name">璇?/div>
         <div class="char-role-tag" id="char-role">Class President</div>
         <div class="char-stat-row"><span class="char-stat-key">Status</span><span class="char-stat-val" id="cs-status">Alive</span></div>
         <div class="char-stat-row"><span class="char-stat-key">Location</span><span class="char-stat-val" id="cs-loc">Unknown</span></div>
@@ -1057,21 +1056,21 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
   </div>
 </div>
 
-<!-- ══ PLAY DEMO POPUP ══ -->
+<!-- ?? PLAY DEMO POPUP ?? -->
 <div id="demo-popup">
   <div class="demo-bar" id="demo-drag">
-    <span class="demo-title">▶ Play Demo</span>
-    <button class="demo-x" onclick="document.getElementById('demo-popup').style.display='none'">✕</button>
+    <span class="demo-title">??Play Demo</span>
+    <button class="demo-x" onclick="document.getElementById('demo-popup').style.display='none'">??/button>
   </div>
   <div id="demo-inner">
     <div class="demo-body">
       <img class="demo-icon" src="assets/images/HAMARTIA/hamartia logo.png" alt="Hamartia logo">
       <div class="demo-name">HAMARTIA</div>
-      <div class="demo-desc">2D horror survival. Find the initiator. 13 survivors — only truth saves you.</div>
+      <div class="demo-desc">2D horror survival. Find the initiator. 13 survivors ??only truth saves you.</div>
       <div class="demo-tags"><span class="demo-tag">Horror</span><span class="demo-tag">Dialogue</span><span class="demo-tag">RPG</span><span class="demo-tag">2020</span></div>
-      <a href="https://mialyk.itch.io/hamartia" target="_blank" class="demo-cta">PLAY ON ITCH.IO ↗</a>
+      <a href="https://mialyk.itch.io/hamartia" target="_blank" class="demo-cta">PLAY ON ITCH.IO ??/a>
     </div>
-    <div class="demo-foot" onclick="toggleDemo()">▲ minimise</div>
+    <div class="demo-foot" onclick="toggleDemo()">??minimise</div>
   </div>
 </div>
 
@@ -1079,7 +1078,7 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
 <div id="whitelist-popup">
   <div class="whitelist-bar">
     <span class="whitelist-title">comment_access.exe</span>
-    <button class="whitelist-close" onclick="closeWhitelistPopup()">✕</button>
+    <button class="whitelist-close" onclick="closeWhitelistPopup()">??/button>
   </div>
   <div class="whitelist-body">
     <div class="whitelist-head">You need to join the whitelist</div>
@@ -1106,7 +1105,7 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
 </div>
 
 <script>
-// ── CURSOR
+// ?? CURSOR
 const cursorCanvas=document.getElementById('cursor-canvas');
 const cursorCtx=cursorCanvas.getContext('2d');
 cursorCanvas.width=window.innerWidth; cursorCanvas.height=window.innerHeight;
@@ -1166,7 +1165,7 @@ function cursorLoop(){
 }
 cursorLoop();
 
-// ── FAKE PLAYER UI
+// ?? FAKE PLAYER UI
 let playing=true;
 let playerMuted=true;
 const iframe=document.getElementById('video-iframe');
@@ -1209,7 +1208,7 @@ function syncVimeoState(){
 if(fakePlayBtn&&fakeProgress){
   fakePlayBtn.onclick=()=>{
     playing=!playing;
-    fakePlayBtn.textContent=playing?'⏸':'▶';
+    fakePlayBtn.textContent=playing?'??:'??;
     syncVimeoState();
   };
   let prog=35;
@@ -1218,7 +1217,7 @@ if(fakePlayBtn&&fakeProgress){
 if(fakeVolumeBtn){
   fakeVolumeBtn.onclick=()=>{
     playerMuted=!playerMuted;
-    fakeVolumeBtn.textContent=playerMuted?'🔇':'🔊';
+    fakeVolumeBtn.textContent=playerMuted?'??':'??';
     syncVimeoState();
   };
 }
@@ -1243,7 +1242,7 @@ if(viewerNum){
   },1000);
 }
 
-// ── CHAT INFINITE LOOP (JS-driven, no gap)
+// ?? CHAT INFINITE LOOP (JS-driven, no gap)
 let chatLoopStarted=false;
 function initChatLoop(){
   const scroll=document.getElementById('chat-scroll');
@@ -1282,21 +1281,21 @@ if(chatCommentTrigger){ ['click','focus','mousedown','touchstart'].forEach(evt=>
 if(chatSendTrigger){ ['click','mousedown','touchstart'].forEach(evt=>chatSendTrigger.addEventListener(evt, openWhitelistPopup)); }
 if(chatFoot){ ['click','mousedown','touchstart'].forEach(evt=>chatFoot.addEventListener(evt, openWhitelistPopup)); }
 
-// ── REVEAL
+// ?? REVEAL
 document.querySelectorAll('.reveal').forEach(el=>{
   new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.07}).observe(el);
 });
 
-// ── DEMO POPUP DRAG
+// ?? DEMO POPUP DRAG
 makeDraggable(document.getElementById('demo-popup'),document.getElementById('demo-drag'));
 let demoMini=false;
 function toggleDemo(){
   demoMini=!demoMini;
   document.querySelector('.demo-body').style.display=demoMini?'none':'block';
-  document.querySelector('.demo-foot').textContent=demoMini?'▼ restore':'▲ minimise';
+  document.querySelector('.demo-foot').textContent=demoMini?'??restore':'??minimise';
 }
 
-// ── POPUP BACKDROP
+// ?? POPUP BACKDROP
 function openPopupBackdrop(){document.getElementById('popup-backdrop').classList.add('active');}
 function closePopupBackdrop(){document.getElementById('popup-backdrop').classList.remove('active');}
 function closeAllPopups(){closeEnv();closeChar();}
@@ -1311,14 +1310,14 @@ function centerWindowPopup(el,minTop=84){
   el.style.transform='none';
 }
 
-// ── ENV POPUP
+// ?? ENV POPUP
 const locations=[
-  {name:'School Gate — Main Entrance',sub:'The sealed entrance. No one leaves.'},
-  {name:'Playground — Sports Court',sub:'Where the first body was found.'},
-  {name:'School Exterior — Outside Wall',sub:'The city beyond the walls. Unreachable.'},
-  {name:'Student Council — President\'s Office',sub:'Locked from the inside. Bloodstained desk.'},
-  {name:'Mystery Club — Forbidden Room',sub:'Forbidden rituals. The altar still burns.'},
-  {name:'F5 Corridor — 5th Floor Hall',sub:'The last place she was seen alive.'},
+  {name:'School Gate ??Main Entrance',sub:'The sealed entrance. No one leaves.'},
+  {name:'Playground ??Sports Court',sub:'Where the first body was found.'},
+  {name:'School Exterior ??Outside Wall',sub:'The city beyond the walls. Unreachable.'},
+  {name:'Student Council ??President\'s Office',sub:'Locked from the inside. Bloodstained desk.'},
+  {name:'Mystery Club ??Forbidden Room',sub:'Forbidden rituals. The altar still burns.'},
+  {name:'F5 Corridor ??5th Floor Hall',sub:'The last place she was seen alive.'},
 ];
 let currentLoc=0;
 
@@ -1345,21 +1344,21 @@ function selectLoc(idx,el){
 
 makeDraggable(document.getElementById('env-popup'),document.getElementById('env-drag'));
 
-// ── CHAR POPUP
+// ?? CHAR POPUP
 const characters=[
-  {id:'SURVIVOR #01',name:'梅',role:'Class President',status:'Alive',loc:'Student Council',sus:'High',desc:'Calm and calculating. She knows more than she lets on. The council room was her domain — now it\'s a crime scene.'},
-  {id:'SURVIVOR #02',name:'海',role:'Track Captain',status:'Alive',loc:'Playground',sus:'Medium',desc:'Fast on his feet. Claims he saw nothing. His alibi places him on the track — but the track is covered in blood.'},
-  {id:'SURVIVOR #03',name:'晴',role:'Art Club Member',status:'Alive',loc:'Unknown',sus:'Low',desc:'Quiet and withdrawn. Her sketchbook is missing. Some pages were torn out before the chaos began.'},
-  {id:'SURVIVOR #04',name:'凜',role:'Mystery Club Lead',status:'Alive',loc:'Mystery Club',sus:'High',desc:'She founded the Mystery Club. The ritual circle in the clubroom is her design. She denies its significance.'},
-  {id:'SURVIVOR #05',name:'黎',role:'Transfer Student',status:'Alive',loc:'F5 Corridor',sus:'Medium',desc:'Arrived three weeks ago. Nobody knows where she came from. She was the last person seen in F5 corridor.'},
-  {id:'SURVIVOR #06',name:'影',role:'Unknown',status:'Alive',loc:'Unknown',sus:'Critical',desc:'No school records. No homeroom. Nobody knows how she got in. She should not be here.'},
-  {id:'SURVIVOR #07',name:'鳶',role:'Drama Club Lead',status:'Alive',loc:'School Gate',sus:'Low',desc:'Theatrical and dramatic. She staged plays about death and guilt. This time the stage is real.'},
-  {id:'SURVIVOR #08',name:'珊',role:'School Nurse Aide',status:'Alive',loc:'Infirmary',sus:'Medium',desc:'She has access to every medicine cabinet. The injuries on the victims match pharmaceutical knowledge.'},
-  {id:'SURVIVOR #09',name:'弦',role:'Music Room Regular',status:'Alive',loc:'Unknown',sus:'Low',desc:'She was playing violin when the explosion happened. Or so she says. The music room was empty.'},
-  {id:'SURVIVOR #10',name:'蘭',role:'Treasurer',status:'Alive',loc:'Student Council',sus:'Medium',desc:'Found the financial irregularities two weeks before the incident. She told no one. Now she wishes she had.'},
-  {id:'SURVIVOR #11',name:'戒',role:'Discipline Committee',status:'Alive',loc:'School Exterior',sus:'Low',desc:'Rule-follower. By-the-book. But someone like that would know exactly how to break every rule undetected.'},
-  {id:'SURVIVOR #12',name:'羽',role:'Library Committee',status:'Alive',loc:'Unknown',sus:'Medium',desc:'She spent every lunch in the library reading about cold cases. She\'s been preparing for something.'},
-  {id:'SURVIVOR #13',name:'絶',role:'???',status:'Alive',loc:'???',sus:'???',desc:'The thirteenth survivor has no name in any school record. Her presence here defies explanation.'},
+  {id:'SURVIVOR #01',name:'璇?,role:'Class President',status:'Alive',loc:'Student Council',sus:'High',desc:'Calm and calculating. She knows more than she lets on. The council room was her domain ??now it\'s a crime scene.'},
+  {id:'SURVIVOR #02',name:'瘚?,role:'Track Captain',status:'Alive',loc:'Playground',sus:'Medium',desc:'Fast on his feet. Claims he saw nothing. His alibi places him on the track ??but the track is covered in blood.'},
+  {id:'SURVIVOR #03',name:'??,role:'Art Club Member',status:'Alive',loc:'Unknown',sus:'Low',desc:'Quiet and withdrawn. Her sketchbook is missing. Some pages were torn out before the chaos began.'},
+  {id:'SURVIVOR #04',name:'??,role:'Mystery Club Lead',status:'Alive',loc:'Mystery Club',sus:'High',desc:'She founded the Mystery Club. The ritual circle in the clubroom is her design. She denies its significance.'},
+  {id:'SURVIVOR #05',name:'暺?,role:'Transfer Student',status:'Alive',loc:'F5 Corridor',sus:'Medium',desc:'Arrived three weeks ago. Nobody knows where she came from. She was the last person seen in F5 corridor.'},
+  {id:'SURVIVOR #06',name:'敶?,role:'Unknown',status:'Alive',loc:'Unknown',sus:'Critical',desc:'No school records. No homeroom. Nobody knows how she got in. She should not be here.'},
+  {id:'SURVIVOR #07',name:'曈?,role:'Drama Club Lead',status:'Alive',loc:'School Gate',sus:'Low',desc:'Theatrical and dramatic. She staged plays about death and guilt. This time the stage is real.'},
+  {id:'SURVIVOR #08',name:'??,role:'School Nurse Aide',status:'Alive',loc:'Infirmary',sus:'Medium',desc:'She has access to every medicine cabinet. The injuries on the victims match pharmaceutical knowledge.'},
+  {id:'SURVIVOR #09',name:'撘?,role:'Music Room Regular',status:'Alive',loc:'Unknown',sus:'Low',desc:'She was playing violin when the explosion happened. Or so she says. The music room was empty.'},
+  {id:'SURVIVOR #10',name:'??,role:'Treasurer',status:'Alive',loc:'Student Council',sus:'Medium',desc:'Found the financial irregularities two weeks before the incident. She told no one. Now she wishes she had.'},
+  {id:'SURVIVOR #11',name:'??,role:'Discipline Committee',status:'Alive',loc:'School Exterior',sus:'Low',desc:'Rule-follower. By-the-book. But someone like that would know exactly how to break every rule undetected.'},
+  {id:'SURVIVOR #12',name:'蝢?,role:'Library Committee',status:'Alive',loc:'Unknown',sus:'Medium',desc:'She spent every lunch in the library reading about cold cases. She\'s been preparing for something.'},
+  {id:'SURVIVOR #13',name:'蝯?,role:'???',status:'Alive',loc:'???',sus:'???',desc:'The thirteenth survivor has no name in any school record. Her presence here defies explanation.'},
 ];
 const characterAssets=[
   {label:'Eikawa',icon:'assets/images/HAMARTIA/character/output/icon-250/eikawa_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/eikawa_720x720.png'},
@@ -1375,7 +1374,7 @@ const characterAssets=[
   {label:'Yanagawa',icon:'assets/images/HAMARTIA/character/output/icon-250/yanagawa_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/yanagawa_720x720.png'},
   {label:'Yurika',icon:'assets/images/HAMARTIA/character/output/icon-250/yurika_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/yurika_720x720.png'},
 ];
-const unknownCharacter={label:'？？？？'};
+const unknownCharacter={label:'嚗?嚗?'};
 
 function renderCharTriggerPreview(activeIndex=0){
   const triggerPreview=document.getElementById('char-atb-preview');
@@ -1386,7 +1385,7 @@ function renderCharTriggerPreview(activeIndex=0){
   const activeLabel=activeCharacter.displayName||activeCharacter.name;
   const mainMarkup=activeCharacter.art
     ? `<img src="${activeCharacter.art}" alt="${activeLabel} full character art">`
-    : `<div class="char-atb-main-placeholder">？？？？</div>`;
+    : `<div class="char-atb-main-placeholder">嚗?嚗?</div>`;
 
   triggerPreview.innerHTML=`
     <div class="char-atb-preview-frame">
@@ -1397,7 +1396,7 @@ function renderCharTriggerPreview(activeIndex=0){
           const activeClass=isActive?' active':'';
           return item.icon
             ? `<div class="char-atb-icon${activeClass}"><img src="${item.icon}" alt="${item.label} icon"></div>`
-            : `<div class="char-atb-icon${activeClass}">？？</div>`;
+            : `<div class="char-atb-icon${activeClass}">嚗?</div>`;
         }).join('')}
       </div>
       <div class="char-atb-main">${mainMarkup}</div>
@@ -1420,11 +1419,11 @@ function hydrateCharacterAssets(){
 
     characters[idx].displayName=unknownCharacter.label;
     characters[idx].name=unknownCharacter.label;
-    characters[idx].role='？？？？';
-    characters[idx].status='？？？？';
-    characters[idx].loc='？？？？';
-    characters[idx].sus='？？？？';
-    iconEl.innerHTML=`<div class="char-icon-inner">？？？？<span class="char-icon-num">${String(idx+1).padStart(2,'0')}</span></div>`;
+    characters[idx].role='嚗?嚗?';
+    characters[idx].status='嚗?嚗?';
+    characters[idx].loc='嚗?嚗?';
+    characters[idx].sus='嚗?嚗?';
+    iconEl.innerHTML=`<div class="char-icon-inner">嚗?嚗?<span class="char-icon-num">${String(idx+1).padStart(2,'0')}</span></div>`;
   });
 
   renderCharTriggerPreview(0);
@@ -1478,7 +1477,7 @@ hydrateCharacterAssets();
 const initialCharIcon=document.querySelector('#char-grid .char-icon');
 if(initialCharIcon)selectChar(0,initialCharIcon);
 
-// ── GENERIC DRAG
+// ?? GENERIC DRAG
 function makeDraggable(el,handle){
   let drag=false,ox=0,oy=0;
   handle.addEventListener('mousedown',e=>{
@@ -1496,7 +1495,7 @@ function makeDraggable(el,handle){
   document.addEventListener('mouseup',()=>drag=false);
 }
 
-// ── BOTTOM AUTO-OPEN
+// ?? BOTTOM AUTO-OPEN
 let envOpened=false, charOpened=false;
 let hasUserScrolled=false;
 function launchEnvPopup(){
@@ -1535,11 +1534,11 @@ window.addEventListener('resize', ()=>{
   if(hasUserScrolled) checkBottomAutoOpen();
 });
 
-// ── PASSWORD
+// ?? PASSWORD
 const PW='mialyk2024';
 function showPasswordModal(e){e.preventDefault();document.getElementById('pw-input').value='';document.getElementById('pw-error').textContent='';document.getElementById('pw-input').classList.remove('error');document.getElementById('pw-modal').classList.add('active');setTimeout(()=>document.getElementById('pw-input').focus(),100);}
 function closePwModal(){document.getElementById('pw-modal').classList.remove('active');}
-function checkPassword(){const v=document.getElementById('pw-input').value;if(v===PW){closePwModal();window.location.href='/lesocial.html';}else{document.getElementById('pw-input').classList.add('error');document.getElementById('pw-error').textContent='✕ Incorrect password';document.getElementById('pw-input').value='';setTimeout(()=>document.getElementById('pw-input').classList.remove('error'),1500);}}
+function checkPassword(){const v=document.getElementById('pw-input').value;if(v===PW){closePwModal();window.location.href='lesocial.html';}else{document.getElementById('pw-input').classList.add('error');document.getElementById('pw-error').textContent='??Incorrect password';document.getElementById('pw-input').value='';setTimeout(()=>document.getElementById('pw-input').classList.remove('error'),1500);}}
 document.getElementById('pw-modal').addEventListener('click',function(e){if(e.target===this)closePwModal();});
 </script>
 </body>

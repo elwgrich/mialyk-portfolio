@@ -1,16 +1,16 @@
-# mialyk // portfolio — Art Direction & Memory
-> Last updated: March 2026 · Version 2.0 · Pre-deploy snapshot
+# mialyk // portfolio ??Art Direction & Memory
+> Last updated: March 2026 ??Version 2.0 ??Pre-deploy snapshot
 
 ---
 
 ## 1. Concept & Tone
 
-**Core idea:** A playable portfolio. The homepage is a game — the user *discovers* work by playing, not scrolling.
+**Core idea:** A playable portfolio. The homepage is a game ??the user *discovers* work by playing, not scrolling.
 
 **Aesthetic:** 8-bit retro-futurism meets editorial minimalism.
 - Game canvas = playful, pixel-art, warm orange
 - UI chrome (nav, popup, footer) = clean, monospaced, restrained
-- The contrast is intentional — game world vs. professional frame
+- The contrast is intentional ??game world vs. professional frame
 
 **Personality:** Creative Lead who codes. Warm but precise. Playful but not childish.
 
@@ -24,9 +24,9 @@
 | `--grey-l` | `#A8B0B2` | Subtle text, hints |
 | `--grey-m` | `#88888C` | Secondary text, nav links |
 | `--black` | `#181818` | Primary text |
-| `--brand` | `#FFB742` | Orange — CTA, mouse, score |
-| `--effect1` | `#DA6628` | Deep orange — hover, shading |
-| `--effect2` | `#F3FF97` | Acid yellow — accent only, never bg |
+| `--brand` | `#FFB742` | Orange ??CTA, mouse, score |
+| `--effect1` | `#DA6628` | Deep orange ??hover, shading |
+| `--effect2` | `#F3FF97` | Acid yellow ??accent only, never bg |
 | `--candy-sm` | `#DCE0E2` | Small candy (+1) |
 | `--candy-md` | `#C9CDCE` | Medium candy (+5) |
 | `--candy-lg` | `#FFB742` | Large candy (+10) |
@@ -40,16 +40,16 @@
 
 | Font | Usage |
 |---|---|
-| **Press Start 2P** | Logo, score, popup titles, pts — game moments only |
+| **Press Start 2P** | H1, logo, score, popup titles, pts |
 | **DM Mono** | Everything else |
 
 ### Scale
 | Token | Size | Usage |
 |---|---|---|
-| `--fs-24` | clamp(20→24px) | Score display, sub-headings |
+| `--fs-24` | clamp(20??4px) | Score display, sub-headings |
 | `--fs-16` | 16px | Logo (mialyk), popup title |
-| `--fs-12` | 12px | **Body** — nav, descriptions, buttons, footer |
-| `--fs-10` | 10px | **Sub-body only** — labels, hints, btn--sm, pw-sub/error |
+| `--fs-12` | 12px | **Body** ??nav, descriptions, buttons, footer |
+| `--fs-10` | 10px | **Sub-body only** ??labels, hints, btn--sm, pw-sub/error |
 
 **Rule: minimum 10px. Body = 12px. Never go below 10px.**
 
@@ -57,7 +57,7 @@
 
 ## 4. Icons
 
-- All inline SVG, `fill="currentColor"` — zero CDN
+- All inline SVG, `fill="currentColor"` ??zero CDN
 - Social: official brand paths (LinkedIn, Instagram, ArtStation, X)
 - UI: custom pixel-art `<rect>` (close, lock) or stroke (arrow)
 
@@ -73,7 +73,7 @@
 
 ## 5. Game & Cursor
 
-### Mouse character (game + cursor — identical design)
+### Mouse character (game + cursor ??identical design)
 - Body: `#FFB742`, shading `#DA6628`, highlight `#FFF8E0`
 - Ears: upper + lower on left side (behind travel direction), outer orange + `#FFD4A8` inner
 - Tail: 3 dots, arc wiggle on movement
@@ -95,7 +95,7 @@
 
 ## 6. Components
 
-### Buttons — 3 fixed sizes
+### Buttons ??3 fixed sizes
 | Class | Font | H | W | Usage |
 |---|---|---|---|---|
 | `.btn--sm` | 10px | 36px | auto | Password modal |
@@ -105,7 +105,7 @@
 - Variants: default (transparent) / primary (`--brand` bg)
 - Sharp corners always. `appearance: none` reset.
 
-### Popup Windows — 3 sizes
+### Popup Windows ??3 sizes
 | | SM | MD | LG |
 |---|---|---|---|
 | Max-width | 360px | 560px | 760px |
@@ -113,10 +113,10 @@
 | Usage | Password | Experience | Future |
 
 ### Experience Popup layout
-Fixed `560 × 520px`, 3-section flex column:
-1. **`.popup-top`** — tag + title + company + period, `padding: 48px 48px 0`
-2. **`.popup-mid`** — desc + pts, `flex: 1`, vertically centred
-3. **`.popup-btns`** — `height: 160px`, bottom-snapped, centred
+Fixed `560 ? 520px`, 3-section flex column:
+1. **`.popup-top`** ??tag + title + company + period, `padding: 48px 48px 0`
+2. **`.popup-mid`** ??desc + pts, `flex: 1`, vertically centred
+3. **`.popup-btns`** ??`height: 160px`, bottom-snapped, centred
 
 ---
 
@@ -129,15 +129,30 @@ Fixed `560 × 520px`, 3-section flex column:
 | Page content max-width | 1200px centered on all pages except index.html |
 | Footer | White bg, top border divider |
 | Popup backdrop | `rgba(24,24,24,0.4)` + `blur(4px)` |
-| Popup entry | scale `0.92→1` + `translateY 16→0`, spring easing |
+| Popup entry | scale `0.92??` + `translateY 16??`, spring easing |
+
+### Hero section
+
+- Default project hero = eyebrow + optional year chip + H1 + meta row. Do not add hero tags or hero deck copy unless explicitly requested.
+- Placement = first section under header, `margin-top: 60px`.
+- Frame = `padding: 32px 24px`, white background, `border-bottom: 1px solid rgba(24,24,24,0.1)`.
+- Inner wrap = max-width `1200px`, centered.
+- Eyebrow = `DM Mono`, `10px`, uppercase, brand orange, `letter-spacing: .12em`, with a `16px x 2px` orange rule before the text.
+- Year chip = `Press Start 2P`, `9px`, `color: --grey-m`, `border: 1px solid rgba(24,24,24,0.15)`, `padding: 4px 10px`, white background.
+- H1 = always `Press Start 2P`, `clamp(26px, 4.5vw, 50px)`, black by default.
+- H1 accent = use sparingly; default secondary tone is `--grey-m`, not a new colour.
+- Meta row = flex layout with `48px` gap and wrap enabled.
+- Meta label = `10px`, uppercase, `--grey-l`, `letter-spacing: .1em`.
+- Meta value = `12px`, `--black`.
+
 
 ---
 
 ## 8. Animation
 
-- **Spring** `cubic-bezier(0.34, 1.56, 0.64, 1)` — popups only
-- **Ease-out** — nav underline
-- Hint: `0.3↔0.9` opacity breathing / playing state: brand orange, solid
+- **Spring** `cubic-bezier(0.34, 1.56, 0.64, 1)` ??popups only
+- **Ease-out** ??nav underline
+- Hint: `0.3??.9` opacity breathing / playing state: brand orange, solid
 - Tick: `200ms` auto / `140ms` player
 
 ---
@@ -148,11 +163,10 @@ Fixed `560 × 520px`, 3-section flex column:
 |---|---|
 | ORA | `#00F6FF` |
 | Helpurr | `#C0FFEE` |
-| Le.social | `#03442D` — password protected |
+| Le.social | `#03442D` ??password protected |
 | Meed | `#F87C56` |
 | Cheddar Verse | `#FFBF56` |
 | Hamartia | `#FF4444` |
-| DeBox | `#00C454` |
 | Illustration | `#88888C` |
 | VFX | `#181818` |
 
@@ -160,13 +174,13 @@ Fixed `560 × 520px`, 3-section flex column:
 
 ## 10. Do / Don't
 
-**Do:** Sharp corners everywhere · Body 12px min · Single font pair · `--brand` as sole warmth · Fixed popup dimensions
+**Do:** Sharp corners everywhere ??Body 12px min ??Single font pair ??`--brand` as sole warmth ??Fixed popup dimensions
 
-**Don't:** Below 10px font · Gradients · Third font · Rounded corners · Spring on nav · `--effect2` as bg · CDN icon dependencies
+**Don't:** Below 10px font ??Gradients ??Third font ??Rounded corners ??Spring on nav ??`--effect2` as bg ??CDN icon dependencies
 
 ---
 
-## 11. Memory — Decision Log
+## 11. Memory ??Decision Log
 
 | Session | Decision |
 |---|---|
@@ -177,10 +191,10 @@ Fixed `560 × 520px`, 3-section flex column:
 | 2 | Candy density: 16% initial / 12% maintain |
 | 3 | Footer: white bg + top divider |
 | 3 | Hint stays visible when playing, turns brand orange |
-| 3 | OOB watchdog: 1s → teleport to opposite edge |
+| 3 | OOB watchdog: 1s ??teleport to opposite edge |
 | 4 | Icons: all inline SVG, no CDN, brand paths for socials |
 | 4 | Button: 3 fixed sizes, `appearance: none` reset, `<a>` = `<button>` |
-| 4 | Popup: 3-section flex, fixed 560×520, 160px button zone |
+| 4 | Popup: 3-section flex, fixed 560?520, 160px button zone |
 | 4 | Typography: body 12px, sub-body 10px, logo 16px |
 | 4 | Mouse: body lag + direction tracking + tail arc wiggle |
 | 4 | Footer cursor: same dot as homepage (isOnGame = true) |
@@ -189,21 +203,24 @@ Fixed `560 × 520px`, 3-section flex column:
 
 ## 12. Standard Templates
 
-> Copy these verbatim for every new page. Only change `href` on nav-logo (homepage: `href="/"`, other pages: `href="/"`). Mark active nav link with class `active`.
+> Copy these verbatim for every new static page. Use relative `.html` routes in the header, keep nav-logo at `href="index.html"`, and mark the current page link with class `active`.
 
 ### Header
+
+Header hover = brand orange underline + dropdown hover background `rgba(255,183,66,0.08)`.
+
 
 ```html
 <!-- HEADER -->
 <header>
-  <a href="/" class="nav-logo">
+  <a href="index.html" class="nav-logo">
     mialyk<span class="slash">//</span><sub>creative lead</sub>
   </a>
   <nav>
     <div class="nav-item">
       <a href="#" class="nav-link">Projects</a>
       <div class="nav-dropdown">
-        <a href="/helpurr.html" class="dropdown-item"><span class="dropdown-dot"></span>Helpurr</a>
+        <a href="helpurr.html" class="dropdown-item"><span class="dropdown-dot"></span>Helpurr</a>
         <a href="#" class="dropdown-item dropdown-locked" onclick="showPasswordModal(event)"><span class="dropdown-dot"></span>Le.social <svg class="pxi pxi--sm" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
   <rect x="8" y="4" width="8" height="2"/><rect x="6" y="6" width="2" height="4"/>
   <rect x="16" y="6" width="2" height="4"/><rect x="4" y="10" width="16" height="2"/>
@@ -211,16 +228,15 @@ Fixed `560 × 520px`, 3-section flex column:
   <rect x="4" y="20" width="16" height="2"/>
   <rect x="10" y="14" width="4" height="2"/><rect x="11" y="16" width="2" height="2"/>
  style="margin-left:4px;opacity:0.5"></svg></a>
-        <a href="/ora.html" class="dropdown-item"><span class="dropdown-dot"></span>ORA</a>
-        <a href="/meed.html" class="dropdown-item"><span class="dropdown-dot"></span>Meed</a>
-        <a href="/debox.html" class="dropdown-item"><span class="dropdown-dot"></span>DeBox</a>
-        <a href="/cheddar.html" class="dropdown-item"><span class="dropdown-dot"></span>Cheddar Verse</a>
-        <a href="/illustration.html" class="dropdown-item"><span class="dropdown-dot"></span>Illustration</a>
-        <a href="/vfx.html" class="dropdown-item"><span class="dropdown-dot"></span>VFX</a>
-        <a href="/hamartia.html" class="dropdown-item"><span class="dropdown-dot"></span>Hamartia <span style="font-size:10px;color:var(--grey-m)">Game</span></a>
+        <a href="ora.html" class="dropdown-item"><span class="dropdown-dot"></span>ORA</a>
+        <a href="meed.html" class="dropdown-item"><span class="dropdown-dot"></span>Meed</a>
+        <a href="cheddar.html" class="dropdown-item"><span class="dropdown-dot"></span>Cheddar Verse</a>
+        <a href="illustration.html" class="dropdown-item"><span class="dropdown-dot"></span>Illustration</a>
+        <a href="vfx.html" class="dropdown-item"><span class="dropdown-dot"></span>VFX</a>
+        <a href="hamartia.html" class="dropdown-item"><span class="dropdown-dot"></span>Hamartia <span style="font-size:10px;color:var(--grey-m)">Game</span></a>
       </div>
     </div>
-    <a href="/about.html" class="nav-link">About</a>
+    <a href="about.html" class="nav-link">About</a>
     <!-- Add class="active" to current page's nav link -->
   </nav>
 </header>
@@ -231,7 +247,7 @@ Fixed `560 × 520px`, 3-section flex column:
 ```html
 <!-- FOOTER -->
 <footer>
-  <div class="footer-copy">© 2026 <span>mialyk</span> — All rights reserved</div>
+  <div class="footer-copy">??2026 <span>mialyk</span> ??All rights reserved</div>
   <div class="footer-socials">
     <!-- LinkedIn -->
     <a href="https://www.linkedin.com/in/mia-lyk" target="_blank" class="social-link" title="LinkedIn"><svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
@@ -262,7 +278,7 @@ Fixed `560 × 520px`, 3-section flex column:
     <input class="pw-input" type="password" id="pw-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkPassword()">
     <div class="pw-error" id="pw-error"></div>
     <div class="pw-btns">
-      <button class="btn btn--sm primary" onclick="checkPassword()">Enter ▶</button>
+      <button class="btn btn--sm primary" onclick="checkPassword()">Enter ??/button>
       <button class="btn btn--sm" onclick="closePwModal()">Cancel</button>
     </div>
   </div>
@@ -286,10 +302,10 @@ function checkPassword() {
   const val = document.getElementById('pw-input').value;
   if (val === LE_SOCIAL_PASSWORD) {
     closePwModal();
-    window.location.href = '/lesocial.html';
+    window.location.href = 'lesocial.html';
   } else {
     document.getElementById('pw-input').classList.add('error');
-    document.getElementById('pw-error').textContent = '✕ Incorrect password';
+    document.getElementById('pw-error').textContent = '??Incorrect password';
     document.getElementById('pw-input').value = '';
     setTimeout(() => document.getElementById('pw-input').classList.remove('error'), 1500);
   }
@@ -303,13 +319,12 @@ document.getElementById('pw-modal').addEventListener('click', function(e) {
 
 | Page | File | Nav active |
 |---|---|---|
-| Homepage | `index.html` | — |
+| Homepage | `index.html` | ??|
 | About | `about.html` | `About` |
 | Helpurr | `helpurr.html` | `Projects` |
 | Le.social | `lesocial.html` | `Projects` (password) |
 | ORA | `ora.html` | `Projects` |
 | Meed | `meed.html` | `Projects` |
-| DeBox | `debox.html` | `Projects` |
 | Cheddar Verse | `cheddar.html` | `Projects` |
 | Illustration | `illustration.html` | `Projects` |
 | VFX | `vfx.html` | `Projects` |
