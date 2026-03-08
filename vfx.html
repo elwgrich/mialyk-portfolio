@@ -24,7 +24,7 @@
   --nav-h:60px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;scroll-padding-top:var(--nav-h);}
+html{scroll-behavior:smooth;scroll-padding-top:var(--nav-h);scroll-snap-type:y proximity;}
 body{background:var(--white);color:var(--black);font-family:var(--font-body);font-size:var(--fs-12);line-height:1.6;cursor:none;overflow-x:hidden;}
 #cursor-canvas{position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:9999;}
 .click-ripple{position:fixed;border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%) scale(0);animation:rippleOut .5s cubic-bezier(.2,.8,.4,1) forwards;}
@@ -119,8 +119,11 @@ h1 .accent{color:var(--grey-m);}
 .info-tab.active .info-tab-title{color:var(--black);}
 .gif-section{padding-top:0;padding-bottom:40px;}
 .gif-wrap{display:flex;justify-content:center;}
-.gif-trigger{display:inline-flex;align-items:center;justify-content:center;border:none;background:none;padding:0;cursor:none;width:280px;height:210px;overflow:hidden;}
-.watch-gif{display:block;width:280px;height:210px;object-fit:cover;image-rendering:auto;}
+.gif-trigger{display:inline-flex;align-items:center;justify-content:center;border:none;background:none;padding:0;cursor:none;width:280px;height:210px;overflow:hidden;transform:scale(1);transform-origin:center;transition:transform .18s cubic-bezier(.22,1,.36,1);}
+.gif-trigger:hover,.gif-trigger:focus-visible{transform:scale(1.04);}
+.gif-trigger:active{transform:scale(.985);}
+.watch-gif{display:block;width:280px;height:210px;object-fit:cover;image-rendering:auto;transform:scale(1);transition:transform .18s cubic-bezier(.22,1,.36,1),filter .18s ease;}
+.gif-trigger:hover .watch-gif,.gif-trigger:focus-visible .watch-gif{transform:scale(1.02);}
 footer{background:var(--white);color:var(--grey-m);padding:32px 24px;border-top:1px solid rgba(24,24,24,.1);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;position:relative;z-index:1;}
 .footer-inner{max-width:1200px;width:100%;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
 .footer-copy{color:var(--grey-m);}
@@ -139,7 +142,7 @@ footer{background:var(--white);color:var(--grey-m);padding:32px 24px;border-top:
 <canvas id="cursor-canvas"></canvas>
 <canvas id="pixel-bg"></canvas>
 <header>
-  <a href="index.html" class="nav-logo">mialyk<span class="slash">//</span><sub>creative lead</sub></a>
+  <a href="index.html" class="nav-logo">mialyk<span class="slash">//</span><sub>building something creative</sub></a>
   <nav>
     <div class="nav-item">
       <a href="#" class="nav-link">Projects</a>
@@ -270,11 +273,14 @@ let lastBodyX=-100;
 let lastBodyY=-100;
 let cursorScale=2;
 let targetScale=2;
-document.addEventListener('mousemove',event=>{mouseX=event.clientX;mouseY=event.clientY;});
-document.querySelectorAll('a,button').forEach(el=>{
-  el.addEventListener('mouseenter',()=>{isHovering=true;});
-  el.addEventListener('mouseleave',()=>{isHovering=false;});
+const interactiveSelector='a,button,[role="button"],.progress-bar,.info-tab,.gif-trigger';
+document.addEventListener('pointermove',event=>{
+  mouseX=event.clientX;
+  mouseY=event.clientY;
+  const target=event.target;
+  isHovering=target instanceof Element&&!!target.closest(interactiveSelector);
 });
+document.addEventListener('pointerleave',()=>{isHovering=false;});
 document.addEventListener('click',event=>{
   const ripple=document.createElement('div');
   ripple.className='click-ripple';
@@ -406,6 +412,8 @@ let isMuted=true;
 let currentTime=0;
 let currentDuration=0;
 let heroSnapLock=false;
+let heroSnapDone=false;
+let gifPlaybackTimer=null;
 function formatTime(seconds){
   const safe=Math.max(0,Math.floor(seconds||0));
   const minutes=String(Math.floor(safe/60)).padStart(2,'0');
@@ -415,11 +423,17 @@ function formatTime(seconds){
 function updateProgress(percent){
   progressFill.style.width=`${Math.max(0,Math.min(100,percent*100))}%`;
 }
-function setWatchGif(state){
+function setWatchGif(state,{restart=false}={}){
   if(!watchGif) return;
   const nextSrc=watchGifSources[state]||watchGifSources.idle;
+  const applySrc=()=>watchGif.setAttribute('src',nextSrc);
+  if(restart){
+    watchGif.removeAttribute('src');
+    window.requestAnimationFrame(applySrc);
+    return;
+  }
   if(!watchGif.getAttribute('src')||watchGif.getAttribute('src')!==nextSrc){
-    watchGif.setAttribute('src',nextSrc);
+    applySrc();
   }
 }
 function syncWatchGif(){
@@ -489,16 +503,23 @@ async function startPlayback(){
     syncWatchGif();
     return;
   }
-  if(!playerReady||!player) return;
-  setWatchGif('press');
-  try{
-    await player.play();
-    isPlaying=true;
-    updateControls();
-    syncWatchGif();
-  }catch(error){
-    syncWatchGif();
-  }
+  setWatchGif('press',{restart:true});
+  if(gifPlaybackTimer) window.clearTimeout(gifPlaybackTimer);
+  gifPlaybackTimer=window.setTimeout(async()=>{
+    gifPlaybackTimer=null;
+    if(!playerReady||!player){
+      syncWatchGif();
+      return;
+    }
+    try{
+      await player.play();
+      isPlaying=true;
+      updateControls();
+      syncWatchGif();
+    }catch(error){
+      syncWatchGif();
+    }
+  },9000);
 }
 infoTabs.forEach(tab=>tab.addEventListener('click',()=>loadVideo(Number(tab.dataset.index),isPlaying)));
 prevBtn.addEventListener('click',()=>stepItem(-1));
@@ -512,8 +533,10 @@ volumeBtn.addEventListener('click',async()=>{
   updateControls();
 });
 if(watchTrigger){
-  watchTrigger.addEventListener('pointerdown',()=>{if(!isPlaying) setWatchGif('press');});
-  watchTrigger.addEventListener('pointerleave',()=>syncWatchGif());
+  watchTrigger.addEventListener('pointerdown',()=>{if(!isPlaying) setWatchGif('press',{restart:true});});
+  watchTrigger.addEventListener('pointerleave',()=>{
+    if(!isPlaying&&!gifPlaybackTimer) syncWatchGif();
+  });
   watchTrigger.addEventListener('click',()=>{startPlayback();});
 }
 progressBar.addEventListener('click',async event=>{
@@ -551,22 +574,28 @@ function initPlayer(){
   player.on('play',()=>{isPlaying=true;updateControls();syncWatchGif();});
   player.on('pause',()=>{isPlaying=false;updateControls();syncWatchGif();});
 }
+function shouldSnapToPlayer(){
+  if(heroSnapLock||heroSnapDone||!heroSection||!playerSection) return false;
+  const navHeight=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-h'))||60;
+  const heroRect=heroSection.getBoundingClientRect();
+  const beforePlayer=window.scrollY<playerSection.offsetTop-24;
+  const crossedGate=heroRect.top<=navHeight+8&&heroRect.bottom<=window.innerHeight*0.78;
+  return window.scrollY>8&&beforePlayer&&crossedGate;
+}
 function smoothSnapToPlayer(){
   if(heroSnapLock||!playerSection) return;
   heroSnapLock=true;
+  heroSnapDone=true;
   playerSection.scrollIntoView({behavior:'smooth',block:'start'});
-  window.setTimeout(()=>{heroSnapLock=false;},900);
+  window.setTimeout(()=>{heroSnapLock=false;},720);
 }
-window.addEventListener('wheel',event=>{
-  if(heroSnapLock||event.deltaY<=12||!heroSection||!playerSection) return;
-  const heroRect=heroSection.getBoundingClientRect();
+window.addEventListener('scroll',()=>{
+  if(!heroSection) return;
   const navHeight=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-h'))||60;
-  const inHeroGate=heroRect.top<=navHeight+4&&heroRect.bottom>window.innerHeight*0.45&&window.scrollY<playerSection.offsetTop-24;
-  if(inHeroGate){
-    event.preventDefault();
-    smoothSnapToPlayer();
-  }
-},{passive:false});
+  const heroRect=heroSection.getBoundingClientRect();
+  if(heroRect.top>=navHeight-4) heroSnapDone=false;
+  if(shouldSnapToPlayer()) smoothSnapToPlayer();
+},{passive:true});
 initPlayer();
 syncSelection(0);
 updateControls();
