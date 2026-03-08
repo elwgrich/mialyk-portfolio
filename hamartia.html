@@ -64,7 +64,7 @@ nav{display:flex;align-items:center;gap:36px;}
 .nav-dropdown{position:absolute;top:calc(100% + 16px);left:50%;transform:translateX(-50%) translateY(-8px);background:var(--white);border:1px solid rgba(24,24,24,0.1);padding:8px 0;min-width:180px;opacity:0;visibility:hidden;transition:opacity .2s,transform .2s,visibility .2s;box-shadow:0 8px 32px rgba(24,24,24,0.08);}
 .nav-item:hover .nav-dropdown{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0);}
 .dropdown-item{display:block;padding:10px 20px;font-size:var(--fs-12);color:var(--grey-m);text-decoration:none;letter-spacing:.04em;transition:background .15s,color .15s;white-space:nowrap;}
-.dropdown-item:hover{color:var(--black);background:rgba(255,183,66,0.08);}
+.dropdown-item:hover{color:var(--black);background:rgba(255,183,66,0.08);} .dropdown-item--disabled{color:var(--grey-l);pointer-events:none;cursor:default;background:transparent;} .dropdown-item--disabled .dropdown-dot{background:var(--grey-l);opacity:.45;}
 .dropdown-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--brand);margin-right:10px;vertical-align:middle;}
 .dropdown-item.active .dropdown-dot{background:var(--accent);}
 .dropdown-locked{opacity:.5;}
@@ -440,17 +440,17 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
     <div class="nav-item">
       <a href="#" class="nav-link active">Projects</a>
       <div class="nav-dropdown">
-        <a href="helpurr.html" class="dropdown-item"><span class="dropdown-dot"></span>Helpurr</a>
+        <a href="https://www.instagram.com/helpurrapp/reels/" target="_blank" rel="noreferrer" class="dropdown-item"><span class="dropdown-dot"></span>Helpurr</a>
         <a href="#" class="dropdown-item dropdown-locked" onclick="showPasswordModal(event)">
           <span class="dropdown-dot"></span>Le.social
           <svg class="pxi pxi--sm" viewBox="0 0 24 24" fill="currentColor" style="margin-left:4px;opacity:.5">
             <rect x="8" y="4" width="8" height="2"/><rect x="6" y="6" width="2" height="4"/><rect x="16" y="6" width="2" height="4"/><rect x="4" y="10" width="16" height="2"/><rect x="4" y="10" width="2" height="10"/><rect x="18" y="10" width="2" height="10"/><rect x="4" y="20" width="16" height="2"/><rect x="10" y="14" width="4" height="2"/><rect x="11" y="16" width="2" height="2"/>
           </svg>
         </a>
-        <a href="ora.html" class="dropdown-item"><span class="dropdown-dot"></span>ORA</a>
-        <a href="meed.html" class="dropdown-item"><span class="dropdown-dot"></span>Meed</a>
-        <a href="cheddar.html" class="dropdown-item"><span class="dropdown-dot"></span>Cheddar Verse</a>
-        <a href="illustration.html" class="dropdown-item"><span class="dropdown-dot"></span>Illustration</a>
+        <a href="https://www.ora.io/" target="_blank" rel="noreferrer" class="dropdown-item"><span class="dropdown-dot"></span>ORA</a>
+        <a href="https://www.meedloyalty.com/" target="_blank" rel="noreferrer" class="dropdown-item"><span class="dropdown-dot"></span>Meed</a>
+        <span class="dropdown-item dropdown-item--disabled" aria-disabled="true"><span class="dropdown-dot"></span>Cheddar Verse</span>
+        <a href="https://www.artstation.com/mialyk" target="_blank" rel="noreferrer" class="dropdown-item"><span class="dropdown-dot"></span>Illustration</a>
         <a href="vfx.html" class="dropdown-item"><span class="dropdown-dot"></span>VFX</a>
         <a href="hamartia.html" class="dropdown-item active"><span class="dropdown-dot"></span>Hamartia <span style="font-size:10px;color:var(--grey-m)">Game</span></a>
       </div>

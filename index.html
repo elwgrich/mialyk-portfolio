@@ -193,7 +193,7 @@ nav {
   transition: background 0.15s, color 0.15s;
   white-space: nowrap;
 }
-.dropdown-item:hover { background: rgba(255,183,66,0.08); color: var(--black); }
+.dropdown-item:hover { background: rgba(255,183,66,0.08); color: var(--black); } .dropdown-item--disabled{color:var(--grey-l);pointer-events:none;cursor:default;background:transparent;} .dropdown-item--disabled .dropdown-dot{background:var(--grey-l);opacity:.45;}
 .dropdown-dot {
   display: inline-block;
   width: 5px; height: 5px;
@@ -365,6 +365,10 @@ canvas#gameCanvas {
   pointer-events: auto;
   appearance: none;
 }
+.project-node--asset {
+  width: 52px;
+  height: 52px;
+}
 .project-node__badge {
   position: absolute;
   inset: 0;
@@ -381,6 +385,27 @@ canvas#gameCanvas {
   height: 4px;
   transform: translate(-50%, -50%);
   background: var(--brand);
+}
+.project-node__asset {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: auto;
+  transform: scale(1);
+  transition: transform 0.18s ease, filter 0.18s ease;
+}
+.project-node--asset .project-node__badge {
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+.project-node--asset .project-node__glyph {
+  display: none;
+}
+.project-node--asset .project-node__label {
+  top: calc(100% + 0px);
 }
 .project-node[data-icon='signal'] .project-node__glyph {
   box-shadow: 6px 0 0 var(--cyan), 0 6px 0 var(--cyan), 6px 6px 0 var(--brand);
@@ -467,6 +492,11 @@ canvas#gameCanvas {
   box-shadow: 0 0 0 1px rgba(255,183,66,0.20), 6px 6px 0 rgba(0,230,200,0.08);
   transform: translateY(-2px);
   outline: none;
+}
+.project-node--asset:hover .project-node__asset,
+.project-node--asset:focus-visible .project-node__asset,
+.project-node--asset.is-active .project-node__asset {
+  transform: scale(1.06);
 }
 .project-node:hover .project-node__label,
 .project-node:focus-visible .project-node__label,
@@ -600,7 +630,7 @@ canvas#gameCanvas {
 }
 
 .popup-tag {
-  font-size: var(--fs-12);
+  font-size: var(--fs-10);
   font-weight: var(--fw-light);
   color: var(--brand);
   letter-spacing: 0.14em;
@@ -627,14 +657,14 @@ canvas#gameCanvas {
 }
 
 .popup-company {
-  font-size: var(--fs-12);
+  font-size: var(--fs-10);
   color: var(--grey-m);
   letter-spacing: 0.06em;
   margin-bottom: 4px;
 }
 
 .popup-period {
-  font-size: var(--fs-12);
+  font-size: var(--fs-10);
   font-weight: var(--fw-light);
   color: var(--grey-l);
   letter-spacing: 0.08em;
@@ -735,6 +765,16 @@ canvas#gameCanvas {
   color: var(--black);
   box-shadow: 4px 4px 0 rgba(0,230,200,0.14);
 }
+.btn.is-disabled,
+.btn.is-disabled:hover,
+.btn.is-disabled:focus-visible {
+  background: rgba(168,176,178,0.14);
+  border-color: rgba(168,176,178,0.34);
+  color: var(--grey-l);
+  box-shadow: none;
+  pointer-events: none;
+}
+.btn.is-disabled .pxi { opacity: 0.4; }
 
 .popup-close {
   position: absolute;
@@ -841,7 +881,7 @@ footer {
 }
 .pw-title {
   font-family: 'Press Start 2P', monospace;
-  font-size: var(--fs-12);
+  font-size: var(--fs-16);
   color: var(--black);
   margin-bottom: 8px;
   line-height: 1.8;
@@ -1031,7 +1071,7 @@ footer {
     <div class="nav-item">
       <a href="#" class="nav-link">Projects</a>
       <div class="nav-dropdown">
-        <a href="helpurr.html" class="dropdown-item"><span class="dropdown-dot"></span>Helpurr</a>
+        <a href="https://www.instagram.com/helpurrapp/reels/" target="_blank" rel="noreferrer" class="dropdown-item"><span class="dropdown-dot"></span>Helpurr</a>
         <a href="#" class="dropdown-item dropdown-locked" onclick="showPasswordModal(event)"><span class="dropdown-dot"></span>Le.social <svg class="pxi pxi--sm" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
   <rect x="8" y="4" width="8" height="2"/><rect x="6" y="6" width="2" height="4"/>
   <rect x="16" y="6" width="2" height="4"/><rect x="4" y="10" width="16" height="2"/>
@@ -1039,10 +1079,10 @@ footer {
   <rect x="4" y="20" width="16" height="2"/>
   <rect x="10" y="14" width="4" height="2"/><rect x="11" y="16" width="2" height="2"/>
  style="margin-left:4px;opacity:0.5"></svg></a>
-        <a href="ora.html" class="dropdown-item"><span class="dropdown-dot"></span>ORA</a>
-        <a href="meed.html" class="dropdown-item"><span class="dropdown-dot"></span>Meed</a>
-        <a href="cheddar.html" class="dropdown-item"><span class="dropdown-dot"></span>Cheddar Verse</a>
-        <a href="illustration.html" class="dropdown-item"><span class="dropdown-dot"></span>Illustration</a>
+        <a href="https://www.ora.io/" target="_blank" rel="noreferrer" class="dropdown-item"><span class="dropdown-dot"></span>ORA</a>
+        <a href="https://www.meedloyalty.com/" target="_blank" rel="noreferrer" class="dropdown-item"><span class="dropdown-dot"></span>Meed</a>
+        <span class="dropdown-item dropdown-item--disabled" aria-disabled="true"><span class="dropdown-dot"></span>Cheddar Verse</span>
+        <a href="https://www.artstation.com/mialyk" target="_blank" rel="noreferrer" class="dropdown-item"><span class="dropdown-dot"></span>Illustration</a>
         <a href="vfx.html" class="dropdown-item"><span class="dropdown-dot"></span>VFX</a>
         <a href="hamartia.html" class="dropdown-item"><span class="dropdown-dot"></span>Hamartia <span style="font-size:10px;color:var(--grey-m)">Game</span></a>
       </div>
@@ -1446,10 +1486,10 @@ const userSprites = {
 const whiteMouseSealSpriteSize = 98;
 const userSpriteSize = 68;
 const ABOUT_POPUP = {
-  tag: 'Seal Encounter',
+  tag: 'Mia the mouse Seal',
   title: 'About',
-  company: 'Explorer Log',
-  period: 'The studio behind the map',
+  company: 'Just building something fun',
+  period: 'The creative behind the map',
   desc: 'The white seal found the ratseal explorer. Open About to see the profile, skill tree, and contact links.',
   pts: 0,
   url: 'about.html',
@@ -1501,18 +1541,18 @@ const EXPERIENCES = [
     period: 'Jun 2024 - Feb 2025 // Full-time',
     desc: 'Built ORA\'s visual identity and brand system from zero. Led art direction for Chain Reaction, Token Launches, and ETH - AI initiatives - videos, products, merchandise.',
     pts: 50,
-    url: 'https://ora.io',
+    url: 'https://www.ora.io/',
     color: BRAND,
   },
   {
     id: 'helpurr', label: 'HELPURR',
     tag: 'Experience Unlocked',
-    title: 'Brand Builder',
+    title: 'Early',
     company: 'Helpurr',
     period: '2025 - 2026',
     desc: 'Early team member shaping the art direction and brand identity for an AI-powered pet care app. Built the visual language from zero - character design, UI aesthetic, and brand system for Helpurr\'s launch.',
     pts: 50,
-    url: 'https://helpurr.com',
+    url: 'https://www.instagram.com/helpurrapp/reels/',
     color: BRAND,
   },
   {
@@ -1523,7 +1563,7 @@ const EXPERIENCES = [
     period: 'Jun 2022 - Jul 2024 // Full-time',
     desc: 'Designed Meed\'s AI-enhanced digital rewards platform - web app and dashboard. Built hype casual mobile games and co-designed "Skysurfer". Won Moralis - Google & Cronos Labs hackathons.',
     pts: 50,
-    url: 'https://meed.com',
+    url: 'https://www.meedloyalty.com/',
     color: BRAND,
   },
   {
@@ -1547,6 +1587,7 @@ const EXPERIENCES = [
     pts: 50,
     url: 'cheddar.html',
     color: BRAND,
+    viewDisabled: true,
   },
 
   {
@@ -1568,19 +1609,23 @@ const EXPERIENCES = [
     period: '2020 - Present',
     desc: 'Personal illustration work spanning character design, editorial, and world-building.',
     pts: 50,
-    url: 'illustration.html',
+    url: 'https://www.artstation.com/mialyk',
     color: BRAND,
+    tooltipTitle: 'Illustration',
+    tooltipMeta: 'personal work',
   },
   {
     id: 'vfx', label: 'VFX',
     tag: 'Project Unlocked',
-    title: 'VFX Artist',
-    company: 'VFX',
-    period: '2021 - 2023',
+    title: 'University Of Hertfordshir',
+    company: 'BA (HONS) 3D Computer Animation And Modelling',
+    period: '2017-2020',
     desc: 'Motion graphics and visual effects for film and digital media projects.',
     pts: 50,
     url: 'vfx.html',
     color: BRAND,
+    tooltipTitle: 'VFX',
+    tooltipMeta: 'Uni Work',
   },
 ];
 
@@ -1740,20 +1785,38 @@ function updateHud() {
   }
 }
 
+const PROJECT_NODE_ASSETS = {
+  lesocial: 'assets/images/Home/drink.png',
+  ora: 'assets/images/Home/ora.png',
+  meed: 'assets/images/Home/pizza.png',
+  hamartia: 'assets/images/Home/school.png',
+  illustration: 'assets/images/Home/draw.png',
+  vfx: 'assets/images/Home/cam.png',
+  helpurr: 'assets/images/Home/cat.png',
+  cheddar: 'assets/images/Home/cheese.png'
+};
+
 function createProjectNode(exp) {
   const button = document.createElement('button');
   button.type = 'button';
   button.className = 'project-node';
   button.dataset.icon = getNodeIcon(exp.id);
-  button.setAttribute('aria-label', `${exp.label}, ${exp.title}, ${exp.company}`);
+  const nodeAsset = PROJECT_NODE_ASSETS[exp.id] || '';
+  const tooltipTitle = exp.tooltipTitle || exp.label;
+  const tooltipMeta = exp.tooltipMeta || `${exp.title} // ${exp.company}`;
+  if (nodeAsset) {
+    button.classList.add('project-node--asset');
+    button.dataset.asset = exp.id;
+  }
+  button.setAttribute('aria-label', `${tooltipTitle}, ${tooltipMeta}`);
   button.innerHTML = `
     <span class="project-node__badge" aria-hidden="true">
-      <span class="project-node__glyph"></span>
+      ${nodeAsset ? `<img class="project-node__asset" src="${nodeAsset}" alt="">` : '<span class="project-node__glyph"></span>'}
     </span>
     <span class="project-node__label">${exp.label}</span>
     <span class="project-node__tooltip" role="presentation">
-      <span class="project-node__tooltip-title">${exp.label}</span>
-      <span class="project-node__tooltip-meta">${exp.title} // ${exp.company}</span>
+      <span class="project-node__tooltip-title">${tooltipTitle}</span>
+      <span class="project-node__tooltip-meta">${tooltipMeta}</span>
     </span>
   `;
 
@@ -2688,8 +2751,16 @@ function showPopup(exp) {
   document.getElementById('popup-desc').textContent   = exp.desc;
   popupPtsEl.style.display = exp.pts ? 'block' : 'none';
   popupPtsEl.textContent    = exp.pts ? '+' + exp.pts + ' pts' : '';
-  popupViewBtn.href = exp.url;
-  popupViewBtn.target = exp.newTab === false ? '_self' : '_blank';
+  popupViewBtn.classList.toggle('is-disabled', !!exp.viewDisabled);
+  popupViewBtn.setAttribute('aria-disabled', exp.viewDisabled ? 'true' : 'false');
+  popupViewBtn.tabIndex = exp.viewDisabled ? -1 : 0;
+  if (exp.viewDisabled) {
+    popupViewBtn.removeAttribute('href');
+    popupViewBtn.removeAttribute('target');
+  } else {
+    popupViewBtn.href = exp.url;
+    popupViewBtn.target = exp.newTab === false ? '_self' : '_blank';
+  }
   popupViewBtn.innerHTML = (exp.buttonLabel || 'View Project') + popupArrowIcon;
   document.getElementById('popup').classList.add('active');
   updateHud();
