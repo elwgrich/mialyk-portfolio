@@ -1569,9 +1569,9 @@ const EXPERIENCES = [
   {
     id: 'hamartia', label: 'HAMARTIA',
     tag: 'Project Unlocked',
-    title: 'Game Project',
-    company: 'Hamartia',
-    period: '2023 - 2024',
+    title: 'Hamartia',
+    company: 'Game Project',
+    period: '2020',
     desc: 'Game design, art direction and visual development for Hamartia.',
     pts: 50,
     url: 'hamartia.html',
@@ -1640,7 +1640,7 @@ let gameStarted = false; // false = auto demo mode
 let gameLoop;
 let unlockedExp = new Set(); // tracks which popups have been shown
 let popupOpen   = false;
-let beanWatchdog = null; // 5s interval to guarantee bean count
+let beanWatchdog = null; // respawn watchdog
 let selectedExpId = null;
 let userFacingLeft = false;
 let userVisualState = 'walking';
@@ -1658,8 +1658,12 @@ let sealVisualState = 'walking';
 let sealVisualFrame = 0;
 let aboutPopupTimer = null;
 let sealHitFreezeUntil = 0;
+let lastCandyRespawnAt = 0;
+const pendingExpRespawns = new Map();
 const SEAL_SIZE_CELLS = 2;
 const SEAL_HIT_PADDING_PX = 4;
+const CANDY_RESPAWN_INTERVAL_MS = 900;
+const EXP_RESPAWN_DELAY_MS = 5000;
 
 // Helpers
 function ri(max) { return Math.floor(Math.random() * max); }
@@ -1744,7 +1748,19 @@ function findCuratedBeanPosition(exp, planned = []) {
     }
   }
 
+  return findRandomBeanPosition(exp, planned, anchor);
+}
+
+function findRandomBeanPosition(exp, planned = [], fallback = null) {
   const minY = Math.ceil((NAV_H + 120) / CELL);
+  for (let attempt = 0; attempt < 240; attempt++) {
+    const gx = 2 + ri(Math.max(1, COLS - 4));
+    const gy = minY + ri(Math.max(1, ROWS - minY - 2));
+    if (beanSlotAvailable(gx, gy, planned, exp.id)) {
+      return { x: gx, y: gy };
+    }
+  }
+
   for (let gy = minY; gy < ROWS - 2; gy++) {
     for (let gx = 2; gx < COLS - 2; gx++) {
       if (beanSlotAvailable(gx, gy, planned, exp.id)) {
@@ -1753,7 +1769,7 @@ function findCuratedBeanPosition(exp, planned = []) {
     }
   }
 
-  return anchor;
+  return fallback || projectAnchorFor(exp.id);
 }
 
 function syncBeanLayout() {
@@ -2133,6 +2149,8 @@ function initGame() {
     aboutPopupTimer = null;
   }
   sealHitFreezeUntil = 0;
+  lastCandyRespawnAt = performance.now();
+  pendingExpRespawns.clear();
   userFacingLeft = false;
   userVisualState = 'walking';
   userVisualFrame = 0;
@@ -2161,15 +2179,17 @@ function spawnCandy() {
   candies.push({ ...pos, size });
 }
 
-function candyTarget()  { return Math.floor(COLS * ROWS * 0.06); } // 6% maintain
+function candyTarget()  { return candyInitial(); } // hold the launch density
 function candyInitial() { return Math.floor(COLS * ROWS * 0.08); } // 8% initial
 
-function maintainCandies() {
+function maintainCandies(force = false) {
   const target = candyTarget();
-  if (candies.length < target) {
-    const toAdd = target - candies.length;
-    for (let i = 0; i < toAdd; i++) spawnCandy();
-  }
+  if (candies.length >= target) return false;
+  const now = performance.now();
+  if (!force && now - lastCandyRespawnAt < CANDY_RESPAWN_INTERVAL_MS) return false;
+  spawnCandy();
+  lastCandyRespawnAt = now;
+  return true;
 }
 
 const MAX_EXP_BEANS = EXPERIENCES.length;
@@ -2179,7 +2199,7 @@ function spawnExpBeans() {
   const planned = [];
 
   EXPERIENCES.forEach(exp => {
-    if (onScreen.has(exp.id)) return;
+    if (onScreen.has(exp.id) || pendingExpRespawns.has(exp.id)) return;
     const pos = findCuratedBeanPosition(exp, planned);
     const bean = { ...pos, exp };
     planned.push(bean);
@@ -2190,13 +2210,36 @@ function spawnExpBeans() {
   updateHud();
 }
 
+function scheduleExpRespawn(exp) {
+  if (!exp) return;
+  pendingExpRespawns.set(exp.id, { exp, readyAt: performance.now() + EXP_RESPAWN_DELAY_MS });
+}
+
 function maintainExpBeans() {
-  if (expBeans.length < MAX_EXP_BEANS) {
-    spawnExpBeans();
-  } else {
+  if (pendingExpRespawns.size === 0) return false;
+  const now = performance.now();
+  const planned = [];
+  let changed = false;
+
+  pendingExpRespawns.forEach(item => {
+    if (now < item.readyAt) return;
+    if (expBeans.some(bean => bean.exp.id === item.exp.id)) {
+      pendingExpRespawns.delete(item.exp.id);
+      return;
+    }
+    const pos = findRandomBeanPosition(item.exp, planned);
+    const bean = { ...pos, exp: item.exp };
+    planned.push(bean);
+    expBeans.push(bean);
+    pendingExpRespawns.delete(item.exp.id);
+    changed = true;
+  });
+
+  if (changed) {
     renderProjectNodes();
     updateHud();
   }
+  return changed;
 }
 
 let oobTimer = null; // out-of-bounds timer
@@ -2204,41 +2247,41 @@ let oobTimer = null; // out-of-bounds timer
 function startBeanWatchdog() {
   if (beanWatchdog) clearInterval(beanWatchdog);
   beanWatchdog = setInterval(() => {
-    if (!popupOpen && expBeans.length < MAX_EXP_BEANS) {
-      spawnExpBeans();
-      draw();
-    }
-  }, 5000);
+    if (popupOpen) return;
+    const candyChanged = maintainCandies();
+    const beanChanged = maintainExpBeans();
+    if (candyChanged || beanChanged) draw();
+  }, 250);
 }
 
 function checkSnakeInBounds() {
-  if (!gameStarted || snake.length === 0) { oobTimer = null; return; }
+  if (!gameStarted || snake.length === 0) {
+    if (oobTimer) { clearTimeout(oobTimer); oobTimer = null; }
+    return;
+  }
+
   const h = snake[0];
-  if (h.x < 0 || h.x >= COLS || h.y < 0 || h.y >= ROWS) {
+  const outX = h.x < 0 || h.x >= COLS;
+  const outY = h.y < 0 || h.y >= ROWS;
+  if (outX || outY) {
     if (!oobTimer) {
       oobTimer = setTimeout(() => {
-        // Still out of bounds after 1s - teleport to opposite edge
         if (snake.length > 0) {
           const head = snake[0];
-          // Wrap to opposite side based on exit direction
-          const nx = ((head.x % COLS) + COLS) % COLS;
-          const ny = ((head.y % ROWS) + ROWS) % ROWS;
-          // Shift whole snake so head lands at (nx, ny)
-          const dx = nx - head.x;
-          const dy = ny - head.y;
-          snake.forEach(s => { s.x += dx; s.y += dy; });
-          // Clamp all segments
+          const shiftX = head.x < 0 ? COLS : head.x >= COLS ? -COLS : 0;
+          const shiftY = head.y < 0 ? ROWS : head.y >= ROWS ? -ROWS : 0;
           snake.forEach(s => {
-            s.x = Math.max(0, Math.min(COLS - 1, s.x));
-            s.y = Math.max(0, Math.min(ROWS - 1, s.y));
+            s.x += shiftX;
+            s.y += shiftY;
           });
         }
         oobTimer = null;
         draw();
       }, 1000);
     }
-  } else {
-    if (oobTimer) { clearTimeout(oobTimer); oobTimer = null; }
+  } else if (oobTimer) {
+    clearTimeout(oobTimer);
+    oobTimer = null;
   }
 }
 
@@ -2251,16 +2294,6 @@ function tick() {
     return;
   }
 
-  // Guard: if snake head is out of bounds (e.g. after resize), teleport back to centre
-  if (snake.length > 0) {
-    const h = snake[0];
-    if (h.x < 0 || h.x >= COLS || h.y < 0 || h.y >= ROWS) {
-      snake.forEach(s => {
-        s.x = ((s.x % COLS) + COLS) % COLS;
-        s.y = ((s.y % ROWS) + ROWS) % ROWS;
-      });
-    }
-  }
 
   if (!gameStarted) {
     autoSteer();
@@ -2271,13 +2304,22 @@ function tick() {
   if (dir.x > 0) userFacingLeft = false;
   const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
 
-  // Wrap (no walls)
-  head.x = (head.x + COLS) % COLS;
-  head.y = (head.y + ROWS) % ROWS;
+  if (gameStarted && isForbidden(head.x, head.y)) {
+    moveSealEnemy();
+    draw();
+    return;
+  }
 
-  // Self collision only in player mode
-  if (gameStarted && snake.some(s => s.x === head.x && s.y === head.y)) {
-    initGame(); return;
+  const willCollectCandy = candies.some(c => c.x === head.x && c.y === head.y);
+  const willCollectBean = expBeans.some(e => e.x === head.x && e.y === head.y);
+  const selfCollisionBody = (willCollectCandy || willCollectBean)
+    ? snake
+    : snake.slice(0, -1);
+
+  // Moving into the tail's current cell is safe if that tail segment will pop this tick.
+  if (gameStarted && selfCollisionBody.some(s => s.x === head.x && s.y === head.y)) {
+    draw();
+    return;
   }
 
   snake.unshift(head);
@@ -2296,7 +2338,6 @@ function tick() {
     floatScore('+' + candies[ci].size, head.x, head.y);
     candies.splice(ci, 1);
     setUserVisualState('candy', true, null, 260);
-    maintainCandies(); // refill if below 12%
     updateScore(score);
   } else {
     // Eat exp bean
@@ -2305,7 +2346,9 @@ function tick() {
       const exp = expBeans[ei].exp;
       score += exp.pts;
       expBeans.splice(ei, 1);
+      scheduleExpRespawn(exp);
       unlockedExp.add(exp.id);
+      renderProjectNodes();
       updateScore(score);
       showPopup(exp);
       // Grow snake
@@ -2313,7 +2356,7 @@ function tick() {
       snake.pop();
     }
   }
-  // Always maintain beans - one per project, no duplicates
+  maintainCandies();
   maintainExpBeans();
   moveSealEnemy();
   if (popupOpen) {
@@ -2769,7 +2812,6 @@ function showPopup(exp) {
 function closePopup() {
   popupOpen = false;
   document.getElementById('popup').classList.remove('active');
-  spawnExpBeans();
   setSelectedProject(null);
 }
 
