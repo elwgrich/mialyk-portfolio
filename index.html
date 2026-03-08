@@ -281,13 +281,18 @@ canvas#gameCanvas {
 .hud-mode {
   flex-shrink: 0;
   padding: 8px 10px 7px;
-  border: 1px solid rgba(255,183,66,0.26);
-  background: rgba(255,183,66,0.08);
+  border: 1px solid rgba(0,230,200,0.28);
+  background: rgba(0,230,200,0.10);
   font-size: var(--fs-10);
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--black);
+  color: var(--cyan);
   line-height: 1.4;
+}
+.hud-mode.is-manual {
+  border: 1px solid rgba(255,183,66,0.26);
+  background: rgba(255,183,66,0.08);
+  color: var(--black);
 }
 
 #pts-label {
@@ -536,7 +541,7 @@ canvas#gameCanvas {
 /* Inner window (shared) */
 .popup-window {
   background: var(--white);
-  border: 1px solid rgba(24,24,24,0.12);
+  border: none;
   width: 90%;
   position: relative;
   box-shadow: 0 24px 80px rgba(24,24,24,0.12);
@@ -556,7 +561,7 @@ canvas#gameCanvas {
 #popup.active { display: flex; }
 #popup-inner {
   background: var(--white);
-  border: 1px solid rgba(24,24,24,0.12);
+  border: none;
   width: 560px;
   max-width: 90vw;
   height: 420px;
@@ -590,8 +595,8 @@ canvas#gameCanvas {
   gap: 12px;
   min-height: 104px;
   padding: 16px 40px 28px;
-  border-top: 1px solid var(--line-soft);
-  background: rgba(254,254,254,0.96);
+  border-top: none;
+  background: transparent;
 }
 
 .popup-tag {
@@ -1053,7 +1058,7 @@ footer {
 
   <div id="game-ui">
     <div class="hud-shell">
-      <div class="hud-eyebrow">Clean Pixel Explorer</div>
+
       <div class="hud-top">
         <div>
           <div id="pts-label">score</div>
@@ -1068,7 +1073,7 @@ footer {
         </div>
         <div class="hud-block">
           <div class="hud-k">nodes live</div>
-          <div class="hud-v" id="hud-project-count">09 online</div>
+          <div class="hud-v" id="hud-project-count">08 online</div>
         </div>
         <div class="hud-block hud-block--wide">
           <div class="hud-k">selected project</div>
@@ -1194,9 +1199,9 @@ document.addEventListener('mousemove', e => {
   mouseY = e.clientY;
   // Use elementFromPoint to precisely detect if cursor is over the game canvas
   const el = document.elementFromPoint(mouseX, mouseY);
-  isOnGame = el === canvas || HOME_SECTION.contains(el);
-  // Footer and nav always use dot cursor too
-  if (el && (el.closest("footer") || el.closest("header"))) isOnGame = true;
+  isOnGame = !!(el && (el === canvas || HOME_SECTION.contains(el)));
+  // Footer, nav, popup, and password modal always use dot cursor
+  if (el && (el.closest("footer") || el.closest("header") || el.closest("#popup") || el.closest("#pw-modal"))) isOnGame = true;
 });
 
 document.querySelectorAll('a, button, .nav-link').forEach(el => {
@@ -1396,6 +1401,8 @@ const EFF2   = '#F3FF97';
 const CYAN   = '#00e6c8';
 const popupViewBtn = document.getElementById('popup-view-btn');
 const popupPtsEl = document.getElementById('popup-pts');
+const gameUiEl = document.getElementById('game-ui');
+const hudShellEl = document.querySelector('.hud-shell');
 const nodeLayer = document.getElementById('node-layer');
 const hudModeEl = document.getElementById('hud-mode');
 const hudStatusEl = document.getElementById('hud-status');
@@ -1418,7 +1425,6 @@ const ABOUT_POPUP = {
 const PROJECT_LAYOUTS = {
   desktop: {
     lesocial:     { x: 0.20, y: 0.36 },
-    debox:        { x: 0.23, y: 0.63 },
     illustration: { x: 0.42, y: 0.24 },
     vfx:          { x: 0.44, y: 0.56 },
     ora:          { x: 0.66, y: 0.22 },
@@ -1433,7 +1439,6 @@ const PROJECT_LAYOUTS = {
     lesocial:     { x: 0.22, y: 0.41 },
     helpurr:      { x: 0.76, y: 0.41 },
     meed:         { x: 0.28, y: 0.56 },
-    debox:        { x: 0.74, y: 0.56 },
     vfx:          { x: 0.24, y: 0.72 },
     cheddar:      { x: 0.76, y: 0.72 },
     hamartia:     { x: 0.50, y: 0.84 },
@@ -1444,7 +1449,6 @@ const PROJECT_LINKS = [
   ['lesocial', 'ora'],
   ['lesocial', 'helpurr'],
   ['ora', 'meed'],
-  ['ora', 'debox'],
   ['meed', 'cheddar'],
   ['meed', 'hamartia'],
   ['helpurr', 'illustration'],
@@ -1509,17 +1513,7 @@ const EXPERIENCES = [
     url: 'cheddar.html',
     color: BRAND,
   },
-  {
-    id: 'debox', label: 'DEBOX',
-    tag: 'Experience Unlocked',
-    title: 'Community Manager',
-    company: 'DeBox',
-    period: '2022 - 2023',
-    desc: 'Grew DeBox HK community from 0 to 2600 in 4 months. Hosted Twitter Spaces, member meetups, and organised the first IRL event and happy hour.',
-    pts: 50,
-    url: 'debox.html',
-    color: BRAND,
-  },
+
   {
     id: 'lesocial', label: 'LE.SOCIAL',
     tag: 'Project Unlocked',
@@ -1591,7 +1585,6 @@ function getNodeIcon(id) {
     meed: 'stack',
     hamartia: 'frame',
     cheddar: 'orbit',
-    debox: 'signal',
     lesocial: 'frame',
     illustration: 'spark',
     vfx: 'stack',
@@ -1612,8 +1605,29 @@ function projectAnchorFor(expId) {
   };
 }
 
+function getHudNoNodeBounds() {
+  if (!HOME_SECTION || !gameUiEl || !hudShellEl) return null;
+  const homeRect = HOME_SECTION.getBoundingClientRect();
+  const hudRect = hudShellEl.getBoundingClientRect();
+  return {
+    left: hudRect.left - homeRect.left - 26,
+    right: hudRect.right - homeRect.left + 38,
+    top: hudRect.top - homeRect.top - 18,
+    bottom: hudRect.bottom - homeRect.top + 52,
+  };
+}
+
+function nodeOverlapsHud(gx, gy) {
+  const bounds = getHudNoNodeBounds();
+  if (!bounds) return false;
+  const x = gridX(gx);
+  const y = gridY(gy);
+  return x >= bounds.left && x <= bounds.right && y >= bounds.top && y <= bounds.bottom;
+}
+
 function beanSlotAvailable(gx, gy, planned = [], excludeId = null) {
   if (gx < 0 || gx >= COLS || gy < 0 || gy >= ROWS - 1) return false;
+  if (nodeOverlapsHud(gx, gy)) return false;
   if (isForbidden(gx, gy) || isForbidden(gx, gy + 1)) return false;
   if (snake.some(s => s.x === gx && s.y === gy)) return false;
   if (candies.some(c => Math.abs(c.x - gx) <= 1 && Math.abs(c.y - gy) <= 1)) return false;
@@ -1627,7 +1641,7 @@ function findCuratedBeanPosition(exp, planned = []) {
   const anchor = projectAnchorFor(exp.id);
   if (beanSlotAvailable(anchor.x, anchor.y, planned, exp.id)) return anchor;
 
-  for (let radius = 1; radius <= 5; radius++) {
+  for (let radius = 1; radius <= 12; radius++) {
     for (let dx = -radius; dx <= radius; dx++) {
       for (let dy = -radius; dy <= radius; dy++) {
         if (Math.abs(dx) !== radius && Math.abs(dy) !== radius) continue;
@@ -1636,6 +1650,15 @@ function findCuratedBeanPosition(exp, planned = []) {
         if (beanSlotAvailable(tx, ty, planned, exp.id)) {
           return { x: tx, y: ty };
         }
+      }
+    }
+  }
+
+  const minY = Math.ceil((NAV_H + 120) / CELL);
+  for (let gy = minY; gy < ROWS - 2; gy++) {
+    for (let gx = 2; gx < COLS - 2; gx++) {
+      if (beanSlotAvailable(gx, gy, planned, exp.id)) {
+        return { x: gx, y: gy };
       }
     }
   }
@@ -1654,8 +1677,10 @@ function syncBeanLayout() {
 }
 
 function updateHud() {
-  hudModeEl.textContent = gameStarted ? 'manual control' : 'auto roam';
-  hudStatusEl.textContent = popupOpen ? 'project focus' : gameStarted ? 'explorer active' : 'map scanning';
+  const isManual = gameStarted;
+  hudModeEl.textContent = isManual ? 'manual control' : 'auto roam';
+  hudModeEl.classList.toggle('is-manual', isManual);
+  hudStatusEl.textContent = popupOpen ? 'project focus' : isManual ? 'explorer active' : 'map scanning';
   hudProjectCountEl.textContent = `${String(expBeans.length).padStart(2, '0')} curated`;
 
   const exp = selectedExpId ? getExperience(selectedExpId) : null;

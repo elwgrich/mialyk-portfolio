@@ -24,9 +24,10 @@
 | `--grey-l` | `#A8B0B2` | Subtle text, hints |
 | `--grey-m` | `#88888C` | Secondary text, nav links |
 | `--black` | `#181818` | Primary text |
-| `--brand` | `#FFB742` | Orange ??CTA, mouse, score |
-| `--effect1` | `#DA6628` | Deep orange ??hover, shading |
-| `--effect2` | `#F3FF97` | Acid yellow ??accent only, never bg |
+| `--brand` | `#FFB742` | Orange warmth for CTA, score, yellow ratseal body |
+| `--effect1` | `#DA6628` | Deep orange shading for ratseal body |
+| `--effect2` | `#F3FF97` | Acid yellow accent only, never as a large background |
+| `--cyan` | `#00e6c8` | Hover / focus accent, homepage cursor hover, interactive states |
 | `--candy-sm` | `#DCE0E2` | Small candy (+1) |
 | `--candy-md` | `#C9CDCE` | Medium candy (+5) |
 | `--candy-lg` | `#FFB742` | Large candy (+10) |
@@ -73,23 +74,30 @@
 
 ## 5. Game & Cursor
 
-### Mouse character (game + cursor ??identical design)
-- Body: `#FFB742`, shading `#DA6628`, highlight `#FFF8E0`
-- Ears: upper + lower on left side (behind travel direction), outer orange + `#FFD4A8` inner
-- Tail: 3 dots, arc wiggle on movement
-- Cursor: body lags 0.22 lerp, rotates toward cursor 0.25 lerp
+### Yellow ratseal design
+- Character family: sharp pixel ratseal, front-heavy rectangular body, never rounded or plush.
+- Body: `#FFB742`; shade: `#DA6628`; outline: `#181818`; highlight: `#FFF8E0`.
+- Ears: two square ears on the rear side of movement, cream fill `#FFD4A8`, tiny warm highlight.
+- Tail: grey dot-chain tail (`#A8B0B2`) with a slight wiggle when moving.
+- Nose: white; whisker strokes: grey; eye reads as a black forward-facing block.
+- Cursor ratseal and in-game ratseal must stay in the same silhouette family, but scale and spacing can be adjusted for readability.
 
-### Homepage cursor
-- Dot: `#FFB742` 5px / `#DA6628` 12px hover
+### Cursor system
+- Homepage / header / footer / popup cursor: brand dot.
+- Default dot: `#FFB742`, radius `5px`.
+- Hover / interactive dot: `#00e6c8`, radius `12px`, alpha about `0.7`.
+- Non-home cursor: yellow ratseal sprite with body lag `0.22` lerp and facing rotation `0.25` lerp.
+- Hover on interactive targets enlarges the non-home ratseal cursor.
 
 ### Candies
-- Small +1 / Medium +5 / Large +10
-- 16% initial density, refills to 12% on eat
+- Small +1 / Medium +5 / Large +10.
+- 16% initial density, refills to 12% on eat.
 
-### Experience Beans
-- Always 5 on screen, 5s watchdog refill
-- Cycles through all projects (no lock-out after seen)
-- Diamond sprite, project accent colour, label below
+### Experience Beans / Nodes
+- Always 5 on screen, 5s watchdog refill.
+- Cycles through all projects (no lock-out after seen).
+- Diamond sprite, project accent colour, label below.
+- Do not place nodes under the homepage HUD / `Clean Pixel Explorer` panel.
 
 ---
 
@@ -109,14 +117,17 @@
 | | SM | MD | LG |
 |---|---|---|---|
 | Max-width | 360px | 560px | 760px |
-| Padding | 32px | 48px top / 160px bottom | 64px |
+| Padding | 32px | 40px interior system | 64px |
 | Usage | Password | Experience | Future |
 
+- Popup windows are flat white panels with shadow only. No outer border line.
+- Experience popup footer area has no divider line.
+
 ### Experience Popup layout
-Fixed `560 ? 520px`, 3-section flex column:
-1. **`.popup-top`** ??tag + title + company + period, `padding: 48px 48px 0`
-2. **`.popup-mid`** ??desc + pts, `flex: 1`, vertically centred
-3. **`.popup-btns`** ??`height: 160px`, bottom-snapped, centred
+Fixed `560 x 420px`, 3-section flex / grid column:
+1. **`.popup-top`** ??tag + title + company + period, `padding: 36px 40px 0`
+2. **`.popup-mid`** ??desc + pts, scrollable when needed, `padding: 14px 40px 0`
+3. **`.popup-btns`** ??bottom-snapped action row, centered, `padding: 16px 40px 28px`
 
 ---
 
@@ -214,7 +225,7 @@ Header hover = brand orange underline + dropdown hover background `rgba(255,183,
 <!-- HEADER -->
 <header>
   <a href="index.html" class="nav-logo">
-    mialyk<span class="slash">//</span><sub>creative lead</sub>
+    mialyk<span class="slash">//</span><sub>building something creative</sub>
   </a>
   <nav>
     <div class="nav-item">
