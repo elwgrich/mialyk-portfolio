@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hamartia ??mialyk</title>
+<title>Hamartia — mialyk</title>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -29,12 +29,12 @@ body{
   overflow-x:hidden;
 }
 
-/* ?? CURSOR ?? */
+/* ── CURSOR ── */
 #cursor-canvas{position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:9999;}
 .click-ripple{position:fixed;border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%) scale(0);animation:rippleOut 0.5s cubic-bezier(0.2,0.8,0.4,1) forwards;}
 @keyframes rippleOut{0%{transform:translate(-50%,-50%) scale(0);opacity:0.7;}100%{transform:translate(-50%,-50%) scale(4);opacity:0;}}
 
-/* ?? HEADER ?? */
+/* ── HEADER ── */
 header{
   position:fixed;top:0;left:0;right:0;z-index:200;
   height:60px;display:flex;align-items:center;justify-content:space-between;
@@ -67,16 +67,16 @@ nav{display:flex;align-items:center;gap:36px;}
 .dropdown-item:hover{color:var(--black);background:rgba(255,183,66,0.08);}
 .dropdown-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--brand);margin-right:10px;vertical-align:middle;}
 .dropdown-item.active .dropdown-dot{background:var(--accent);}
-.dropdown-locked{opacity:.5;}.dropdown-locked:hover{opacity:1;}
+.dropdown-locked{opacity:.5;}
 .pxi{display:inline-block;} .pxi--sm{width:14px;height:14px;} .pxi--md{width:18px;height:18px;}
 
-/* ?? HERO ?? */
+/* ── HERO ── */
 .hero{
   margin-top:60px;padding:32px 24px;
   border-bottom:1px solid rgba(24,24,24,0.1);
   background:var(--white);position:relative;overflow:hidden;
 }
-/* subtle pixel grid ??white surface, just texture */
+/* subtle pixel grid — white surface, just texture */
 .hero::after{content:'';position:absolute;inset:0;pointer-events:none;
   background-image:linear-gradient(rgba(24,24,24,0.018) 1px,transparent 1px),linear-gradient(90deg,rgba(24,24,24,0.018) 1px,transparent 1px);
   background-size:8px 8px;}
@@ -91,11 +91,11 @@ h1 .accent{color:var(--accent);}
 .meta-label{font-size:var(--fs-10);color:var(--grey-l);text-transform:uppercase;letter-spacing:.1em;}
 .meta-value{font-size:var(--fs-12);color:var(--black);}
 
-/* ?? SECTION LABEL ?? */
+/* ── SECTION LABEL ── */
 .slabel{font-family:'Press Start 2P',monospace;font-size:var(--fs-10);color:var(--grey-l);letter-spacing:.08em;text-transform:uppercase;margin-bottom:24px;display:flex;align-items:center;gap:12px;}
 .slabel::after{content:'';flex:1;height:1px;background:rgba(24,24,24,0.1);}
 
-/* ?? STATS ?? */
+/* ── STATS ── */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid rgba(24,24,24,0.1);border-top:none;}
 .stat-cell{padding:28px 24px;border-right:1px solid rgba(24,24,24,0.1);background:var(--white);transition:background .2s;}
 .stat-cell:last-child{border-right:none;}
@@ -103,7 +103,7 @@ h1 .accent{color:var(--accent);}
 .stat-num{font-family:'Press Start 2P',monospace;font-size:clamp(16px,2vw,22px);color:var(--accent);margin-bottom:8px;display:block;}
 .stat-desc{font-size:var(--fs-10);color:var(--grey-m);line-height:1.6;text-transform:uppercase;letter-spacing:.06em;}
 
-/* ?? TICKER ?? */
+/* ── TICKER ── */
 .ticker-wrap{border-top:1px solid rgba(24,24,24,0.1);border-bottom:1px solid rgba(24,24,24,0.1);height:32px;overflow:hidden;display:flex;align-items:center;background:var(--white);padding:0 24px;}
 .ticker-label{font-family:'Press Start 2P',monospace;font-size:7px;color:var(--black);background:var(--brand);height:100%;padding:0 14px;display:flex;align-items:center;flex-shrink:0;letter-spacing:.06em;}
 .ticker-track{flex:1;overflow:hidden;}
@@ -113,16 +113,16 @@ h1 .accent{color:var(--accent);}
 .ticker-item em{color:var(--black);font-style:normal;}
 .ticker-sep{color:var(--brand);}
 
-/* ?? MAIN ?? */
+/* ── MAIN ── */
 .psection{width:calc(100% - 48px);max-width:1200px;margin:0 auto;padding:24px 0 72px;display:flex;flex-direction:column;gap:36px;}
 
-/* ?? STREAMER UI ?? */
+/* ══ STREAMER UI ══ */
 .streamer-ui{display:grid;grid-template-columns:minmax(0,1fr) 260px;border:1px solid rgba(24,24,24,0.12);background:var(--white);align-items:start;width:100%;flex:1 1 auto;}
 @media(max-width:768px){.streamer-ui{grid-template-columns:1fr;}}
 
-/* win chrome ??brand orange titlebar (art rule: brand as warmth) */
+/* win chrome — brand orange titlebar (art rule: brand as warmth) */
 .win-bar{display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:24px;
-  background:var(--brand); /* brand 20% ??key UI chrome */ 
+  background:var(--brand); /* brand 20% — key UI chrome */ 
   font-family:'Press Start 2P',monospace;font-size:7px;color:var(--black);flex-shrink:0;}
 .win-bar.dark{background:var(--black);color:var(--white);}
 .win-controls{display:flex;gap:4px;}
@@ -191,7 +191,7 @@ h1 .accent{color:var(--accent);}
 .chat-send{height:28px;min-width:32px;padding:0 10px;flex-shrink:0;background:var(--brand);color:var(--black);font-family:'Press Start 2P',monospace;font-size:6px;border:none;cursor:none;transition:background .15s;}
 .chat-send:hover{background:var(--effect1);color:var(--white);}
 
-/* ?? ART WINDOW TRIGGER BUTTONS ?? */
+/* ══ ART WINDOW TRIGGER BUTTONS ══ */
 .art-triggers{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:0;width:100%;}
 .art-trigger-btn{
   border:1px solid rgba(24,24,24,0.12);
@@ -211,19 +211,11 @@ h1 .accent{color:var(--accent);}
 .atb-preview{width:100%;aspect-ratio:16/7;background:#0C0C0C;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;}
 .atb-preview::after{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.05) 2px,rgba(0,0,0,0.05) 3px);}
 .atb-preview-label{font-family:'Press Start 2P',monospace;font-size:8px;color:rgba(255,183,66,0.5);text-align:center;}
-.char-atb-preview-frame{display:grid;grid-template-columns:108px 1fr;gap:10px;width:100%;height:100%;padding:10px;position:relative;z-index:1;}
-.char-atb-icons{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;align-content:center;}
-.char-atb-icon{aspect-ratio:1;border:1px solid rgba(255,255,255,0.08);background:#111;overflow:hidden;display:flex;align-items:center;justify-content:center;font-family:'Press Start 2P',monospace;font-size:8px;color:rgba(255,183,66,0.72);}
-.char-atb-icon img{width:100%;height:100%;display:block;object-fit:cover;}
-.char-atb-icon.active{border-color:var(--brand);}
-.char-atb-main{border:1px solid rgba(255,255,255,0.08);background:#111;overflow:hidden;display:flex;align-items:center;justify-content:center;}
-.char-atb-main img{width:100%;height:100%;display:block;object-fit:contain;}
-.char-atb-main-placeholder{font-family:'Press Start 2P',monospace;font-size:12px;color:rgba(255,183,66,0.72);}
 .atb-footer{padding:8px 12px;border-top:1px solid rgba(24,24,24,0.06);display:flex;justify-content:space-between;}
 .atb-desc{font-size:var(--fs-10);color:var(--grey-m);}
 .atb-tag{font-family:'Press Start 2P',monospace;font-size:7px;color:var(--brand);}
 
-/* ?? DRAGGABLE POPUPS ?? */
+/* ══ DRAGGABLE POPUPS ══ */
 .dw{
   position:fixed;z-index:600;
   border:1px solid rgba(24,24,24,0.15);
@@ -248,7 +240,7 @@ h1 .accent{color:var(--accent);}
 .dw-btn{width:14px;height:14px;border:1px solid rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center;font-size:8px;color:rgba(0,0,0,0.5);cursor:none;font-family:'DM Mono',monospace;background:none;transition:background .12s;}
 .dw-btn:hover{background:rgba(0,0,0,0.12);}
 
-/* ?? ENVIRONMENT POPUP ?? */
+/* ── ENVIRONMENT POPUP ── */
 #env-popup{width:700px;top:80px;left:50%;transform:translateX(-50%);}
 .env-inner{display:flex;height:500px;}
 
@@ -289,16 +281,16 @@ h1 .accent{color:var(--accent);}
 
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
-/* ?? CHARACTER POPUP ?? */
-#char-popup{width:min(800px,calc(100vw - 32px));top:100px;left:calc(50% + 80px);}
-.char-inner{display:flex;flex-direction:column;max-height:calc(100vh - 80px);}
+/* ── CHARACTER POPUP ── */
+#char-popup{width:560px;top:100px;left:calc(50% + 80px);}
+.char-inner{display:flex;flex-direction:column;height:520px;}
 
 /* character grid */
 .char-grid-wrap{padding:24px;border-bottom:1px solid rgba(24,24,24,0.08);}
 .char-grid-label{font-size:var(--fs-10);color:var(--grey-m);margin-bottom:10px;letter-spacing:.06em;text-transform:uppercase;}
-.char-grid{display:grid;grid-template-columns:repeat(auto-fit,64px);gap:8px;justify-content:flex-start;}
+.char-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
 .char-icon{
-  width:64px;height:64px;
+  width:100%;aspect-ratio:1;
   background:#0D0D0D;
   border:1px solid rgba(24,24,24,0.1);
   display:flex;align-items:center;justify-content:center;
@@ -308,27 +300,20 @@ h1 .accent{color:var(--accent);}
 .char-icon:hover{border-color:var(--brand);background:#1A1A1A;}
 .char-icon.active{border-color:var(--brand);background:rgba(255,183,66,0.1);}
 .char-icon.active .char-icon-inner{color:var(--brand);}
-.char-icon.active .char-icon-badge{background:var(--brand);color:var(--black);}
-.char-icon-img{width:100%;height:100%;display:block;object-fit:cover;}
-.char-icon-badge{
-  position:absolute;right:4px;bottom:4px;z-index:1;
-  font-family:'Press Start 2P',monospace;font-size:6px;line-height:1;
-  color:var(--white);background:rgba(0,0,0,0.72);padding:3px 4px;
-}
 .char-icon-inner{font-family:'Press Start 2P',monospace;font-size:7px;color:var(--grey-m);text-align:center;line-height:1.4;}
 .char-icon-num{font-size:6px;color:var(--grey-l);display:block;margin-top:2px;}
 
 /* character display */
-.char-display{flex:1;display:flex;overflow:auto;}
-.char-img-area{width:520px;height:520px;flex-shrink:0;background:#0D0D0D;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:12px;}
+.char-display{flex:1;display:flex;overflow:hidden;}
+.char-img-area{width:200px;flex-shrink:0;background:#0D0D0D;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
 .char-img-area::after{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.06) 3px,rgba(0,0,0,0.06) 4px);}
-.char-art{width:100%;height:100%;object-fit:contain;display:none;position:relative;z-index:1;}
+.char-art{width:100%;height:100%;object-fit:cover;display:none;}
 .char-art.active{display:block;animation:fadeIn .25s ease-out;}
-.char-art-placeholder{text-align:center;position:relative;z-index:1;}
+.char-art-placeholder{text-align:center;}
 .char-art-placeholder-label{font-family:'Press Start 2P',monospace;font-size:7px;color:rgba(255,183,66,0.45);margin-bottom:6px;display:block;}
 .char-art-placeholder-sub{font-size:9px;color:rgba(255,255,255,0.2);}
 
-.char-info{flex:1;min-width:280px;padding:24px;border-left:1px solid rgba(24,24,24,0.08);background:var(--white);overflow:auto;}
+.char-info{flex:1;padding:24px;border-left:1px solid rgba(24,24,24,0.08);background:var(--white);overflow:hidden;}
 .char-id{font-family:'Press Start 2P',monospace;font-size:8px;color:var(--brand);margin-bottom:6px;}
 .char-name-display{font-family:'Press Start 2P',monospace;font-size:13px;color:var(--black);line-height:1.4;margin-bottom:12px;}
 .char-role-tag{display:inline-block;font-size:var(--fs-10);color:var(--grey-m);border:1px solid rgba(24,24,24,0.15);padding:3px 10px;margin-bottom:16px;}
@@ -338,14 +323,14 @@ h1 .accent{color:var(--accent);}
 .char-stat-key{color:var(--grey-m);}
 .char-stat-val{color:var(--black);}
 
-/* ?? PLAY DEMO POPUP ?? */
+/* ── PLAY DEMO POPUP ── */
 #demo-popup{width:220px;bottom:88px;right:36px;position:fixed;z-index:500;border:1px solid rgba(24,24,24,0.15);background:var(--white);box-shadow:4px 4px 0 rgba(24,24,24,0.07);}
 .demo-bar{display:flex;align-items:center;justify-content:space-between;height:24px;padding:0 10px;background:var(--brand);cursor:move;}
 .demo-title{font-family:'Press Start 2P',monospace;font-size:7px;color:var(--black);}
 .demo-x{background:none;border:none;color:rgba(0,0,0,0.5);font-size:12px;cursor:none;font-family:'DM Mono',monospace;}
 .demo-x:hover{color:var(--black);}
 .demo-body{padding:24px;}
-.demo-icon{width:64px;height:64px;display:block;object-fit:contain;margin-bottom:10px;image-rendering:auto;}
+.demo-icon{width:32px;height:32px;background:var(--black);display:flex;align-items:center;justify-content:center;font-family:'Press Start 2P',monospace;font-size:8px;color:var(--brand);margin-bottom:10px;}
 .demo-name{font-family:'Press Start 2P',monospace;font-size:8px;color:var(--black);margin-bottom:6px;}
 .demo-desc{font-size:var(--fs-10);color:var(--grey-m);line-height:1.7;margin-bottom:12px;}
 .demo-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;}
@@ -359,7 +344,31 @@ h1 .accent{color:var(--accent);}
 .demo-foot{text-align:center;padding:6px;font-size:var(--fs-10);color:var(--grey-m);border-top:1px solid rgba(24,24,24,0.06);cursor:none;transition:color .15s;}
 .demo-foot:hover{color:var(--black);}
 
-/* ?? CREDITS ?? */
+/* ── POPUP MEDIA OVERRIDES ── */
+#env-current-img{display:block;animation:fadeIn .3s ease-out;}
+#char-popup{width:min(800px,calc(100vw - 48px));max-width:800px;}
+.char-inner{height:auto;}
+.char-grid{grid-template-columns:repeat(7,64px);gap:8px;}
+.char-icon{width:64px;height:64px;}
+.char-icon-thumb{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(100%);transition:filter .15s,transform .15s;}
+.char-icon:hover .char-icon-thumb,.char-icon.active .char-icon-thumb{filter:none;transform:scale(1.02);}
+.char-icon-fallback{font-family:'Press Start 2P',monospace;font-size:8px;color:var(--grey-m);}
+.char-icon-num{position:absolute;right:4px;bottom:4px;font-size:6px;color:var(--white);padding:2px 4px;background:rgba(24,24,24,0.78);line-height:1;}
+.char-icon.active .char-icon-num{color:var(--brand);}
+.char-display{flex:0 0 auto;min-height:520px;height:520px;}
+.char-img-area{width:520px;height:520px;}
+.char-art{width:100%;height:100%;object-fit:cover;display:block;}
+.char-art.is-hidden{display:none;}
+.char-art-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:#0D0D0D;}
+.char-art-placeholder.is-hidden{display:none;}
+.demo-icon img{width:100%;height:100%;object-fit:contain;display:block;}
+@media(max-width:900px){
+  .char-grid{grid-template-columns:repeat(auto-fit,64px);justify-content:center;}
+  .char-display{flex-direction:column;height:auto;min-height:0;}
+  .char-img-area{width:100%;height:min(520px,70vw);}
+}
+
+/* ── CREDITS ── */
 .credits-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;padding-top:48px;border-top:1px solid rgba(24,24,24,0.1);margin-top:64px;}
 @media(max-width:768px){.credits-grid{grid-template-columns:1fr;gap:32px;}}
 .role-list{display:flex;flex-direction:column;}
@@ -370,7 +379,7 @@ h1 .accent{color:var(--accent);}
 .tool-tag{font-size:var(--fs-10);padding:6px 12px;border:1px solid rgba(24,24,24,0.15);color:var(--grey-m);transition:border-color .15s,color .15s;}
 .tool-tag:hover{border-color:var(--brand);color:var(--black);}
 
-/* ?? FOOTER ?? */
+/* ── FOOTER ── */
 footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:32px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;font-size:var(--fs-12);letter-spacing:.08em;}
 .footer-copy{font-size:var(--fs-12);color:var(--grey-m);}
 .footer-copy span{color:var(--brand);}
@@ -388,7 +397,7 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
 .whitelist-head{font-family:'Press Start 2P',monospace;font-size:10px;color:var(--black);line-height:1.8;margin-bottom:10px;}
 .whitelist-copy{font-size:var(--fs-10);color:var(--grey-m);line-height:1.8;margin-bottom:18px;}
 .whitelist-cta{width:100%;height:36px;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;}
-/* ?? PW MODAL ?? */
+/* ── PW MODAL ── */
 #pw-modal{position:fixed;inset:0;z-index:1000;background:rgba(24,24,24,0.4);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;}
 #pw-modal.active{display:flex;}
 #pw-inner{background:var(--white);padding:32px;width:360px;}
@@ -418,7 +427,7 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
 
 <canvas id="cursor-canvas"></canvas>
 
-<!-- ?? HEADER ?? -->
+<!-- ══ HEADER ══ -->
 <header>
   <a href="index.html" class="nav-logo">mialyk<span class="slash">//</span><sub>creative lead</sub></a>
   <nav>
@@ -444,7 +453,7 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
   </nav>
 </header>
 
-<!-- ?? HERO ?? -->
+<!-- ══ HERO ══ -->
 <section class="hero">
   <div class="hero-inner">
     <div class="hero-eyebrow">Game Project<span class="hero-year">2020</span></div>
@@ -453,7 +462,7 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
       <div class="meta-item"><span class="meta-label">Type</span><span class="meta-value">2D Horror Survival Dialogue</span></div>
       <div class="meta-item"><span class="meta-label">Credit</span><span class="meta-value">All by mialyk</span></div>
       <div class="meta-item"><span class="meta-label">Engine</span><span class="meta-value">RPG Maker</span></div>
-      <div class="meta-item"><span class="meta-label">Theme</span><span class="meta-value">School Violence 繚 Survival</span></div>
+      <div class="meta-item"><span class="meta-label">Theme</span><span class="meta-value">School Violence · Survival</span></div>
       <div class="meta-item"><span class="meta-label">Tools</span><span class="meta-value">RPG Maker, adobe</span></div>
     </div>
   </div>
@@ -462,27 +471,27 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
 <div class="ticker-wrap reveal">
   <div class="ticker-label">HAMARTIA</div>
   <div class="ticker-track"><div class="ticker-inner">
-    <span class="ticker-item"><em>2D Horror Survival Dialogue</em><span class="ticker-sep"> 繚 </span></span>
-    <span class="ticker-item">High-school culture festival<span class="ticker-sep"> 繚 </span></span>
-    <span class="ticker-item"><em>13 survivors 繚 1 initiator 繚 0 mercy</em><span class="ticker-sep"> 繚 </span></span>
-    <span class="ticker-item">Dialogue trees + mini-games<span class="ticker-sep"> 繚 </span></span>
-    <span class="ticker-item">Asian communal culture &amp; school bullying<span class="ticker-sep"> 繚 </span></span>
-    <span class="ticker-item"><em>Blood 繚 Sacrifice 繚 Survival</em><span class="ticker-sep"> 繚 </span></span>
-    <span class="ticker-item">Solo developed 繚 2020<span class="ticker-sep"> 繚 </span></span>
-    <span class="ticker-item">Humanity and survival ??what will be real?<span class="ticker-sep"> 繚 </span></span>
+    <span class="ticker-item"><em>2D Horror Survival Dialogue</em><span class="ticker-sep"> · </span></span>
+    <span class="ticker-item">High-school culture festival<span class="ticker-sep"> · </span></span>
+    <span class="ticker-item"><em>13 survivors · 1 initiator · 0 mercy</em><span class="ticker-sep"> · </span></span>
+    <span class="ticker-item">Dialogue trees + mini-games<span class="ticker-sep"> · </span></span>
+    <span class="ticker-item">Asian communal culture &amp; school bullying<span class="ticker-sep"> · </span></span>
+    <span class="ticker-item"><em>Blood · Sacrifice · Survival</em><span class="ticker-sep"> · </span></span>
+    <span class="ticker-item">Solo developed · 2020<span class="ticker-sep"> · </span></span>
+    <span class="ticker-item">Humanity and survival — what will be real?<span class="ticker-sep"> · </span></span>
     <!-- dupe -->
-    <span class="ticker-item"><em>2D Horror Survival Dialogue</em><span class="ticker-sep"> 繚 </span></span>
-    <span class="ticker-item">High-school culture festival<span class="ticker-sep"> 繚 </span></span>
-    <span class="ticker-item"><em>13 survivors 繚 1 initiator 繚 0 mercy</em><span class="ticker-sep"> 繚 </span></span>
-    <span class="ticker-item">Dialogue trees + mini-games<span class="ticker-sep"> 繚 </span></span>
-    <span class="ticker-item">Asian communal culture &amp; school bullying<span class="ticker-sep"> 繚 </span></span>
-    <span class="ticker-item"><em>Blood 繚 Sacrifice 繚 Survival</em><span class="ticker-sep"> 繚 </span></span>
-    <span class="ticker-item">Solo developed 繚 2020<span class="ticker-sep"> 繚 </span></span>
-    <span class="ticker-item">Humanity and survival ??what will be real?<span class="ticker-sep"> 繚 </span></span>
+    <span class="ticker-item"><em>2D Horror Survival Dialogue</em><span class="ticker-sep"> · </span></span>
+    <span class="ticker-item">High-school culture festival<span class="ticker-sep"> · </span></span>
+    <span class="ticker-item"><em>13 survivors · 1 initiator · 0 mercy</em><span class="ticker-sep"> · </span></span>
+    <span class="ticker-item">Dialogue trees + mini-games<span class="ticker-sep"> · </span></span>
+    <span class="ticker-item">Asian communal culture &amp; school bullying<span class="ticker-sep"> · </span></span>
+    <span class="ticker-item"><em>Blood · Sacrifice · Survival</em><span class="ticker-sep"> · </span></span>
+    <span class="ticker-item">Solo developed · 2020<span class="ticker-sep"> · </span></span>
+    <span class="ticker-item">Humanity and survival — what will be real?<span class="ticker-sep"> · </span></span>
   </div></div>
 </div>
 
-<!-- ?? MAIN ?? -->
+<!-- ══ MAIN ══ -->
 <div class="psection">
 
   <!-- STREAMER UI -->
@@ -492,7 +501,7 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
   <div class="win-bar">
     <span>hamartia_trailer.mp4</span>
     <div class="win-controls">
-      <div class="win-btn">?</div><div class="win-btn">??/div><div class="win-btn">??/div>
+      <div class="win-btn">─</div><div class="win-btn">□</div><div class="win-btn">✕</div>
     </div>
   </div>
   <div class="menu-bar">
@@ -510,61 +519,61 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
       </iframe>
     </div>
     <div class="video-overlay">
-      <div class="video-title-px">CULTURE FESTIVAL ??DAY 01</div>
-      <div class="video-sub-px">Hamartia 繚 Game Trailer 繚 2020</div>
+      <div class="video-title-px">CULTURE FESTIVAL — DAY 01</div>
+      <div class="video-sub-px">Hamartia · Game Trailer · 2020</div>
     </div>
   </div>
   <div class="ctrl-bar">
-    <span class="ctrl-btn">??/span>
-    <span class="ctrl-btn" id="play-btn">??/span>
-    <span class="ctrl-btn">??/span>
+    <span class="ctrl-btn">⏮</span>
+    <span class="ctrl-btn" id="play-btn">⏸</span>
+    <span class="ctrl-btn">⏭</span>
     <div class="progress-bar"><div class="progress-fill" id="pfill"></div><div class="progress-head" id="phead"></div></div>
     <span class="time-lbl">00:35 / 01:42</span>
-    <span class="ctrl-btn" id="volume-btn">??</span>
+    <span class="ctrl-btn" id="volume-btn">🔇</span>
   </div>
   <div class="ch-bar">
-    <div><div class="ch-name">HAMARTIA</div><div class="ch-sub">mialyk 繚 2020 繚 Horror Survival</div></div>
+    <div><div class="ch-name">HAMARTIA</div><div class="ch-sub">mialyk · 2020 · Horror Survival</div></div>
     <div><span class="viewer-num" id="viewer-num">2,599</span><span class="viewer-lbl">watching</span></div>
   </div>
 </div>
 
 <!-- CHAT -->
     <div class="chat-panel">
-      <div class="win-bar"><span>Live Chat</span><div class="win-controls"><div class="win-btn">?</div><div class="win-btn">??/div></div></div>
+      <div class="win-bar"><span>Live Chat</span><div class="win-controls"><div class="win-btn">─</div><div class="win-btn">✕</div></div></div>
       <div class="chat-topbar"><div class="chat-dot"></div><span class="chat-lbl">LIVE CHAT</span></div>
       <div class="chat-messages"><div class="chat-scroll" id="chat-scroll">
-        <div class="chat-msg hl"><span class="chat-user u1">ghost_??/span><span class="chat-text">pixel art is <em>insane</em></span></div>
+        <div class="chat-msg hl"><span class="chat-user u1">ghost_✦</span><span class="chat-text">pixel art is <em>insane</em></span></div>
         <div class="chat-msg"><span class="chat-user u2">yuki99</span><span class="chat-text">who is the initiator??</span></div>
         <div class="chat-msg"><span class="chat-user u3">anon_404</span><span class="chat-text"><em>so unsettling</em> love it</span></div>
-        <div class="chat-msg"><span class="chat-user u4">nxr_m</span><span class="chat-text">school bg gorgeous ?</span></div>
-        <div class="chat-msg"><span class="chat-user u5">sleepy??/span><span class="chat-text">RPG Maker never looked this good</span></div>
-        <div class="chat-msg hl"><span class="chat-user u1">ghost_??/span><span class="chat-text">13 chars all hand drawn?!</span></div>
+        <div class="chat-msg"><span class="chat-user u4">nxr_m</span><span class="chat-text">school bg gorgeous 😭</span></div>
+        <div class="chat-msg"><span class="chat-user u5">sleepy✦</span><span class="chat-text">RPG Maker never looked this good</span></div>
+        <div class="chat-msg hl"><span class="chat-user u1">ghost_✦</span><span class="chat-text">13 chars all hand drawn?!</span></div>
         <div class="chat-msg"><span class="chat-user u6">red_thr</span><span class="chat-text"><em>blood festival vibes</em> omg</span></div>
         <div class="chat-msg"><span class="chat-user u2">yuki99</span><span class="chat-text">played demo 3x already</span></div>
-        <div class="chat-msg"><span class="chat-user u3">anon_404</span><span class="chat-text">solo dev?? respect ??</span></div>
-        <div class="chat-msg"><span class="chat-user u4">nxr_m</span><span class="chat-text">char design ??</span></div>
-        <div class="chat-msg hl"><span class="chat-user u5">sleepy??/span><span class="chat-text">cannot figure out who did it</span></div>
-        <div class="chat-msg"><span class="chat-user u1">ghost_??/span><span class="chat-text">radio mechanic so clever</span></div>
+        <div class="chat-msg"><span class="chat-user u3">anon_404</span><span class="chat-text">solo dev?? respect 🙏</span></div>
+        <div class="chat-msg"><span class="chat-user u4">nxr_m</span><span class="chat-text">char design 🤌</span></div>
+        <div class="chat-msg hl"><span class="chat-user u5">sleepy✦</span><span class="chat-text">cannot figure out who did it</span></div>
+        <div class="chat-msg"><span class="chat-user u1">ghost_✦</span><span class="chat-text">radio mechanic so clever</span></div>
         <div class="chat-msg"><span class="chat-user u2">yuki99</span><span class="chat-text">hits different after midnight</span></div>
-        <div class="chat-msg"><span class="chat-user u6">red_thr</span><span class="chat-text"><em>humanity vs survival</em> ??</span></div>
+        <div class="chat-msg"><span class="chat-user u6">red_thr</span><span class="chat-text"><em>humanity vs survival</em> 💀</span></div>
         <div class="chat-msg"><span class="chat-user u3">anon_404</span><span class="chat-text">bullying theme is so real</span></div>
         <div class="chat-msg"><span class="chat-user u4">nxr_m</span><span class="chat-text">full release when??</span></div>
       </div></div>
       <div class="chat-foot">
         <input class="chat-input" id="chat-comment-trigger" type="text" placeholder="Send a comment..." readonly>
-        <button class="chat-send" id="chat-send-trigger">??/button>
+        <button class="chat-send" id="chat-send-trigger">▶</button>
       </div>
     </div>
   </div>
 
-  <!-- ?? ART TRIGGER BUTTONS ?? -->
+  <!-- ══ ART TRIGGER BUTTONS ══ -->
   <div class="art-triggers reveal">
 
     <!-- ENV TRIGGER -->
     <button class="art-trigger-btn" onclick="openEnv()">
       <div class="atb-bar">
         <span class="atb-title">environment_art.exe</span>
-        <span class="atb-open">Open ??/span>
+        <span class="atb-open">Open ↗</span>
       </div>
       <div class="atb-preview">
         <svg width="240" height="100" viewBox="0 0 240 100" style="image-rendering:pixelated;opacity:.8;">
@@ -592,7 +601,7 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
         </svg>
       </div>
       <div class="atb-footer">
-        <span class="atb-desc">6 locations 繚 Interactive map</span>
+        <span class="atb-desc">6 locations · Interactive map</span>
         <span class="atb-tag">ENV</span>
       </div>
     </button>
@@ -601,18 +610,45 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
     <button class="art-trigger-btn" onclick="openChar()">
       <div class="atb-bar">
         <span class="atb-title">character_select.exe</span>
-        <span class="atb-open">Open ??/span>
+        <span class="atb-open">Open ↗</span>
       </div>
-      <div class="atb-preview" id="char-atb-preview"></div>
+      <div class="atb-preview">
+        <!-- 13 mini character icons preview -->
+        <svg width="240" height="100" viewBox="0 0 240 100" style="image-rendering:pixelated;opacity:.8;">
+          <rect width="240" height="100" fill="#0A0A0A"/>
+          <rect x="10" y="20" width="220" height="60" fill="#111"/>
+          <!-- 13 char icons in a row -->
+          <rect x="16" y="28" width="14" height="14" fill="#222"/><rect x="17" y="29" width="12" height="8" fill="#333"/><rect x="20" y="33" width="2" height="2" fill="#FFB742"/>
+          <rect x="34" y="28" width="14" height="14" fill="#222"/><rect x="35" y="29" width="12" height="8" fill="#2a1a1a"/><rect x="38" y="33" width="2" height="2" fill="#FF4444"/>
+          <rect x="52" y="28" width="14" height="14" fill="#222"/><rect x="53" y="29" width="12" height="8" fill="#1a2a1a"/><rect x="56" y="33" width="2" height="2" fill="#88888C"/>
+          <rect x="70" y="28" width="14" height="14" fill="#222"/><rect x="71" y="29" width="12" height="8" fill="#1a1a2a"/><rect x="74" y="33" width="2" height="2" fill="#A8B0B2"/>
+          <rect x="88" y="28" width="14" height="14" fill="#222"/><rect x="89" y="29" width="12" height="8" fill="#2a2a1a"/><rect x="92" y="33" width="2" height="2" fill="#FFB742"/>
+          <rect x="106" y="28" width="14" height="14" fill="#FFB742" opacity=".15"/><rect x="107" y="29" width="12" height="8" fill="#333"/><rect x="110" y="33" width="2" height="2" fill="#FFB742"/>
+          <rect x="124" y="28" width="14" height="14" fill="#222"/><rect x="125" y="29" width="12" height="8" fill="#2a1a2a"/><rect x="128" y="33" width="2" height="2" fill="#FF4444"/>
+          <rect x="16" y="50" width="14" height="14" fill="#222"/><rect x="17" y="51" width="12" height="8" fill="#1a2a2a"/>
+          <rect x="34" y="50" width="14" height="14" fill="#222"/><rect x="35" y="51" width="12" height="8" fill="#2a1a1a"/>
+          <rect x="52" y="50" width="14" height="14" fill="#222"/><rect x="53" y="51" width="12" height="8" fill="#111"/>
+          <rect x="70" y="50" width="14" height="14" fill="#222"/><rect x="71" y="51" width="12" height="8" fill="#1a1a1a"/>
+          <rect x="88" y="50" width="14" height="14" fill="#222"/><rect x="89" y="51" width="12" height="8" fill="#2a2a1a"/>
+          <rect x="106" y="50" width="14" height="14" fill="#222"/><rect x="107" y="51" width="12" height="8" fill="#1a2a1a"/>
+          <!-- big char preview area -->
+          <rect x="148" y="20" width="82" height="60" fill="#0D0D0D"/>
+          <rect x="148" y="20" width="82" height="60" fill="#111"/>
+          <rect x="168" y="30" width="42" height="50" fill="#1A1A1A"/>
+          <rect x="176" y="32" width="26" height="30" fill="#222"/>
+          <rect x="181" y="36" width="4" height="4" fill="#A8B0B2" opacity=".4"/>
+          <rect x="191" y="36" width="4" height="4" fill="#A8B0B2" opacity=".4"/>
+        </svg>
+      </div>
       <div class="atb-footer">
-        <span class="atb-desc" id="char-atb-desc">13 survivors // Character select</span>
+        <span class="atb-desc">13 survivors · Character select</span>
         <span class="atb-tag">CHAR</span>
       </div>
     </button>
   </div>
 </div><!-- /psection -->
 
-<!-- ?? FOOTER ?? -->
+<!-- ══ FOOTER ══ -->
 <footer>
   <div class="footer-copy">2026 <span>mialyk</span> // All rights reserved</div>
   <div class="footer-socials">
@@ -623,16 +659,16 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
   </div>
 </footer>
 
-<!-- ?? BACKDROP ?? -->
+<!-- ══ BACKDROP ══ -->
 <div id="popup-backdrop" onclick="closeAllPopups()"></div>
 
-<!-- ?? ENVIRONMENT POPUP ?? -->
+<!-- ══ ENVIRONMENT POPUP ══ -->
 <div class="dw" id="env-popup">
   <div class="dw-bar" id="env-drag">
     <span class="dw-title">environment_art.exe</span>
     <div class="dw-controls">
-      <div class="dw-btn" onclick="closeEnv()">?</div>
-      <div class="dw-btn" onclick="closeEnv()">??/div>
+      <div class="dw-btn" onclick="closeEnv()">─</div>
+      <div class="dw-btn" onclick="closeEnv()">✕</div>
     </div>
   </div>
   <div class="env-inner">
@@ -671,381 +707,57 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
     </div>
     <!-- Display area -->
     <div class="env-display" id="env-display">
-      <div class="env-counter" id="env-counter">01 / 06</div>
+      <div class="env-counter" id="env-counter">01 / 06</div>      <img class="env-img" id="env-current-img" src="assets/images/HAMARTIA/location/school.jpg" alt="School Gate environment image">
 
-      <!-- Each location placeholder art (swap img tags for real images) -->
-      <!-- LOC 0: 摮豢憭折? -->
-      <div class="loc-art active" id="loc-art-0">
-        <svg width="100%" height="100%" viewBox="0 0 540 500" preserveAspectRatio="xMidYMid slice" style="image-rendering:pixelated;">
-          <rect width="540" height="500" fill="#080808"/>
-          <!-- gate silhouette -->
-          <rect x="190" y="120" width="160" height="260" fill="#141414"/>
-          <rect x="190" y="110" width="160" height="16" fill="#1E1E1E"/>
-          <rect x="220" y="100" width="100" height="14" fill="#252525"/>
-          <rect x="240" y="88" width="60" height="14" fill="#2a2a2a"/>
-          <!-- gate pillars -->
-          <rect x="185" y="120" width="20" height="270" fill="#1A1A1A"/>
-          <rect x="335" y="120" width="20" height="270" fill="#1A1A1A"/>
-          <!-- gate doors -->
-          <rect x="208" y="135" width="60" height="230" fill="#111"/>
-          <rect x="272" y="135" width="60" height="230" fill="#111"/>
-          <!-- gate bars -->
-          <rect x="213" y="140" width="4" height="220" fill="#1C1C1C"/>
-          <rect x="223" y="140" width="4" height="220" fill="#1C1C1C"/>
-          <rect x="233" y="140" width="4" height="220" fill="#1C1C1C"/>
-          <rect x="243" y="140" width="4" height="220" fill="#1C1C1C"/>
-          <rect x="253" y="140" width="4" height="220" fill="#1C1C1C"/>
-          <rect x="277" y="140" width="4" height="220" fill="#1C1C1C"/>
-          <rect x="287" y="140" width="4" height="220" fill="#1C1C1C"/>
-          <rect x="297" y="140" width="4" height="220" fill="#1C1C1C"/>
-          <rect x="307" y="140" width="4" height="220" fill="#1C1C1C"/>
-          <rect x="317" y="140" width="4" height="220" fill="#1C1C1C"/>
-          <!-- name plate -->
-          <rect x="220" y="220" width="100" height="40" fill="#1A1A1A"/>
-          <rect x="225" y="224" width="90" height="32" fill="#111"/>
-          <!-- blood drip -->
-          <rect x="256" y="220" width="4" height="30" fill="#FF4444" opacity=".6"/>
-          <rect x="270" y="220" width="4" height="20" fill="#FF4444" opacity=".4"/>
-          <!-- ground -->
-          <rect x="0" y="380" width="540" height="120" fill="#0C0C0C"/>
-          <rect x="0" y="376" width="540" height="6" fill="#141414"/>
-          <!-- blood pool -->
-          <rect x="200" y="378" width="140" height="6" fill="#FF4444" opacity=".3"/>
-          <!-- stars -->
-          <rect x="30" y="20" width="2" height="2" fill="#fff" opacity=".3"/>
-          <rect x="80" y="40" width="2" height="2" fill="#fff" opacity=".2"/>
-          <rect x="420" y="15" width="2" height="2" fill="#fff" opacity=".35"/>
-          <rect x="500" y="50" width="2" height="2" fill="#fff" opacity=".25"/>
-          <rect x="150" y="35" width="2" height="2" fill="#fff" opacity=".2"/>
-          <!-- school text accent -->
-          <rect x="228" y="228" width="6" height="2" fill="#FF4444" opacity=".5"/>
-          <rect x="240" y="228" width="6" height="2" fill="#FF4444" opacity=".5"/>
-          <rect x="252" y="228" width="6" height="2" fill="#FF4444" opacity=".5"/>
-        </svg>
-      </div>
-
-      <!-- LOC 1: ? -->
-      <div class="loc-art" id="loc-art-1">
-        <svg width="100%" height="100%" viewBox="0 0 540 500" preserveAspectRatio="xMidYMid slice" style="image-rendering:pixelated;">
-          <rect width="540" height="500" fill="#080808"/>
-          <!-- ground / court -->
-          <rect x="0" y="300" width="540" height="200" fill="#0E0E0E"/>
-          <rect x="0" y="296" width="540" height="6" fill="#161616"/>
-          <!-- court markings -->
-          <rect x="100" y="300" width="2" height="180" fill="#1A1A1A"/>
-          <rect x="440" y="300" width="2" height="180" fill="#1A1A1A"/>
-          <rect x="100" y="380" width="340" height="2" fill="#1A1A1A"/>
-          <rect x="260" y="300" width="2" height="180" fill="#1A1A1A"/>
-          <!-- circle -->
-          <rect x="240" y="378" width="20" height="4" fill="#1A1A1A"/>
-          <rect x="256" y="374" width="4" height="4" fill="#1A1A1A"/>
-          <rect x="280" y="374" width="4" height="4" fill="#1A1A1A"/>
-          <!-- goal posts -->
-          <rect x="110" y="240" width="6" height="70" fill="#1E1E1E"/>
-          <rect x="70" y="240" width="50" height="6" fill="#1E1E1E"/>
-          <rect x="70" y="240" width="6" height="60" fill="#1E1E1E"/>
-          <rect x="424" y="240" width="6" height="70" fill="#1E1E1E"/>
-          <rect x="424" y="240" width="50" height="6" fill="#1E1E1E"/>
-          <rect x="468" y="240" width="6" height="60" fill="#1E1E1E"/>
-          <!-- school building back -->
-          <rect x="60" y="100" width="420" height="200" fill="#121212"/>
-          <rect x="60" y="96" width="420" height="6" fill="#1A1A1A"/>
-          <!-- windows -->
-          <rect x="80" y="115" width="18" height="14" fill="#1E1E1E"/>
-          <rect x="110" y="115" width="18" height="14" fill="#FF4444" opacity=".3"/>
-          <rect x="140" y="115" width="18" height="14" fill="#1E1E1E"/>
-          <rect x="170" y="115" width="18" height="14" fill="#1E1E1E"/>
-          <rect x="200" y="115" width="18" height="14" fill="#FF4444" opacity=".5"/>
-          <rect x="230" y="115" width="18" height="14" fill="#1E1E1E"/>
-          <rect x="320" y="115" width="18" height="14" fill="#1E1E1E"/>
-          <rect x="350" y="115" width="18" height="14" fill="#FF4444" opacity=".2"/>
-          <rect x="380" y="115" width="18" height="14" fill="#1E1E1E"/>
-          <rect x="410" y="115" width="18" height="14" fill="#1E1E1E"/>
-          <rect x="440" y="115" width="18" height="14" fill="#FF4444" opacity=".6"/>
-          <!-- blood on court -->
-          <rect x="200" y="305" width="40" height="4" fill="#FF4444" opacity=".4"/>
-          <rect x="280" y="310" width="20" height="4" fill="#FF4444" opacity=".3"/>
-          <rect x="150" y="320" width="8" height="8" fill="#FF4444" opacity=".5"/>
-          <!-- stars -->
-          <rect x="40" y="20" width="2" height="2" fill="#fff" opacity=".3"/>
-          <rect x="480" y="30" width="2" height="2" fill="#fff" opacity=".25"/>
-        </svg>
-      </div>
-
-      <!-- LOC 2: 摮豢憭?-->
-      <div class="loc-art" id="loc-art-2">
-        <svg width="100%" height="100%" viewBox="0 0 540 500" preserveAspectRatio="xMidYMid slice" style="image-rendering:pixelated;">
-          <rect width="540" height="500" fill="#060608"/>
-          <!-- sky buildings behind -->
-          <rect x="0" y="150" width="80" height="230" fill="#0E0E10"/>
-          <rect x="20" y="120" width="40" height="30" fill="#0E0E10"/>
-          <rect x="460" y="130" width="80" height="250" fill="#0E0E10"/>
-          <rect x="470" y="100" width="50" height="32" fill="#0E0E10"/>
-          <!-- city lights in back buildings -->
-          <rect x="28" y="135" width="6" height="5" fill="#FFB742" opacity=".25"/>
-          <rect x="40" y="145" width="6" height="5" fill="#FFB742" opacity=".2"/>
-          <rect x="475" y="120" width="6" height="5" fill="#FFB742" opacity=".3"/>
-          <rect x="492" y="140" width="6" height="5" fill="#FFB742" opacity=".2"/>
-          <!-- main school exterior wall -->
-          <rect x="80" y="140" width="380" height="250" fill="#141416"/>
-          <rect x="80" y="136" width="380" height="6" fill="#1C1C1E"/>
-          <!-- windows large -->
-          <rect x="100" y="160" width="50" height="60" fill="#0D0D0D"/>
-          <rect x="164" y="160" width="50" height="60" fill="#FF4444" opacity=".15"/>
-          <rect x="228" y="160" width="50" height="60" fill="#0D0D0D"/>
-          <rect x="292" y="160" width="50" height="60" fill="#FF4444" opacity=".35"/>
-          <rect x="356" y="160" width="50" height="60" fill="#0D0D0D"/>
-          <!-- window row 2 -->
-          <rect x="100" y="240" width="50" height="60" fill="#FF4444" opacity=".08"/>
-          <rect x="164" y="240" width="50" height="60" fill="#0D0D0D"/>
-          <rect x="228" y="240" width="50" height="60" fill="#0D0D0D"/>
-          <rect x="292" y="240" width="50" height="60" fill="#FF4444" opacity=".2"/>
-          <rect x="356" y="240" width="50" height="60" fill="#0D0D0D"/>
-          <!-- main door -->
-          <rect x="226" y="310" width="88" height="80" fill="#0A0A0A"/>
-          <rect x="234" y="318" width="34" height="70" fill="#0D0D0D"/>
-          <rect x="272" y="318" width="34" height="70" fill="#0D0D0D"/>
-          <!-- sidewalk -->
-          <rect x="0" y="388" width="540" height="112" fill="#0C0C0C"/>
-          <rect x="0" y="384" width="540" height="6" fill="#141414"/>
-          <!-- blood trail leading in -->
-          <rect x="230" y="386" width="80" height="4" fill="#FF4444" opacity=".4"/>
-          <rect x="240" y="382" width="60" height="6" fill="#FF4444" opacity=".25"/>
-          <rect x="252" y="370" width="36" height="14" fill="#FF4444" opacity=".15"/>
-          <!-- moon -->
-          <rect x="480" y="30" width="14" height="14" fill="#C0C8CA" opacity=".6"/>
-          <rect x="484" y="30" width="4" height="4" fill="#060608" opacity=".6"/>
-          <!-- stars -->
-          <rect x="60" y="20" width="2" height="2" fill="#fff" opacity=".3"/>
-          <rect x="200" y="35" width="2" height="2" fill="#fff" opacity=".2"/>
-          <rect x="350" y="18" width="2" height="2" fill="#fff" opacity=".35"/>
-        </svg>
-      </div>
-
-      <!-- LOC 3: 摮貊??摰?-->
-      <div class="loc-art" id="loc-art-3">
-        <svg width="100%" height="100%" viewBox="0 0 540 500" preserveAspectRatio="xMidYMid slice" style="image-rendering:pixelated;">
-          <rect width="540" height="500" fill="#0A0A08"/>
-          <!-- room walls floor -->
-          <rect x="60" y="80" width="420" height="320" fill="#141412"/>
-          <!-- floor -->
-          <rect x="60" y="360" width="420" height="40" fill="#111110"/>
-          <!-- floor tiles -->
-          <rect x="60" y="360" width="420" height="1" fill="#1A1A18"/>
-          <rect x="60" y="370" width="420" height="1" fill="#1A1A18"/>
-          <rect x="60" y="380" width="420" height="1" fill="#1A1A18"/>
-          <rect x="120" y="360" width="1" height="40" fill="#1A1A18"/>
-          <rect x="180" y="360" width="1" height="40" fill="#1A1A18"/>
-          <rect x="240" y="360" width="1" height="40" fill="#1A1A18"/>
-          <rect x="300" y="360" width="1" height="40" fill="#1A1A18"/>
-          <rect x="360" y="360" width="1" height="40" fill="#1A1A18"/>
-          <rect x="420" y="360" width="1" height="40" fill="#1A1A18"/>
-          <!-- big desk -->
-          <rect x="160" y="260" width="220" height="80" fill="#1C1C1A"/>
-          <rect x="160" y="256" width="220" height="6" fill="#242420"/>
-          <!-- desk items: nameplate, papers -->
-          <rect x="200" y="266" width="80" height="16" fill="#111"/>
-          <rect x="204" y="268" width="72" height="12" fill="#191917"/>
-          <rect x="350" y="264" width="20" height="30" fill="#111"/>
-          <rect x="352" y="266" width="16" height="26" fill="#161614"/>
-          <rect x="170" y="270" width="24" height="4" fill="#FF4444" opacity=".3"/>
-          <rect x="170" y="276" width="16" height="4" fill="#FF4444" opacity=".2"/>
-          <!-- president chair -->
-          <rect x="236" y="180" width="68" height="90" fill="#1A1A18"/>
-          <rect x="236" y="176" width="68" height="8" fill="#222220"/>
-          <rect x="240" y="190" width="60" height="60" fill="#161614"/>
-          <!-- bookshelf left -->
-          <rect x="70" y="90" width="60" height="270" fill="#171714"/>
-          <rect x="74" y="96" width="52" height="18" fill="#111"/>
-          <rect x="74" y="120" width="52" height="18" fill="#111"/>
-          <rect x="74" y="144" width="52" height="18" fill="#111"/>
-          <rect x="74" y="168" width="52" height="18" fill="#FF4444" opacity=".2"/>
-          <rect x="74" y="192" width="52" height="18" fill="#111"/>
-          <rect x="74" y="216" width="52" height="18" fill="#111"/>
-          <rect x="74" y="240" width="52" height="18" fill="#FF4444" opacity=".15"/>
-          <!-- notice board -->
-          <rect x="350" y="90" width="110" height="150" fill="#1A1814"/>
-          <rect x="355" y="95" width="100" height="140" fill="#141210"/>
-          <!-- notices with red -->
-          <rect x="360" y="100" width="40" height="28" fill="#111"/>
-          <rect x="360" y="102" width="40" height="2" fill="#FF4444" opacity=".5"/>
-          <rect x="406" y="100" width="40" height="28" fill="#111"/>
-          <rect x="360" y="136" width="40" height="28" fill="#111"/>
-          <rect x="406" y="136" width="40" height="28" fill="#111"/>
-          <rect x="406" y="138" width="40" height="2" fill="#FF4444" opacity=".4"/>
-          <rect x="360" y="172" width="86" height="14" fill="#FF4444" opacity=".15"/>
-          <!-- blood on desk -->
-          <rect x="260" y="256" width="30" height="4" fill="#FF4444" opacity=".5"/>
-          <rect x="270" y="252" width="10" height="6" fill="#FF4444" opacity=".35"/>
-        </svg>
-      </div>
-
-      <!-- LOC 4: 蟡?蝷?-->
-      <div class="loc-art" id="loc-art-4">
-        <svg width="100%" height="100%" viewBox="0 0 540 500" preserveAspectRatio="xMidYMid slice" style="image-rendering:pixelated;">
-          <rect width="540" height="500" fill="#080808"/>
-          <!-- dark room -->
-          <rect x="40" y="60" width="460" height="360" fill="#0D0D0D"/>
-          <!-- occult circle on floor -->
-          <rect x="0" y="380" width="540" height="120" fill="#0C0C0C"/>
-          <rect x="195" y="350" width="150" height="2" fill="#FF4444" opacity=".4"/>
-          <rect x="265" y="280" width="2" height="72" fill="#FF4444" opacity=".4"/>
-          <rect x="210" y="295" width="100" height="2" fill="#FF4444" opacity=".3"/>
-          <rect x="215" y="320" width="4" height="4" fill="#FF4444" opacity=".6"/>
-          <rect x="315" y="320" width="4" height="4" fill="#FF4444" opacity=".6"/>
-          <rect x="265" y="280" width="4" height="4" fill="#FF4444" opacity=".7"/>
-          <rect x="240" y="336" width="4" height="4" fill="#FF4444" opacity=".5"/>
-          <rect x="290" y="336" width="4" height="4" fill="#FF4444" opacity=".5"/>
-          <!-- altar table -->
-          <rect x="190" y="220" width="160" height="60" fill="#141414"/>
-          <rect x="190" y="216" width="160" height="6" fill="#1C1C1C"/>
-          <!-- candles -->
-          <rect x="205" y="190" width="8" height="30" fill="#1E1E1E"/>
-          <rect x="207" y="186" width="4" height="6" fill="#FFB742" opacity=".8"/>
-          <rect x="206" y="182" width="6" height="6" fill="#FFB742" opacity=".3"/>
-          <rect x="345" y="190" width="8" height="30" fill="#1E1E1E"/>
-          <rect x="347" y="186" width="4" height="6" fill="#FFB742" opacity=".8"/>
-          <rect x="346" y="182" width="6" height="6" fill="#FFB742" opacity=".3"/>
-          <rect x="265" y="185" width="8" height="35" fill="#1E1E1E"/>
-          <rect x="267" y="181" width="4" height="6" fill="#FFB742" opacity=".9"/>
-          <rect x="266" y="177" width="6" height="6" fill="#FFB742" opacity=".4"/>
-          <!-- book on altar -->
-          <rect x="242" y="222" width="56" height="40" fill="#111"/>
-          <rect x="248" y="226" width="44" height="32" fill="#0D0D0D"/>
-          <rect x="250" y="230" width="40" height="2" fill="#FF4444" opacity=".4"/>
-          <rect x="250" y="236" width="40" height="2" fill="#FF4444" opacity=".3"/>
-          <rect x="250" y="242" width="30" height="2" fill="#FF4444" opacity=".25"/>
-          <!-- pentagrams on wall -->
-          <rect x="80" y="100" width="60" height="60" fill="#111"/>
-          <rect x="100" y="120" width="20" height="2" fill="#FF4444" opacity=".5"/>
-          <rect x="105" y="108" width="10" height="24" fill="#FF4444" opacity=".4"/>
-          <rect x="88" y="118" width="24" height="10" fill="#FF4444" opacity=".35"/>
-          <rect x="400" y="100" width="60" height="60" fill="#111"/>
-          <rect x="420" y="120" width="20" height="2" fill="#FF4444" opacity=".5"/>
-          <rect x="425" y="108" width="10" height="24" fill="#FF4444" opacity=".4"/>
-          <rect x="408" y="118" width="24" height="10" fill="#FF4444" opacity=".35"/>
-          <!-- ambient candle light -->
-          <rect x="0" y="0" width="540" height="500" fill="#FF4444" opacity=".015"/>
-        </svg>
-      </div>
-
-      <!-- LOC 5: F5韏啣? -->
-      <div class="loc-art" id="loc-art-5">
-        <svg width="100%" height="100%" viewBox="0 0 540 500" preserveAspectRatio="xMidYMid slice" style="image-rendering:pixelated;">
-          <rect width="540" height="500" fill="#070707"/>
-          <!-- corridor perspective -->
-          <!-- floor -->
-          <rect x="0" y="350" width="540" height="150" fill="#0C0C0C"/>
-          <rect x="0" y="346" width="540" height="6" fill="#141414"/>
-          <!-- floor tiles perspective -->
-          <rect x="0" y="360" width="540" height="1" fill="#141414"/>
-          <rect x="0" y="380" width="540" height="1" fill="#141414"/>
-          <rect x="0" y="400" width="540" height="1" fill="#141414"/>
-          <rect x="0" y="420" width="540" height="1" fill="#141414"/>
-          <rect x="0" y="440" width="540" height="1" fill="#141414"/>
-          <!-- perspective lines -->
-          <rect x="80" y="350" width="1" height="150" fill="#141414"/>
-          <rect x="160" y="350" width="1" height="150" fill="#141414"/>
-          <rect x="270" y="350" width="1" height="150" fill="#141414"/>
-          <rect x="380" y="350" width="1" height="150" fill="#141414"/>
-          <rect x="460" y="350" width="1" height="150" fill="#141414"/>
-          <!-- ceiling -->
-          <rect x="0" y="0" width="540" height="100" fill="#0C0C0C"/>
-          <rect x="0" y="98" width="540" height="4" fill="#141414"/>
-          <!-- ceiling lights (flickering feel) -->
-          <rect x="120" y="40" width="40" height="8" fill="#1A1A14"/>
-          <rect x="123" y="42" width="34" height="4" fill="#FFB742" opacity=".25"/>
-          <rect x="280" y="40" width="40" height="8" fill="#1A1A14"/>
-          <rect x="283" y="42" width="34" height="4" fill="#FFB742" opacity=".15"/><!-- dim/broken -->
-          <rect x="440" y="40" width="40" height="8" fill="#1A1A14"/>
-          <rect x="443" y="42" width="34" height="4" fill="#FFB742" opacity=".3"/>
-          <!-- lockers left -->
-          <rect x="0" y="100" width="70" height="250" fill="#141414"/>
-          <rect x="4" y="105" width="62" height="50" fill="#111"/>
-          <rect x="4" y="160" width="62" height="50" fill="#111"/>
-          <rect x="4" y="215" width="62" height="50" fill="#111"/>
-          <rect x="4" y="270" width="62" height="50" fill="#111"/>
-          <rect x="30" y="128" width="6" height="6" fill="#1A1A1A"/>
-          <rect x="30" y="183" width="6" height="6" fill="#1A1A1A"/>
-          <rect x="30" y="238" width="6" height="6" fill="#1A1A1A"/>
-          <!-- locker blood -->
-          <rect x="4" y="155" width="62" height="6" fill="#FF4444" opacity=".2"/>
-          <rect x="24" y="105" width="4" height="50" fill="#FF4444" opacity=".15"/>
-          <!-- lockers right -->
-          <rect x="470" y="100" width="70" height="250" fill="#141414"/>
-          <rect x="474" y="105" width="62" height="50" fill="#111"/>
-          <rect x="474" y="160" width="62" height="50" fill="#111"/>
-          <rect x="474" y="215" width="62" height="50" fill="#111"/>
-          <rect x="474" y="270" width="62" height="50" fill="#111"/>
-          <rect x="500" y="128" width="6" height="6" fill="#1A1A1A"/>
-          <!-- corridor end door -->
-          <rect x="220" y="150" width="100" height="200" fill="#0D0D0D"/>
-          <rect x="228" y="158" width="40" height="184" fill="#0A0A0A"/>
-          <rect x="272" y="158" width="40" height="184" fill="#0A0A0A"/>
-          <rect x="265" y="240" width="8" height="8" fill="#141414"/>
-          <!-- blood trail on floor -->
-          <rect x="240" y="348" width="60" height="6" fill="#FF4444" opacity=".5"/>
-          <rect x="250" y="340" width="40" height="10" fill="#FF4444" opacity=".35"/>
-          <rect x="255" y="325" width="30" height="18" fill="#FF4444" opacity=".2"/>
-          <rect x="260" y="300" width="20" height="28" fill="#FF4444" opacity=".12"/>
-          <!-- handprint on locker -->
-          <rect x="10" y="130" width="14" height="18" fill="#FF4444" opacity=".3"/>
-          <rect x="12" y="128" width="2" height="4" fill="#FF4444" opacity=".3"/>
-          <rect x="16" y="127" width="2" height="4" fill="#FF4444" opacity=".3"/>
-          <rect x="20" y="128" width="2" height="4" fill="#FF4444" opacity=".3"/>
-        </svg>
-      </div>
 
       <div class="env-caption" id="env-caption">
-        <div class="env-cap-name" id="env-cap-name">摮豢憭折? ??School Gate</div>
+        <div class="env-cap-name" id="env-cap-name">學校大門 — School Gate</div>
         <div class="env-cap-sub" id="env-cap-sub">The sealed entrance. No one leaves.</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ?? CHARACTER POPUP ?? -->
+<!-- ══ CHARACTER POPUP ══ -->
 <div class="dw" id="char-popup">
   <div class="dw-bar" id="char-drag">
     <span class="dw-title">character_select.exe</span>
     <div class="dw-controls">
-      <div class="dw-btn" onclick="closeChar()">?</div>
-      <div class="dw-btn" onclick="closeChar()">??/div>
+      <div class="dw-btn" onclick="closeChar()">─</div>
+      <div class="dw-btn" onclick="closeChar()">✕</div>
     </div>
   </div>
   <div class="char-inner">
     <!-- icon grid -->
     <div class="char-grid-wrap">
-      <div class="char-grid-label">SELECT SURVIVOR ??13 / 13</div>
+      <div class="char-grid-label">SELECT SURVIVOR — 13 / 13</div>
       <div class="char-grid" id="char-grid">
         <!-- 13 chars -->
-        <div class="char-icon active" onclick="selectChar(0,this)"><div class="char-icon-inner">璇?span class="char-icon-num">01</span></div></div>
-        <div class="char-icon" onclick="selectChar(1,this)"><div class="char-icon-inner">瘚?span class="char-icon-num">02</span></div></div>
-        <div class="char-icon" onclick="selectChar(2,this)"><div class="char-icon-inner">??span class="char-icon-num">03</span></div></div>
-        <div class="char-icon" onclick="selectChar(3,this)"><div class="char-icon-inner">??span class="char-icon-num">04</span></div></div>
-        <div class="char-icon" onclick="selectChar(4,this)"><div class="char-icon-inner">暺?span class="char-icon-num">05</span></div></div>
-        <div class="char-icon" onclick="selectChar(5,this)"><div class="char-icon-inner">敶?span class="char-icon-num">06</span></div></div>
-        <div class="char-icon" onclick="selectChar(6,this)"><div class="char-icon-inner">曈?span class="char-icon-num">07</span></div></div>
-        <div class="char-icon" onclick="selectChar(7,this)"><div class="char-icon-inner">??span class="char-icon-num">08</span></div></div>
-        <div class="char-icon" onclick="selectChar(8,this)"><div class="char-icon-inner">撘?span class="char-icon-num">09</span></div></div>
-        <div class="char-icon" onclick="selectChar(9,this)"><div class="char-icon-inner">??span class="char-icon-num">10</span></div></div>
-        <div class="char-icon" onclick="selectChar(10,this)"><div class="char-icon-inner">??span class="char-icon-num">11</span></div></div>
-        <div class="char-icon" onclick="selectChar(11,this)"><div class="char-icon-inner">蝢?span class="char-icon-num">12</span></div></div>
-        <div class="char-icon" onclick="selectChar(12,this)"><div class="char-icon-inner">蝯?span class="char-icon-num">13</span></div></div>
+        <div class="char-icon active" onclick="selectChar(0,this)"><div class="char-icon-inner">梅<span class="char-icon-num">01</span></div></div>
+        <div class="char-icon" onclick="selectChar(1,this)"><div class="char-icon-inner">海<span class="char-icon-num">02</span></div></div>
+        <div class="char-icon" onclick="selectChar(2,this)"><div class="char-icon-inner">晴<span class="char-icon-num">03</span></div></div>
+        <div class="char-icon" onclick="selectChar(3,this)"><div class="char-icon-inner">凜<span class="char-icon-num">04</span></div></div>
+        <div class="char-icon" onclick="selectChar(4,this)"><div class="char-icon-inner">黎<span class="char-icon-num">05</span></div></div>
+        <div class="char-icon" onclick="selectChar(5,this)"><div class="char-icon-inner">影<span class="char-icon-num">06</span></div></div>
+        <div class="char-icon" onclick="selectChar(6,this)"><div class="char-icon-inner">鳶<span class="char-icon-num">07</span></div></div>
+        <div class="char-icon" onclick="selectChar(7,this)"><div class="char-icon-inner">珊<span class="char-icon-num">08</span></div></div>
+        <div class="char-icon" onclick="selectChar(8,this)"><div class="char-icon-inner">弦<span class="char-icon-num">09</span></div></div>
+        <div class="char-icon" onclick="selectChar(9,this)"><div class="char-icon-inner">蘭<span class="char-icon-num">10</span></div></div>
+        <div class="char-icon" onclick="selectChar(10,this)"><div class="char-icon-inner">戒<span class="char-icon-num">11</span></div></div>
+        <div class="char-icon" onclick="selectChar(11,this)"><div class="char-icon-inner">羽<span class="char-icon-num">12</span></div></div>
+        <div class="char-icon" onclick="selectChar(12,this)"><div class="char-icon-inner">絶<span class="char-icon-num">13</span></div></div>
       </div>
     </div>
     <!-- display -->
     <div class="char-display">
-      <div class="char-img-area" id="char-img-area">
-        <img class="char-art" id="char-art" alt="Hamartia character art">
-        <div class="char-art-placeholder" id="char-placeholder">
-          <span class="char-art-placeholder-label">UNKNOWN CHARACTER</span>
-          <span class="char-art-placeholder-sub">嚗?嚗?</span>
-        </div>
-      </div>
+      <div class="char-img-area" id="char-img-area">      <img class="char-art" id="char-art-current" src="assets/images/HAMARTIA/character/output/layout-1080x720/eikawa_720x720.png" alt="SURVIVOR #01 art">
+      <div class="char-art-placeholder is-hidden" id="char-placeholder">
+        <span class="char-art-placeholder-label">NO FILE / NO RECORD</span>
+        <span class="char-art-placeholder-sub">The thirteenth survivor has no recoverable art.</span>
+      </div></div>
       <div class="char-info">
         <div class="char-id" id="char-id">SURVIVOR #01</div>
-        <div class="char-name-display" id="char-name">璇?/div>
+        <div class="char-name-display" id="char-name">梅</div>
         <div class="char-role-tag" id="char-role">Class President</div>
         <div class="char-stat-row"><span class="char-stat-key">Status</span><span class="char-stat-val" id="cs-status">Alive</span></div>
         <div class="char-stat-row"><span class="char-stat-key">Location</span><span class="char-stat-val" id="cs-loc">Unknown</span></div>
@@ -1056,21 +768,21 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
   </div>
 </div>
 
-<!-- ?? PLAY DEMO POPUP ?? -->
+<!-- ══ PLAY DEMO POPUP ══ -->
 <div id="demo-popup">
   <div class="demo-bar" id="demo-drag">
-    <span class="demo-title">??Play Demo</span>
-    <button class="demo-x" onclick="document.getElementById('demo-popup').style.display='none'">??/button>
+    <span class="demo-title">▶ Play Demo</span>
+    <button class="demo-x" onclick="document.getElementById('demo-popup').style.display='none'">✕</button>
   </div>
   <div id="demo-inner">
     <div class="demo-body">
-      <img class="demo-icon" src="assets/images/HAMARTIA/hamartia logo.png" alt="Hamartia logo">
+      <div class="demo-icon"><img src="assets/images/HAMARTIA/hamartia logo.png" alt="Hamartia logo"></div>
       <div class="demo-name">HAMARTIA</div>
-      <div class="demo-desc">2D horror survival. Find the initiator. 13 survivors ??only truth saves you.</div>
+      <div class="demo-desc">2D horror survival. Find the initiator. 13 survivors — only truth saves you.</div>
       <div class="demo-tags"><span class="demo-tag">Horror</span><span class="demo-tag">Dialogue</span><span class="demo-tag">RPG</span><span class="demo-tag">2020</span></div>
-      <a href="https://mialyk.itch.io/hamartia" target="_blank" class="demo-cta">PLAY ON ITCH.IO ??/a>
+      <a href="https://mialyk.itch.io/hamartia" target="_blank" class="demo-cta">PLAY ON ITCH.IO ↗</a>
     </div>
-    <div class="demo-foot" onclick="toggleDemo()">??minimise</div>
+    <div class="demo-foot" onclick="toggleDemo()">▲ minimise</div>
   </div>
 </div>
 
@@ -1078,7 +790,7 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
 <div id="whitelist-popup">
   <div class="whitelist-bar">
     <span class="whitelist-title">comment_access.exe</span>
-    <button class="whitelist-close" onclick="closeWhitelistPopup()">??/button>
+    <button class="whitelist-close" onclick="closeWhitelistPopup()">✕</button>
   </div>
   <div class="whitelist-body">
     <div class="whitelist-head">You need to join the whitelist</div>
@@ -1105,7 +817,7 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
 </div>
 
 <script>
-// ?? CURSOR
+// ── CURSOR
 const cursorCanvas=document.getElementById('cursor-canvas');
 const cursorCtx=cursorCanvas.getContext('2d');
 cursorCanvas.width=window.innerWidth; cursorCanvas.height=window.innerHeight;
@@ -1165,7 +877,7 @@ function cursorLoop(){
 }
 cursorLoop();
 
-// ?? FAKE PLAYER UI
+// ── FAKE PLAYER UI
 let playing=true;
 let playerMuted=true;
 const iframe=document.getElementById('video-iframe');
@@ -1208,7 +920,7 @@ function syncVimeoState(){
 if(fakePlayBtn&&fakeProgress){
   fakePlayBtn.onclick=()=>{
     playing=!playing;
-    fakePlayBtn.textContent=playing?'??:'??;
+    fakePlayBtn.textContent=playing?'⏸':'▶';
     syncVimeoState();
   };
   let prog=35;
@@ -1217,7 +929,7 @@ if(fakePlayBtn&&fakeProgress){
 if(fakeVolumeBtn){
   fakeVolumeBtn.onclick=()=>{
     playerMuted=!playerMuted;
-    fakeVolumeBtn.textContent=playerMuted?'??':'??';
+    fakeVolumeBtn.textContent=playerMuted?'🔇':'🔊';
     syncVimeoState();
   };
 }
@@ -1242,7 +954,7 @@ if(viewerNum){
   },1000);
 }
 
-// ?? CHAT INFINITE LOOP (JS-driven, no gap)
+// ── CHAT INFINITE LOOP (JS-driven, no gap)
 let chatLoopStarted=false;
 function initChatLoop(){
   const scroll=document.getElementById('chat-scroll');
@@ -1281,21 +993,21 @@ if(chatCommentTrigger){ ['click','focus','mousedown','touchstart'].forEach(evt=>
 if(chatSendTrigger){ ['click','mousedown','touchstart'].forEach(evt=>chatSendTrigger.addEventListener(evt, openWhitelistPopup)); }
 if(chatFoot){ ['click','mousedown','touchstart'].forEach(evt=>chatFoot.addEventListener(evt, openWhitelistPopup)); }
 
-// ?? REVEAL
+// ── REVEAL
 document.querySelectorAll('.reveal').forEach(el=>{
   new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.07}).observe(el);
 });
 
-// ?? DEMO POPUP DRAG
+// ── DEMO POPUP DRAG
 makeDraggable(document.getElementById('demo-popup'),document.getElementById('demo-drag'));
 let demoMini=false;
 function toggleDemo(){
   demoMini=!demoMini;
   document.querySelector('.demo-body').style.display=demoMini?'none':'block';
-  document.querySelector('.demo-foot').textContent=demoMini?'??restore':'??minimise';
+  document.querySelector('.demo-foot').textContent=demoMini?'▼ restore':'▲ minimise';
 }
 
-// ?? POPUP BACKDROP
+// ── POPUP BACKDROP
 function openPopupBackdrop(){document.getElementById('popup-backdrop').classList.add('active');}
 function closePopupBackdrop(){document.getElementById('popup-backdrop').classList.remove('active');}
 function closeAllPopups(){closeEnv();closeChar();}
@@ -1310,21 +1022,30 @@ function centerWindowPopup(el,minTop=84){
   el.style.transform='none';
 }
 
-// ?? ENV POPUP
+// ── ENV POPUP
 const locations=[
-  {name:'School Gate ??Main Entrance',sub:'The sealed entrance. No one leaves.'},
-  {name:'Playground ??Sports Court',sub:'Where the first body was found.'},
-  {name:'School Exterior ??Outside Wall',sub:'The city beyond the walls. Unreachable.'},
-  {name:'Student Council ??President\'s Office',sub:'Locked from the inside. Bloodstained desk.'},
-  {name:'Mystery Club ??Forbidden Room',sub:'Forbidden rituals. The altar still burns.'},
-  {name:'F5 Corridor ??5th Floor Hall',sub:'The last place she was seen alive.'},
+  {name:'School Gate — Main Entrance',sub:'The sealed entrance. No one leaves.'},
+  {name:'Playground — Sports Court',sub:'Where the first body was found.'},
+  {name:'School Exterior — Outside Wall',sub:'The city beyond the walls. Unreachable.'},
+  {name:'Student Council — President\'s Office',sub:'Locked from the inside. Bloodstained desk.'},
+  {name:'Mystery Club — Forbidden Room',sub:'Forbidden rituals. The altar still burns.'},
+  {name:'F5 Corridor — 5th Floor Hall',sub:'The last place she was seen alive.'},
 ];
+const locationMedia=[
+  'assets/images/HAMARTIA/location/school.jpg',
+  'assets/images/HAMARTIA/location/playround.jpg',
+  'assets/images/HAMARTIA/location/font_door.jpg',
+  'assets/images/HAMARTIA/location/Su.jpg',
+  'assets/images/HAMARTIA/location/tartot.jpg',
+  'assets/images/HAMARTIA/location/corridor.png',
+];
+const envCurrentImg=document.getElementById('env-current-img');
 let currentLoc=0;
 
 function openEnv(){
   const p=document.getElementById('env-popup');
   p.classList.add('open','entering');
-  centerWindowPopup(p,84);
+  positionEnvPopup();
   setTimeout(()=>p.classList.remove('entering'),400);
 }
 function closeEnv(){
@@ -1332,107 +1053,95 @@ function closeEnv(){
   if(!document.getElementById('char-popup').classList.contains('open'))closePopupBackdrop();
 }
 function selectLoc(idx,el){
-  document.querySelectorAll('.loc-item').forEach(i=>i.classList.remove('active'));
-  el.classList.add('active');
-  document.querySelectorAll('.loc-art').forEach(a=>a.classList.remove('active'));
-  document.getElementById('loc-art-'+idx).classList.add('active');
+  const items=document.querySelectorAll('.loc-item');
+  items.forEach(i=>i.classList.remove('active'));
+  const targetEl=el||items[idx];
+  if(targetEl) targetEl.classList.add('active');
   document.getElementById('env-cap-name').textContent=locations[idx].name;
   document.getElementById('env-cap-sub').textContent=locations[idx].sub;
   document.getElementById('env-counter').textContent='0'+(idx+1)+' / 06';
+  if(envCurrentImg){
+    envCurrentImg.src=locationMedia[idx];
+    envCurrentImg.alt=locations[idx].name + ' environment image';
+  }
   currentLoc=idx;
 }
 
 makeDraggable(document.getElementById('env-popup'),document.getElementById('env-drag'));
 
-// ?? CHAR POPUP
+// ── CHAR POPUP
 const characters=[
-  {id:'SURVIVOR #01',name:'璇?,role:'Class President',status:'Alive',loc:'Student Council',sus:'High',desc:'Calm and calculating. She knows more than she lets on. The council room was her domain ??now it\'s a crime scene.'},
-  {id:'SURVIVOR #02',name:'瘚?,role:'Track Captain',status:'Alive',loc:'Playground',sus:'Medium',desc:'Fast on his feet. Claims he saw nothing. His alibi places him on the track ??but the track is covered in blood.'},
-  {id:'SURVIVOR #03',name:'??,role:'Art Club Member',status:'Alive',loc:'Unknown',sus:'Low',desc:'Quiet and withdrawn. Her sketchbook is missing. Some pages were torn out before the chaos began.'},
-  {id:'SURVIVOR #04',name:'??,role:'Mystery Club Lead',status:'Alive',loc:'Mystery Club',sus:'High',desc:'She founded the Mystery Club. The ritual circle in the clubroom is her design. She denies its significance.'},
-  {id:'SURVIVOR #05',name:'暺?,role:'Transfer Student',status:'Alive',loc:'F5 Corridor',sus:'Medium',desc:'Arrived three weeks ago. Nobody knows where she came from. She was the last person seen in F5 corridor.'},
-  {id:'SURVIVOR #06',name:'敶?,role:'Unknown',status:'Alive',loc:'Unknown',sus:'Critical',desc:'No school records. No homeroom. Nobody knows how she got in. She should not be here.'},
-  {id:'SURVIVOR #07',name:'曈?,role:'Drama Club Lead',status:'Alive',loc:'School Gate',sus:'Low',desc:'Theatrical and dramatic. She staged plays about death and guilt. This time the stage is real.'},
-  {id:'SURVIVOR #08',name:'??,role:'School Nurse Aide',status:'Alive',loc:'Infirmary',sus:'Medium',desc:'She has access to every medicine cabinet. The injuries on the victims match pharmaceutical knowledge.'},
-  {id:'SURVIVOR #09',name:'撘?,role:'Music Room Regular',status:'Alive',loc:'Unknown',sus:'Low',desc:'She was playing violin when the explosion happened. Or so she says. The music room was empty.'},
-  {id:'SURVIVOR #10',name:'??,role:'Treasurer',status:'Alive',loc:'Student Council',sus:'Medium',desc:'Found the financial irregularities two weeks before the incident. She told no one. Now she wishes she had.'},
-  {id:'SURVIVOR #11',name:'??,role:'Discipline Committee',status:'Alive',loc:'School Exterior',sus:'Low',desc:'Rule-follower. By-the-book. But someone like that would know exactly how to break every rule undetected.'},
-  {id:'SURVIVOR #12',name:'蝢?,role:'Library Committee',status:'Alive',loc:'Unknown',sus:'Medium',desc:'She spent every lunch in the library reading about cold cases. She\'s been preparing for something.'},
-  {id:'SURVIVOR #13',name:'蝯?,role:'???',status:'Alive',loc:'???',sus:'???',desc:'The thirteenth survivor has no name in any school record. Her presence here defies explanation.'},
+  {id:'SURVIVOR #01',name:'梅',role:'Class President',status:'Alive',loc:'Student Council',sus:'High',desc:'Calm and calculating. She knows more than she lets on. The council room was her domain — now it\'s a crime scene.'},
+  {id:'SURVIVOR #02',name:'海',role:'Track Captain',status:'Alive',loc:'Playground',sus:'Medium',desc:'Fast on his feet. Claims he saw nothing. His alibi places him on the track — but the track is covered in blood.'},
+  {id:'SURVIVOR #03',name:'晴',role:'Art Club Member',status:'Alive',loc:'Unknown',sus:'Low',desc:'Quiet and withdrawn. Her sketchbook is missing. Some pages were torn out before the chaos began.'},
+  {id:'SURVIVOR #04',name:'凜',role:'Mystery Club Lead',status:'Alive',loc:'Mystery Club',sus:'High',desc:'She founded the Mystery Club. The ritual circle in the clubroom is her design. She denies its significance.'},
+  {id:'SURVIVOR #05',name:'黎',role:'Transfer Student',status:'Alive',loc:'F5 Corridor',sus:'Medium',desc:'Arrived three weeks ago. Nobody knows where she came from. She was the last person seen in F5 corridor.'},
+  {id:'SURVIVOR #06',name:'影',role:'Unknown',status:'Alive',loc:'Unknown',sus:'Critical',desc:'No school records. No homeroom. Nobody knows how she got in. She should not be here.'},
+  {id:'SURVIVOR #07',name:'鳶',role:'Drama Club Lead',status:'Alive',loc:'School Gate',sus:'Low',desc:'Theatrical and dramatic. She staged plays about death and guilt. This time the stage is real.'},
+  {id:'SURVIVOR #08',name:'珊',role:'School Nurse Aide',status:'Alive',loc:'Infirmary',sus:'Medium',desc:'She has access to every medicine cabinet. The injuries on the victims match pharmaceutical knowledge.'},
+  {id:'SURVIVOR #09',name:'弦',role:'Music Room Regular',status:'Alive',loc:'Unknown',sus:'Low',desc:'She was playing violin when the explosion happened. Or so she says. The music room was empty.'},
+  {id:'SURVIVOR #10',name:'蘭',role:'Treasurer',status:'Alive',loc:'Student Council',sus:'Medium',desc:'Found the financial irregularities two weeks before the incident. She told no one. Now she wishes she had.'},
+  {id:'SURVIVOR #11',name:'戒',role:'Discipline Committee',status:'Alive',loc:'School Exterior',sus:'Low',desc:'Rule-follower. By-the-book. But someone like that would know exactly how to break every rule undetected.'},
+  {id:'SURVIVOR #12',name:'羽',role:'Library Committee',status:'Alive',loc:'Unknown',sus:'Medium',desc:'She spent every lunch in the library reading about cold cases. She\'s been preparing for something.'},
+  {id:'SURVIVOR #13',name:'絶',role:'???',status:'Alive',loc:'???',sus:'???',desc:'The thirteenth survivor has no name in any school record. Her presence here defies explanation.'},
 ];
-const characterAssets=[
-  {label:'Eikawa',icon:'assets/images/HAMARTIA/character/output/icon-250/eikawa_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/eikawa_720x720.png'},
-  {label:'Funa',icon:'assets/images/HAMARTIA/character/output/icon-250/Funa_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/Funa_720x720.png'},
-  {label:'Hamada',icon:'assets/images/HAMARTIA/character/output/icon-250/hamada_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/hamada_720x720.png'},
-  {label:'Kekame',icon:'assets/images/HAMARTIA/character/output/icon-250/Kekame_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/Kekame_720x720.png'},
-  {label:'Matsue',icon:'assets/images/HAMARTIA/character/output/icon-250/matsue_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/matsue_720x720.png'},
-  {label:'Moriya',icon:'assets/images/HAMARTIA/character/output/icon-250/moriya_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/moriya_720x720.png'},
-  {label:'Reigo',icon:'assets/images/HAMARTIA/character/output/icon-250/Reigo_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/Reigo_720x720.png'},
-  {label:'Sasuga',icon:'assets/images/HAMARTIA/character/output/icon-250/SASUGA_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/SASUGA_720x720.png'},
-  {label:'Takakuwa',icon:'assets/images/HAMARTIA/character/output/icon-250/takakuwa_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/takakuwa_720x720.png'},
-  {label:'Yako',icon:'assets/images/HAMARTIA/character/output/icon-250/YAKO_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/YAKO_720x720.png'},
-  {label:'Yanagawa',icon:'assets/images/HAMARTIA/character/output/icon-250/yanagawa_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/yanagawa_720x720.png'},
-  {label:'Yurika',icon:'assets/images/HAMARTIA/character/output/icon-250/yurika_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/yurika_720x720.png'},
+
+const characterMedia=[
+  {icon:'assets/images/HAMARTIA/character/output/icon-250/eikawa_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/eikawa_720x720.png'},
+  {icon:'assets/images/HAMARTIA/character/output/icon-250/Funa_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/Funa_720x720.png'},
+  {icon:'assets/images/HAMARTIA/character/output/icon-250/hamada_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/hamada_720x720.png'},
+  {icon:'assets/images/HAMARTIA/character/output/icon-250/Kekame_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/Kekame_720x720.png'},
+  {icon:'assets/images/HAMARTIA/character/output/icon-250/matsue_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/matsue_720x720.png'},
+  {icon:'assets/images/HAMARTIA/character/output/icon-250/moriya_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/moriya_720x720.png'},
+  {icon:'assets/images/HAMARTIA/character/output/icon-250/Reigo_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/Reigo_720x720.png'},
+  {icon:'assets/images/HAMARTIA/character/output/icon-250/SASUGA_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/SASUGA_720x720.png'},
+  {icon:'assets/images/HAMARTIA/character/output/icon-250/takakuwa_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/takakuwa_720x720.png'},
+  {icon:'assets/images/HAMARTIA/character/output/icon-250/YAKO_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/YAKO_720x720.png'},
+  {icon:'assets/images/HAMARTIA/character/output/icon-250/yanagawa_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/yanagawa_720x720.png'},
+  {icon:'assets/images/HAMARTIA/character/output/icon-250/yurika_250.png',art:'assets/images/HAMARTIA/character/output/layout-1080x720/yurika_720x720.png'},
+  {icon:'',art:''},
 ];
-const unknownCharacter={label:'嚗?嚗?'};
-
-function renderCharTriggerPreview(activeIndex=0){
-  const triggerPreview=document.getElementById('char-atb-preview');
-  if(!triggerPreview)return;
-
-  const previewItems=[...characterAssets.slice(0,5),unknownCharacter];
-  const activeCharacter=characters[activeIndex]||characters[0];
-  const activeLabel=activeCharacter.displayName||activeCharacter.name;
-  const mainMarkup=activeCharacter.art
-    ? `<img src="${activeCharacter.art}" alt="${activeLabel} full character art">`
-    : `<div class="char-atb-main-placeholder">嚗?嚗?</div>`;
-
-  triggerPreview.innerHTML=`
-    <div class="char-atb-preview-frame">
-      <div class="char-atb-icons">
-        ${previewItems.map((item,idx)=>{
-          const isUnknown=idx===previewItems.length-1;
-          const isActive=isUnknown?activeIndex===12:(activeIndex===idx&&idx<5);
-          const activeClass=isActive?' active':'';
-          return item.icon
-            ? `<div class="char-atb-icon${activeClass}"><img src="${item.icon}" alt="${item.label} icon"></div>`
-            : `<div class="char-atb-icon${activeClass}">嚗?</div>`;
-        }).join('')}
-      </div>
-      <div class="char-atb-main">${mainMarkup}</div>
-    </div>
-  `;
+const charArtCurrent=document.getElementById('char-art-current');
+const charPlaceholder=document.getElementById('char-placeholder');
+function renderCharGrid(){
+  const grid=document.getElementById('char-grid');
+  if(!grid) return;
+  grid.innerHTML=characters.map((c,idx)=>{
+    const media=characterMedia[idx]||{};
+    const num=String(idx+1).padStart(2,'0');
+    const thumb=media.icon
+      ? `<img class="char-icon-thumb" src="${media.icon}" alt="${c.id} icon">`
+      : `<div class="char-icon-fallback">${num}</div>`;
+    return `<div class="char-icon${idx===0?' active':''}" onclick="selectChar(${idx},this)">${thumb}<span class="char-icon-num">${num}</span></div>`;
+  }).join('');
 }
-
-function hydrateCharacterAssets(){
-  const charIcons=document.querySelectorAll('#char-grid .char-icon');
-  charIcons.forEach((iconEl,idx)=>{
-    const asset=characterAssets[idx];
-    if(asset){
-      characters[idx].displayName=asset.label;
-      characters[idx].icon=asset.icon;
-      characters[idx].art=asset.art;
-      iconEl.setAttribute('title',asset.label);
-      iconEl.innerHTML=`<img class="char-icon-img" src="${asset.icon}" alt="${asset.label} icon"><span class="char-icon-badge">${String(idx+1).padStart(2,'0')}</span>`;
-      return;
-    }
-
-    characters[idx].displayName=unknownCharacter.label;
-    characters[idx].name=unknownCharacter.label;
-    characters[idx].role='嚗?嚗?';
-    characters[idx].status='嚗?嚗?';
-    characters[idx].loc='嚗?嚗?';
-    characters[idx].sus='嚗?嚗?';
-    iconEl.innerHTML=`<div class="char-icon-inner">嚗?嚗?<span class="char-icon-num">${String(idx+1).padStart(2,'0')}</span></div>`;
-  });
-
-  renderCharTriggerPreview(0);
+function positionEnvPopup(){
+  const p=document.getElementById('env-popup');
+  if(!p) return;
+  const left=Math.max(24, Math.round((window.innerWidth - p.offsetWidth) / 2));
+  p.style.left=left+'px';
+  p.style.top='84px';
+  p.style.right='auto';
+  p.style.bottom='auto';
+  p.style.transform='none';
+}
+function positionCharPopup(){
+  const p=document.getElementById('char-popup');
+  if(!p) return;
+  const rail=Math.max(24, Math.round((window.innerWidth - 1200) / 2 + 24));
+  const left=Math.max(24, window.innerWidth - rail - p.offsetWidth);
+  const top=Math.max(84, window.innerHeight - p.offsetHeight - 48);
+  p.style.left=left+'px';
+  p.style.top=top+'px';
+  p.style.right='auto';
+  p.style.bottom='auto';
+  p.style.transform='none';
 }
 
 function openChar(){
   const p=document.getElementById('char-popup');
   p.classList.add('open','entering');
-  centerWindowPopup(p,84);
+  positionCharPopup();
   setTimeout(()=>p.classList.remove('entering'),400);
 }
 function closeChar(){
@@ -1440,15 +1149,13 @@ function closeChar(){
   if(!document.getElementById('env-popup').classList.contains('open'))closePopupBackdrop();
 }
 function selectChar(idx,el){
-  document.querySelectorAll('.char-icon').forEach(i=>i.classList.remove('active'));
-  el.classList.add('active');
+  const icons=document.querySelectorAll('.char-icon');
+  icons.forEach(i=>i.classList.remove('active'));
+  const targetEl=el||icons[idx];
+  if(targetEl) targetEl.classList.add('active');
   const c=characters[idx];
-  const displayName=c.displayName||c.name;
-  const charArt=document.getElementById('char-art');
-  const charPlaceholder=document.getElementById('char-placeholder');
-
   document.getElementById('char-id').textContent=c.id;
-  document.getElementById('char-name').textContent=displayName;
+  document.getElementById('char-name').textContent=c.name;
   document.getElementById('char-role').textContent=c.role;
   document.getElementById('cs-status').textContent=c.status;
   document.getElementById('cs-loc').textContent=c.loc;
@@ -1456,28 +1163,26 @@ function selectChar(idx,el){
   sus.textContent=c.sus;
   sus.style.color=c.sus==='High'||c.sus==='Critical'?'var(--accent)':c.sus==='Medium'?'var(--brand)':'var(--grey-m)';
   document.getElementById('char-desc').textContent=c.desc;
-
-  if(c.art){
-    charArt.src=c.art;
-    charArt.alt=`${displayName} full character art`;
-    charArt.classList.add('active');
-    charPlaceholder.style.display='none';
-  }else{
-    charArt.removeAttribute('src');
-    charArt.alt='Hamartia character art';
-    charArt.classList.remove('active');
-    charPlaceholder.style.display='block';
+  const media=characterMedia[idx]||{};
+  if(charArtCurrent){
+    if(media.art){
+      charArtCurrent.src=media.art;
+      charArtCurrent.alt=c.id + ' art';
+      charArtCurrent.classList.remove('is-hidden');
+      if(charPlaceholder) charPlaceholder.classList.add('is-hidden');
+    } else {
+      charArtCurrent.classList.add('is-hidden');
+      if(charPlaceholder) charPlaceholder.classList.remove('is-hidden');
+    }
   }
-
-  renderCharTriggerPreview(idx);
 }
 
 makeDraggable(document.getElementById('char-popup'),document.getElementById('char-drag'));
-hydrateCharacterAssets();
-const initialCharIcon=document.querySelector('#char-grid .char-icon');
-if(initialCharIcon)selectChar(0,initialCharIcon);
+renderCharGrid();
+selectLoc(0, document.querySelector('.loc-item.active'));
+selectChar(0, document.querySelector('#char-grid .char-icon'));
 
-// ?? GENERIC DRAG
+// ── GENERIC DRAG
 function makeDraggable(el,handle){
   let drag=false,ox=0,oy=0;
   handle.addEventListener('mousedown',e=>{
@@ -1495,7 +1200,7 @@ function makeDraggable(el,handle){
   document.addEventListener('mouseup',()=>drag=false);
 }
 
-// ?? BOTTOM AUTO-OPEN
+// ── BOTTOM AUTO-OPEN
 let envOpened=false, charOpened=false;
 let hasUserScrolled=false;
 function launchEnvPopup(){
@@ -1503,7 +1208,7 @@ function launchEnvPopup(){
   envOpened=true;
   const ep=document.getElementById('env-popup');
   ep.classList.add('open','entering');
-  centerWindowPopup(ep,84);
+  positionEnvPopup();
   setTimeout(()=>ep.classList.remove('entering'),400);
 }
 function launchCharPopup(){
@@ -1511,7 +1216,7 @@ function launchCharPopup(){
   charOpened=true;
   const cp=document.getElementById('char-popup');
   cp.classList.add('open','entering');
-  centerWindowPopup(cp,84);
+  positionCharPopup();
   setTimeout(()=>cp.classList.remove('entering'),400);
 }
 function checkBottomAutoOpen(){
@@ -1529,16 +1234,16 @@ window.addEventListener('scroll', ()=>{
 window.addEventListener('resize', ()=>{
   const envPopup=document.getElementById('env-popup');
   const charPopup=document.getElementById('char-popup');
-  if(envPopup.classList.contains('open')) centerWindowPopup(envPopup,84);
-  if(charPopup.classList.contains('open')) centerWindowPopup(charPopup,84);
+  if(envPopup.classList.contains('open')) positionEnvPopup();
+  if(charPopup.classList.contains('open')) positionCharPopup();
   if(hasUserScrolled) checkBottomAutoOpen();
 });
 
-// ?? PASSWORD
+// ── PASSWORD
 const PW='mialyk2024';
 function showPasswordModal(e){e.preventDefault();document.getElementById('pw-input').value='';document.getElementById('pw-error').textContent='';document.getElementById('pw-input').classList.remove('error');document.getElementById('pw-modal').classList.add('active');setTimeout(()=>document.getElementById('pw-input').focus(),100);}
 function closePwModal(){document.getElementById('pw-modal').classList.remove('active');}
-function checkPassword(){const v=document.getElementById('pw-input').value;if(v===PW){closePwModal();window.location.href='lesocial.html';}else{document.getElementById('pw-input').classList.add('error');document.getElementById('pw-error').textContent='??Incorrect password';document.getElementById('pw-input').value='';setTimeout(()=>document.getElementById('pw-input').classList.remove('error'),1500);}}
+function checkPassword(){const v=document.getElementById('pw-input').value;if(v===PW){closePwModal();window.location.href='/lesocial.html';}else{document.getElementById('pw-input').classList.add('error');document.getElementById('pw-error').textContent='✕ Incorrect password';document.getElementById('pw-input').value='';setTimeout(()=>document.getElementById('pw-input').classList.remove('error'),1500);}}
 document.getElementById('pw-modal').addEventListener('click',function(e){if(e.target===this)closePwModal();});
 </script>
 </body>

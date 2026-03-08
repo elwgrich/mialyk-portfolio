@@ -85,11 +85,11 @@ main{padding-top:var(--nav-h);position:relative;z-index:1;}
 .meta-val{font-size:12px;color:var(--black);}
 .hero-btns{display:flex;gap:12px;flex-wrap:wrap;}
 
-/* ?蹓??蹓??蹓??蹓??蹓??蹓??蹓??蹓??蹓??蹓??蹓??蹓??蹓??蹓??蹓??蹓??蹓??蹓??蹓???   TLB GALLERY ??white background, floating
+/* ?頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩???   TLB GALLERY ??white background, floating
    images at varied heights + sizes.
    Scroll drives horizontal pan via rAF lerp.
    Bottom: tick-ruler timeline.
-   ?蹓??蹓??蹓??蹓??蹓??蹓??蹓??蹓??蹓??蹓??蹓??蹓??蹓??蹓??蹓??蹓??蹓??蹓??蹓???*/
+   ?頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩???*/
 
 /* Tall pin gives us the scroll distance */
 .gallery-pin{
@@ -238,7 +238,7 @@ footer{background:var(--white);color:var(--grey-m);padding:32px 40px;display:fle
 <section class="project-hero" id="hero">
   <div class="hero-bar"></div>
   <div>
-    <div class="hero-label">NFT 蝜?Metaverse 蝜?Illustration &amp; 3D</div>
+    <div class="hero-label">NFT ??Metaverse ??Illustration &amp; 3D</div>
     <h1 class="hero-h1">Cheddar<br><span>Verse</span></h1>
     <p class="hero-sub">Designed the complete visual universe for a sold-out NFT project ??characters, 3D blind boxes, and full social media production across Discord, Twitter &amp; Instagram.</p>
     <div class="hero-meta">
@@ -269,7 +269,7 @@ footer{background:var(--white);color:var(--grey-m);padding:32px 40px;display:fle
 </main>
 
 <footer>
-  <div class="foot-copy">蝛?2026 <span>mialyk</span> ??All rights reserved</div>
+  <div class="foot-copy">??2026 <span>mialyk</span> ??All rights reserved</div>
   <div class="foot-soc">
     <a href="https://www.linkedin.com/in/mia-lyk" target="_blank" class="soc-a">
       <svg style="width:16px;height:16px" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
@@ -307,22 +307,22 @@ footer{background:var(--white);color:var(--grey-m);padding:32px 40px;display:fle
    top is 0..1 fraction of available stage height
    ????????????????????????????????????????????????????????????????????? */
 const CARDS = [
-  { img:'', num:'01', cat:'2D 蝜?Character',    label:'Character ??Base',       w:0.14, h:0.62, top:0.08 },
-  { img:'', num:'02', cat:'2D 蝜?Trait',        label:'Streetwear Trait',        w:0.18, h:0.72, top:0.04 },
-  { img:'', num:'03', cat:'2D 蝜?Environment',  label:'Background Trait',        w:0.15, h:0.55, top:0.22 },
-  { img:'', num:'04', cat:'2D 蝜?Trait',        label:'Expression Set',          w:0.20, h:0.65, top:0.06 },
-  { img:'', num:'05', cat:'2D 蝜?Legendary',    label:'The Rat King',            w:0.16, h:0.70, top:0.02 },
-  { img:'', num:'06', cat:'2D 蝜?Accessory',    label:'Accessory Pack',          w:0.13, h:0.50, top:0.30 },
-  { img:'', num:'07', cat:'2D 蝜?Rare Variant', label:'Gold Variant',            w:0.17, h:0.68, top:0.10 },
-  { img:'', num:'08', cat:'3D 蝜?Product',      label:'Blind Box ??Hero',        w:0.22, h:0.58, top:0.16 },
-  { img:'', num:'09', cat:'3D 蝜?Product',      label:'Blind Box ??45蝪?,         w:0.19, h:0.62, top:0.05 },
-  { img:'', num:'10', cat:'3D 蝜?Reveal',       label:'Blind Box ??Open',        w:0.21, h:0.72, top:0.03 },
-  { img:'', num:'11', cat:'3D 蝜?Reveal',       label:'Character in Box',        w:0.18, h:0.66, top:0.18 },
-  { img:'', num:'12', cat:'Social 蝜?Twitter',  label:'Mint Announcement',       w:0.28, h:0.48, top:0.28 },
-  { img:'', num:'13', cat:'Social 蝜?IG',       label:'Instagram Teaser 01',     w:0.16, h:0.60, top:0.08 },
-  { img:'', num:'14', cat:'Social 蝜?IG',       label:'Instagram Teaser 02',     w:0.16, h:0.60, top:0.24 },
-  { img:'', num:'15', cat:'Social 蝜?Discord',  label:'Discord Server Art',      w:0.26, h:0.44, top:0.38 },
-  { img:'', num:'16', cat:'Social 蝜?Twitter',  label:'Twitter Profile Header',  w:0.24, h:0.42, top:0.10 },
+  { img:'', num:'01', cat:'2D ??Character',    label:'Character ??Base',       w:0.14, h:0.62, top:0.08 },
+  { img:'', num:'02', cat:'2D ??Trait',        label:'Streetwear Trait',        w:0.18, h:0.72, top:0.04 },
+  { img:'', num:'03', cat:'2D ??Environment',  label:'Background Trait',        w:0.15, h:0.55, top:0.22 },
+  { img:'', num:'04', cat:'2D ??Trait',        label:'Expression Set',          w:0.20, h:0.65, top:0.06 },
+  { img:'', num:'05', cat:'2D ??Legendary',    label:'The Rat King',            w:0.16, h:0.70, top:0.02 },
+  { img:'', num:'06', cat:'2D ??Accessory',    label:'Accessory Pack',          w:0.13, h:0.50, top:0.30 },
+  { img:'', num:'07', cat:'2D ??Rare Variant', label:'Gold Variant',            w:0.17, h:0.68, top:0.10 },
+  { img:'', num:'08', cat:'3D ??Product',      label:'Blind Box ??Hero',        w:0.22, h:0.58, top:0.16 },
+  { img:'', num:'09', cat:'3D ??Product',      label:'Blind Box ??45??,         w:0.19, h:0.62, top:0.05 },
+  { img:'', num:'10', cat:'3D ??Reveal',       label:'Blind Box ??Open',        w:0.21, h:0.72, top:0.03 },
+  { img:'', num:'11', cat:'3D ??Reveal',       label:'Character in Box',        w:0.18, h:0.66, top:0.18 },
+  { img:'', num:'12', cat:'Social ??Twitter',  label:'Mint Announcement',       w:0.28, h:0.48, top:0.28 },
+  { img:'', num:'13', cat:'Social ??IG',       label:'Instagram Teaser 01',     w:0.16, h:0.60, top:0.08 },
+  { img:'', num:'14', cat:'Social ??IG',       label:'Instagram Teaser 02',     w:0.16, h:0.60, top:0.24 },
+  { img:'', num:'15', cat:'Social ??Discord',  label:'Discord Server Art',      w:0.26, h:0.44, top:0.38 },
+  { img:'', num:'16', cat:'Social ??Twitter',  label:'Twitter Profile Header',  w:0.24, h:0.42, top:0.10 },
 ];
 
 /* Timeline labels ??one per group of ~4 cards */
