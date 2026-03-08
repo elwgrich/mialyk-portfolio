@@ -1410,6 +1410,41 @@ const hudProjectCountEl = document.getElementById('hud-project-count');
 const hudSelectedEl = document.getElementById('hud-selected');
 const hudSelectedMetaEl = document.getElementById('hud-selected-meta');
 const popupArrowIcon = ' <svg class="pxi pxi--sm" style="margin-top:3.4px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" xmlns="http://www.w3.org/2000/svg"><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
+function preloadImage(src) {
+  const img = new Image();
+  img.src = src;
+  return img;
+}
+const whiteMouseSealSprites = {
+  walking: [
+    preloadImage('assets/images/Home/whitemose_walking.png'),
+    preloadImage('assets/images/Home/whitemose_walking2.png')
+  ],
+  blocked: [
+    preloadImage('assets/images/Home/whitemose_beenblock1.png'),
+    preloadImage('assets/images/Home/whitemose_beenblock2.png')
+  ],
+  hit: [
+    preloadImage('assets/images/Home/whitemose_ifhityellowmouse.png'),
+    preloadImage('assets/images/Home/whitemose_ifhityellowmouse2.png')
+  ]
+};
+const userSprites = {
+  walking: [
+    preloadImage('assets/images/Home/user_walking1.png'),
+    preloadImage('assets/images/Home/user_walking2.png')
+  ],
+  candy: [
+    preloadImage('assets/images/Home/user_getcandy.png'),
+    preloadImage('assets/images/Home/user_getcandy2.png')
+  ],
+  caught: [
+    preloadImage('assets/images/Home/user_got catch.png'),
+    preloadImage('assets/images/Home/user_got catch2.png')
+  ]
+};
+const whiteMouseSealSpriteSize = 98;
+const userSpriteSize = 68;
 const ABOUT_POPUP = {
   tag: 'Seal Encounter',
   title: 'About',
@@ -1562,6 +1597,10 @@ let unlockedExp = new Set(); // tracks which popups have been shown
 let popupOpen   = false;
 let beanWatchdog = null; // 5s interval to guarantee bean count
 let selectedExpId = null;
+let userFacingLeft = false;
+let userVisualState = 'walking';
+let userVisualFrame = 0;
+let userVisualUntil = 0;
 const projectNodeEls = new Map();
 
 // Auto-wander AI
@@ -1569,7 +1608,13 @@ let autoTarget  = null;
 let autoTimer   = 0;
 let sealEnemy   = null;
 let sealMoveTimer = 0;
+let sealFacingLeft = false;
+let sealVisualState = 'walking';
+let sealVisualFrame = 0;
+let aboutPopupTimer = null;
+let sealHitFreezeUntil = 0;
 const SEAL_SIZE_CELLS = 2;
+const SEAL_HIT_PADDING_PX = 4;
 
 // Helpers
 function ri(max) { return Math.floor(Math.random() * max); }
@@ -1800,6 +1845,19 @@ function sealOccupies(gx, gy, enemy = sealEnemy) {
     && gy >= enemy.y && gy < enemy.y + SEAL_SIZE_CELLS;
 }
 
+function sealHitsHead(head, paddingPx = SEAL_HIT_PADDING_PX, enemy = sealEnemy) {
+  if (!enemy || !head) return false;
+  const enemyLeft = enemy.x * CELL - paddingPx;
+  const enemyTop = enemy.y * CELL - paddingPx;
+  const enemyRight = enemy.x * CELL + CELL * SEAL_SIZE_CELLS + paddingPx;
+  const enemyBottom = enemy.y * CELL + CELL * SEAL_SIZE_CELLS + paddingPx;
+  const headLeft = head.x * CELL;
+  const headTop = head.y * CELL;
+  const headRight = headLeft + CELL;
+  const headBottom = headTop + CELL;
+  return headRight > enemyLeft && headLeft < enemyRight && headBottom > enemyTop && headTop < enemyBottom;
+}
+
 function safeSpawnSealEnemy() {
   let pos;
   let tries = 0;
@@ -1835,9 +1893,58 @@ function sealCellFree(gx, gy, allowHead) {
   return true;
 }
 
+function setSealVisualState(state, randomize = true, forcedFrame = null) {
+  const frames = whiteMouseSealSprites[state] || whiteMouseSealSprites.walking;
+  sealVisualState = state;
+  if (typeof forcedFrame === 'number' && frames.length > 0) {
+    sealVisualFrame = Math.max(0, Math.min(frames.length - 1, forcedFrame));
+    return;
+  }
+  if (randomize && frames.length > 0) {
+    sealVisualFrame = ri(frames.length);
+  }
+}
+
+function sealBlockedByCandy(gx, gy) {
+  if (gx < 0 || gx + SEAL_SIZE_CELLS > COLS || gy < 0 || gy + SEAL_SIZE_CELLS > ROWS) return false;
+  for (let y = gy; y < gy + SEAL_SIZE_CELLS; y++) {
+    for (let x = gx; x < gx + SEAL_SIZE_CELLS; x++) {
+      if (candies.some(c => c.x === x && c.y === y)) return true;
+    }
+  }
+  return false;
+}
+
+function setUserVisualState(state, randomize = true, forcedFrame = null, holdMs = 0) {
+  const frames = userSprites[state] || userSprites.walking;
+  userVisualState = state;
+  if (typeof forcedFrame === 'number' && frames.length > 0) {
+    userVisualFrame = Math.max(0, Math.min(frames.length - 1, forcedFrame));
+  } else if (randomize && frames.length > 0) {
+    userVisualFrame = ri(frames.length);
+  }
+  userVisualUntil = holdMs > 0 ? performance.now() + holdMs : 0;
+}
+
+function syncUserVisualState() {
+  if (userVisualState !== 'walking' && userVisualUntil && performance.now() >= userVisualUntil) {
+    setUserVisualState('walking', true);
+  }
+}
+
 function spawnSealEnemy() {
   sealEnemy = safeSpawnSealEnemy();
   sealMoveTimer = 0;
+  sealFacingLeft = false;
+  setSealVisualState('walking');
+}
+
+function scheduleAboutPopup(delay = 1000) {
+  if (popupOpen || aboutPopupTimer) return;
+  aboutPopupTimer = window.setTimeout(() => {
+    aboutPopupTimer = null;
+    showAboutPopup();
+  }, delay);
 }
 
 function moveSealEnemy() {
@@ -1849,38 +1956,90 @@ function moveSealEnemy() {
   const head = snake[0];
   const dx = head.x - sealEnemy.x;
   const dy = head.y - sealEnemy.y;
-  const candidates = [];
-
-  if (Math.abs(dx) >= Math.abs(dy)) {
-    if (dx !== 0) candidates.push({ x: sealEnemy.x + Math.sign(dx), y: sealEnemy.y });
-    if (dy !== 0) candidates.push({ x: sealEnemy.x, y: sealEnemy.y + Math.sign(dy) });
-  } else {
-    if (dy !== 0) candidates.push({ x: sealEnemy.x, y: sealEnemy.y + Math.sign(dy) });
-    if (dx !== 0) candidates.push({ x: sealEnemy.x + Math.sign(dx), y: sealEnemy.y });
-  }
-
-  [
+  const primaryCandidates = [];
+  const fallbackCandidates = [
     { x: sealEnemy.x + 1, y: sealEnemy.y },
     { x: sealEnemy.x - 1, y: sealEnemy.y },
     { x: sealEnemy.x, y: sealEnemy.y + 1 },
     { x: sealEnemy.x, y: sealEnemy.y - 1 }
-  ].forEach(option => candidates.push(option));
+  ];
 
-  for (const option of candidates) {
+  if (dx < 0) sealFacingLeft = true;
+  if (dx > 0) sealFacingLeft = false;
+
+  if (Math.abs(dx) >= Math.abs(dy)) {
+    if (dx !== 0) primaryCandidates.push({ x: sealEnemy.x + Math.sign(dx), y: sealEnemy.y });
+    if (dy !== 0) primaryCandidates.push({ x: sealEnemy.x, y: sealEnemy.y + Math.sign(dy) });
+  } else {
+    if (dy !== 0) primaryCandidates.push({ x: sealEnemy.x, y: sealEnemy.y + Math.sign(dy) });
+    if (dx !== 0) primaryCandidates.push({ x: sealEnemy.x + Math.sign(dx), y: sealEnemy.y });
+  }
+
+  let moved = false;
+  let candyBlocked = false;
+
+  for (const option of primaryCandidates) {
     const nx = Math.max(0, Math.min(COLS - SEAL_SIZE_CELLS, option.x));
     const ny = Math.max(0, Math.min(ROWS - SEAL_SIZE_CELLS, option.y));
+    if (nx === sealEnemy.x && ny === sealEnemy.y) continue;
     if (sealCellFree(nx, ny, true)) {
       sealEnemy = { x: nx, y: ny };
+      moved = true;
       break;
+    }
+    if (sealBlockedByCandy(nx, ny)) {
+      candyBlocked = true;
     }
   }
 
-  if (sealOccupies(head.x, head.y)) {
-    showAboutPopup();
+  if (!moved && candyBlocked) {
+    setSealVisualState('blocked');
+    if (sealHitsHead(head)) {
+      triggerSealHit();
+    }
+    return;
+  }
+
+  if (!moved) {
+    for (const option of fallbackCandidates) {
+      const nx = Math.max(0, Math.min(COLS - SEAL_SIZE_CELLS, option.x));
+      const ny = Math.max(0, Math.min(ROWS - SEAL_SIZE_CELLS, option.y));
+      if (nx === sealEnemy.x && ny === sealEnemy.y) continue;
+      if (sealCellFree(nx, ny, true)) {
+        sealEnemy = { x: nx, y: ny };
+        moved = true;
+        break;
+      }
+      if (sealBlockedByCandy(nx, ny)) {
+        candyBlocked = true;
+      }
+    }
+  }
+
+  if (moved) {
+    setSealVisualState('walking');
+  } else if (candyBlocked) {
+    setSealVisualState('blocked');
+  }
+
+  if (sealHitsHead(head)) {
+    triggerSealHit();
   }
 }
 
+function triggerSealHit() {
+  setSealVisualState('hit', false, 0);
+  setUserVisualState('caught', true, null, 1200);
+  sealHitFreezeUntil = performance.now() + 1000;
+  scheduleAboutPopup(1000);
+}
+
 function showAboutPopup() {
+  if (aboutPopupTimer) {
+    window.clearTimeout(aboutPopupTimer);
+    aboutPopupTimer = null;
+  }
+  sealHitFreezeUntil = 0;
   if (popupOpen) return;
   spawnSealEnemy();
   showPopup(ABOUT_POPUP);
@@ -1903,6 +2062,18 @@ function initGame() {
   unlockedExp = new Set();
   sealEnemy = null;
   sealMoveTimer = 0;
+  sealFacingLeft = false;
+  sealVisualState = 'walking';
+  sealVisualFrame = 0;
+  if (aboutPopupTimer) {
+    window.clearTimeout(aboutPopupTimer);
+    aboutPopupTimer = null;
+  }
+  sealHitFreezeUntil = 0;
+  userFacingLeft = false;
+  userVisualState = 'walking';
+  userVisualFrame = 0;
+  userVisualUntil = 0;
   selectedExpId = null;
   projectNodeEls.forEach(el => el.remove());
   projectNodeEls.clear();
@@ -2011,6 +2182,11 @@ function checkSnakeInBounds() {
 // Tick
 function tick() {
   if (popupOpen) return;
+  syncUserVisualState();
+  if (sealHitFreezeUntil > performance.now()) {
+    draw();
+    return;
+  }
 
   // Guard: if snake head is out of bounds (e.g. after resize), teleport back to centre
   if (snake.length > 0) {
@@ -2028,6 +2204,8 @@ function tick() {
   }
 
   dir = nextDir;
+  if (dir.x < 0) userFacingLeft = true;
+  if (dir.x > 0) userFacingLeft = false;
   const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
 
   // Wrap (no walls)
@@ -2040,9 +2218,10 @@ function tick() {
   }
 
   snake.unshift(head);
+  if (userVisualState === 'walking') setUserVisualState('walking');
 
-  if (sealOccupies(head.x, head.y)) {
-    showAboutPopup();
+  if (sealHitsHead(head)) {
+    triggerSealHit();
     draw();
     return;
   }
@@ -2053,6 +2232,7 @@ function tick() {
     score += candies[ci].size;
     floatScore('+' + candies[ci].size, head.x, head.y);
     candies.splice(ci, 1);
+    setUserVisualState('candy', true, null, 260);
     maintainCandies(); // refill if below 12%
     updateScore(score);
   } else {
@@ -2340,18 +2520,24 @@ function drawMouse(pos, d) {
   const P = Math.max(2, Math.floor(S / 10));
   const cx = ox + S / 2;
   const cy = oy + S / 2;
-
-  let angle = 0;
-  if (d.x === 1) angle = 0;
-  if (d.x === -1) angle = Math.PI;
-  if (d.y === -1) angle = -Math.PI / 2;
-  if (d.y === 1) angle = Math.PI / 2;
+  const frames = userSprites[userVisualState] || userSprites.walking;
+  const sprite = frames[userVisualFrame % frames.length] || frames[0];
 
   px(cx - P * 4, cy + P * 4, P * 8, P, 'rgba(255,183,66,0.24)');
 
+  if (sprite && sprite.complete && sprite.naturalWidth > 0) {
+    ctx.save();
+    ctx.translate(cx, cy);
+    if (userFacingLeft) ctx.scale(-1, 1);
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(sprite, -userSpriteSize / 2, -userSpriteSize / 2, userSpriteSize, userSpriteSize);
+    ctx.restore();
+    return;
+  }
+
   ctx.save();
   ctx.translate(cx, cy);
-  ctx.rotate(angle);
+  if (userFacingLeft) ctx.scale(-1, 1);
 
   const p = (rx, ry, w, h, col) => {
     px(Math.round(rx - w / 2), Math.round(ry - h / 2), Math.round(w), Math.round(h), col);
@@ -2397,26 +2583,8 @@ function drawMouse(pos, d) {
   ctx.restore();
 }
 // Score floater
-function drawSealEnemy() {
-  if (!sealEnemy) return;
-
-  const ox = sealEnemy.x * CELL;
-  const oy = sealEnemy.y * CELL;
-  const S = CELL * SEAL_SIZE_CELLS;
+function drawSealEnemyFallback(ox, oy, S, flipX) {
   const P = Math.max(2, Math.floor(S / 10));
-  const target = snake[0] || { x: sealEnemy.x - 1, y: sealEnemy.y };
-  const centerX = sealEnemy.x + SEAL_SIZE_CELLS / 2;
-  const centerY = sealEnemy.y + SEAL_SIZE_CELLS / 2;
-  const dx = target.x - centerX;
-  const dy = target.y - centerY;
-
-  let angle = 0;
-  if (Math.abs(dx) >= Math.abs(dy)) {
-    angle = dx >= 0 ? 0 : Math.PI;
-  } else {
-    angle = dy >= 0 ? Math.PI / 2 : -Math.PI / 2;
-  }
-
   const MOUSE_BODY = '#F4F1EA';
   const MOUSE_DARK = GREY_L;
   const MOUSE_EAR = '#E9E3DA';
@@ -2427,7 +2595,7 @@ function drawSealEnemy() {
 
   ctx.save();
   ctx.translate(ox + S / 2, oy + S / 2);
-  ctx.rotate(angle);
+  if (flipX) ctx.scale(-1, 1);
 
   const p = (rx, ry, w, h, col) => {
     px(Math.round(rx - w / 2), Math.round(ry - h / 2), Math.round(w), Math.round(h), col);
@@ -2466,6 +2634,28 @@ function drawSealEnemy() {
   ctx.fillRect(Math.round(P * 1.7), Math.round(-P * 0.3), Math.round(P * 3), 1);
   ctx.fillRect(Math.round(P * 1.7), Math.round(P * 0.8), Math.round(P * 3), 1);
   ctx.restore();
+}
+
+function drawSealEnemy() {
+  if (!sealEnemy) return;
+
+  const ox = sealEnemy.x * CELL;
+  const oy = sealEnemy.y * CELL;
+  const S = CELL * SEAL_SIZE_CELLS;
+  const frames = whiteMouseSealSprites[sealVisualState] || whiteMouseSealSprites.walking;
+  const sprite = frames[sealVisualFrame % frames.length] || frames[0];
+
+  if (sprite && sprite.complete && sprite.naturalWidth > 0) {
+    ctx.save();
+    ctx.translate(ox + S / 2, oy + S / 2);
+    if (sealFacingLeft) ctx.scale(-1, 1);
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(sprite, -whiteMouseSealSpriteSize / 2, -whiteMouseSealSpriteSize / 2, whiteMouseSealSpriteSize, whiteMouseSealSpriteSize);
+    ctx.restore();
+    return;
+  }
+
+  drawSealEnemyFallback(ox, oy, S, sealFacingLeft);
 }
 
 function floatScore(text, col, row) {
