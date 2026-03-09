@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VFX - mialyk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+:root{
+  --white:#FEFEFE;
+  --grey-l:#A8B0B2;
+  --grey-m:#88888C;
+  --black:#181818;
+  --brand:#FFB742;
+  --effect1:#DA6628;
+  --effect2:#F3FF97;
+  --accent:#FF4444;
+  --fs-16:16px;
+  --fs-12:12px;
+  --fs-10:10px;
+  --font-brand:'Press Start 2P',monospace;
+  --font-body:'DM Mono',monospace;
+  --nav-h:60px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;scroll-padding-top:var(--nav-h);scroll-snap-type:y proximity;}
+body{background:var(--white);color:var(--black);font-family:var(--font-body);font-size:var(--fs-12);line-height:1.6;cursor:none;overflow-x:hidden;}
+#cursor-canvas{position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:9999;}
+.click-ripple{position:fixed;border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%) scale(0);animation:rippleOut .5s cubic-bezier(.2,.8,.4,1) forwards;}
+@keyframes rippleOut{0%{transform:translate(-50%,-50%) scale(0);opacity:.7;}100%{transform:translate(-50%,-50%) scale(4);opacity:0;}}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.38;
+  background-image:radial-gradient(circle,rgba(136,136,140,.18) 1px,transparent 1px);
+  background-size:28px 28px;}
+header{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:var(--white);border-bottom:1px solid rgba(24,24,24,.08);display:flex;align-items:center;justify-content:space-between;padding:0 40px;z-index:500;}
+.nav-logo{font-family:var(--font-brand);font-size:var(--fs-16);color:var(--black);text-decoration:none;letter-spacing:.02em;display:flex;align-items:center;gap:6px;line-height:1;}
+.nav-logo .slash{color:var(--brand);}
+.nav-logo sub{font-family:var(--font-body);font-size:var(--fs-12);color:var(--grey-m);letter-spacing:.05em;vertical-align:baseline;margin-left:2px;}
+nav{display:flex;align-items:center;gap:36px;}
+.nav-item{position:relative;}
+.nav-link{font-size:var(--fs-12);color:var(--grey-m);text-decoration:none;letter-spacing:.06em;text-transform:uppercase;position:relative;transition:color .2s;}
+.nav-link::after{content:'';position:absolute;left:0;bottom:-2px;width:0;height:1px;background:var(--brand);transition:width .3s cubic-bezier(.4,0,.2,1);}
+.nav-link:hover,.nav-link.active{color:var(--black);}
+.nav-link:hover::after,.nav-link.active::after{width:100%;}
+.nav-dropdown{position:absolute;top:calc(100% + 16px);left:50%;transform:translateX(-50%) translateY(-8px);background:var(--white);border:1px solid rgba(24,24,24,.1);min-width:180px;padding:8px 0;opacity:0;visibility:hidden;transition:opacity .2s,transform .2s,visibility .2s;box-shadow:0 8px 32px rgba(24,24,24,.08);}
+.nav-item:hover .nav-dropdown{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0);}
+.dropdown-item{display:block;padding:10px 20px;font-size:var(--fs-12);color:var(--grey-m);text-decoration:none;letter-spacing:.04em;white-space:nowrap;transition:background .15s,color .15s;}
+.dropdown-item:hover{background:rgba(255,183,66,.08);color:var(--black);} .dropdown-item--disabled{color:var(--grey-l);pointer-events:none;cursor:default;background:transparent;} .dropdown-item--disabled .dropdown-dot{background:var(--grey-l);opacity:.45;}
+.dropdown-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--brand);margin-right:10px;vertical-align:middle;}
+.dropdown-item.active .dropdown-dot{background:var(--brand);}
+.dropdown-locked{opacity:.6;}
+.dropdown-locked:hover{opacity:1;}
+.pxi{display:inline-block;width:16px;height:16px;vertical-align:middle;flex-shrink:0;fill:currentColor;}
+.pxi--sm{width:14px;height:14px;}
+.pxi--md{width:18px;height:18px;}
+.btn{font-family:var(--font-body);font-size:var(--fs-12);letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--black);background:transparent;color:var(--black);display:inline-flex;align-items:center;justify-content:center;text-decoration:none;white-space:nowrap;line-height:1;appearance:none;transition:background .2s,color .2s,border-color .2s;}
+.btn:hover{background:var(--black);color:var(--white);}
+.btn--sm{font-size:var(--fs-10);padding:0 16px;height:36px;}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:var(--black);}
+.btn.primary:hover{background:var(--effect1);border-color:var(--effect1);color:var(--white);}
+@keyframes popIn{from{opacity:0;transform:scale(.92) translateY(16px);}to{opacity:1;transform:scale(1) translateY(0);}}
+#pw-modal{display:none;position:fixed;inset:0;background:rgba(24,24,24,.5);backdrop-filter:blur(4px);z-index:700;align-items:center;justify-content:center;}
+#pw-modal.active{display:flex;}
+#pw-inner{background:var(--white);border:1px solid rgba(24,24,24,.12);padding:32px;max-width:360px;width:90%;box-shadow:0 24px 80px rgba(24,24,24,.12);animation:popIn .3s cubic-bezier(.34,1.56,.64,1);}
+.pw-title{font-family:var(--font-brand);font-size:var(--fs-12);color:var(--black);margin-bottom:8px;line-height:1.8;}
+.pw-sub{font-size:var(--fs-10);color:var(--grey-m);margin-bottom:24px;letter-spacing:.06em;}
+.pw-input{font-family:var(--font-body);font-size:var(--fs-12);width:100%;padding:12px 16px;border:1px solid rgba(24,24,24,.2);background:var(--white);color:var(--black);outline:none;margin-bottom:8px;transition:border-color .2s;letter-spacing:.1em;}
+.pw-input:focus{border-color:var(--brand);}
+.pw-input.error{border-color:var(--effect1);}
+.pw-error{font-size:var(--fs-10);color:var(--effect1);margin-bottom:16px;min-height:14px;}
+.pw-btns{display:flex;gap:10px;}
+main{position:relative;z-index:1;padding-bottom:24px;}
+.section-pad{padding-left:24px;padding-right:24px;}
+.section-inner{max-width:1200px;margin:0 auto;}
+.hero{margin-top:60px;padding:32px 24px;height:238px;border-bottom:1px solid rgba(24,24,24,.1);background:var(--white);position:relative;overflow:hidden;z-index:1;scroll-snap-align:start;scroll-snap-stop:always;}
+.hero::after{content:'';position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(24,24,24,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(24,24,24,.018) 1px,transparent 1px);background-size:8px 8px;}
+.hero-inner{width:100%;max-width:1200px;margin:0 auto;position:relative;z-index:1;}
+.hero-eyebrow{display:flex;align-items:center;gap:12px;font-size:var(--fs-10);color:var(--brand);letter-spacing:.12em;text-transform:uppercase;margin-bottom:20px;line-height:19px;}
+.hero-eyebrow::before{content:'';width:16px;height:2px;background:var(--brand);display:block;}
+.hero-year{font-family:var(--font-brand);font-size:9px;color:var(--grey-m);border:1px solid rgba(24,24,24,.15);padding:4px 10px;}
+h1{font-family:var(--font-brand);font-size:clamp(26px,4.5vw,50px);line-height:1.35;margin-bottom:32px;color:var(--black);}
+h1 .accent{color:var(--grey-m);}
+.hero-meta{display:flex;gap:48px;flex-wrap:wrap;}
+.meta-item{display:flex;flex-direction:column;gap:4px;padding:0;}
+.meta-label{font-size:var(--fs-10);color:var(--grey-l);text-transform:uppercase;letter-spacing:.1em;line-height:13px;}
+.meta-value{font-size:var(--fs-12);color:var(--black);line-height:16px;}
+.ticker-wrap{padding:0 24px;border-top:1px solid rgba(24,24,24,.1);border-bottom:1px solid rgba(24,24,24,.1);height:32px;overflow:hidden;background:var(--white);position:relative;z-index:1;}
+.ticker-shell{max-width:1200px;height:100%;margin:0 auto;display:flex;align-items:center;}
+.ticker-label{font-family:var(--font-brand);font-size:7px;color:var(--black);background:var(--brand);height:100%;padding:0 14px;display:flex;align-items:center;flex-shrink:0;letter-spacing:.06em;}
+.ticker-track{flex:1;overflow:hidden;}
+.ticker-inner{display:flex;white-space:nowrap;animation:ticker 28s linear infinite;}
+@keyframes ticker{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+.ticker-item{font-size:var(--fs-10);color:var(--grey-m);padding:0 28px;flex-shrink:0;}
+.ticker-item em{color:var(--black);font-style:normal;}
+.ticker-sep{color:var(--brand);}
+.player-section{padding-top:24px;scroll-snap-align:start;scroll-snap-stop:always;}
+.player-shell{border:1px solid rgba(24,24,24,.12);background:var(--white);overflow:hidden;display:flex;flex-direction:column;max-height:640px;transition:border-color .18s ease,box-shadow .18s ease;}
+.player-shell.is-playing{border-color:rgba(255,183,66,.48);box-shadow:0 0 0 1px rgba(255,183,66,.18);}
+.video-stage{position:relative;background:#0C0C0C;aspect-ratio:16/9;min-height:340px;max-height:calc(640px - 98px);overflow:hidden;flex:1 1 auto;}
+.video-stage::after{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.05) 3px,rgba(0,0,0,.05) 4px);}
+.video-embed,.video-embed iframe{display:block;width:100%;height:100%;border:0;}
+.video-embed{position:absolute;inset:0;}
+.ctrl-bar{height:34px;border-top:1px solid rgba(24,24,24,.08);display:flex;align-items:center;padding:0 24px;gap:10px;background:var(--white);}
+.ctrl-btn{font-size:13px;color:var(--grey-m);cursor:none;user-select:none;transition:color .15s ease;border:none;background:none;padding:0;min-width:18px;text-align:center;}
+.ctrl-btn:hover{color:var(--black);}
+.ctrl-btn:disabled{opacity:.35;}
+.ctrl-btn[aria-pressed="true"]{color:var(--black);}
+#play-btn{color:var(--grey-l);}
+#play-btn:hover{color:var(--grey-m);}
+#play-btn[aria-pressed="true"]{color:var(--brand);}
+.progress-bar{flex:1;height:3px;background:rgba(24,24,24,.1);position:relative;cursor:none;}
+.progress-fill{position:absolute;left:0;top:0;bottom:0;background:var(--accent);width:0;}
+.progress-head{position:absolute;top:50%;right:0;transform:translate(50%,-50%);width:7px;height:7px;background:var(--accent);}
+.progress-bar.disabled{opacity:.45;}
+.time-lbl{font-size:var(--fs-10);color:var(--grey-m);white-space:nowrap;transition:color .15s ease;}
+.player-shell.is-playing .time-lbl{color:var(--black);}
+.info-bar{padding:0;border-top:1px solid rgba(24,24,24,.06);background:var(--white);}
+.info-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;}
+.info-tab{border:none;border-right:1px solid rgba(24,24,24,.08);background:var(--white);min-height:64px;padding:12px 16px;display:grid;grid-template-columns:56px 1fr;align-items:center;gap:12px;text-align:left;cursor:none;transition:background .15s,color .15s,border-color .15s;}
+.info-tab:last-child{border-right:none;}
+.info-tab:hover{background:rgba(255,183,66,.05);}
+.info-tab.active{background:rgba(255,183,66,.08);}
+.info-tab-code{font-family:var(--font-brand);font-size:12px;color:var(--black);line-height:1.8;}
+.info-tab-title{font-size:var(--fs-10);color:var(--grey-m);line-height:1.5;}
+.info-tab.active .info-tab-title{color:var(--black);}
+.gif-section{padding-top:0;padding-bottom:40px;}
+.gif-wrap{display:flex;justify-content:center;}
+.gif-trigger{display:inline-flex;align-items:center;justify-content:center;border:none;background:none;padding:0;cursor:none;width:280px;height:210px;overflow:hidden;transform:scale(1);transform-origin:center;transition:transform .18s cubic-bezier(.22,1,.36,1);}
+.gif-trigger:hover,.gif-trigger:focus-visible{transform:scale(1.04);}
+.gif-trigger:active{transform:scale(.985);}
+.watch-gif{display:block;width:280px;height:210px;object-fit:cover;image-rendering:auto;transform:scale(1);transition:transform .18s cubic-bezier(.22,1,.36,1),filter .18s ease;}
+.gif-trigger:hover .watch-gif,.gif-trigger:focus-visible .watch-gif{transform:scale(1.02);}
+footer{background:var(--white);color:var(--grey-m);padding:32px 24px;border-top:1px solid rgba(24,24,24,.1);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;position:relative;z-index:1;}
+.footer-inner{max-width:1200px;width:100%;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.footer-copy{color:var(--grey-m);}
+.footer-copy span{color:var(--brand);}
+.footer-socials{display:flex;align-items:center;gap:20px;}
+.social-link{color:var(--grey-m);transition:color .2s;display:flex;align-items:center;gap:6px;text-decoration:none;}
+.social-link:hover{color:var(--brand);}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+@media (max-width:900px){.hero-meta{gap:24px;}.info-tabs{grid-template-columns:1fr;}.ctrl-bar{flex-wrap:wrap;height:auto;padding:10px 24px;}}
+@media (max-width:768px){header{padding:0 24px;}nav{gap:24px;}.hero{padding-top:28px;padding-bottom:28px;}}
+@media (max-width:560px){header{padding:0 18px;}nav{gap:18px;}.hero-meta{flex-direction:column;gap:16px;}}
+</style>
+</head>
+<body>
+<canvas id="cursor-canvas"></canvas>
+<header>
+  <a href="index.html" class="nav-logo">mialyk<span class="slash">//</span><sub>building something creative</sub></a>
+  <nav>
+    <div class="nav-item">
+      <a href="#" class="nav-link">Projects</a>
+      <div class="nav-dropdown">
+        <a href="https://www.instagram.com/helpurrapp/reels/" target="_blank" rel="noreferrer" class="dropdown-item"><span class="dropdown-dot"></span>Helpurr</a>
+        <a href="#" class="dropdown-item dropdown-locked" onclick="showPasswordModal(event)"><span class="dropdown-dot"></span>Le.social <svg class="pxi pxi--sm" viewBox="0 0 24 24" fill="currentColor"><rect x="8" y="4" width="8" height="2"/><rect x="6" y="6" width="2" height="4"/><rect x="16" y="6" width="2" height="4"/><rect x="4" y="10" width="16" height="2"/><rect x="4" y="10" width="2" height="10"/><rect x="18" y="10" width="2" height="10"/><rect x="4" y="20" width="16" height="2"/><rect x="10" y="14" width="4" height="2"/><rect x="11" y="16" width="2" height="2"/></svg></a>
+        <a href="https://www.ora.io/" target="_blank" rel="noreferrer" class="dropdown-item"><span class="dropdown-dot"></span>ORA</a>
+        <a href="https://www.meedloyalty.com/" target="_blank" rel="noreferrer" class="dropdown-item"><span class="dropdown-dot"></span>Meed</a>
+        <a href="cheddar.html" class="dropdown-item"><span class="dropdown-dot"></span>Cheddar Verse</a>
+        <a href="https://www.artstation.com/mialyk" target="_blank" rel="noreferrer" class="dropdown-item"><span class="dropdown-dot"></span>Illustration</a>
+        <a href="vfx.html" class="dropdown-item active"><span class="dropdown-dot"></span>VFX</a>
+        <a href="hamartia.html" class="dropdown-item"><span class="dropdown-dot"></span>Hamartia <span style="font-size:10px;color:var(--grey-m)">Game</span></a>
+      </div>
+    </div>
+    <a href="about.html" class="nav-link">About</a>
+  </nav>
+</header>
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">University Work <span class="hero-year">2020</span> </div>
+    <h1>V<span class="accent">FX</span></h1>
+    <div class="hero-meta">
+      <div class="meta-item"><span class="meta-label">Type</span><span class="meta-value">Visual Effects / Motion</span></div>
+      <div class="meta-item"><span class="meta-label">Credit</span><span class="meta-value">mialyk</span></div>
+    </div>
+  </div>
+</section>
+<main>
+  <section class="section-pad player-section">
+    <div class="section-inner">
+      <div class="player-shell reveal">
+        <div class="video-stage" id="video-stage">
+          <iframe
+            id="video-iframe"
+            class="video-embed"
+            src="https://player.vimeo.com/video/530879308?autoplay=1&loop=1&muted=1&autopause=0&playsinline=1&dnt=1&controls=0"
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowfullscreen
+            title="VFX player">
+          </iframe>
+        </div>
+        <div class="ctrl-bar">
+          <button class="ctrl-btn" id="prev-btn" type="button" aria-label="Previous">⏮</button>
+          <button class="ctrl-btn" id="play-btn" type="button" aria-label="Play">▶</button>
+          <button class="ctrl-btn" id="next-btn" type="button" aria-label="Next">⏭</button>
+          <div class="progress-bar" id="progress-bar" aria-label="Progress bar"><div class="progress-fill" id="progress-fill"><div class="progress-head" id="progress-head"></div></div></div>
+          <span class="time-lbl" id="time-label">00:00 / 00:00</span>
+          <button class="ctrl-btn" id="volume-btn" type="button" aria-label="Mute">🔇</button>
+        </div>
+        <div class="info-bar">
+          <div class="info-tabs" role="tablist" aria-label="Video tabs">
+            <button class="info-tab active" id="info-tab-0" type="button" data-index="0" role="tab" aria-selected="true">
+              <span class="info-tab-code">01</span>
+              <span class="info-tab-title">VFX-2019</span>
+            </button>
+            <button class="info-tab" id="info-tab-1" type="button" data-index="1" role="tab" aria-selected="false">
+              <span class="info-tab-code">02</span>
+              <span class="info-tab-title">3D modeling-2019</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section-pad gif-section">
+    <div class="section-inner">
+      <div class="gif-wrap">
+        <button class="gif-trigger reveal" id="watch-trigger" type="button" aria-label="Play selected video"><img class="watch-gif" id="watch-gif" src="assets/images/VFX/Watchmovie_1.gif" alt="Watch movie gif"></button>
+      </div>
+    </div>
+  </section>
+</main>
+<div id="pw-modal">
+  <div id="pw-inner">
+    <div class="pw-title"><svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor"><rect x="8" y="4" width="8" height="2"/><rect x="6" y="6" width="2" height="4"/><rect x="16" y="6" width="2" height="4"/><rect x="4" y="10" width="16" height="2"/><rect x="4" y="10" width="2" height="10"/><rect x="18" y="10" width="2" height="10"/><rect x="4" y="20" width="16" height="2"/><rect x="10" y="14" width="4" height="2"/><rect x="11" y="16" width="2" height="2"/></svg> Le.social</div>
+    <div class="pw-sub">This project is password protected.<br>Enter password to view.</div>
+    <input class="pw-input" type="password" id="pw-input" placeholder="Password" autocomplete="current-password">
+    <div class="pw-error" id="pw-error"></div>
+    <div class="pw-btns">
+      <button class="btn btn--sm primary" onclick="checkPassword()">Enter</button>
+      <button class="btn btn--sm" onclick="closePwModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+<footer>
+  <div class="footer-inner">
+    <div class="footer-copy">2026 <span>mialyk</span> // All rights reserved</div>
+    <div class="footer-socials">
+      <a href="https://www.linkedin.com/in/mia-lyk" target="_blank" class="social-link" title="LinkedIn"><svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+      <a href="https://www.instagram.com/mia_lyk" target="_blank" class="social-link" title="Instagram"><svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></a>
+      <a href="https://www.artstation.com/mialyk" target="_blank" class="social-link" title="ArtStation"><svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor"><path d="M0 17.723l2.027 3.505h.001a2.424 2.424 0 0 0 2.164 1.333h13.457l-2.792-4.838H0zm24 .025c0-.484-.143-.935-.388-1.314L15.728 2.728a2.424 2.424 0 0 0-2.164-1.333H9.419L21.598 22.54l1.92-3.325c.378-.637.482-.919.482-1.467zm-11.129-3.462L7.428 4.858l-5.444 9.428h10.887z"/></svg></a>
+      <a href="https://x.com/elwgrich/" target="_blank" class="social-link" title="X"><svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.213 5.567 5.95-5.567zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+    </div>
+  </div>
+</footer>
+<script src="https://player.vimeo.com/api/player.js"></script>
+<script>
+// ── Cursor ──
+const cursorCanvas=document.getElementById('cursor-canvas');
+const cursorCtx=cursorCanvas.getContext('2d');
+function sizeCursor(){cursorCanvas.width=window.innerWidth;cursorCanvas.height=window.innerHeight;}
+sizeCursor();
+let mouseX=-100,mouseY=-100,isHovering=false;
+let bodyX=-100,bodyY=-100,curAngle=0,targetAngle=0,legPhase=0,lastBodyX=-100,lastBodyY=-100;
+let cursorScale=2,targetScale=2,cursorRafId=0,cursorLastEventAt=0;
+const interactiveSelector='a,button,[role="button"],.progress-bar,.info-tab,.gif-trigger';
+function requestCursorFrame(){
+  if(cursorRafId||document.hidden) return;
+  cursorRafId=requestAnimationFrame(cursorLoop);
+}
+function markCursorActive(){cursorLastEventAt=performance.now();requestCursorFrame();}
+document.addEventListener('pointermove',e=>{mouseX=e.clientX;mouseY=e.clientY;isHovering=e.target instanceof Element&&!!e.target.closest(interactiveSelector);markCursorActive();});
+document.addEventListener('pointerleave',()=>{isHovering=false;});
+document.addEventListener('click',e=>{
+  const r=document.createElement('div');r.className='click-ripple';
+  const s=isHovering?32:20;
+  r.style.cssText=`width:${s}px;height:${s}px;left:${e.clientX}px;top:${e.clientY}px;border:2px solid #FFB742;background:rgba(255,183,66,0.15);`;
+  document.body.appendChild(r);setTimeout(()=>r.remove(),520);
+});
+function drawMouseCursor(scale,angle,moving){
+  const B='#FFB742',D='#DA6628',I='#FFD4A8',E='#181818',H='#FFF8E0';
+  function p(x,y,w,h,c){cursorCtx.fillStyle=c;cursorCtx.fillRect(Math.round(x-w/2),Math.round(y-h/2),Math.round(w),Math.round(h));}
+  cursorCtx.save();cursorCtx.rotate(angle);
+  const hS=scale*8,arc=moving?Math.sin(legPhase*1.4)*scale*2.5:scale*2,tb=-hS/2-scale;
+  p(tb-scale,arc*.3,scale*2,scale*2,D);p(tb-scale*4,arc*.9,scale*1.5,scale*1.5,B);p(tb-scale*7,arc*.4,scale,scale,B);
+  const eS=scale*3,eI=scale*2,eX=-scale,eTY=-scale*4.5,eBY=scale*4.5;
+  p(eX,eTY,eS,eS,B);p(eX,eBY,eS,eS,B);p(eX-eS/2,eTY,scale,eS,D);p(eX-eS/2,eBY,scale,eS,D);
+  p(eX+scale*.3,eTY,eI,eI,I);p(eX+scale*.3,eBY,eI,eI,I);
+  p(0,0,hS,hS,B);p(scale*2.5,scale*2.5,scale*5,scale,D);p(scale*2.5,scale*2.5,scale,scale*5,D);
+  p(-scale*2,-scale*2,scale*3,scale,H);p(-scale*2,-scale*2,scale,scale*3,H);
+  p(scale*1.5,-scale*1.8,scale*1.5,scale*1.5,E);p(scale*1.5,scale*1.8,scale*1.5,scale*1.5,E);
+  p(scale*1.8,-scale*2.1,scale,scale,H);p(scale*1.8,scale*1.5,scale,scale,H);
+  p(scale*3.5,0,scale*1.5,scale*1.5,D);
+  cursorCtx.fillStyle='rgba(136,136,140,0.6)';
+  cursorCtx.fillRect(Math.round(scale*3.2-scale*1.5),Math.round(-scale*.3),Math.round(scale*3),1);
+  cursorCtx.fillRect(Math.round(scale*3.2-scale*1.5),Math.round(scale*.8),Math.round(scale*3),1);
+  cursorCtx.restore();
+}
+function cursorLoop(now){
+  cursorRafId=0;
+  if(document.hidden) return;
+  cursorCtx.clearRect(0,0,cursorCanvas.width,cursorCanvas.height);
+  cursorCtx.imageSmoothingEnabled=false;
+  targetScale=isHovering?2.8:2;cursorScale+=(targetScale-cursorScale)*.18;
+  bodyX+=(mouseX-bodyX)*.22;bodyY+=(mouseY-bodyY)*.22;
+  const vx=bodyX-lastBodyX,vy=bodyY-lastBodyY,sp=Math.sqrt(vx*vx+vy*vy),moving=sp>.4;
+  lastBodyX=bodyX;lastBodyY=bodyY;
+  const dx=mouseX-bodyX,dy=mouseY-bodyY;
+  if(Math.abs(dx)>1||Math.abs(dy)>1) targetAngle=Math.atan2(dy,dx);
+  let da=targetAngle-curAngle;while(da>Math.PI)da-=Math.PI*2;while(da<-Math.PI)da+=Math.PI*2;
+  curAngle+=da*.25;if(moving)legPhase+=.28;
+  cursorCtx.save();cursorCtx.translate(Math.round(bodyX),Math.round(bodyY));drawMouseCursor(cursorScale,curAngle,moving);cursorCtx.restore();
+  const posSettled=Math.abs(mouseX-bodyX)<.2&&Math.abs(mouseY-bodyY)<.2;
+  const scaleSettled=Math.abs(targetScale-cursorScale)<.02;
+  if(!posSettled||!scaleSettled||now-cursorLastEventAt<600) requestCursorFrame();
+}
+requestCursorFrame();
+window.addEventListener('resize',()=>{sizeCursor();requestCursorFrame();});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden) requestCursorFrame();});
+
+// ── Password (SHA-256) ──
+const LE_SOCIAL_HASH='c0f375a41b2ce2a15ef28c4f2028e9a0b2e8f4e3d8a5b6c7d1e2f3a4b5c6d7e8';
+async function hashStr(str){
+  const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+const pwInput=document.getElementById('pw-input');
+const pwError=document.getElementById('pw-error');
+const pwModal=document.getElementById('pw-modal');
+function showPasswordModal(event){
+  event.preventDefault();
+  pwInput.value='';pwError.textContent='';pwInput.classList.remove('error');
+  pwModal.classList.add('active');
+  setTimeout(()=>pwInput.focus(),100);
+}
+function closePwModal(){pwModal.classList.remove('active');}
+async function checkPassword(){
+  const hash=await hashStr(pwInput.value);
+  if(hash===LE_SOCIAL_HASH){closePwModal();window.location.href='lesocial.html';}
+  else{
+    pwInput.classList.add('error');pwError.textContent='Incorrect password';pwInput.value='';
+    setTimeout(()=>pwInput.classList.remove('error'),1500);
+  }
+}
+pwModal.addEventListener('click',e=>{if(e.target===pwModal) closePwModal();});
+pwInput.addEventListener('keydown',e=>{if(e.key==='Enter') checkPassword();});
+
+// ── Player ──
+const items=[
+  {code:'01',title:'VFX-2019',vimeoId:530879308},
+  {code:'02',title:'3D modeling-2019',vimeoId:534043389}
+];
+const iframe=document.getElementById('video-iframe');
+const progressFill=document.getElementById('progress-fill');
+const progressBar=document.getElementById('progress-bar');
+const timeLabel=document.getElementById('time-label');
+const infoTabs=[...document.querySelectorAll('.info-tab')];
+const playBtn=document.getElementById('play-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const volumeBtn=document.getElementById('volume-btn');
+const watchTrigger=document.getElementById('watch-trigger');
+const watchGif=document.getElementById('watch-gif');
+const playerShell=document.querySelector('.player-shell');
+const heroSection=document.querySelector('.hero');
+const playerSection=document.querySelector('.player-section');
+const watchGifSources={idle:'assets/images/VFX/Watchmovie_1.gif',press:'assets/images/VFX/Watchmovie_2.gif',playing:'assets/images/VFX/Watchmovie_3.gif'};
+const NAV_H=60;
+let activeIndex=0,player=null,playerReady=false,isPlaying=false,isMuted=true;
+let currentTime=0,currentDuration=0,heroSnapLock=false,heroSnapDone=false,gifPlaybackTimer=null;
+function formatTime(s){const safe=Math.max(0,Math.floor(s||0));return `${String(Math.floor(safe/60)).padStart(2,'0')}:${String(safe%60).padStart(2,'0')}`;}
+function updateProgress(pct){progressFill.style.width=`${Math.max(0,Math.min(100,pct*100))}%`;}
+function setWatchGif(state,{restart=false}={}){
+  if(!watchGif) return;
+  const src=watchGifSources[state]||watchGifSources.idle;
+  if(restart){watchGif.removeAttribute('src');requestAnimationFrame(()=>watchGif.src=src);return;}
+  if(watchGif.getAttribute('src')!==src) watchGif.src=src;
+}
+function syncWatchGif(){setWatchGif(isPlaying?'playing':'idle');}
+function updateControls(){
+  playBtn.textContent=isPlaying?'⏸':'▶';
+  playBtn.setAttribute('aria-label',isPlaying?'Pause':'Play');
+  playBtn.setAttribute('aria-pressed',isPlaying?'true':'false');
+  volumeBtn.textContent=isMuted?'🔇':'🔊';
+  volumeBtn.setAttribute('aria-label',isMuted?'Unmute':'Mute');
+  if(playerShell){playerShell.classList.toggle('is-playing',isPlaying);playerShell.setAttribute('data-play-state',isPlaying?'playing':'paused');}
+  timeLabel.textContent=`${formatTime(currentTime)} / ${formatTime(currentDuration)}`;
+}
+function syncSelection(idx){
+  infoTabs.forEach((t,i)=>{t.classList.toggle('active',i===idx);t.setAttribute('aria-selected',i===idx?'true':'false');});
+}
+async function loadVideo(index,autoplay=isPlaying){
+  activeIndex=index;syncSelection(index);currentTime=0;currentDuration=0;updateProgress(0);
+  if(playerReady&&player){
+    try{
+      await player.loadVideo(items[index].vimeoId);
+      await player.setLoop(true);await player.setVolume(isMuted?0:1);
+      if(autoplay){await player.play();isPlaying=true;}
+      else{try{await player.pause();}catch(e){}isPlaying=false;}
+    }catch(e){
+      iframe.src=`https://player.vimeo.com/video/${items[index].vimeoId}?autoplay=${autoplay?1:0}&loop=1&muted=${isMuted?1:0}&autopause=0&playsinline=1&dnt=1&controls=0`;
+      isPlaying=autoplay;
+    }
+  }else{
+    iframe.src=`https://player.vimeo.com/video/${items[index].vimeoId}?autoplay=${autoplay?1:0}&loop=1&muted=${isMuted?1:0}&autopause=0&playsinline=1&dnt=1&controls=0`;
+    isPlaying=autoplay;
+  }
+  updateControls();syncWatchGif();
+}
+function stepItem(d){loadVideo((activeIndex+d+items.length)%items.length,isPlaying);}
+async function togglePlayback(){
+  if(!playerReady||!player) return;
+  try{
+    if(isPlaying){await player.pause();isPlaying=false;}
+    else{await player.play();isPlaying=true;}
+    updateControls();syncWatchGif();
+  }catch(e){}
+}
+async function startPlayback(){
+  if(isPlaying){syncWatchGif();return;}
+  setWatchGif('press',{restart:true});
+  if(gifPlaybackTimer) clearTimeout(gifPlaybackTimer);
+  gifPlaybackTimer=setTimeout(async()=>{
+    gifPlaybackTimer=null;
+    if(!playerReady||!player){syncWatchGif();return;}
+    try{await player.play();isPlaying=true;updateControls();syncWatchGif();}catch(e){syncWatchGif();}
+  },9000);
+}
+infoTabs.forEach(t=>t.addEventListener('click',()=>loadVideo(Number(t.dataset.index),isPlaying)));
+prevBtn.addEventListener('click',()=>stepItem(-1));
+nextBtn.addEventListener('click',()=>stepItem(1));
+playBtn.addEventListener('click',togglePlayback);
+volumeBtn.addEventListener('click',async()=>{
+  isMuted=!isMuted;
+  if(playerReady&&player){try{await player.setVolume(isMuted?0:1);}catch(e){}}
+  updateControls();
+});
+if(watchTrigger){
+  watchTrigger.addEventListener('pointerdown',()=>{if(!isPlaying) setWatchGif('press',{restart:true});});
+  watchTrigger.addEventListener('pointerleave',()=>{if(!isPlaying&&!gifPlaybackTimer) syncWatchGif();});
+  watchTrigger.addEventListener('click',startPlayback);
+}
+progressBar.addEventListener('click',async e=>{
+  if(!playerReady||!player||!currentDuration) return;
+  const rect=progressBar.getBoundingClientRect();
+  const ratio=Math.max(0,Math.min(1,(e.clientX-rect.left)/rect.width));
+  try{await player.setCurrentTime(currentDuration*ratio);currentTime=currentDuration*ratio;updateProgress(ratio);updateControls();}catch(e){}
+});
+function initPlayer(){
+  if(!window.Vimeo) return;
+  player=new Vimeo.Player(iframe);
+  player.ready().then(async()=>{
+    playerReady=true;
+    try{await player.setLoop(true);}catch(e){}
+    try{await player.setVolume(0);}catch(e){}
+    // autoplay on ready — muted so browser allows it
+    try{await player.play();isPlaying=true;}catch(e){}
+    updateControls();syncWatchGif();
+  }).catch(()=>{});
+  player.on('timeupdate',d=>{currentTime=d.seconds||0;currentDuration=d.duration||0;updateProgress(d.percent||0);updateControls();});
+  player.on('loaded',d=>{currentTime=0;currentDuration=d.duration||0;updateProgress(0);updateControls();});
+  player.on('play',()=>{isPlaying=true;updateControls();syncWatchGif();});
+  player.on('pause',()=>{isPlaying=false;updateControls();syncWatchGif();});
+}
+function shouldSnapToPlayer(){
+  if(heroSnapLock||heroSnapDone||!heroSection||!playerSection) return false;
+  const heroRect=heroSection.getBoundingClientRect();
+  return window.scrollY>8&&window.scrollY<playerSection.offsetTop-24&&heroRect.top<=NAV_H+8&&heroRect.bottom<=window.innerHeight*.78;
+}
+function smoothSnapToPlayer(){
+  if(heroSnapLock||!playerSection) return;
+  heroSnapLock=true;heroSnapDone=true;
+  playerSection.scrollIntoView({behavior:'smooth',block:'start'});
+  setTimeout(()=>{heroSnapLock=false;},720);
+}
+window.addEventListener('scroll',()=>{
+  if(!heroSection) return;
+  if(heroSection.getBoundingClientRect().top>=NAV_H-4) heroSnapDone=false;
+  if(shouldSnapToPlayer()) smoothSnapToPlayer();
+},{passive:true});
+initPlayer();
+syncSelection(0);updateControls();syncWatchGif();
+const revealObserver=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting) e.target.classList.add('visible');});
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));
+</script>
+</body>
+</html>

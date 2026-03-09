@@ -15,7 +15,7 @@
   --font-body:'DM Mono',monospace;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:auto;}
+html{scroll-behavior:smooth;scroll-snap-type:y proximity;scroll-padding-top:var(--nav-h);}
 body{
   background:var(--white);color:var(--black);
   font-family:var(--font-body);font-size:12px;line-height:1.6;
@@ -26,7 +26,9 @@ body{
 #cursor-canvas{position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:9999;}
 .click-ripple{position:fixed;border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%) scale(0);animation:rippleOut .5s cubic-bezier(.2,.8,.4,1) forwards;}
 @keyframes rippleOut{to{transform:translate(-50%,-50%) scale(4);opacity:0;}}
-#pixel-bg{position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:0;opacity:.35;}
+body::before{content:'';position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:0;opacity:.35;
+  background-image:radial-gradient(circle,rgba(255,191,86,.06) 1px,transparent 1px);
+  background-size:24px 24px;}
 
 /* NAV */
 header{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:var(--white);border-bottom:1px solid rgba(24,24,24,.08);display:flex;align-items:center;justify-content:space-between;padding:0 40px;z-index:500;}
@@ -67,33 +69,41 @@ nav{display:flex;align-items:center;gap:36px;}
 .btn.primary:hover{background:var(--effect1);border-color:var(--effect1);color:var(--white);}
 
 /* PAGE */
-main{padding-top:var(--nav-h);position:relative;z-index:1;}
+main{position:relative;z-index:1;}
 
 /* HERO */
-.project-hero{max-width:1100px;margin:0 auto;padding:80px 40px;display:grid;grid-template-columns:4px 1fr;gap:0 40px;opacity:0;transform:translateY(24px);transition:opacity .6s,transform .6s;}
-.project-hero.vis{opacity:1;transform:none;}
-.hero-bar{background:var(--project);}
-.hero-label{font-size:10px;font-weight:300;color:var(--project);letter-spacing:.18em;text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:10px;}
-.hero-label::before{content:'';display:inline-block;width:24px;height:1px;background:var(--project);}
-.hero-h1{font-family:var(--font-brand);font-size:clamp(20px,2.5vw,24px);color:var(--black);line-height:1.9;margin-bottom:16px;}
-.hero-h1 span{color:var(--project);}
-.hero-sub{font-size:12px;font-weight:300;color:var(--grey-m);line-height:2;max-width:600px;margin-bottom:32px;}
-.hero-meta{display:flex;flex-wrap:wrap;border:1px solid rgba(24,24,24,.1);margin-bottom:36px;width:fit-content;}
-.meta-cell{padding:14px 24px;border-right:1px solid rgba(24,24,24,.1);}
-.meta-cell:last-child{border-right:none;}
-.meta-lbl{font-size:10px;color:var(--grey-l);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px;font-weight:300;}
-.meta-val{font-size:12px;color:var(--black);}
-.hero-btns{display:flex;gap:12px;flex-wrap:wrap;}
+.hero{
+  margin-top:60px;padding:32px 24px;
+  height:238px;
+  border-bottom:1px solid rgba(24,24,24,0.1);
+  background:var(--white);position:relative;overflow:hidden;
+  scroll-snap-align:start;scroll-snap-stop:always;
+}
+.hero::after{content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(24,24,24,0.018) 1px,transparent 1px),linear-gradient(90deg,rgba(24,24,24,0.018) 1px,transparent 1px);
+  background-size:8px 8px;}
+.hero-inner{width:100%;max-width:1200px;margin:0 auto;position:relative;z-index:1;}
+.hero-eyebrow{display:flex;align-items:center;gap:12px;font-size:10px;color:var(--project);letter-spacing:.12em;text-transform:uppercase;margin-bottom:20px;line-height:19px;}
+.hero-eyebrow::before{content:'';width:16px;height:2px;background:var(--project);display:block;}
+.hero-year{font-family:'Press Start 2P',monospace;font-size:9px;color:var(--grey-m);border:1px solid rgba(24,24,24,0.15);padding:4px 10px;}
+h1{font-family:'Press Start 2P',monospace;font-size:clamp(26px,4.5vw,50px);line-height:1.35;margin-bottom:32px;color:var(--black);}
+h1 .accent{color:var(--project);}
+.hero-meta{display:flex;gap:48px;flex-wrap:wrap;}
+.meta-item{display:flex;flex-direction:column;gap:4px;padding:0;}
+.meta-label{font-size:10px;color:var(--grey-l);text-transform:uppercase;letter-spacing:.1em;line-height:13px;}
+.meta-value{font-size:12px;color:var(--black);line-height:16px;}
 
-/* ?頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩???   TLB GALLERY ??white background, floating
+/* ???????????????????????????????????????????????????????????   TLB GALLERY ??white background, floating
    images at varied heights + sizes.
    Scroll drives horizontal pan via rAF lerp.
-   Bottom: tick-ruler timeline.
-   ?頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩??頩???*/
+   Cards carry hover lift, click-to-open, and a soft wave drift.
+   ???????????????????????????????????????????????????????????*/
 
 /* Tall pin gives us the scroll distance */
 .gallery-pin{
   position:relative;
+  scroll-snap-align:start;
+  scroll-snap-stop:always;
   /* height set by JS */
 }
 
@@ -104,6 +114,8 @@ main{padding-top:var(--nav-h);position:relative;z-index:1;}
   height:calc(100vh - var(--nav-h));
   overflow:hidden;
   background:var(--white);
+  perspective:2200px;
+  perspective-origin:50% 44%;
 }
 
 /* The panning stage ??wider than viewport, moves via translateX */
@@ -112,92 +124,137 @@ main{padding-top:var(--nav-h);position:relative;z-index:1;}
   top:0;left:0;
   /* width & height set by JS */
   will-change:transform;
+  transform-style:preserve-3d;
+}
+
+.gallery-ui{
+  position:absolute;
+  top:24px;left:24px;right:24px;
+  display:flex;align-items:flex-start;justify-content:space-between;
+  z-index:8;pointer-events:none;
+}
+.gallery-ui-left,.gallery-ui-right{display:flex;align-items:center;gap:10px;pointer-events:auto;}
+.gallery-ui-left{flex-wrap:wrap;}
+.gallery-filter-btn,.gallery-top-btn{
+  height:38px;padding:0 16px;
+  border:1px solid rgba(24,24,24,.14);
+  background:rgba(254,254,254,.92);
+  color:var(--grey-m);
+  font-family:var(--font-body);font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  cursor:pointer;transition:background .18s,color .18s,border-color .18s;
+  backdrop-filter:blur(12px);
+}
+.gallery-filter-btn:hover,.gallery-top-btn:hover{background:var(--white);color:var(--black);border-color:rgba(24,24,24,.28);}
+.gallery-filter-btn.is-active{background:var(--project);border-color:var(--project);color:var(--black);}
+.gallery-filter-icon,.gallery-top-btn{width:38px;padding:0;}
+.gallery-filter-icon svg,.gallery-top-btn svg{width:14px;height:14px;display:block;}
+.gallery-top-btn:hover{background:var(--black);border-color:var(--black);color:var(--white);}
+
+.asset-modal,.asset-viewer{display:none;position:fixed;inset:0;background:rgba(24,24,24,.42);backdrop-filter:blur(4px);z-index:720;align-items:center;justify-content:center;padding:24px;}
+.asset-modal.active,.asset-viewer.active{display:flex;}
+.asset-shell,.asset-viewer-shell{background:var(--white);border:1px solid rgba(24,24,24,.15);box-shadow:6px 6px 0 rgba(24,24,24,.07);animation:popIn .3s cubic-bezier(.34,1.56,.64,1);overflow:hidden;}
+.asset-shell{width:min(1120px,calc(100vw - 48px));max-height:min(760px,calc(100vh - 48px));display:flex;flex-direction:column;}
+.asset-bar,.asset-viewer-bar{display:flex;align-items:center;justify-content:space-between;height:28px;padding:0 24px;background:var(--brand);border-bottom:1px solid rgba(24,24,24,.12);}
+.asset-title{font-family:var(--font-brand);font-size:8px;color:var(--black);line-height:1;}
+.asset-controls{display:flex;gap:4px;}
+.asset-close{width:14px;height:14px;border:1px solid rgba(0,0,0,.2);background:none;color:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s,color .15s,border-color .15s;font-family:var(--font-body);font-size:8px;line-height:1;}
+.asset-close:hover{background:rgba(0,0,0,.12);border-color:rgba(0,0,0,.26);color:var(--black);}
+.asset-grid{padding:24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:14px;align-content:start;overflow:auto;background:var(--white);}
+.asset-thumb{width:100%;border:0;background:transparent;display:flex;flex-direction:column;gap:10px;cursor:pointer;text-align:left;}
+.asset-thumb-media{width:100%;aspect-ratio:1 / 1;border:1px solid rgba(24,24,24,.08);background:var(--white);display:flex;align-items:center;justify-content:center;padding:8px;}
+.asset-thumb-media img{width:100%;height:100%;object-fit:contain;display:block;}
+.asset-thumb-label{font-size:10px;color:var(--grey-m);letter-spacing:.06em;line-height:1.5;}
+.asset-thumb:hover .asset-thumb-media{border-color:var(--project);}
+.asset-thumb:hover .asset-thumb-label{color:var(--black);}
+.asset-viewer-shell{width:min(1160px,calc(100vw - 48px));max-height:min(860px,calc(100vh - 48px));display:flex;flex-direction:column;}
+.asset-viewer-body{padding:24px;display:grid;grid-template-columns:minmax(180px,220px) minmax(0,1fr);gap:28px;align-items:start;background:var(--white);}
+.asset-viewer-copy{display:flex;flex-direction:column;gap:10px;padding-right:8px;}
+.asset-viewer-kicker{font-family:var(--font-brand);font-size:8px;color:var(--brand);line-height:1.8;}
+.asset-viewer-name{font-family:var(--font-brand);font-size:12px;color:var(--black);line-height:1.8;}
+.asset-viewer-frame{position:relative;width:100%;height:min(72vh,720px);border:1px solid rgba(24,24,24,.1);background:#F8F7F4;display:flex;align-items:center;justify-content:center;padding:20px 72px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.55);}
+.asset-viewer-frame img{max-width:100%;max-height:100%;object-fit:contain;display:block;}
+.asset-viewer-arrow{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;border:1px solid rgba(24,24,24,.16);background:rgba(254,254,254,.92);color:var(--black);display:flex;align-items:center;justify-content:center;cursor:pointer;font-family:var(--font-brand);font-size:10px;line-height:1;transition:background .15s,border-color .15s,color .15s;}
+.asset-viewer-arrow:hover{background:var(--brand);border-color:var(--brand);}
+.asset-viewer-arrow--prev{left:20px;}
+.asset-viewer-arrow--next{right:20px;}
+@media(max-width:768px){
+  .asset-modal,.asset-viewer{padding:16px;}
+  .asset-shell,.asset-viewer-shell{width:calc(100vw - 32px);}
+  .asset-grid{grid-template-columns:repeat(auto-fit,minmax(120px,1fr));padding:16px;}
+  .asset-bar,.asset-viewer-bar{padding:0 16px;}
+  .asset-viewer-body{grid-template-columns:1fr;padding:16px;gap:16px;}
+  .asset-viewer-copy{padding-right:0;padding-bottom:0;}
+  .asset-viewer-frame{height:min(62vh,520px);padding:12px 52px;}
+  .asset-viewer-arrow{width:32px;height:32px;font-size:9px;}
+  .asset-viewer-arrow--prev{left:12px;}
+  .asset-viewer-arrow--next{right:12px;}
+  .gallery-ui{top:16px;left:16px;right:16px;gap:12px;flex-direction:column;}
+  .gallery-ui-left{max-width:100%;}
+  .gallery-ui-right{align-self:flex-end;}
+  .gallery-filter-btn,.gallery-top-btn{height:34px;}
+  .gallery-filter-btn{padding:0 12px;}
+  .gallery-filter-icon,.gallery-top-btn{width:34px;padding:0;}
 }
 
 /* Each image card ??absolute positioned by JS */
 .gal-card{
   position:absolute;
   /* top, left, width, height set by JS */
-  overflow:hidden;
-  background:#e8e8e8;
+  overflow:visible;
+  background:transparent;
+  border:none;
+  box-shadow:none;
+  transform-style:preserve-3d;
+  backface-visibility:hidden;
+  transform-origin:center center;
+  cursor:pointer;
 }
-.gal-card canvas{
+.gal-card-stack{
+  position:absolute;inset:0;
+  overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--white);
+  border:1px solid rgba(24,24,24,.08);
+  box-shadow:0 28px 50px rgba(24,24,24,.08);
+  transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease,filter .22s ease,opacity .52s ease;
+}
+.gal-card.is-entering .gal-card-stack{opacity:0;transform:translate3d(0,-72px,0);}
+.gal-card.is-entered .gal-card-stack{opacity:1;transform:translate3d(0,0,0);}
+.gal-card.is-entering .gal-card-stack img{opacity:.001;}
+.gal-card-stack canvas{
   position:absolute;inset:0;
   width:100%;height:100%;
   display:block;
   image-rendering:pixelated;
   z-index:2;pointer-events:none;
 }
-.gal-card img{
+.gal-card-stack img{
   position:absolute;inset:0;
   width:100%;height:100%;
-  object-fit:cover;
+  object-fit:contain;
   opacity:0;display:block;
+  transition:opacity .28s ease,transform .28s ease,filter .28s ease;
 }
-/* label below each card */
-.gal-card-label{
-  position:absolute;
-  bottom:-28px;left:0;
-  font-size:10px;color:var(--grey-m);
-  letter-spacing:.1em;text-transform:uppercase;
-  font-weight:300;white-space:nowrap;
+.gal-card--media .gal-card-stack{background:var(--white);box-shadow:0 28px 50px rgba(24,24,24,.08);}
+.gal-card--threed .gal-card-stack{border:none;background:transparent;box-shadow:none;}
+.gal-card-stack::after{
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.18),transparent 42%,rgba(255,191,86,.1));
+  opacity:0;
+  transition:opacity .22s ease;
+  pointer-events:none;
 }
-
-/* Timeline ruler ??fixed at bottom of sticky area */
-.gallery-timeline{
-  position:absolute;
-  bottom:0;left:0;right:0;
-  height:52px;
-  background:var(--white);
-  border-top:1px solid rgba(24,24,24,.06);
-  /* overflow VISIBLE so ticks can pull upward */
-  overflow:visible;
+.gal-card.is-hovered{z-index:4;}
+.gal-card.is-hovered .gal-card-stack{
+  transform:translate(32px,-32px) scale(1.02);
+  border-color:rgba(255,191,86,.62);
+  box-shadow:-16px 16px 0 rgba(24,24,24,.07),0 34px 84px rgba(24,24,24,.14);
+  filter:saturate(1.03);
 }
-/* The ruler strip (wider than viewport, moves with stage) */
-.tl-strip{
-  position:absolute;
-  top:0;left:0;
-  height:100%;
-  display:flex;align-items:flex-start;
-  padding-top:6px;
-  will-change:transform;
-  overflow:visible;
-}
-.tl-tick{
-  flex-shrink:0;
-  display:flex;flex-direction:column;align-items:center;
-  /* will-change so browser composites individually */
-  will-change:transform;
-  /* transform-origin bottom so pull feels natural */
-  transform-origin:center bottom;
-}
-.tl-line{
-  width:1px;
-  background:rgba(24,24,24,.18);
-  /* transition only for color changes */
-  transition:background .15s, height .15s;
-}
-.tl-tick.pulled .tl-line{
-  background:var(--project);
-}
-.tl-label{
-  margin-top:6px;
-  font-size:9px;color:var(--grey-l);
-  letter-spacing:.16em;text-transform:uppercase;
-  font-weight:300;white-space:nowrap;
-  transition:color .15s;
-}
-.tl-tick.pulled .tl-label{
-  color:var(--project);
-}
-/* Center indicator */
-.tl-cursor{
-  position:absolute;
-  top:0;left:50%;
-  width:1px;height:20px;
-  background:var(--project);
-  transform:translateX(-50%);
-}
+.gal-card.is-hovered .gal-card-stack::after{opacity:1;}
+.gal-card.is-hovered .gal-card-stack img{filter:saturate(1.06) contrast(1.02);}
 
 /* FOOTER */
 footer{background:var(--white);color:var(--grey-m);padding:32px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;font-size:12px;letter-spacing:.08em;border-top:1px solid rgba(24,24,24,.1);position:relative;z-index:1;}
@@ -206,12 +263,15 @@ footer{background:var(--white);color:var(--grey-m);padding:32px 40px;display:fle
 .foot-soc{display:flex;align-items:center;gap:20px;}
 .soc-a{color:var(--grey-m);transition:color .2s;display:flex;align-items:center;text-decoration:none;}
 .soc-a:hover{color:var(--brand);}
+.soc-a svg{width:16px;height:16px;display:block;}
+.meta-value--accent{color:var(--project);}
+.asset-thumb-num{color:var(--project);margin-right:6px;}
+.dropdown-tag{font-size:10px;color:var(--grey-m);}
 </style>
 </head>
 <body>
 
 <canvas id="cursor-canvas"></canvas>
-<canvas id="pixel-bg"></canvas>
 
 <header>
   <a href="index.html" class="nav-logo">mialyk<span class="slash">//</span><sub>building something creative</sub></a>
@@ -223,10 +283,10 @@ footer{background:var(--white);color:var(--grey-m);padding:32px 40px;display:fle
         <a href="#" class="dropdown-item dropdown-locked" onclick="showPw(event)"><span class="dropdown-dot"></span>Le.social <svg class="pxi pxi--sm" viewBox="0 0 24 24" fill="currentColor" style="margin-left:4px;opacity:.5"><rect x="8" y="4" width="8" height="2"/><rect x="6" y="6" width="2" height="4"/><rect x="16" y="6" width="2" height="4"/><rect x="4" y="10" width="16" height="2"/><rect x="4" y="10" width="2" height="10"/><rect x="18" y="10" width="2" height="10"/><rect x="4" y="20" width="16" height="2"/><rect x="10" y="14" width="4" height="2"/><rect x="11" y="16" width="2" height="2"/></svg></a>
         <a href="https://www.ora.io/" target="_blank" rel="noreferrer"          class="dropdown-item"><span class="dropdown-dot"></span>ORA</a>
         <a href="https://www.meedloyalty.com/" target="_blank" rel="noreferrer"         class="dropdown-item"><span class="dropdown-dot"></span>Meed</a>
-        <span class="dropdown-item dropdown-item--disabled" aria-disabled="true"><span class="dropdown-dot"></span>Cheddar Verse</span>
+        <a href="cheddar.html" class="dropdown-item"><span class="dropdown-dot"></span>Cheddar Verse</a>
         <a href="https://www.artstation.com/mialyk" target="_blank" rel="noreferrer" class="dropdown-item"><span class="dropdown-dot"></span>Illustration</a>
         <a href="vfx.html"          class="dropdown-item"><span class="dropdown-dot"></span>VFX</a>
-        <a href="hamartia.html"     class="dropdown-item"><span class="dropdown-dot"></span>Hamartia <span style="font-size:10px;color:var(--grey-m)">Game</span></a>
+        <a href="hamartia.html"     class="dropdown-item"><span class="dropdown-dot"></span>Hamartia <span class="dropdown-tag">Game</span></a>
       </div>
     </div>
     <a href="about.html" class="nav-link">About</a>
@@ -235,21 +295,16 @@ footer{background:var(--white);color:var(--grey-m);padding:32px 40px;display:fle
 
 <main>
 
-<section class="project-hero" id="hero">
-  <div class="hero-bar"></div>
-  <div>
-    <div class="hero-label">NFT ??Metaverse ??Illustration &amp; 3D</div>
-    <h1 class="hero-h1">Cheddar<br><span>Verse</span></h1>
-    <p class="hero-sub">Designed the complete visual universe for a sold-out NFT project ??characters, 3D blind boxes, and full social media production across Discord, Twitter &amp; Instagram.</p>
+<section class="hero" id="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">NFT Metaverse<span class="hero-year">2022</span></div>
+    <h1>Cheddar <span class="accent">Verse</span></h1>
     <div class="hero-meta">
-      <div class="meta-cell"><div class="meta-lbl">Role</div><div class="meta-val">Illustrator &amp; 3D Artist</div></div>
-      <div class="meta-cell"><div class="meta-lbl">Period</div><div class="meta-val">Oct 2021 ??May 2022</div></div>
-      <div class="meta-cell"><div class="meta-lbl">Status</div><div class="meta-val" style="color:var(--project)">Sold Out ??/div></div>
+      <div class="meta-item"><span class="meta-label">Role</span><span class="meta-value">2D &amp; 3D Artist</span></div>
+      <div class="meta-item"><span class="meta-label">Period</span><span class="meta-value">Jan 2022 - May 2022</span></div>
+      <div class="meta-item"><span class="meta-label">Status</span><span class="meta-value meta-value--accent">Sold Out</span></div>
     </div>
-    <div class="hero-btns">
-      <a href="#gallery-anchor" class="btn btn--lg primary">Browse Collection ??/a>
-      <a href="index.html" class="btn btn--lg">??Back</a>
-    </div>
+
   </div>
 </section>
 
@@ -258,30 +313,51 @@ footer{background:var(--white);color:var(--grey-m);padding:32px 40px;display:fle
 <!-- GALLERY PIN -->
 <div class="gallery-pin" id="galleryPin">
   <div class="gallery-sticky" id="gallerySticky">
-    <div class="gallery-stage" id="galleryStage"></div>
-    <div class="gallery-timeline" id="galleryTimeline">
-      <div class="tl-strip"  id="tlStrip"></div>
-      <div class="tl-cursor"></div>
+    <div class="gallery-ui">
+      <div class="gallery-ui-left">
+        <button type="button" class="gallery-filter-btn is-active" data-jump-to="media">Media Illustration</button>
+        <button type="button" class="gallery-filter-btn" data-jump-to="threed">3D Assets</button>
+        <button type="button" class="gallery-filter-btn gallery-filter-icon" id="assetOverviewBtn" aria-label="Asset Overview" title="Asset Overview">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <rect x="4" y="4" width="6" height="6"></rect>
+            <rect x="14" y="4" width="6" height="6"></rect>
+            <rect x="4" y="14" width="6" height="6"></rect>
+            <rect x="14" y="14" width="6" height="6"></rect>
+          </svg>
+        </button>
+      </div>
+      <div class="gallery-ui-right">
+        <button type="button" class="gallery-top-btn" id="galleryTopBtn" aria-label="Back to hero" title="Back to hero">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <rect x="11" y="5" width="2" height="14"></rect>
+            <rect x="7" y="9" width="2" height="2"></rect>
+            <rect x="9" y="7" width="2" height="2"></rect>
+            <rect x="13" y="7" width="2" height="2"></rect>
+            <rect x="15" y="9" width="2" height="2"></rect>
+          </svg>
+        </button>
+      </div>
     </div>
+    <div class="gallery-stage" id="galleryStage"></div>
   </div>
 </div>
 
 </main>
 
 <footer>
-  <div class="foot-copy">??2026 <span>mialyk</span> ??All rights reserved</div>
+  <div class="foot-copy">2026 <span>mialyk</span> // All rights reserved</div>
   <div class="foot-soc">
     <a href="https://www.linkedin.com/in/mia-lyk" target="_blank" class="soc-a">
-      <svg style="width:16px;height:16px" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
     </a>
     <a href="https://www.instagram.com/mia_lyk" target="_blank" class="soc-a">
-      <svg style="width:16px;height:16px" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
     </a>
     <a href="https://www.artstation.com/mialyk" target="_blank" class="soc-a">
-      <svg style="width:16px;height:16px" viewBox="0 0 24 24" fill="currentColor"><path d="M0 17.723l2.027 3.505h.001a2.424 2.424 0 0 0 2.164 1.333h13.457l-2.792-4.838H0zm24 .025c0-.484-.143-.935-.388-1.314L15.728 2.728a2.424 2.424 0 0 0-2.164-1.333H9.419L21.598 22.54l1.92-3.325c.378-.637.482-.919.482-1.467zm-11.129-3.462L7.428 4.858l-5.444 9.428h10.887z"/></svg>
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M0 17.723l2.027 3.505h.001a2.424 2.424 0 0 0 2.164 1.333h13.457l-2.792-4.838H0zm24 .025c0-.484-.143-.935-.388-1.314L15.728 2.728a2.424 2.424 0 0 0-2.164-1.333H9.419L21.598 22.54l1.92-3.325c.378-.637.482-.919.482-1.467zm-11.129-3.462L7.428 4.858l-5.444 9.428h10.887z"/></svg>
     </a>
     <a href="https://x.com/elwgrich/" target="_blank" class="soc-a">
-      <svg style="width:16px;height:16px" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.213 5.567 5.95-5.567zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.213 5.567 5.95-5.567zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
     </a>
   </div>
 </footer>
@@ -290,11 +366,45 @@ footer{background:var(--white);color:var(--grey-m);padding:32px 40px;display:fle
   <div id="pw-inner">
     <div class="pw-title">Le.social</div>
     <div class="pw-sub">Password protected. Enter to view.</div>
-    <input class="pw-input" type="password" id="pw-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkPw()">
+    <input class="pw-input" type="password" id="pw-input" placeholder="Password" autocomplete="current-password">
     <div class="pw-error" id="pw-error"></div>
     <div class="pw-btns">
-      <button class="btn btn--sm primary" onclick="checkPw()">Enter ??/button>
+      <button class="btn btn--sm primary" onclick="checkPw()">Enter</button>
       <button class="btn btn--sm" onclick="closePw()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div id="asset-modal" class="asset-modal">
+  <div class="asset-shell">
+    <div class="asset-bar">
+      <div class="asset-title">asset_overview.exe</div>
+      <div class="asset-controls">
+        <button type="button" class="asset-close" id="assetModalClose" aria-label="Close asset overview">x</button>
+      </div>
+    </div>
+    <div class="asset-grid" id="assetGrid"></div>
+  </div>
+</div>
+
+<div id="asset-viewer" class="asset-viewer">
+  <div class="asset-viewer-shell">
+    <div class="asset-viewer-bar">
+      <div class="asset-title">cheddar_asset_viewer.exe</div>
+      <div class="asset-controls">
+        <button type="button" class="asset-close" id="assetViewerClose" aria-label="Close asset viewer">x</button>
+      </div>
+    </div>
+    <div class="asset-viewer-body">
+      <div class="asset-viewer-copy">
+        <div class="asset-viewer-kicker" id="assetViewerKicker">Asset</div>
+        <div class="asset-viewer-name" id="assetViewerName">Cheddar Asset</div>
+      </div>
+      <div class="asset-viewer-frame">
+        <button type="button" class="asset-viewer-arrow asset-viewer-arrow--prev" id="assetViewerPrev" aria-label="Previous asset">&#8592;</button>
+        <img id="assetViewerImg" alt="">
+        <button type="button" class="asset-viewer-arrow asset-viewer-arrow--next" id="assetViewerNext" aria-label="Next asset">&#8594;</button>
+      </div>
     </div>
   </div>
 </div>
@@ -307,315 +417,634 @@ footer{background:var(--white);color:var(--grey-m);padding:32px 40px;display:fle
    top is 0..1 fraction of available stage height
    ????????????????????????????????????????????????????????????????????? */
 const CARDS = [
-  { img:'', num:'01', cat:'2D ??Character',    label:'Character ??Base',       w:0.14, h:0.62, top:0.08 },
-  { img:'', num:'02', cat:'2D ??Trait',        label:'Streetwear Trait',        w:0.18, h:0.72, top:0.04 },
-  { img:'', num:'03', cat:'2D ??Environment',  label:'Background Trait',        w:0.15, h:0.55, top:0.22 },
-  { img:'', num:'04', cat:'2D ??Trait',        label:'Expression Set',          w:0.20, h:0.65, top:0.06 },
-  { img:'', num:'05', cat:'2D ??Legendary',    label:'The Rat King',            w:0.16, h:0.70, top:0.02 },
-  { img:'', num:'06', cat:'2D ??Accessory',    label:'Accessory Pack',          w:0.13, h:0.50, top:0.30 },
-  { img:'', num:'07', cat:'2D ??Rare Variant', label:'Gold Variant',            w:0.17, h:0.68, top:0.10 },
-  { img:'', num:'08', cat:'3D ??Product',      label:'Blind Box ??Hero',        w:0.22, h:0.58, top:0.16 },
-  { img:'', num:'09', cat:'3D ??Product',      label:'Blind Box ??45??,         w:0.19, h:0.62, top:0.05 },
-  { img:'', num:'10', cat:'3D ??Reveal',       label:'Blind Box ??Open',        w:0.21, h:0.72, top:0.03 },
-  { img:'', num:'11', cat:'3D ??Reveal',       label:'Character in Box',        w:0.18, h:0.66, top:0.18 },
-  { img:'', num:'12', cat:'Social ??Twitter',  label:'Mint Announcement',       w:0.28, h:0.48, top:0.28 },
-  { img:'', num:'13', cat:'Social ??IG',       label:'Instagram Teaser 01',     w:0.16, h:0.60, top:0.08 },
-  { img:'', num:'14', cat:'Social ??IG',       label:'Instagram Teaser 02',     w:0.16, h:0.60, top:0.24 },
-  { img:'', num:'15', cat:'Social ??Discord',  label:'Discord Server Art',      w:0.26, h:0.44, top:0.38 },
-  { img:'', num:'16', cat:'Social ??Twitter',  label:'Twitter Profile Header',  w:0.24, h:0.42, top:0.10 },
+  { img:'assets/images/cheddar/media illustration/01_token01.png',        num:'01', section:'media',  label:'Token 01',         assetW:3240, assetH:1080 },
+  { img:'assets/images/cheddar/media illustration/02_token02.png',        num:'02', section:'media',  label:'Token 02',         assetW:4500, assetH:1500 },
+  { img:'assets/images/cheddar/media illustration/03_token03.png',        num:'03', section:'media',  label:'Token 03',         assetW:3240, assetH:1080 },
+  { img:'assets/images/cheddar/media illustration/04_funeral.png',        num:'04', section:'media',  label:'Funeral',          assetW:3240, assetH:1080 },
+  { img:'assets/images/cheddar/media illustration/05_igpromtion01.png',   num:'05', section:'media',  label:'IG Promotion 01',   assetW:3840, assetH:2160 },
+  { img:'assets/images/cheddar/media illustration/06_ig_promo02.png',     num:'06', section:'media',  label:'IG Promo 02',       assetW:3240, assetH:3240 },
+  { img:'assets/images/cheddar/media illustration/07_giveaway.png',       num:'07', section:'media',  label:'Giveaway',          assetW:3240, assetH:3240 },
+  { img:'assets/images/cheddar/media illustration/08_openseabanner03.png', num:'08', section:'media', label:'OpenSea Banner 03', assetW:2800, assetH:800  },
+  { img:'assets/images/cheddar/media illustration/09_buyin.jpg',          num:'09', section:'media',  label:'Buy In',            assetW:1920, assetH:1080 },
+  { img:'assets/images/cheddar/media illustration/10_3day.png',           num:'10', section:'media',  label:'3 Day',             assetW:3240, assetH:1080 },
+  { img:'assets/images/cheddar/media illustration/11_24hours.png',        num:'11', section:'media',  label:'24 Hours',          assetW:3240, assetH:1080 },
+  { img:'assets/images/cheddar/media illustration/12_soldout.png',        num:'12', section:'media',  label:'Sold Out',          assetW:3240, assetH:1080 },
+  { img:'assets/images/cheddar/media illustration/13_amaDC.png',          num:'13', section:'media',  label:'AMA DC',            assetW:1280, assetH:716  },
+  { img:'assets/images/cheddar/3D asset/01_card_T_2.gif',                 num:'14', section:'threed', label:'Card Turntable',     assetW:471,  assetH:471  },
+  { img:'assets/images/cheddar/3D asset/02_2D_Blind_box.gif',             num:'15', section:'threed', label:'Blind Box 01',       assetW:540,  assetH:540  },
+  { img:'assets/images/cheddar/3D asset/03_2D_Blind_box_c02.gif',         num:'16', section:'threed', label:'Blind Box 02',       assetW:540,  assetH:540  },
+  { img:'assets/images/cheddar/3D asset/04_2D_Blind_box_c03.gif',         num:'17', section:'threed', label:'Blind Box 03',       assetW:540,  assetH:540  },
 ];
 
-/* Timeline labels ??one per group of ~4 cards */
-const LABELS = [
-  { idx:0,  text:'Character Design' },
-  { idx:4,  text:'Rare & Legendary' },
-  { idx:7,  text:'3D Production'    },
-  { idx:11, text:'Social Media'     },
+const SECTIONS = [
+  { key:'media',  label:'Media Illustration' },
+  { key:'threed', label:'3D Assets' },
 ];
 
-/* dissolve palette */
-const PAL = ['#FFBF56','#DA6628','#e0d0b0','#c8b890','#f5eed8','#88888C','#181818','#e8e0d0'];
+const SECTION_LABEL = {
+  media: 'Media Illustration',
+  threed: '3D Assets',
+};
+
+const PAL = ['#FFBF56','#DA6628','#e0d0b0','#c8b890','#f5eed8','#88888C','#FEFEFE','#FFF8E0'];
 const dissolved = new Set();
 
-/* ???? DOM refs ???? */
-const pin     = document.getElementById('galleryPin');
-const sticky  = document.getElementById('gallerySticky');
-const stage   = document.getElementById('galleryStage');
-const tlStrip = document.getElementById('tlStrip');
+const pin = document.getElementById('galleryPin');
+const stage = document.getElementById('galleryStage');
+const jumpBtns = Array.from(document.querySelectorAll('[data-jump-to]'));
+const overviewBtn = document.getElementById('assetOverviewBtn');
+const topBtn = document.getElementById('galleryTopBtn');
+const assetModal = document.getElementById('asset-modal');
+const assetGrid = document.getElementById('assetGrid');
+const assetViewer = document.getElementById('asset-viewer');
+const assetViewerImg = document.getElementById('assetViewerImg');
+const assetViewerName = document.getElementById('assetViewerName');
+const assetViewerKicker = document.getElementById('assetViewerKicker');
+const assetModalClose = document.getElementById('assetModalClose');
+const assetViewerClose = document.getElementById('assetViewerClose');
+const assetViewerPrev = document.getElementById('assetViewerPrev');
+const assetViewerNext = document.getElementById('assetViewerNext');
 
-/* ???? Dimensions ???? */
-const GAP     = 40;    // px gap between cards (min)
-const PADDING = 120;   // left margin before first card
-const TL_H    = 52;    // timeline height in px
+const TRACK_BASE_W = 420;
+const PADDING = 120;
+const MAX_CARD_W = 620;
+const MAX_CARD_H = 420;
+const MOTION_BUFFER = 60;
+const IMAGE_BUFFER = 280;
 
 let VW, VH, stageW, stageH;
-let cards = []; // computed card rects
+let cards = [];
+let cardEls = [];
+let cardImgEls = [];
+let sectionAnchors = {};
+let targetX = 0, currentX = 0;
+let hoverCardIdx = -1;
+let assetThumbObserver = null;
+let activeViewerIndex = -1;
+let galleryRafId = 0;
+let cursorRafId = 0;
+let cursorLastEventAt = 0;
+let hasPlayedGalleryIntro = false;
+
+function fitCard(assetW, assetH) {
+  const scale = Math.min(MAX_CARD_W / assetW, MAX_CARD_H / assetH, 1);
+  return {
+    w: Math.max(128, Math.round(assetW * scale)),
+    h: Math.max(128, Math.round(assetH * scale)),
+  };
+}
 
 function measure() {
-  VW      = window.innerWidth;
-  VH      = window.innerHeight - 60; // minus nav
-  stageH  = VH - TL_H;
+  VW = window.innerWidth;
+  VH = window.innerHeight - 60;
+  stageH = VH;
 
-  /* Lay out cards from left to right */
-  let cursor = PADDING;
-  cards = CARDS.map((d, i) => {
-    const w = Math.round(d.w * VW);
-    const h = Math.round(d.h * stageH);
-    const t = Math.round(d.top * stageH);
-    const x = cursor;
-    cursor += w + GAP + Math.round(Math.random() * GAP * 0.5);
-    return { ...d, x, y:t, w, h };
+  const total = Math.max(CARDS.length - 1, 1);
+  const railStep = Math.round(Math.max(148, Math.min(168, VW * 0.108)));
+  const stepY = Math.round(Math.max(20, Math.min(25, VH * 0.032)));
+  const centerStart = stageH * 0.78;
+  const centerFloor = stageH * 0.31;
+  const rotStart = -54;
+  const rotEnd = -40;
+  const rotEase = 0.88;
+  const sizedCards = CARDS.map(d => ({ ...d, size: fitCard(d.assetW, d.assetH) }));
+  const railStart = sizedCards[0] ? sizedCards[0].size.w * 0.5 + 320 : MAX_CARD_W * 0.5 + 320;
+  let railOffset = 0;
+  let maxRight = 0;
+
+  cards = sizedCards.map((d, idx) => {
+    const size = d.size;
+    const progress = idx / total;
+    const depthCurve = Math.sin(progress * Math.PI);
+    const centerX = railStart + railOffset;
+    const centerY = Math.max(centerFloor, centerStart - idx * stepY);
+    const x = Math.round(centerX - size.w * 0.5);
+    const y = Math.round(centerY - size.h * 0.5 - (idx === 0 ? 36 : 0));
+    const z = Math.round(depthCurve * 24 + (d.section === 'threed' ? 16 : 0));
+    const rotProgress = total <= 0 ? 0 : idx / total;
+    const rotCurve = 1 - Math.pow(1 - rotProgress, rotEase);
+    const ry = Number((rotStart + (rotEnd - rotStart) * rotCurve).toFixed(2));
+    const rx = Number((((idx % 3) - 1) * 0.22).toFixed(2));
+    const wavePhase = idx * 0.55 + (d.section === 'threed' ? 0.75 : 0);
+    const waveAmp = d.section === 'threed' ? 10 : 7.5;
+    const step = idx === 0 ? Math.round(railStep * 0.05) : railStep;
+    const spaceBoost = d.label === 'AMA DC' ? railStep : 0;
+    railOffset += step + spaceBoost;
+    maxRight = Math.max(maxRight, x + size.w);
+    return { ...d, x, y, w:size.w, h:size.h, z, ry, rx, wavePhase, waveAmp };
   });
-  stageW = cursor + PADDING;
 
-  /* Scroll pin height: enough to pan full stage width minus 1 viewport */
-  const scrollDist = stageW - VW;
+  sectionAnchors = {};
+  SECTIONS.forEach(section => {
+    const first = cards.find(card => card.section === section.key);
+    if (first) {
+      sectionAnchors[section.key] = {
+        x: first.x + first.w * 0.5,
+        cardX: first.x,
+      };
+    }
+  });
+
+  stageW = Math.max(maxRight + PADDING, VW);
+  const scrollDist = Math.max(0, stageW - VW);
   pin.style.height = (VH + scrollDist) + 'px';
-
-  stage.style.width  = stageW + 'px';
+  stage.style.width = stageW + 'px';
   stage.style.height = stageH + 'px';
 }
+function setHoverCard(nextIdx) {
+  if (hoverCardIdx === nextIdx) return;
+  hoverCardIdx = nextIdx;
+  cardEls.forEach((el, idx) => {
+    el.classList.toggle('is-hovered', idx === hoverCardIdx);
+  });
+  requestGalleryFrame();
+}
 
-/* ???? Build DOM ???? */
+function getCardImageEl(idx) {
+  return cardImgEls[idx] || null;
+}
+
+function isCardNearViewport(card, buffer = MOTION_BUFFER) {
+  return card.x + card.w >= currentX - buffer && card.x <= currentX + VW + buffer;
+}
+
+function ensureCardImageLoaded(idx, priority = 'low') {
+  const img = getCardImageEl(idx);
+  if (!img || img.dataset.loaded === 'true') return img;
+  img.fetchPriority = priority;
+  img.decoding = 'async';
+  img.src = img.dataset.src;
+  img.dataset.loaded = 'true';
+  return img;
+}
+
+function hydrateAssetThumb(img, priority = 'low') {
+  if (!img || img.dataset.loaded === 'true') return;
+  img.fetchPriority = priority;
+  img.decoding = 'async';
+  img.src = img.dataset.src;
+  img.dataset.loaded = 'true';
+}
+
+function getBaseCardTransform(card) {
+  return `translate3d(0,0px,${card.z.toFixed(2)}px) rotateY(${card.ry.toFixed(2)}deg) rotateX(${card.rx.toFixed(2)}deg)`;
+}
+
 function buildCards() {
-  stage.innerHTML = '';
+  const fragment = document.createDocumentFragment();
+  cardEls = [];
+  cardImgEls = [];
+  const shouldPlayIntro = !hasPlayedGalleryIntro;
+
   cards.forEach((c, i) => {
     const el = document.createElement('div');
-    el.className = 'gal-card';
+    el.className = `gal-card gal-card--${c.section}${shouldPlayIntro ? ' is-entering' : ' is-entered'}`;
     el.style.cssText = `left:${c.x}px;top:${c.y}px;width:${c.w}px;height:${c.h}px;`;
+    if (i === 0) el.style.transformOrigin = 'left center';
     el.dataset.idx = i;
+    el.tabIndex = 0;
+    el.setAttribute('role', 'button');
+    el.setAttribute('aria-label', `${c.label} - open large view`);
+
+    const stack = document.createElement('div');
+    stack.className = 'gal-card-stack';
 
     const cv = document.createElement('canvas');
-    el.appendChild(cv);
+    stack.appendChild(cv);
 
-    if (c.img) {
-      const img = document.createElement('img');
-      img.src = c.img; img.alt = c.label; img.crossOrigin = 'anonymous';
-      el.appendChild(img);
-    }
+    const img = document.createElement('img');
+    img.alt = c.label;
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    img.fetchPriority = 'low';
+    img.dataset.src = c.img;
+    stack.appendChild(img);
 
-    const lbl = document.createElement('div');
-    lbl.className = 'gal-card-label';
-    lbl.innerHTML = `<span style="color:var(--project);margin-right:8px">${c.num}</span>${c.label}`;
-    el.appendChild(lbl);
+    el.appendChild(stack);
 
-    stage.appendChild(el);
+    const activate = () => {
+      hov = true;
+      requestCursorFrame();
+      setHoverCard(i);
+    };
+    const deactivate = () => {
+      hov = false;
+      requestCursorFrame();
+      if (hoverCardIdx === i) setHoverCard(-1);
+    };
+
+    el.addEventListener('mouseenter', activate);
+    el.addEventListener('mouseleave', deactivate);
+    el.addEventListener('focus', () => setHoverCard(i));
+    el.addEventListener('blur', () => {
+      if (hoverCardIdx === i) setHoverCard(-1);
+    });
+    el.addEventListener('click', () => openAssetViewer(c));
+    el.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openAssetViewer(c);
+      }
+    });
+
+    fragment.appendChild(el);
+    cardEls.push(el);
+    cardImgEls.push(img);
   });
-}
 
-/* ???? Build timeline ???? */
-function buildTimeline() {
-  tlStrip.innerHTML = '';
-  const tickW   = 24;   // px per tick
-  const nTicks  = Math.ceil(stageW / tickW) + 4;
+  stage.replaceChildren(fragment);
 
-  /* Map labels to tick positions */
-  const labelMap = {};
-  LABELS.forEach(lb => {
-    if (cards[lb.idx]) {
-      const tick = Math.round(cards[lb.idx].x / tickW);
-      labelMap[tick] = lb.text;
-    }
-  });
-
-  for (let i = 0; i < nTicks; i++) {
-    const t = document.createElement('div');
-    t.className  = 'tl-tick';
-    t.style.width = tickW + 'px';
-
-    const isMajor = (i % 4 === 0);
-    const line = document.createElement('div');
-    line.className = 'tl-line';
-    line.style.height = isMajor ? '14px' : '8px';
-    t.appendChild(line);
-
-    if (labelMap[i]) {
-      const lbl = document.createElement('div');
-      lbl.className = 'tl-label';
-      lbl.textContent = labelMap[i];
-      t.appendChild(lbl);
-    }
-    tlStrip.appendChild(t);
+  if (shouldPlayIntro) {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        cardEls.forEach((el, idx) => {
+          setTimeout(() => {
+            el.classList.remove('is-entering');
+            el.classList.add('is-entered');
+          }, idx * 42);
+        });
+      });
+    });
+    hasPlayedGalleryIntro = true;
   }
 }
-
-/* ???? Scroll ??translateX ???? */
-let targetX = 0, currentX = 0;
 
 function getProgress() {
   const pinRect = pin.getBoundingClientRect();
   const scrolled = -pinRect.top;
   const maxScroll = pin.offsetHeight - VH;
+  if (maxScroll <= 0) return 0;
   return Math.max(0, Math.min(1, scrolled / maxScroll));
+}
+
+function syncJumpUi() {
+  const centerX = currentX + VW * 0.5;
+  let activeKey = 'media';
+  let best = Number.POSITIVE_INFINITY;
+
+  SECTIONS.forEach(section => {
+    const anchor = sectionAnchors[section.key];
+    if (!anchor) return;
+    const dist = Math.abs(centerX - anchor.x);
+    if (dist < best) {
+      best = dist;
+      activeKey = section.key;
+    }
+  });
+
+  jumpBtns.forEach(btn => {
+    btn.classList.toggle('is-active', btn.dataset.jumpTo === activeKey);
+    btn.setAttribute('aria-pressed', String(btn.dataset.jumpTo === activeKey));
+  });
+}
+
+function syncCardTransforms(now = 0, animate = false) {
+  const t = now * 0.001;
+
+  cardEls.forEach((el, idx) => {
+    const card = cards[idx];
+    if (!card) return;
+
+    const img = getCardImageEl(idx);
+    const hovered = idx === hoverCardIdx;
+    const visible = hovered || isCardNearViewport(card);
+    const wave = animate && visible
+      ? Math.sin(t * 1.45 + card.wavePhase) * card.waveAmp + Math.cos(t * 1.05 + card.wavePhase * 1.2) * (card.waveAmp * 0.35)
+      : 0;
+    const nextTransform = wave
+      ? `translate3d(0,${wave.toFixed(2)}px,${card.z.toFixed(2)}px) rotateY(${card.ry.toFixed(2)}deg) rotateX(${card.rx.toFixed(2)}deg)`
+      : getBaseCardTransform(card);
+
+    if (el._lastTransform !== nextTransform) {
+      el.style.transform = nextTransform;
+      el._lastTransform = nextTransform;
+    }
+
+    const nextImgTransform = hovered ? 'scale(1.035)' : '';
+    if (img && img._lastTransform !== nextImgTransform) {
+      img.style.transform = nextImgTransform;
+      img._lastTransform = nextImgTransform;
+    }
+
+    el.dataset.motionState = hovered ? 'hover' : animate && visible ? 'active' : 'rest';
+  });
+}
+
+function syncTransforms(now = 0, animate = false) {
+  const tx = -Math.round(currentX * 10) / 10;
+  const nextStageTransform = `translate3d(${tx}px,0,0)`;
+  if (stage._lastTransform !== nextStageTransform) {
+    stage.style.transform = nextStageTransform;
+    stage._lastTransform = nextStageTransform;
+  }
+  syncJumpUi();
+  syncCardTransforms(now, animate);
+}
+
+let galleryInView = false;
+function updateGalleryInView() {
+  const rect = pin.getBoundingClientRect();
+  const wasInView = galleryInView;
+  galleryInView = rect.bottom > VH * 0.2 && rect.top < window.innerHeight;
+  if (galleryInView && !wasInView) requestGalleryFrame();
+}
+window.addEventListener('scroll', updateGalleryInView, { passive: true });
+
+function isGalleryInView() { return galleryInView; }
+
+function requestGalleryFrame() {
+  if (galleryRafId || document.hidden) return;
+  galleryRafId = requestAnimationFrame(runGalleryFrame);
+}
+
+function runGalleryFrame(now) {
+  galleryRafId = 0;
+  const diff = targetX - currentX;
+  const moving = Math.abs(diff) > 0.08;
+  const animate = galleryInView;
+
+  if (moving) currentX += Math.abs(diff) < 0.05 ? diff : diff * 0.12;
+  else currentX = targetX;
+
+  syncTransforms(now, animate);
+
+  if (animate || moving) requestGalleryFrame();
+}
+
+function hydrateVisibleCards() {
+  const vLeft = currentX - IMAGE_BUFFER;
+  const vRight = currentX + VW + IMAGE_BUFFER;
+  cards.forEach((c, i) => {
+    if (c.x + c.w >= vLeft && c.x <= vRight) {
+      ensureCardImageLoaded(i, i < 2 && currentX < 16 ? 'high' : 'low');
+      dissolve(i);
+    }
+  });
+}
+
+function buildAssetGrid() {
+  assetGrid.innerHTML = '';
+  if (assetThumbObserver) assetThumbObserver.disconnect();
+
+  cards.forEach(card => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'asset-thumb';
+
+    const media = document.createElement('span');
+    media.className = 'asset-thumb-media';
+    const img = document.createElement('img');
+    img.alt = card.label;
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    img.fetchPriority = 'low';
+    img.dataset.src = card.img;
+    media.appendChild(img);
+
+    const label = document.createElement('span');
+    label.className = 'asset-thumb-label';
+    label.innerHTML = `<span class="asset-thumb-num">${card.num}</span>${card.label}`;
+
+    btn.appendChild(media);
+    btn.appendChild(label);
+    btn.addEventListener('click', () => openAssetViewer(card));
+    assetGrid.appendChild(btn);
+
+    if (assetThumbObserver) assetThumbObserver.observe(img);
+    else hydrateAssetThumb(img);
+  });
+}
+
+function openAssetOverview() {
+  buildAssetGrid();
+  hov = false;
+  setHoverCard(-1);
+  assetModal.classList.add('active');
+}
+
+function closeAssetOverview() {
+  assetModal.classList.remove('active');
+  if (assetThumbObserver) assetThumbObserver.disconnect();
+  assetGrid.innerHTML = '';
+}
+
+function setAssetViewerCard(card) {
+  assetViewerImg.decoding = 'async';
+  assetViewerImg.fetchPriority = 'high';
+  assetViewerImg.src = card.img;
+  assetViewerImg.alt = card.label;
+  assetViewerName.textContent = card.label;
+  assetViewerKicker.textContent = SECTION_LABEL[card.section] || 'Asset';
+}
+
+function stepAssetViewer(direction) {
+  if (!CARDS.length) return;
+  if (activeViewerIndex < 0) activeViewerIndex = 0;
+  activeViewerIndex = (activeViewerIndex + direction + CARDS.length) % CARDS.length;
+  setAssetViewerCard(CARDS[activeViewerIndex]);
+}
+
+function openAssetViewer(card) {
+  closeAssetOverview();
+  hov = false;
+  setHoverCard(-1);
+  activeViewerIndex = CARDS.findIndex(item => item.img === card.img);
+  if (activeViewerIndex < 0) activeViewerIndex = 0;
+  setAssetViewerCard(CARDS[activeViewerIndex]);
+  assetViewer.classList.add('active');
+}
+
+function closeAssetViewer() {
+  assetViewer.classList.remove('active');
+  activeViewerIndex = -1;
+  assetViewerImg.removeAttribute('src');
+  assetViewerImg.alt = '';
+}
+
+function scrollToGalleryX(nextX) {
+  const maxX = Math.max(stageW - VW, 0);
+  const clampedX = Math.max(0, Math.min(nextX, maxX));
+  targetX = clampedX;
+  requestGalleryFrame();
+
+  const maxScroll = Math.max(pin.offsetHeight - VH, 0);
+  const progress = maxX > 0 ? clampedX / maxX : 0;
+  const pinPageTop = pin.getBoundingClientRect().top + window.scrollY;
+  const targetScrollY = pinPageTop + progress * maxScroll;
+  window.scrollTo({ top: Math.max(0, targetScrollY), behavior: 'smooth' });
+}
+
+function jumpToSection(key) {
+  const anchor = sectionAnchors[key];
+  if (!anchor) return;
+  scrollToGalleryX(anchor.x - VW * 0.5);
+}
+
+function rebuildGallery() {
+  dissolved.clear();
+  measure();
+  buildCards();
+  if (galleryRafId) {
+    cancelAnimationFrame(galleryRafId);
+    galleryRafId = 0;
+  }
+  updateGalleryInView();
+  currentX = targetX = getProgress() * Math.max(stageW - VW, 0);
+  syncTransforms(0, true);
+  hydrateVisibleCards();
+  requestGalleryFrame();
 }
 
 window.addEventListener('scroll', () => {
   const p = getProgress();
-  targetX = p * (stageW - VW);
-
-  /* pre-dissolve visible cards */
-  const vLeft  = targetX - 50;
-  const vRight = targetX + VW + 50;
-  cards.forEach((c, i) => {
-    if (c.x + c.w >= vLeft && c.x <= vRight) dissolve(i);
-  });
+  targetX = p * Math.max(stageW - VW, 0);
+  hydrateVisibleCards();
+  requestGalleryFrame();
 }, { passive: true });
 
-/* ???? Magnetic timeline tick constants ???? */
-const PULL_MAX = 28;   // max upward pull px
-const RADIUS   = 180;  // mouse influence radius px
-const SPRING   = 0.18; // toward-target spring
-const DAMPEN   = 0.13; // return-to-zero damp
-const TICK_W   = 24;   // must match buildTimeline
-
-let tickNodes  = [];   // { el, curY } per tick
-const tlEl     = document.getElementById('galleryTimeline');
-let tlTop      = 0;
-
-function getTickNodes() {
-  tickNodes = Array.from(tlStrip.children).map(el => ({ el, curY: 0 }));
-}
-function refreshTlTop() {
-  tlTop = tlEl.getBoundingClientRect().top;
-}
-
-function rafLoop() {
-  /* gallery scroll pan */
-  const diff = targetX - currentX;
-  currentX += Math.abs(diff) < 0.05 ? diff : diff * 0.09;
-  const tx = -Math.round(currentX * 10) / 10;
-  stage.style.transform   = `translateX(${tx}px)`;
-  tlStrip.style.transform = `translateX(${tx}px)`;
-
-  /* magnetic ticks */
-  refreshTlTop();
-  const nearTl = my > tlTop - RADIUS && my < tlTop + 60;
-
-  tickNodes.forEach((t, i) => {
-    const screenX = i * TICK_W + TICK_W * 0.5 - currentX;
-    const dx      = mx - screenX;
-    let target    = 0;
-
-    if (nearTl && Math.abs(dx) < RADIUS) {
-      const norm = 1 - Math.abs(dx) / RADIUS;
-      target = -PULL_MAX * norm * norm;   // negative = up
-    }
-
-    const spd = target < t.curY ? SPRING : DAMPEN;
-    t.curY += (target - t.curY) * spd;
-    if (Math.abs(t.curY) < 0.04) t.curY = 0;
-
-    t.el.style.transform = t.curY ? `translateY(${t.curY.toFixed(2)}px)` : '';
-    t.el.classList.toggle('pulled', t.curY < -1);
-  });
-
-  requestAnimationFrame(rafLoop);
-}
-requestAnimationFrame(rafLoop);
-
-/* ???? Pixel dissolve ???? */
 function dissolve(idx) {
   if (dissolved.has(idx)) return;
   dissolved.add(idx);
 
-  const el  = stage.children[idx];
+  const el = stage.children[idx];
   if (!el) return;
-  const cv  = el.querySelector('canvas');
+  const cv = el.querySelector('canvas');
   const img = el.querySelector('img');
-  const W   = cards[idx].w;
-  const H   = cards[idx].h;
+  if (!cv || !img) return;
 
-  cv.width = W; cv.height = H;
+  const W = cards[idx].w;
+  const H = cards[idx].h;
+  cv.width = W;
+  cv.height = H;
   const ctx = cv.getContext('2d');
 
-  if (img) {
-    const run = () => {
-      let px = 48;
-      const tick = () => {
-        const sw = Math.max(1, Math.round(W / px));
-        const sh = Math.max(1, Math.round(H / px));
-        ctx.imageSmoothingEnabled = false;
-        ctx.clearRect(0, 0, W, H);
-        ctx.drawImage(img, 0, 0, sw, sh);
-        ctx.drawImage(cv, 0, 0, sw, sh, 0, 0, W, H);
-        px *= 0.74;
-        if (px > 1.15) requestAnimationFrame(tick);
-        else { img.style.opacity = '1'; ctx.clearRect(0, 0, W, H); }
-      };
-      requestAnimationFrame(tick);
-    };
-    img.complete && img.naturalWidth ? run() : (img.onload = run);
-  } else {
-    /* palette noise dissolve */
-    const MIN = 4;
-    const mc  = Math.ceil(W / MIN), mr = Math.ceil(H / MIN);
-    const nm  = new Uint8Array(mc * mr);
-    for (let i = 0; i < nm.length; i++) nm[i] = Math.floor(Math.random() * PAL.length);
+  const finish = () => {
+    img.style.opacity = '1';
+    ctx.clearRect(0, 0, W, H);
+    cv.remove();
+  };
+
+  const run = () => {
     let px = 48;
     const tick = () => {
+      const sw = Math.max(1, Math.round(W / px));
+      const sh = Math.max(1, Math.round(H / px));
+      ctx.imageSmoothingEnabled = false;
       ctx.clearRect(0, 0, W, H);
-      const cols = Math.ceil(W / px), rows = Math.ceil(H / px);
-      for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
-        ctx.fillStyle = PAL[nm[Math.floor(r * mr / rows) * mc + Math.floor(c * mc / cols)] % PAL.length];
-        ctx.fillRect(c * px, r * px, px + 1, px + 1);
+
+      if (img.naturalWidth) {
+        ctx.drawImage(img, 0, 0, sw, sh);
+        ctx.drawImage(cv, 0, 0, sw, sh, 0, 0, W, H);
+      } else {
+        const cols = Math.ceil(W / px), rows = Math.ceil(H / px);
+        for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+          ctx.fillStyle = PAL[(r + c) % PAL.length];
+          ctx.fillRect(c * px, r * px, px + 1, px + 1);
+        }
       }
-      px = Math.max(MIN, px * 0.78);
-      if (px > MIN + 0.3) requestAnimationFrame(tick);
-      else ctx.clearRect(0, 0, W, H);
+
+      px *= 0.74;
+      if (px > 1.15) requestAnimationFrame(tick);
+      else finish();
     };
     requestAnimationFrame(tick);
-  }
+  };
+
+  if (img.complete && img.naturalWidth) run();
+  else img.onload = run;
 }
 
-/* ???? Init ???? */
-function init() {
-  measure();
-  buildCards();
-  buildTimeline();
-  getTickNodes();
-  /* dissolve first few visible cards */
-  cards.forEach((c, i) => { if (c.x < VW * 1.5) dissolve(i); });
+if ('IntersectionObserver' in window) {
+  assetThumbObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      hydrateAssetThumb(entry.target);
+      assetThumbObserver.unobserve(entry.target);
+    });
+  }, {
+    root: assetGrid,
+    rootMargin: '180px 0px',
+  });
 }
 
-window.addEventListener('resize', () => {
-  measure();
-  buildCards();
-  buildTimeline();
-  getTickNodes();
-  currentX = targetX = getProgress() * (stageW - VW);
-  stage.style.transform   = `translateX(${-currentX}px)`;
-  tlStrip.style.transform = `translateX(${-currentX}px)`;
-  cards.forEach((c, i) => { if (c.x < currentX + VW * 1.5) dissolve(i); });
+jumpBtns.forEach(btn => {
+  btn.addEventListener('click', () => jumpToSection(btn.dataset.jumpTo));
 });
 
-init();
+overviewBtn.addEventListener('click', openAssetOverview);
+assetModalClose.addEventListener('click', closeAssetOverview);
+assetViewerClose.addEventListener('click', closeAssetViewer);
+assetViewerPrev.addEventListener('click', () => stepAssetViewer(-1));
+assetViewerNext.addEventListener('click', () => stepAssetViewer(1));
 
-/* ???? Pixel BG ???? */
-const bgC = document.getElementById('pixel-bg'), bgX = bgC.getContext('2d');
-function drawBg() {
-  bgC.width = window.innerWidth; bgC.height = window.innerHeight;
-  bgX.clearRect(0,0,bgC.width,bgC.height);
-  const S = 24, cols = Math.ceil(bgC.width/S)+1, rows = Math.ceil(bgC.height/S)+1;
-  for(let r=0;r<rows;r++) for(let c=0;c<cols;c++)
-    if(Math.random()<.055){ bgX.fillStyle=`rgba(255,191,86,${.03+Math.random()*.05})`; bgX.fillRect(c*S,r*S,S,S); }
-}
-drawBg(); window.addEventListener('resize', drawBg);
+topBtn.addEventListener('click', () => {
+  document.getElementById('hero').scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
 
-/* ???? Cursor ???? */
+assetModal.addEventListener('click', e => {
+  if (e.target === assetModal) closeAssetOverview();
+});
+assetViewer.addEventListener('click', e => {
+  if (e.target === assetViewer) closeAssetViewer();
+});
+
+document.addEventListener('keydown', e => {
+  if (assetViewer.classList.contains('active')) {
+    if (e.key === 'Escape') {
+      closeAssetViewer();
+      return;
+    }
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      stepAssetViewer(-1);
+      return;
+    }
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      stepAssetViewer(1);
+      return;
+    }
+  }
+  if (e.key === 'Escape' && assetModal.classList.contains('active')) closeAssetOverview();
+});
+
+let resizeTimer = 0;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(rebuildGallery, 120);
+});
+
+rebuildGallery();
+updateGalleryInView();
+
+/* ── Cursor ── */
 const cc=document.getElementById('cursor-canvas'),cx=cc.getContext('2d');
 cc.width=window.innerWidth;cc.height=window.innerHeight;
-window.addEventListener('resize',()=>{cc.width=window.innerWidth;cc.height=window.innerHeight;});
+window.addEventListener('resize',()=>{
+  cc.width=window.innerWidth;
+  cc.height=window.innerHeight;
+  requestCursorFrame();
+});
 let mx=-100,my=-100,hov=false,bx=-100,by=-100,ang=0,tang=0,lph=0,lbx=-100,lby=-100,csc=2,tsc=2;
-document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+function requestCursorFrame(){
+  if (cursorRafId || document.hidden) return;
+  cursorRafId = requestAnimationFrame(cursorLoop);
+}
+function markCursorActive(){
+  cursorLastEventAt = performance.now();
+  requestCursorFrame();
+}
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;markCursorActive();});
 document.querySelectorAll('a,button').forEach(el=>{
-  el.addEventListener('mouseenter',()=>hov=true);
-  el.addEventListener('mouseleave',()=>hov=false);
+  el.addEventListener('mouseenter',()=>{hov=true;markCursorActive();});
+  el.addEventListener('mouseleave',()=>{hov=false;markCursorActive();});
 });
 document.addEventListener('click',e=>{
   const r=document.createElement('div');r.className='click-ripple';
   const s=hov?32:20;
   r.style.cssText=`width:${s}px;height:${s}px;left:${e.clientX}px;top:${e.clientY}px;border:2px solid #FFB742;background:rgba(255,183,66,.15);`;
   document.body.appendChild(r);setTimeout(()=>r.remove(),520);
+  markCursorActive();
 });
 function drawCursor(P,a,mv){
   const B='#FFB742',D='#DA6628',I='#FFD4A8',E='#181818',H='#FFF8E0';
@@ -638,7 +1067,9 @@ function drawCursor(P,a,mv){
   cx.fillRect(Math.round(P*1.7),Math.round(P*.8),Math.round(P*3),1);
   cx.restore();
 }
-function cursorLoop(){
+function cursorLoop(now){
+  cursorRafId = 0;
+  if (document.hidden) return;
   cx.clearRect(0,0,cc.width,cc.height);cx.imageSmoothingEnabled=false;
   tsc=hov?2.8:2;csc+=(tsc-csc)*.18;
   bx+=(mx-bx)*.22;by+=(my-by)*.22;
@@ -649,19 +1080,62 @@ function cursorLoop(){
   let da=tang-ang;while(da>Math.PI)da-=Math.PI*2;while(da<-Math.PI)da+=Math.PI*2;ang+=da*.25;
   if(mv)lph+=.28;
   cx.save();cx.translate(Math.round(bx),Math.round(by));drawCursor(csc,ang,mv);cx.restore();
-  requestAnimationFrame(cursorLoop);
+  const posSettled = Math.abs(mx-bx) < .2 && Math.abs(my-by) < .2;
+  const scaleSettled = Math.abs(tsc-csc) < .02;
+  const recentlyActive = now - cursorLastEventAt < 600;
+  if (!posSettled || !scaleSettled || recentlyActive) requestCursorFrame();
 }
-cursorLoop();
+requestCursorFrame();
 
-/* ???? PW modal ???? */
-const PW='mialyk2024';
-function showPw(e){e.preventDefault();document.getElementById('pw-input').value='';document.getElementById('pw-error').textContent='';document.getElementById('pw-input').classList.remove('error');document.getElementById('pw-modal').classList.add('active');setTimeout(()=>document.getElementById('pw-input').focus(),100);}
-function closePw(){document.getElementById('pw-modal').classList.remove('active');}
-function checkPw(){if(document.getElementById('pw-input').value===PW){closePw();window.location.href='lesocial.html';}else{document.getElementById('pw-input').classList.add('error');document.getElementById('pw-error').textContent='Incorrect password';document.getElementById('pw-input').value='';setTimeout(()=>document.getElementById('pw-input').classList.remove('error'),1500);}}
-document.getElementById('pw-modal').addEventListener('click',function(e){if(e.target===this)closePw();});
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    if (galleryRafId) {
+      cancelAnimationFrame(galleryRafId);
+      galleryRafId = 0;
+    }
+    if (cursorRafId) {
+      cancelAnimationFrame(cursorRafId);
+      cursorRafId = 0;
+    }
+    return;
+  }
+  requestGalleryFrame();
+  requestCursorFrame();
+});
 
-/* ???? Hero entrance ???? */
-setTimeout(()=>document.getElementById('hero').classList.add('vis'),200);
+/* PW modal */
+async function hashStr(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+const PW_HASH = 'c0f375a41b2ce2a15ef28c4f2028e9a0b2e8f4e3d8a5b6c7d1e2f3a4b5c6d7e8'; // sha256('mialyk2024')
+function showPw(e) {
+  e.preventDefault();
+  const inp = document.getElementById('pw-input');
+  inp.value = '';
+  document.getElementById('pw-error').textContent = '';
+  inp.classList.remove('error');
+  document.getElementById('pw-modal').classList.add('active');
+  setTimeout(() => inp.focus(), 100);
+}
+function closePw() { document.getElementById('pw-modal').classList.remove('active'); }
+async function checkPw() {
+  const inp = document.getElementById('pw-input');
+  const hash = await hashStr(inp.value);
+  if (hash === PW_HASH) {
+    closePw();
+    window.location.href = 'lesocial.html';
+  } else {
+    inp.classList.add('error');
+    document.getElementById('pw-error').textContent = 'Incorrect password';
+    inp.value = '';
+    setTimeout(() => inp.classList.remove('error'), 1500);
+  }
+}
+document.getElementById('pw-modal').addEventListener('click', function(e) { if (e.target === this) closePw(); });
+document.getElementById('pw-input').addEventListener('keydown', e => { if (e.key === 'Enter') checkPw(); });
+
+
 </script>
 </body>
 </html>

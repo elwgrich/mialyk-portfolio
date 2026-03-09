@@ -82,15 +82,15 @@ nav{display:flex;align-items:center;gap:36px;}
   background-image:linear-gradient(rgba(24,24,24,0.018) 1px,transparent 1px),linear-gradient(90deg,rgba(24,24,24,0.018) 1px,transparent 1px);
   background-size:8px 8px;}
 .hero-inner{width:100%;max-width:1200px;margin:0 auto;position:relative;z-index:1;}
-.hero-eyebrow{display:flex;align-items:center;gap:12px;font-size:var(--fs-10);color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:20px;}
+.hero-eyebrow{display:flex;align-items:center;gap:12px;font-size:var(--fs-10);color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:20px;line-height:19px;}
 .hero-eyebrow::before{content:'';width:16px;height:2px;background:var(--accent);display:block;}
 .hero-year{font-family:'Press Start 2P',monospace;font-size:9px;color:var(--grey-m);border:1px solid rgba(24,24,24,0.15);padding:4px 10px;}
 h1{font-family:'Press Start 2P',monospace;font-size:clamp(26px,4.5vw,50px);line-height:1.35;margin-bottom:32px;color:var(--black);}
 h1 .accent{color:var(--accent);}
 .hero-meta{display:flex;gap:48px;flex-wrap:wrap;}
-.meta-item{display:flex;flex-direction:column;gap:4px;}
-.meta-label{font-size:var(--fs-10);color:var(--grey-l);text-transform:uppercase;letter-spacing:.1em;}
-.meta-value{font-size:var(--fs-12);color:var(--black);}
+.meta-item{display:flex;flex-direction:column;gap:4px;padding:0;}
+.meta-label{font-size:var(--fs-10);color:var(--grey-l);text-transform:uppercase;letter-spacing:.1em;line-height:13px;}
+.meta-value{font-size:var(--fs-12);color:var(--black);line-height:16px;}
 
 /* ── SECTION LABEL ── */
 .slabel{font-family:'Press Start 2P',monospace;font-size:var(--fs-10);color:var(--grey-l);letter-spacing:.08em;text-transform:uppercase;margin-bottom:24px;display:flex;align-items:center;gap:12px;}
@@ -449,7 +449,7 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
         </a>
         <a href="https://www.ora.io/" target="_blank" rel="noreferrer" class="dropdown-item"><span class="dropdown-dot"></span>ORA</a>
         <a href="https://www.meedloyalty.com/" target="_blank" rel="noreferrer" class="dropdown-item"><span class="dropdown-dot"></span>Meed</a>
-        <span class="dropdown-item dropdown-item--disabled" aria-disabled="true"><span class="dropdown-dot"></span>Cheddar Verse</span>
+        <a href="cheddar.html" class="dropdown-item"><span class="dropdown-dot"></span>Cheddar Verse</a>
         <a href="https://www.artstation.com/mialyk" target="_blank" rel="noreferrer" class="dropdown-item"><span class="dropdown-dot"></span>Illustration</a>
         <a href="vfx.html" class="dropdown-item"><span class="dropdown-dot"></span>VFX</a>
         <a href="hamartia.html" class="dropdown-item active"><span class="dropdown-dot"></span>Hamartia <span style="font-size:10px;color:var(--grey-m)">Game</span></a>

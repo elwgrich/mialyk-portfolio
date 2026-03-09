@@ -146,15 +146,25 @@ Fixed `560 x 420px`, 3-section flex / grid column:
 
 - Default project hero = eyebrow + optional year chip + H1 + meta row. Do not add hero tags or hero deck copy unless explicitly requested.
 - Placement = first section under header, `margin-top: 60px`.
-- Frame = `padding: 32px 24px`, white background, `border-bottom: 1px solid rgba(24,24,24,0.1)`.
+- Frame = `padding: 32px 24px`, white background, `border-bottom: 1px solid rgba(24,24,24,0.1)`, fixed hero height `238px`.
 - Inner wrap = max-width `1200px`, centered.
 - Eyebrow = `DM Mono`, `10px`, uppercase, brand orange, `letter-spacing: .12em`, with a `16px x 2px` orange rule before the text.
 - Year chip = `Press Start 2P`, `9px`, `color: --grey-m`, `border: 1px solid rgba(24,24,24,0.15)`, `padding: 4px 10px`, white background.
 - H1 = always `Press Start 2P`, `clamp(26px, 4.5vw, 50px)`, black by default.
 - H1 accent = use sparingly; default secondary tone is `--grey-m`, not a new colour.
 - Meta row = flex layout with `48px` gap and wrap enabled.
-- Meta label = `10px`, uppercase, `--grey-l`, `letter-spacing: .1em`.
-- Meta value = `12px`, `--black`.
+- Meta label = `10px`, uppercase, `--grey-l`, `letter-spacing: .1em`, `line-height: 13px`.
+- Meta value = `12px`, `--black`, `line-height: 16px`.
+
+| Hero item | H | Padding | Font size |
+|---|---|---|---|
+| Hero frame | `238px` | `32px 24px` | n/a |
+| Eyebrow | `19px` line-height | `0` | `10px` |
+| Year chip | auto | `4px 10px` | `9px` |
+| H1 | auto | `0` | `clamp(26px, 4.5vw, 50px)` |
+| Meta item | auto | `0` | n/a |
+| Meta label | `13px` line-height | `0` | `10px` |
+| Meta value | `16px` line-height | `0` | `12px` |
 
 
 ---

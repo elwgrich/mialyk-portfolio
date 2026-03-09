@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Helpurr — mialyk</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --white: #FEFEFE;
+    --grey-l: #A8B0B2;
+    --grey-m: #88888C;
+    --black: #181818;
+    --brand: #FFB742;
+    --effect1: #DA6628;
+    --effect2: #F3FF97;
+    --cyan: #00e6c8;
+    --accent: #C0FFEE;
+    --fs-24: clamp(20px, 2.4vw, 24px);
+    --fs-16: 16px;
+    --fs-12: 12px;
+    --fs-10: 10px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--white);
+    color: var(--black);
+    font-family: 'DM Mono', monospace;
+    font-size: var(--fs-12);
+    cursor: none;
+    overflow-x: hidden;
+  }
+
+  /* ── CURSOR ── */
+  #cursor {
+    position: fixed;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--brand);
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width .15s, height .15s, background .15s, opacity .15s;
+  }
+  #cursor.hover {
+    width: 24px; height: 24px;
+    background: rgba(0,230,200,0.7);
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 60px;
+    background: var(--white);
+    border-bottom: 1px solid rgba(24,24,24,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    z-index: 100;
+  }
+
+  .nav-logo {
+    font-family: 'Press Start 2P', monospace;
+    font-size: var(--fs-16);
+    color: var(--black);
+    text-decoration: none;
+    display: flex;
+    align-items: baseline;
+    gap: 0;
+  }
+  .nav-logo .slash { color: var(--brand); margin: 0 2px; }
+  .nav-logo sub {
+    font-family: 'DM Mono', monospace;
+    font-size: var(--fs-10);
+    color: var(--grey-m);
+    font-weight: 400;
+    bottom: 0;
+    margin-left: 6px;
+  }
+
+  nav { display: flex; align-items: center; gap: 32px; }
+
+  .nav-item { position: relative; }
+
+  .nav-link {
+    font-family: 'DM Mono', monospace;
+    font-size: var(--fs-12);
+    color: var(--grey-m);
+    text-decoration: none;
+    padding: 4px 0;
+    position: relative;
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px; left: 0; right: 0;
+    height: 1px;
+    background: var(--brand);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .2s ease-out;
+  }
+  .nav-link:hover::after,
+  .nav-link.active::after { transform: scaleX(1); }
+  .nav-link:hover, .nav-link.active { color: var(--black); }
+
+  .nav-dropdown {
+    position: absolute;
+    top: calc(100% + 12px);
+    left: -12px;
+    background: var(--white);
+    border: 1px solid rgba(24,24,24,0.1);
+    min-width: 160px;
+    padding: 6px 0;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-4px);
+    transition: opacity .15s, transform .15s;
+  }
+  .nav-item:hover .nav-dropdown {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    font-size: var(--fs-12);
+    color: var(--grey-m);
+    text-decoration: none;
+  }
+  .dropdown-item:hover {
+    background: rgba(255,183,66,0.08);
+    color: var(--black);
+  }
+  .dropdown-dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--grey-l);
+    flex-shrink: 0;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    margin-top: 60px;
+    padding: 32px 24px;
+    background: var(--white);
+    border-bottom: 1px solid rgba(24,24,24,0.1);
+  }
+  .hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .hero-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .eyebrow-rule {
+    width: 16px; height: 2px;
+    background: var(--brand);
+    flex-shrink: 0;
+  }
+  .eyebrow-text {
+    font-family: 'DM Mono', monospace;
+    font-size: var(--fs-10);
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: var(--brand);
+  }
+  .hero-title-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .hero h1 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(26px, 4.5vw, 50px);
+    color: var(--black);
+    line-height: 1.3;
+  }
+  .year-chip {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    color: var(--grey-m);
+    border: 1px solid rgba(24,24,24,0.15);
+    padding: 4px 10px;
+    background: var(--white);
+    white-space: nowrap;
+  }
+  .hero-meta {
+    display: flex;
+    gap: 48px;
+    flex-wrap: wrap;
+  }
+  .meta-item {}
+  .meta-label {
+    font-size: var(--fs-10);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--grey-l);
+    margin-bottom: 4px;
+  }
+  .meta-value {
+    font-size: var(--fs-12);
+    color: var(--black);
+  }
+
+  /* ── PAGE CONTENT ── */
+  .page-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 24px;
+  }
+
+  .section { margin-bottom: 100px; }
+
+  .section-label {
+    font-size: var(--fs-10);
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: var(--grey-l);
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(24,24,24,0.08);
+  }
+
+  /* ── PHONE SHOWCASE ── */
+  .phone-showcase {
+    display: flex;
+    gap: 60px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .phone-frame {
+    position: relative;
+    width: 280px;
+    height: 580px;
+    flex-shrink: 0;
+  }
+
+  .phone-shell {
+    position: absolute;
+    inset: 0;
+    border: 3px solid var(--black);
+    border-radius: 40px;
+    background: var(--black);
+    box-shadow: 6px 6px 0 var(--accent), 12px 12px 0 rgba(24,24,24,0.08);
+    overflow: hidden;
+  }
+
+  /* pixel-art notch */
+  .phone-notch {
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 80px; height: 26px;
+    background: var(--black);
+    border-radius: 0 0 16px 16px;
+    z-index: 10;
+  }
+
+  .phone-screen {
+    position: absolute;
+    inset: 4px;
+    border-radius: 36px;
+    overflow: hidden;
+    background: #000;
+  }
+
+  /* Video reel */
+  .video-reel {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .video-track {
+    display: flex;
+    flex-direction: column;
+    transition: transform .4s cubic-bezier(0.34,1.2,0.64,1);
+  }
+
+  .video-slide {
+    width: 100%;
+    height: 572px;
+    flex-shrink: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .video-slide video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* placeholder when no video */
+  .video-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: #0a0a0a;
+  }
+  .vp-icon {
+    width: 48px; height: 48px;
+    border: 2px solid rgba(192,255,238,0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .vp-icon svg { width: 18px; height: 18px; }
+  .vp-num {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    color: rgba(192,255,238,0.4);
+  }
+  .vp-label {
+    font-size: var(--fs-10);
+    color: rgba(255,255,255,0.3);
+  }
+
+  /* Dot nav */
+  .phone-dots {
+    position: absolute;
+    right: -24px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .phone-dot {
+    width: 6px; height: 6px;
+    background: rgba(24,24,24,0.2);
+    cursor: pointer;
+    transition: background .2s, transform .2s;
+  }
+  .phone-dot.active {
+    background: var(--brand);
+    transform: scale(1.4);
+  }
+
+  /* Swipe hint */
+  .swipe-hint {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: var(--fs-10);
+    color: rgba(255,255,255,0.4);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    pointer-events: none;
+    animation: hint-breathe 2s ease-in-out infinite;
+  }
+  @keyframes hint-breathe {
+    0%,100% { opacity: 0.4; }
+    50% { opacity: 0.8; }
+  }
+
+  /* Showcase text */
+  .showcase-text {
+    max-width: 400px;
+  }
+  .showcase-text h2 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(14px, 2vw, 20px);
+    line-height: 1.6;
+    margin-bottom: 20px;
+    color: var(--black);
+  }
+  .showcase-text p {
+    font-size: var(--fs-12);
+    color: var(--grey-m);
+    line-height: 1.8;
+    margin-bottom: 32px;
+  }
+
+  .tag-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+  .tag {
+    font-size: var(--fs-10);
+    color: var(--grey-m);
+    border: 1px solid rgba(24,24,24,0.12);
+    padding: 4px 10px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+  }
+  .tag.accent {
+    border-color: var(--accent);
+    color: var(--black);
+    background: rgba(192,255,238,0.15);
+  }
+
+  /* ── INSTAGRAM MOCK ── */
+  .ig-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+
+  .ig-text { padding-top: 20px; }
+  .ig-text h2 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(13px, 1.8vw, 18px);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  .ig-text p {
+    font-size: var(--fs-12);
+    color: var(--grey-m);
+    line-height: 1.8;
+  }
+
+  .ig-frame {
+    width: 100%;
+    max-width: 380px;
+    border: 2px solid var(--black);
+    background: var(--white);
+    box-shadow: 6px 6px 0 var(--accent);
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    overflow: hidden;
+  }
+
+  /* IG Header */
+  .ig-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(24,24,24,0.1);
+  }
+  .ig-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, var(--brand), var(--effect1));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .ig-username {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--black);
+  }
+  .ig-handle {
+    font-size: 11px;
+    color: var(--grey-m);
+  }
+  .ig-follow-btn {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 600;
+    color: #0095F6;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  /* IG Stories */
+  .ig-stories {
+    display: flex;
+    gap: 12px;
+    padding: 12px 16px;
+    overflow-x: auto;
+    border-bottom: 1px solid rgba(24,24,24,0.08);
+    scrollbar-width: none;
+  }
+  .ig-stories::-webkit-scrollbar { display: none; }
+  .story-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .story-ring {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    padding: 2px;
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .story-ring.seen { background: rgba(24,24,24,0.15); }
+  .story-inner {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    border: 2px solid white;
+    background: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    overflow: hidden;
+  }
+  .story-label {
+    font-size: 10px;
+    color: var(--black);
+    max-width: 56px;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* IG Grid */
+  .ig-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    max-height: 360px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) transparent;
+  }
+  .ig-grid::-webkit-scrollbar { width: 4px; }
+  .ig-grid::-webkit-scrollbar-thumb { background: var(--accent); }
+
+  .ig-cell {
+    aspect-ratio: 1;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: filter .2s;
+  }
+  .ig-cell:hover { filter: brightness(0.85); }
+  .ig-cell img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+  .ig-cell-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity .2s;
+    font-size: 12px;
+    color: white;
+    gap: 8px;
+  }
+  .ig-cell:hover .ig-cell-overlay { opacity: 1; }
+
+  /* IG bottom nav */
+  .ig-nav {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    border-top: 1px solid rgba(24,24,24,0.1);
+  }
+  .ig-nav-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    color: var(--black);
+    opacity: 0.6;
+    transition: opacity .15s;
+  }
+  .ig-nav-btn:hover, .ig-nav-btn.active { opacity: 1; }
+
+  /* ── STICKER APP MOCK ── */
+  .sticker-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+
+  .sticker-text { padding-top: 20px; }
+  .sticker-text h2 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(13px, 1.8vw, 18px);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  .sticker-text p {
+    font-size: var(--fs-12);
+    color: var(--grey-m);
+    line-height: 1.8;
+  }
+
+  .chat-app {
+    width: 100%;
+    max-width: 380px;
+    border: 2px solid var(--black);
+    background: var(--white);
+    box-shadow: 6px 6px 0 var(--brand);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 560px;
+  }
+
+  /* Chat header */
+  .chat-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: var(--black);
+    color: var(--white);
+  }
+  .chat-back {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: var(--brand);
+    cursor: pointer;
+    background: none;
+    border: none;
+  }
+  .chat-contact-avatar {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+  .chat-contact-name {
+    font-family: 'DM Mono', monospace;
+    font-size: var(--fs-12);
+    font-weight: 500;
+    color: var(--white);
+  }
+  .chat-contact-status {
+    font-size: var(--fs-10);
+    color: var(--accent);
+    opacity: 0.8;
+  }
+
+  /* Chat messages */
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #f7f7f7;
+    scrollbar-width: none;
+  }
+  .chat-messages::-webkit-scrollbar { display: none; }
+
+  .msg {
+    max-width: 70%;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .msg.sent { align-self: flex-end; align-items: flex-end; }
+  .msg.received { align-self: flex-start; }
+
+  .msg-bubble {
+    padding: 8px 12px;
+    font-size: var(--fs-12);
+    line-height: 1.5;
+    border: 1.5px solid var(--black);
+  }
+  .msg.sent .msg-bubble { background: var(--brand); }
+  .msg.received .msg-bubble { background: var(--white); }
+
+  .msg-sticker {
+    font-size: 56px;
+    line-height: 1;
+    display: block;
+    cursor: default;
+    animation: sticker-pop .4s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  }
+  @keyframes sticker-pop {
+    from { transform: scale(0.3) rotate(-15deg); opacity: 0; }
+    to { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
+
+  .msg-time {
+    font-size: 9px;
+    color: var(--grey-l);
+  }
+
+  /* Sticker tray */
+  .sticker-tray {
+    border-top: 2px solid var(--black);
+    background: var(--white);
+  }
+  .sticker-tray-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(24,24,24,0.1);
+    font-size: var(--fs-10);
+    color: var(--grey-m);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+  }
+  .sticker-tray-header span {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: var(--brand);
+  }
+  .sticker-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
+    padding: 8px;
+  }
+  .sticker-btn {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    cursor: pointer;
+    background: none;
+    border: 2px solid transparent;
+    border-radius: 0;
+    transition: background .12s, border-color .12s, transform .12s;
+  }
+  .sticker-btn:hover {
+    background: rgba(192,255,238,0.3);
+    border-color: var(--accent);
+    transform: scale(1.15);
+  }
+  .sticker-btn:active { transform: scale(0.95); }
+
+  /* ── BUTTONS ── */
+  .btn {
+    font-family: 'Press Start 2P', monospace;
+    font-size: var(--fs-12);
+    height: 52px;
+    padding: 0 24px;
+    background: transparent;
+    border: 1.5px solid var(--black);
+    color: var(--black);
+    cursor: pointer;
+    letter-spacing: .04em;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    appearance: none;
+    transition: background .15s, color .15s, border-color .15s;
+  }
+  .btn.primary { background: var(--brand); border-color: var(--brand); }
+  .btn:hover { background: var(--black); color: var(--white); border-color: var(--black); }
+  .btn.primary:hover { background: var(--effect1); border-color: var(--effect1); color: var(--white); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--white);
+    border-top: 1px solid rgba(24,24,24,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    height: 60px;
+  }
+  .footer-copy {
+    font-size: var(--fs-12);
+    color: var(--grey-m);
+  }
+  .footer-copy span { color: var(--black); }
+  .footer-socials { display: flex; gap: 16px; align-items: center; }
+  .social-link {
+    color: var(--grey-m);
+    display: flex;
+    align-items: center;
+    transition: color .15s;
+  }
+  .social-link:hover { color: var(--black); }
+  .pxi { display: inline-block; }
+  .pxi--sm { width: 14px; height: 14px; }
+  .pxi--md { width: 18px; height: 18px; }
+  .pxi--lg { width: 24px; height: 24px; }
+
+  /* ── PASSWORD MODAL ── */
+  #pw-modal {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(24,24,24,0.4);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+  #pw-modal.active { display: flex; }
+  #pw-inner {
+    background: var(--white);
+    max-width: 360px;
+    width: 90%;
+    padding: 32px;
+    animation: popup-in .35s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  }
+  @keyframes popup-in {
+    from { transform: scale(0.92) translateY(16px); opacity: 0; }
+    to { transform: scale(1) translateY(0); opacity: 1; }
+  }
+  .pw-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: var(--fs-16);
+    margin-bottom: 12px;
+    display: flex; align-items: center;
+  }
+  .pw-sub { font-size: var(--fs-10); color: var(--grey-m); margin-bottom: 20px; line-height: 1.7; }
+  .pw-input {
+    width: 100%;
+    height: 44px;
+    border: 1.5px solid rgba(24,24,24,0.2);
+    background: var(--white);
+    font-family: 'DM Mono', monospace;
+    font-size: var(--fs-12);
+    padding: 0 12px;
+    outline: none;
+    appearance: none;
+    margin-bottom: 8px;
+  }
+  .pw-input:focus { border-color: var(--black); }
+  .pw-input.error { border-color: #FF4444; }
+  .pw-error { font-size: var(--fs-10); color: #FF4444; min-height: 16px; margin-bottom: 12px; }
+  .pw-btns { display: flex; gap: 8px; }
+  .btn--sm {
+    font-family: 'Press Start 2P', monospace;
+    font-size: var(--fs-10);
+    height: 36px;
+    padding: 0 16px;
+    background: transparent;
+    border: 1.5px solid var(--black);
+    color: var(--black);
+    cursor: pointer;
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    transition: background .15s, color .15s;
+  }
+  .btn--sm.primary { background: var(--brand); border-color: var(--brand); }
+  .btn--sm:hover { background: var(--black); color: var(--white); }
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursor"></div>
+
+<!-- HEADER -->
+<header>
+  <a href="index.html" class="nav-logo">
+    mialyk<span class="slash">//</span><sub>building something creative</sub>
+  </a>
+  <nav>
+    <div class="nav-item">
+      <a href="#" class="nav-link active">Projects</a>
+      <div class="nav-dropdown">
+        <a href="helpurr.html" class="dropdown-item"><span class="dropdown-dot"></span>Helpurr</a>
+        <a href="#" class="dropdown-item dropdown-locked" onclick="showPasswordModal(event)"><span class="dropdown-dot"></span>Le.social
+          <svg class="pxi pxi--sm" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="margin-left:4px;opacity:0.5">
+            <rect x="8" y="4" width="8" height="2"/><rect x="6" y="6" width="2" height="4"/>
+            <rect x="16" y="6" width="2" height="4"/><rect x="4" y="10" width="16" height="2"/>
+            <rect x="4" y="10" width="2" height="10"/><rect x="18" y="10" width="2" height="10"/>
+            <rect x="4" y="20" width="16" height="2"/>
+            <rect x="10" y="14" width="4" height="2"/><rect x="11" y="16" width="2" height="2"/>
+          </svg>
+        </a>
+        <a href="ora.html" class="dropdown-item"><span class="dropdown-dot"></span>ORA</a>
+        <a href="meed.html" class="dropdown-item"><span class="dropdown-dot"></span>Meed</a>
+        <a href="cheddar.html" class="dropdown-item"><span class="dropdown-dot"></span>Cheddar Verse</a>
+        <a href="illustration.html" class="dropdown-item"><span class="dropdown-dot"></span>Illustration</a>
+        <a href="vfx.html" class="dropdown-item"><span class="dropdown-dot"></span>VFX</a>
+        <a href="hamartia.html" class="dropdown-item"><span class="dropdown-dot"></span>Hamartia <span style="font-size:10px;color:var(--grey-m)">Game</span></a>
+      </div>
+    </div>
+    <a href="about.html" class="nav-link">About</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <div class="eyebrow-rule"></div>
+      <span class="eyebrow-text">Product Design &amp; Illustration</span>
+    </div>
+    <div class="hero-title-row">
+      <h1>Helpurr</h1>
+      <span class="year-chip">2024</span>
+    </div>
+    <div class="hero-meta">
+      <div class="meta-item">
+        <div class="meta-label">Role</div>
+        <div class="meta-value">Product Designer</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Type</div>
+        <div class="meta-value">Mobile App</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Platform</div>
+        <div class="meta-value">iOS</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Status</div>
+        <div class="meta-value" style="color:var(--accent)">Live on App Store</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAGE CONTENT -->
+<main class="page-content">
+
+  <!-- ── SECTION 1: PHONE VIDEO SHOWCASE ── -->
+  <section class="section">
+    <div class="section-label">01 — App Promo</div>
+    <div class="phone-showcase">
+      <div class="phone-frame">
+        <div class="phone-shell">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="video-reel" id="videoReel">
+              <div class="video-track" id="videoTrack">
+
+                <!-- Slide 1 -->
+                <div class="video-slide">
+                  <div class="video-placeholder">
+                    <div class="vp-icon">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="#C0FFEE" stroke-width="2">
+                        <polygon points="5,3 19,12 5,21"/>
+                      </svg>
+                    </div>
+                    <div class="vp-num">01</div>
+                    <div class="vp-label">Pain Detection</div>
+                  </div>
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="video-slide">
+                  <div class="video-placeholder">
+                    <div class="vp-icon">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="#C0FFEE" stroke-width="2">
+                        <polygon points="5,3 19,12 5,21"/>
+                      </svg>
+                    </div>
+                    <div class="vp-num">02</div>
+                    <div class="vp-label">Wellness Tracking</div>
+                  </div>
+                </div>
+
+                <!-- Slide 3 -->
+                <div class="video-slide">
+                  <div class="video-placeholder">
+                    <div class="vp-icon">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="#C0FFEE" stroke-width="2">
+                        <polygon points="5,3 19,12 5,21"/>
+                      </svg>
+                    </div>
+                    <div class="vp-num">03</div>
+                    <div class="vp-label">Smart Insights</div>
+                  </div>
+                </div>
+
+                <!-- Slide 4 -->
+                <div class="video-slide">
+                  <div class="video-placeholder">
+                    <div class="vp-icon">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="#C0FFEE" stroke-width="2">
+                        <polygon points="5,3 19,12 5,21"/>
+                      </svg>
+                    </div>
+                    <div class="vp-num">04</div>
+                    <div class="vp-label">Sticker Pack</div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <div class="swipe-hint">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="rgba(255,255,255,0.4)">
+                <polygon points="5,0 10,10 0,10"/>
+              </svg>
+              scroll
+            </div>
+          </div>
+        </div>
+        <!-- Dot nav (outside shell, right side) -->
+        <div class="phone-dots" id="phoneDots">
+          <div class="phone-dot active" onclick="goToSlide(0)"></div>
+          <div class="phone-dot" onclick="goToSlide(1)"></div>
+          <div class="phone-dot" onclick="goToSlide(2)"></div>
+          <div class="phone-dot" onclick="goToSlide(3)"></div>
+        </div>
+      </div>
+
+      <div class="showcase-text">
+        <h2>Spot pain.<br>Share delight.</h2>
+        <p>AI-powered cat pain detection app for iOS. Uses computer vision to analyse facial cues and detect early signs of discomfort — in seconds.</p>
+        <div class="tag-row">
+          <span class="tag accent">AI / Computer Vision</span>
+          <span class="tag">iOS</span>
+          <span class="tag">Product Design</span>
+          <span class="tag">Motion</span>
+        </div>
+        <a href="https://helpurr.app" target="_blank" class="btn primary">
+          Visit Site
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square">
+            <line x1="2" y1="12" x2="12" y2="2"/>
+            <polyline points="6,2 12,2 12,8"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECTION 2: STICKER CHAT APP ── -->
+  <section class="section">
+    <div class="section-label">02 — Try the Stickers</div>
+    <div class="sticker-section">
+      <div class="sticker-text">
+        <h2>Send a<br>cat feeling.</h2>
+        <p style="margin-bottom:16px">Pick a sticker from the Helpurr pack and drop it into the chat. Each one was hand-illustrated to capture a very specific cat mood.</p>
+        <p style="color:var(--grey-l)">→ Tap any sticker below to send it.</p>
+      </div>
+
+      <div class="chat-app">
+        <!-- Chat Header -->
+        <div class="chat-header">
+          <button class="chat-back">←</button>
+          <div class="chat-contact-avatar">🐈</div>
+          <div>
+            <div class="chat-contact-name">Cat Friend</div>
+            <div class="chat-contact-status">online</div>
+          </div>
+        </div>
+
+        <!-- Messages -->
+        <div class="chat-messages" id="chatMessages">
+          <div class="msg received">
+            <div class="msg-bubble">hey how's your cat doing? 🐱</div>
+            <div class="msg-time">11:42</div>
+          </div>
+          <div class="msg sent">
+            <div class="msg-bubble">she's being dramatic as usual lol</div>
+            <div class="msg-time">11:43</div>
+          </div>
+          <div class="msg received">
+            <div class="msg-bubble">send a sticker that sums it up 👀</div>
+            <div class="msg-time">11:43</div>
+          </div>
+        </div>
+
+        <!-- Sticker Tray -->
+        <div class="sticker-tray">
+          <div class="sticker-tray-header">
+            <span>Helpurr</span> sticker pack
+          </div>
+          <div class="sticker-grid">
+            <button class="sticker-btn" onclick="sendSticker('😿')">😿</button>
+            <button class="sticker-btn" onclick="sendSticker('😸')">😸</button>
+            <button class="sticker-btn" onclick="sendSticker('🙀')">🙀</button>
+            <button class="sticker-btn" onclick="sendSticker('😹')">😹</button>
+            <button class="sticker-btn" onclick="sendSticker('😼')">😼</button>
+            <button class="sticker-btn" onclick="sendSticker('😾')">😾</button>
+            <button class="sticker-btn" onclick="sendSticker('🐾')">🐾</button>
+            <button class="sticker-btn" onclick="sendSticker('🐱')">🐱</button>
+            <button class="sticker-btn" onclick="sendSticker('😺')">😺</button>
+            <button class="sticker-btn" onclick="sendSticker('🐈')">🐈</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-copy">©2026 <span>mialyk</span> — All rights reserved</div>
+  <div class="footer-socials">
+    <a href="https://www.linkedin.com/in/mia-lyk" target="_blank" class="social-link" title="LinkedIn">
+      <svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+    </a>
+    <a href="https://www.instagram.com/mia_lyk" target="_blank" class="social-link" title="Instagram">
+      <svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+    </a>
+    <a href="https://www.artstation.com/mialyk" target="_blank" class="social-link" title="ArtStation">
+      <svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor"><path d="M0 17.723l2.027 3.505h.001a2.424 2.424 0 0 0 2.164 1.333h13.457l-2.792-4.838H0zm24 .025c0-.484-.143-.935-.388-1.314L15.728 2.728a2.424 2.424 0 0 0-2.164-1.333H9.419L21.598 22.54l1.92-3.325c.378-.637.482-.919.482-1.467zm-11.129-3.462L7.428 4.858l-5.444 9.428h10.887z"/></svg>
+    </a>
+    <a href="https://x.com/elwgrich/" target="_blank" class="social-link" title="X">
+      <svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.213 5.567 5.95-5.567zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+    </a>
+  </div>
+</footer>
+
+<!-- PASSWORD MODAL -->
+<div id="pw-modal">
+  <div id="pw-inner">
+    <div class="pw-title">
+      <svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor" style="margin-right:8px;vertical-align:middle">
+        <rect x="8" y="4" width="8" height="2"/><rect x="6" y="6" width="2" height="4"/>
+        <rect x="16" y="6" width="2" height="4"/><rect x="4" y="10" width="16" height="2"/>
+        <rect x="4" y="10" width="2" height="10"/><rect x="18" y="10" width="2" height="10"/>
+        <rect x="4" y="20" width="16" height="2"/>
+        <rect x="10" y="14" width="4" height="2"/><rect x="11" y="16" width="2" height="2"/>
+      </svg>
+      Le.social
+    </div>
+    <div class="pw-sub">This project is password protected.<br>Enter password to view.</div>
+    <input class="pw-input" type="password" id="pw-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkPassword()">
+    <div class="pw-error" id="pw-error"></div>
+    <div class="pw-btns">
+      <button class="btn--sm primary" onclick="checkPassword()">Enter →</button>
+      <button class="btn--sm" onclick="closePwModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── CURSOR ──
+  const cursor = document.getElementById('cursor');
+  let mx = 0, my = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+  document.querySelectorAll('a, button, .ig-cell, .sticker-btn, .phone-dot').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+  });
+
+  // ── PHONE VIDEO REEL ──
+  let currentSlide = 0;
+  const totalSlides = 4;
+  const track = document.getElementById('videoTrack');
+  const dots = document.querySelectorAll('.phone-dot');
+  const slideHeight = 572;
+
+  function goToSlide(n) {
+    currentSlide = Math.max(0, Math.min(n, totalSlides - 1));
+    track.style.transform = `translateY(-${currentSlide * slideHeight}px)`;
+    dots.forEach((d, i) => d.classList.toggle('active', i === currentSlide));
+  }
+
+  // Wheel scroll inside phone
+  document.getElementById('videoReel').addEventListener('wheel', e => {
+    e.preventDefault();
+    if (e.deltaY > 0) goToSlide(currentSlide + 1);
+    else goToSlide(currentSlide - 1);
+  }, { passive: false });
+
+  // Touch swipe
+  let touchStartY = 0;
+  document.getElementById('videoReel').addEventListener('touchstart', e => {
+    touchStartY = e.touches[0].clientY;
+  });
+  document.getElementById('videoReel').addEventListener('touchend', e => {
+    const dy = touchStartY - e.changedTouches[0].clientY;
+    if (Math.abs(dy) > 30) goToSlide(currentSlide + (dy > 0 ? 1 : -1));
+  });
+
+  // ── STICKER CHAT ──
+  function sendSticker(emoji) {
+    const messages = document.getElementById('chatMessages');
+    const now = new Date();
+    const time = now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
+
+    const msg = document.createElement('div');
+    msg.className = 'msg sent';
+    msg.innerHTML = `
+      <span class="msg-sticker">${emoji}</span>
+      <div class="msg-time">${time}</div>
+    `;
+    messages.appendChild(msg);
+    messages.scrollTop = messages.scrollHeight;
+
+    // Auto-reply after short delay
+    setTimeout(() => {
+      const replies = ['😂 accurate', 'omg 💀', 'your cat irl', 'perfect', '🐾🐾🐾'];
+      const reply = document.createElement('div');
+      reply.className = 'msg received';
+      reply.innerHTML = `
+        <div class="msg-bubble">${replies[Math.floor(Math.random() * replies.length)]}</div>
+        <div class="msg-time">${time}</div>
+      `;
+      messages.appendChild(reply);
+      messages.scrollTop = messages.scrollHeight;
+    }, 800);
+  }
+
+  // ── PASSWORD MODAL ──
+  const LE_SOCIAL_PASSWORD = 'mialyk2024';
+  function showPasswordModal(e) {
+    e.preventDefault();
+    document.getElementById('pw-input').value = '';
+    document.getElementById('pw-error').textContent = '';
+    document.getElementById('pw-input').classList.remove('error');
+    document.getElementById('pw-modal').classList.add('active');
+    setTimeout(() => document.getElementById('pw-input').focus(), 100);
+  }
+  function closePwModal() { document.getElementById('pw-modal').classList.remove('active'); }
+  function checkPassword() {
+    const val = document.getElementById('pw-input').value;
+    if (val === LE_SOCIAL_PASSWORD) {
+      closePwModal();
+      window.location.href = 'lesocial.html';
+    } else {
+      document.getElementById('pw-input').classList.add('error');
+      document.getElementById('pw-error').textContent = '↳ Incorrect password';
+      document.getElementById('pw-input').value = '';
+      setTimeout(() => document.getElementById('pw-input').classList.remove('error'), 1500);
+    }
+  }
+  document.getElementById('pw-modal').addEventListener('click', function(e) {
+    if (e.target === this) closePwModal();
+  });
+</script>
+</body>
+</html>
