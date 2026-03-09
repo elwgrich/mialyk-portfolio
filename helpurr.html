@@ -24,7 +24,7 @@
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* ?? SCROLL SNAP ?? */
+  /* SCROLL SNAP */
   html {
     scroll-behavior: smooth;
     scroll-snap-type: y mandatory;
@@ -57,7 +57,7 @@
     min-height: 100vh;
   }
 
-  /* ?? SHOWCASE TEXT ??sticky, fixed layout ?? */
+  /* SHOWCASE TEXT - sticky, fixed layout */
   #showcaseText {
     position: sticky;
     top: 100px;
@@ -78,7 +78,7 @@
     min-height: 80px;
   }
 
-  /* Visit Site btn ??always at bottom of showcase-text */
+  /* Visit Site button stays pinned to the bottom of showcase text */
   .visit-site-wrap {
     margin-top: auto;
     padding-top: 24px;
@@ -86,7 +86,7 @@
 
   #visitSiteBtn { width: auto; }
 
-  /* ?? TIKTOK UI (right side of phone) ?? */
+  /* TIKTOK UI (right side of phone) */
   .tiktok-ui {
     position: absolute;
     right: -52px;
@@ -239,7 +239,7 @@
     overflow-x: hidden;
   }
 
-  /* ?? CURSOR ?? */
+  /* CURSOR */
   #cursor {
     position: fixed;
     width: 10px; height: 10px;
@@ -255,7 +255,7 @@
     background: rgba(0,230,200,0.7);
   }
 
-  /* ?? HEADER ?? */
+  /* HEADER */
   header {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -353,7 +353,7 @@
     flex-shrink: 0;
   }
 
-  /* ?? HERO ?? */
+  /* HERO */
   .hero {
     margin-top: 60px;
     padding: 32px 24px;
@@ -422,7 +422,7 @@
     color: var(--black);
   }
 
-  /* ?? PAGE CONTENT ?? */
+  /* PAGE CONTENT */
   .page-content {
     max-width: 1200px;
     margin: 0 auto;
@@ -448,7 +448,7 @@
     background: rgba(24,24,24,0.08);
   }
 
-  /* ?? PHONE SHOWCASE ?? */
+  /* PHONE SHOWCASE */
   .phone-showcase {
     display: flex;
     gap: 60px;
@@ -739,7 +739,7 @@
     background: rgba(192,255,238,0.15);
   }
 
-  /* ?? INSTAGRAM MOCK ?? */
+  /* INSTAGRAM MOCK */
   .ig-section {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -914,7 +914,7 @@
   }
   .ig-nav-btn:hover, .ig-nav-btn.active { opacity: 1; }
 
-  /* ?? CHAT INSIDE PHONE (WhatsApp style) ?? */
+  /* CHAT INSIDE PHONE (WhatsApp style) */
   .chat-app-inner {
     width: 100%;
     height: 100%;
@@ -1177,7 +1177,7 @@
   .wa-sticker-btn:hover { background: rgba(0,0,0,0.06); transform: scale(1.15); }
   .wa-sticker-btn:active { transform: scale(0.92); }
 
-  /* ?? STICKER APP MOCK ?? */
+  /* STICKER APP MOCK */
   .sticker-section {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1340,7 +1340,7 @@
   }
   .sticker-btn:active { transform: scale(0.95); }
 
-  /* ?? BUTTONS ?? */
+  /* BUTTONS */
   .btn {
     font-family: 'Press Start 2P', monospace;
     font-size: var(--fs-12);
@@ -1365,7 +1365,7 @@
   .btn--md { width: 172px; height: 44px; font-size: var(--fs-12); padding: 0 24px; }
   .btn--lg { width: auto; height: 52px; font-size: var(--fs-12); padding: 0 24px; }
 
-  /* ?? FOOTER ?? */
+  /* FOOTER */
   footer {
     background: var(--white);
     border-top: 1px solid rgba(24,24,24,0.1);
@@ -1393,7 +1393,7 @@
   .pxi--md { width: 18px; height: 18px; }
   .pxi--lg { width: 24px; height: 24px; }
 
-  /* ?? PASSWORD MODAL ?? */
+  /* PASSWORD MODAL */
   #pw-modal {
     display: none;
     position: fixed; inset: 0;
@@ -1454,6 +1454,52 @@
   }
   .btn--sm.primary { background: var(--brand); border-color: var(--brand); }
   .btn--sm:hover { background: var(--black); color: var(--white); }
+  @media (max-width: 900px) {
+    header { padding: 0 20px; }
+    .nav-logo sub { display: none; }
+    nav { gap: 20px; }
+    .nav-dropdown { left: auto; right: 0; }
+    .phone-showcase { gap: 40px; }
+  }
+
+  @media (max-width: 720px) {
+    header { padding: 0 16px; }
+    .nav-logo { font-size: 12px; }
+    nav { gap: 14px; }
+    .nav-link { font-size: 11px; }
+    .hero {
+      height: auto;
+      min-height: 0;
+      padding: 24px 16px;
+    }
+    .hero-title-row { gap: 12px; margin-bottom: 20px; }
+    .hero-meta { gap: 20px; }
+    .page-content { padding: 48px 16px 72px; }
+    .phone-showcase {
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+    }
+    .phone-frame { width: min(100%, 290px); }
+    #showcaseText {
+      position: static;
+      top: auto;
+      width: 100%;
+      max-width: 420px;
+      min-height: 0;
+      padding: 0;
+    }
+    .showcase-text { width: 100%; }
+    .tiktok-ui { right: 8px; bottom: 92px; }
+    footer {
+      height: auto;
+      min-height: 60px;
+      padding: 14px 16px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .footer-socials { width: 100%; justify-content: flex-start; }
+  }
 </style>
 </head>
 <body>
@@ -1555,7 +1601,7 @@
                     <!-- WA Header -->
                     <div class="wa-header">
                       <button class="wa-back">&#8249;</button>
-                      <div class="wa-avatar">??</div>
+                      <div class="wa-avatar">&#128049;</div>
                       <div class="wa-info">
                         <div class="wa-name">Cat Friend</div>
                         <div class="wa-status">online</div>
@@ -1569,18 +1615,18 @@
                     <!-- Messages -->
                     <div class="wa-messages" id="waMessages">
                       <div class="wa-date-divider">Today</div>
-                      <div class="wa-msg received"><div class="wa-bubble">how's your cat? ?<span class="wa-time">11:42</span></div></div>
-                      <div class="wa-msg sent"><div class="wa-bubble">dramatic as usual lol ??<span class="wa-time">11:43 <span class="wa-ticks">??</span></span></div></div>
-                      <div class="wa-msg received"><div class="wa-bubble">send a sticker that sums it up ??<span class="wa-time">11:43</span></div></div>
+                      <div class="wa-msg received"><div class="wa-bubble">how's your cat? &#128049;<span class="wa-time">11:42</span></div></div>
+                      <div class="wa-msg sent"><div class="wa-bubble">dramatic as usual lol<span class="wa-time">11:43 <span class="wa-ticks">&#10003;&#10003;</span></span></div></div>
+                      <div class="wa-msg received"><div class="wa-bubble">send a sticker that sums it up &#128064;<span class="wa-time">11:43</span></div></div>
                     </div>
 
                     <!-- Input Bar -->
                     <div class="wa-input-bar">
                       <div class="wa-input-inner">
-                        <span class="wa-input-emoji">??</span>
+                        <span class="wa-input-emoji">&#9786;</span>
                         <div class="wa-input-text" style="color:#999;font-size:13px;">Message</div>
-                        <span class="wa-input-attach">??</span>
-                        <span class="wa-input-cam">?</span>
+                        <span class="wa-input-attach">&#128206;</span>
+                        <span class="wa-input-cam">&#128247;</span>
                       </div>
                       <button class="wa-send-btn"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
                     </div>
@@ -1590,32 +1636,32 @@
                     <!-- 2-Tab Sticker Tray -->
                     <div class="wa-sticker-tray">
                       <div class="wa-sticker-tabs">
-                        <button class="wa-sticker-tab active" onclick="switchStickerPack(0,this)"><div class="wa-sticker-pack-icon">?</div></button>
-                        <button class="wa-sticker-tab" onclick="switchStickerPack(1,this)"><div class="wa-sticker-pack-icon">?</div></button>
+                        <button class="wa-sticker-tab active" onclick="switchStickerPack(0,this)"><div class="wa-sticker-pack-icon">&#128049;</div></button>
+                        <button class="wa-sticker-tab" onclick="switchStickerPack(1,this)"><div class="wa-sticker-pack-icon">&#128062;</div></button>
                       </div>
                       <div class="wa-sticker-grid" id="stickerPack0">
-                        <button class="wa-sticker-btn" onclick="sendWASticker('?')">?</button>
-                        <button class="wa-sticker-btn" onclick="sendWASticker('?')">?</button>
-                        <button class="wa-sticker-btn" onclick="sendWASticker('??')">??</button>
-                        <button class="wa-sticker-btn" onclick="sendWASticker('?')">?</button>
-                        <button class="wa-sticker-btn" onclick="sendWASticker('?')">?</button>
-                        <button class="wa-sticker-btn" onclick="sendWASticker('?')">?</button>
-                        <button class="wa-sticker-btn" onclick="sendWASticker('?')">?</button>
-                        <button class="wa-sticker-btn" onclick="sendWASticker('?')">?</button>
-                        <button class="wa-sticker-btn" onclick="sendWASticker('?')">?</button>
-                        <button class="wa-sticker-btn" onclick="sendWASticker('??')">??</button>
+                        <button class="wa-sticker-btn" onclick="sendWASticker('&#128049;')">&#128049;</button>
+                        <button class="wa-sticker-btn" onclick="sendWASticker('&#128062;')">&#128062;</button>
+                        <button class="wa-sticker-btn" onclick="sendWASticker('&#10084;')">&#10084;</button>
+                        <button class="wa-sticker-btn" onclick="sendWASticker('&#10024;')">&#10024;</button>
+                        <button class="wa-sticker-btn" onclick="sendWASticker('&#128031;')">&#128031;</button>
+                        <button class="wa-sticker-btn" onclick="sendWASticker('&#127774;')">&#127774;</button>
+                        <button class="wa-sticker-btn" onclick="sendWASticker('&#128062;')">&#128062;</button>
+                        <button class="wa-sticker-btn" onclick="sendWASticker('&#128049;')">&#128049;</button>
+                        <button class="wa-sticker-btn" onclick="sendWASticker('&#9889;')">&#9889;</button>
+                        <button class="wa-sticker-btn" onclick="sendWASticker('&#127810;')">&#127810;</button>
                       </div>
                       <div class="wa-sticker-grid" id="stickerPack1" style="display:none;">
-                        <button class="wa-sticker-btn" onclick="sendWASticker('????')">????</button>
-                        <button class="wa-sticker-btn" onclick="sendWASticker('??')">??</button>
-                        <button class="wa-sticker-btn" onclick="sendWASticker('?')">?</button>
-                        <button class="wa-sticker-btn" onclick="sendWASticker('??')">??</button>
-                        <button class="wa-sticker-btn" onclick="sendWASticker('?')">?</button>
-                        <button class="wa-sticker-btn" onclick="sendWASticker('??')">??</button>
-                        <button class="wa-sticker-btn" onclick="sendWASticker('?')">?</button>
-                        <button class="wa-sticker-btn" onclick="sendWASticker('??')">??</button>
-                        <button class="wa-sticker-btn" onclick="sendWASticker('?')">?</button>
-                        <button class="wa-sticker-btn" onclick="sendWASticker('?')">?</button>
+                        <button class="wa-sticker-btn" onclick="sendWASticker('&#128045;')">&#128045;</button>
+                        <button class="wa-sticker-btn" onclick="sendWASticker('&#128007;')">&#128007;</button>
+                        <button class="wa-sticker-btn" onclick="sendWASticker('&#129418;')">&#129418;</button>
+                        <button class="wa-sticker-btn" onclick="sendWASticker('&#128059;')">&#128059;</button>
+                        <button class="wa-sticker-btn" onclick="sendWASticker('&#128038;')">&#128038;</button>
+                        <button class="wa-sticker-btn" onclick="sendWASticker('&#127873;')">&#127873;</button>
+                        <button class="wa-sticker-btn" onclick="sendWASticker('&#128241;')">&#128241;</button>
+                        <button class="wa-sticker-btn" onclick="sendWASticker('&#128247;')">&#128247;</button>
+                        <button class="wa-sticker-btn" onclick="sendWASticker('&#10024;')">&#10024;</button>
+                        <button class="wa-sticker-btn" onclick="sendWASticker('&#127968;')">&#127968;</button>
                       </div>
                     </div>
 
@@ -1653,7 +1699,7 @@
           </div>
         </div>
 
-        <!-- TikTok UI ??right side, video slides only -->
+        <!-- TikTok UI - right side, video slides only -->
         <div class="tiktok-ui" id="tiktokUI">
           <button class="tik-btn" onclick="toggleLike(this)">
             <div class="tik-icon">
@@ -1760,56 +1806,54 @@
 </div>
 
 <script>
-  // ?? CURSOR ??
-  const cursor = document.getElementById('cursor');
-  document.addEventListener('mousemove', e => {
-    cursor.style.left = e.clientX + 'px';
-    cursor.style.top = e.clientY + 'px';
+  // CURSOR
+  const cursor = document.getElementById("cursor");
+  document.addEventListener("mousemove", e => {
+    cursor.style.left = e.clientX + "px";
+    cursor.style.top = e.clientY + "px";
   });
-  document.querySelectorAll('a, button, .wa-sticker-btn, .phone-dot, .tik-btn').forEach(el => {
-    el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
-    el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+  document.querySelectorAll("a, button, .wa-sticker-btn, .phone-dot, .tik-btn").forEach(el => {
+    el.addEventListener("mouseenter", () => cursor.classList.add("hover"));
+    el.addEventListener("mouseleave", () => cursor.classList.remove("hover"));
   });
 
-  // ?? SCROLL SNAP TO PHONE ??
+  // SCROLL SNAP TO PHONE
   function snapToPhone() {
-    document.getElementById('phoneSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById("phoneSection").scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  // ?? LIVE CLOCK ??
+  // LIVE CLOCK
   function updateClock() {
     const now = new Date();
-    const t = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
-    const el1 = document.getElementById('waInputTime');
-    const el2 = document.getElementById('waIosTime');
-    if (el1) el1.textContent = t;
-    if (el2) el2.textContent = t;
+    const t = now.getHours() + ":" + String(now.getMinutes()).padStart(2, "0");
+    const inputTime = document.getElementById("waInputTime");
+    const iosTime = document.getElementById("waIosTime");
+    if (inputTime) inputTime.textContent = t;
+    if (iosTime) iosTime.textContent = t;
   }
   updateClock();
   setInterval(updateClock, 10000);
 
-  // Hide outer iOS chrome on load ??slide 0 is WA
-  document.getElementById('iosStatusBar').style.display = 'none';
-  const _home = document.getElementById('iosHome');
-  if (_home) _home.style.display = 'none';
+  // Hide outer iOS chrome on load - slide 0 is WA
+  document.getElementById("iosStatusBar").style.display = "none";
+  const iosHome = document.getElementById("iosHome");
+  if (iosHome) iosHome.style.display = "none";
 
-  // ?? AUTOPLAY PROGRESS ??
+  // AUTOPLAY PROGRESS
   let progressTimer = null;
-  let progressVal = 0;
-  const AUTOPLAY_DURATION = 4000; // ms per video
+  const AUTOPLAY_DURATION = 4000;
 
   function startProgress() {
     stopProgress();
-    progressVal = 0;
-    const fill = document.getElementById('videoProgressFill');
-    const bar = document.getElementById('videoProgress');
+    const fill = document.getElementById("videoProgressFill");
+    const bar = document.getElementById("videoProgress");
     if (!fill || !bar) return;
-    bar.classList.add('visible');
-    fill.style.transition = 'none';
-    fill.style.width = '0%';
+    bar.classList.add("visible");
+    fill.style.transition = "none";
+    fill.style.width = "0%";
     requestAnimationFrame(() => {
       fill.style.transition = `width ${AUTOPLAY_DURATION}ms linear`;
-      fill.style.width = '100%';
+      fill.style.width = "100%";
     });
     progressTimer = setTimeout(() => {
       if (currentSlide < totalSlides - 1) goToSlide(currentSlide + 1);
@@ -1819,232 +1863,195 @@
 
   function stopProgress() {
     clearTimeout(progressTimer);
-    const fill = document.getElementById('videoProgressFill');
-    const bar = document.getElementById('videoProgress');
-    if (fill) { fill.style.transition = 'none'; fill.style.width = '0%'; }
-    if (bar) bar.classList.remove('visible');
+    const fill = document.getElementById("videoProgressFill");
+    const bar = document.getElementById("videoProgress");
+    if (fill) {
+      fill.style.transition = "none";
+      fill.style.width = "0%";
+    }
+    if (bar) bar.classList.remove("visible");
   }
 
-  // ?? SLIDE DATA ??3 text versions ??
-  // Version A: slide 0 (WA Sticker)
-  // Version B: slides 1?? (Pain Detection media)
-  // Version C: slides 5?? (Sticker media)
-
+  // SLIDE DATA - 3 text versions
   const textVersions = {
-    // A ??WhatsApp sticker
     A: {
-      label: 'Helpurr Sticker Pack',
-      title: 'Send a<br>cat feeling.',
-      desc: 'Two packs of hand-illustrated Helpurr stickers. Tap to send ??your cat friend will understand.',
-      tags: ['Sticker Design', 'Illustration', 'WhatsApp'],
-      cta: 'btn btn--lg primary'
+      label: "Helpurr Sticker Pack",
+      title: "Send a<br>cat feeling.",
+      desc: "Two packs of hand-illustrated Helpurr stickers. Tap to send; your cat friend will understand.",
+      tags: ["Sticker Design", "Illustration", "WhatsApp"],
+      cta: "btn btn--lg primary"
     },
-    // B ??Pain detection media (slides 1??)
     B: {
-      label: 'AI Pain Detection',
-      title: 'Spot pain.<br>Share delight.',
-      desc: 'Computer vision trained on thousands of cat expressions. Know when your cat hurts ??before they stop telling you.',
-      tags: ['AI / Computer Vision', 'iOS', 'Product Design'],
-      cta: ''
+      label: "AI Pain Detection",
+      title: "Spot pain.<br>Share delight.",
+      desc: "Computer vision trained on thousands of cat expressions. Know when your cat hurts before they stop telling you.",
+      tags: ["AI / Computer Vision", "iOS", "Product Design"],
+      cta: "btn btn--lg primary"
     },
-    // C ??Sticker media (slides 5??)
     C: {
-      label: 'Sticker Collection',
-      title: 'Every mood,<br>illustrated.',
-      desc: 'Custom cat stickers designed to live in your chats. Built into Helpurr so you can share the feels.',
-      tags: ['Illustration', 'Motion', 'iOS'],
-      cta: 'btn btn--lg primary'
+      label: "Sticker Collection",
+      title: "Every mood,<br>illustrated.",
+      desc: "Custom cat stickers designed to live in your chats. Built into Helpurr so you can share the feels.",
+      tags: ["Illustration", "Motion", "iOS"],
+      cta: "btn btn--lg primary"
     }
   };
 
   function getVersion(n) {
-    if (n === 0) return 'A';
-    if (n >= 1 && n <= 4) return 'B';
-    return 'C';
+    if (n === 0) return "A";
+    if (n >= 1 && n <= 4) return "B";
+    return "C";
   }
 
   let currentSlide = 0;
   const totalSlides = 9;
-  const track = document.getElementById('videoTrack');
-  const dots = document.querySelectorAll('.phone-dot');
+  const track = document.getElementById("videoTrack");
+  const dots = document.querySelectorAll(".phone-dot");
 
   function getSlideHeight() {
-    const reel = document.getElementById('videoReel');
+    const reel = document.getElementById("videoReel");
     return reel ? reel.offsetHeight : 490;
   }
 
   function updateSideText(n) {
-    const ver = getVersion(n);
-    const d = textVersions[ver];
-
-    // Animate out ??update ??animate in
-    const body = document.querySelector('.slide-body');
-    if (body) { body.style.opacity = '0'; body.style.transform = 'translateY(6px)'; }
+    const d = textVersions[getVersion(n)];
+    const body = document.querySelector(".slide-body");
+    if (body) {
+      body.style.opacity = "0";
+      body.style.transform = "translateY(6px)";
+    }
 
     setTimeout(() => {
-      document.getElementById('slideLabel').textContent = d.label;
-      document.getElementById('slideTitle').innerHTML = d.title;
-      document.getElementById('slideDesc').textContent = d.desc;
-
-      // Tags
-      const tagRow = document.getElementById('tagRow');
+      document.getElementById("slideLabel").textContent = d.label;
+      document.getElementById("slideTitle").innerHTML = d.title;
+      document.getElementById("slideDesc").textContent = d.desc;
+      const tagRow = document.getElementById("tagRow");
       if (tagRow) {
-        tagRow.innerHTML = d.tags.map(t =>
-          `<span class="tag${t === d.tags[0] ? ' accent' : ''}">${t}</span>`
-        ).join('');
+        tagRow.innerHTML = d.tags.map((t, index) => `<span class="tag${index === 0 ? " accent" : ""}">${t}</span>`).join("");
       }
-
-      // Visit Site btn style
-      const vsBtn = document.getElementById('visitSiteBtn');
-      if (vsBtn) {
-        vsBtn.className = d.cta || '';
+      const visitBtn = document.getElementById("visitSiteBtn");
+      if (visitBtn) visitBtn.className = d.cta;
+      if (body) {
+        body.style.opacity = "1";
+        body.style.transform = "translateY(0)";
       }
-
-      if (body) { body.style.opacity = '1'; body.style.transform = 'translateY(0)'; }
     }, 120);
 
-    const hint = document.getElementById('swipeHint');
-    if (hint) hint.style.opacity = n >= totalSlides - 1 ? '0' : '1';
+    const hint = document.getElementById("swipeHint");
+    if (hint) hint.style.opacity = n >= totalSlides - 1 ? "0" : "1";
 
-    const sb = document.getElementById('iosStatusBar');
-    const home = document.getElementById('iosHome');
-    const tikUI = document.getElementById('tiktokUI');
+    const statusBar = document.getElementById("iosStatusBar");
+    const home = document.getElementById("iosHome");
+    const tikUI = document.getElementById("tiktokUI");
 
     if (n === 0) {
-      sb.style.display = 'none';
-      if (home) home.style.display = 'none';
-      if (tikUI) tikUI.classList.remove('visible');
+      statusBar.style.display = "none";
+      if (home) home.style.display = "none";
+      if (tikUI) tikUI.classList.remove("visible");
       stopProgress();
     } else {
-      sb.style.display = 'flex';
-      if (home) { home.style.display = 'flex'; home.style.background = 'transparent'; home.querySelector('.ios-home-bar').style.background = 'rgba(255,255,255,0.35)'; }
-      if (tikUI) tikUI.classList.add('visible');
+      statusBar.style.display = "flex";
+      if (home) {
+        home.style.display = "flex";
+        home.style.background = "transparent";
+        const homeBar = home.querySelector(".ios-home-bar");
+        if (homeBar) homeBar.style.background = "rgba(255,255,255,0.35)";
+      }
+      if (tikUI) tikUI.classList.add("visible");
       startProgress();
     }
   }
 
   function goToSlide(n) {
     currentSlide = Math.max(0, Math.min(n, totalSlides - 1));
-    const h = getSlideHeight();
-    track.style.transform = `translateY(-${currentSlide * h}px)`;
-    dots.forEach((d, i) => d.classList.toggle('active', i === currentSlide));
+    track.style.transform = `translateY(-${currentSlide * getSlideHeight()}px)`;
+    dots.forEach((dot, index) => dot.classList.toggle("active", index === currentSlide));
     updateSideText(currentSlide);
   }
 
-  document.getElementById('videoReel').addEventListener('wheel', e => {
+  document.getElementById("videoReel").addEventListener("wheel", e => {
     e.preventDefault();
     goToSlide(currentSlide + (e.deltaY > 0 ? 1 : -1));
   }, { passive: false });
 
   let touchStartY = 0;
-  document.getElementById('videoReel').addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; });
-  document.getElementById('videoReel').addEventListener('touchend', e => {
+  document.getElementById("videoReel").addEventListener("touchstart", e => {
+    touchStartY = e.touches[0].clientY;
+  });
+  document.getElementById("videoReel").addEventListener("touchend", e => {
     const dy = touchStartY - e.changedTouches[0].clientY;
     if (Math.abs(dy) > 30) goToSlide(currentSlide + (dy > 0 ? 1 : -1));
   });
 
-  // ?? LIKE BUTTON ??
+  // LIKE BUTTON
   let liked = false;
   function toggleLike(btn) {
     liked = !liked;
-    const icon = btn.querySelector('svg');
-    const count = document.getElementById('likeCount');
-    btn.classList.toggle('liked', liked);
-    icon.style.fill = liked ? '#ff3040' : 'white';
-    count.textContent = liked ? '2.5K' : '2.4K';
-    // pop animation
-    btn.querySelector('.tik-icon').style.transform = 'scale(1.3)';
-    setTimeout(() => btn.querySelector('.tik-icon').style.transform = '', 200);
+    const icon = btn.querySelector("svg");
+    const count = document.getElementById("likeCount");
+    btn.classList.toggle("liked", liked);
+    icon.style.fill = liked ? "#ff3040" : "white";
+    count.textContent = liked ? "2.5K" : "2.4K";
+    btn.querySelector(".tik-icon").style.transform = "scale(1.3)";
+    setTimeout(() => btn.querySelector(".tik-icon").style.transform = "", 200);
   }
 
-  // ?? STICKER PACK SWITCHER ??
+  // STICKER PACK SWITCHER
   function switchStickerPack(index, btn) {
-    document.querySelectorAll('.wa-sticker-tab').forEach(t => t.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('stickerPack0').style.display = index === 0 ? 'grid' : 'none';
-    document.getElementById('stickerPack1').style.display = index === 1 ? 'grid' : 'none';
+    document.querySelectorAll(".wa-sticker-tab").forEach(tab => tab.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById("stickerPack0").style.display = index === 0 ? "grid" : "none";
+    document.getElementById("stickerPack1").style.display = index === 1 ? "grid" : "none";
   }
 
-  // ?? WHATSAPP STICKER ??
+  // WHATSAPP STICKER
   function sendWASticker(emoji) {
-    const msgs = document.getElementById('waMessages');
+    const msgs = document.getElementById("waMessages");
     if (!msgs) return;
     const now = new Date();
-    const time = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
-    const msg = document.createElement('div');
-    msg.className = 'wa-msg sent';
-    msg.innerHTML = `<span class="wa-sticker">${emoji}</span><span class="wa-time" style="margin-top:2px;">${time} <span class="wa-ticks">??</span></span>`;
+    const time = now.getHours() + ":" + String(now.getMinutes()).padStart(2, "0");
+    const msg = document.createElement("div");
+    msg.className = "wa-msg sent";
+    msg.innerHTML = `<span class="wa-sticker">${emoji}</span><span class="wa-time" style="margin-top:2px;">${time} <span class="wa-ticks">&#10003;&#10003;</span></span>`;
     msgs.appendChild(msg);
     msgs.scrollTop = msgs.scrollHeight;
-    const replies = ['????', 'omg accurate', '???', 'dead ??', 'this is so your cat'];
+    const replies = ["so accurate", "omg accurate", "&#128049;&#128049;&#128049;", "dead", "this is so your cat"];
     setTimeout(() => {
-      const reply = document.createElement('div');
-      reply.className = 'wa-msg received';
-      reply.innerHTML = `<div class="wa-bubble">${replies[Math.floor(Math.random()*replies.length)]}<span class="wa-time">${time}</span></div>`;
+      const reply = document.createElement("div");
+      reply.className = "wa-msg received";
+      reply.innerHTML = `<div class="wa-bubble">${replies[Math.floor(Math.random() * replies.length)]}<span class="wa-time">${time}</span></div>`;
       msgs.appendChild(reply);
       msgs.scrollTop = msgs.scrollHeight;
     }, 900);
   }
 
-  // ?? STICKER CHAT ??
-  function sendSticker(emoji) {
-    const messages = document.getElementById('chatMessages');
-    const now = new Date();
-    const time = now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
-
-    const msg = document.createElement('div');
-    msg.className = 'msg sent';
-    msg.innerHTML = `
-      <span class="msg-sticker">${emoji}</span>
-      <div class="msg-time">${time}</div>
-    `;
-    messages.appendChild(msg);
-    messages.scrollTop = messages.scrollHeight;
-
-    // Auto-reply after short delay
-    setTimeout(() => {
-      const replies = ['?? accurate', 'omg ??', 'your cat irl', 'perfect', '???'];
-      const reply = document.createElement('div');
-      reply.className = 'msg received';
-      reply.innerHTML = `
-        <div class="msg-bubble">${replies[Math.floor(Math.random() * replies.length)]}</div>
-        <div class="msg-time">${time}</div>
-      `;
-      messages.appendChild(reply);
-      messages.scrollTop = messages.scrollHeight;
-    }, 800);
-  }
-
-  // ?? PASSWORD MODAL ??
-  const LE_SOCIAL_PASSWORD = 'mialyk2024';
+  // PASSWORD MODAL
+  const LE_SOCIAL_PASSWORD = "mialyk2024";
   function showPasswordModal(e) {
     e.preventDefault();
-    document.getElementById('pw-input').value = '';
-    document.getElementById('pw-error').textContent = '';
-    document.getElementById('pw-input').classList.remove('error');
-    document.getElementById('pw-modal').classList.add('active');
-    setTimeout(() => document.getElementById('pw-input').focus(), 100);
+    document.getElementById("pw-input").value = "";
+    document.getElementById("pw-error").textContent = "";
+    document.getElementById("pw-input").classList.remove("error");
+    document.getElementById("pw-modal").classList.add("active");
+    setTimeout(() => document.getElementById("pw-input").focus(), 100);
   }
-  function closePwModal() { document.getElementById('pw-modal').classList.remove('active'); }
+  function closePwModal() {
+    document.getElementById("pw-modal").classList.remove("active");
+  }
   function checkPassword() {
-    const val = document.getElementById('pw-input').value;
+    const val = document.getElementById("pw-input").value;
     if (val === LE_SOCIAL_PASSWORD) {
       closePwModal();
-      window.location.href = 'lesocial.html';
+      window.location.href = "lesocial.html";
     } else {
-      document.getElementById('pw-input').classList.add('error');
-      document.getElementById('pw-error').textContent = '??Incorrect password';
-      document.getElementById('pw-input').value = '';
-      setTimeout(() => document.getElementById('pw-input').classList.remove('error'), 1500);
+      document.getElementById("pw-input").classList.add("error");
+      document.getElementById("pw-error").textContent = "Incorrect password";
+      document.getElementById("pw-input").value = "";
+      setTimeout(() => document.getElementById("pw-input").classList.remove("error"), 1500);
     }
   }
-  document.getElementById('pw-modal').addEventListener('click', function(e) {
-    if (e.target === this) closePwModal();
-  });
+
+  goToSlide(0);
 </script>
 </body>
 </html>
-
-
-
-
