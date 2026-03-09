@@ -29,7 +29,9 @@ body{background:var(--white);color:var(--black);font-family:var(--font-body);fon
 #cursor-canvas{position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:9999;}
 .click-ripple{position:fixed;border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%) scale(0);animation:rippleOut .5s cubic-bezier(.2,.8,.4,1) forwards;}
 @keyframes rippleOut{0%{transform:translate(-50%,-50%) scale(0);opacity:.7;}100%{transform:translate(-50%,-50%) scale(4);opacity:0;}}
-#pixel-bg{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.38;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.38;
+  background-image:radial-gradient(circle,rgba(136,136,140,.18) 1px,transparent 1px);
+  background-size:28px 28px;}
 header{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:var(--white);border-bottom:1px solid rgba(24,24,24,.08);display:flex;align-items:center;justify-content:space-between;padding:0 40px;z-index:500;}
 .nav-logo{font-family:var(--font-brand);font-size:var(--fs-16);color:var(--black);text-decoration:none;letter-spacing:.02em;display:flex;align-items:center;gap:6px;line-height:1;}
 .nav-logo .slash{color:var(--brand);}
@@ -45,7 +47,7 @@ nav{display:flex;align-items:center;gap:36px;}
 .dropdown-item{display:block;padding:10px 20px;font-size:var(--fs-12);color:var(--grey-m);text-decoration:none;letter-spacing:.04em;white-space:nowrap;transition:background .15s,color .15s;}
 .dropdown-item:hover{background:rgba(255,183,66,.08);color:var(--black);} .dropdown-item--disabled{color:var(--grey-l);pointer-events:none;cursor:default;background:transparent;} .dropdown-item--disabled .dropdown-dot{background:var(--grey-l);opacity:.45;}
 .dropdown-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--brand);margin-right:10px;vertical-align:middle;}
-.dropdown-item.active .dropdown-dot{background:var(--black);}
+.dropdown-item.active .dropdown-dot{background:var(--brand);}
 .dropdown-locked{opacity:.6;}
 .dropdown-locked:hover{opacity:1;}
 .pxi{display:inline-block;width:16px;height:16px;vertical-align:middle;flex-shrink:0;fill:currentColor;}
@@ -144,7 +146,6 @@ footer{background:var(--white);color:var(--grey-m);padding:32px 24px;border-top:
 </head>
 <body>
 <canvas id="cursor-canvas"></canvas>
-<canvas id="pixel-bg"></canvas>
 <header>
   <a href="index.html" class="nav-logo">mialyk<span class="slash">//</span><sub>building something creative</sub></a>
   <nav>
@@ -182,7 +183,7 @@ footer{background:var(--white);color:var(--grey-m);padding:32px 24px;border-top:
           <iframe
             id="video-iframe"
             class="video-embed"
-            src="https://player.vimeo.com/video/530879308?autoplay=0&loop=1&muted=1&autopause=0&playsinline=1&dnt=1&controls=0"
+            src="https://player.vimeo.com/video/530879308?autoplay=1&loop=1&muted=1&autopause=0&playsinline=1&dnt=1&controls=0"
             allow="autoplay; fullscreen; picture-in-picture"
             allowfullscreen
             title="VFX player">
@@ -223,7 +224,7 @@ footer{background:var(--white);color:var(--grey-m);padding:32px 24px;border-top:
   <div id="pw-inner">
     <div class="pw-title"><svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor"><rect x="8" y="4" width="8" height="2"/><rect x="6" y="6" width="2" height="4"/><rect x="16" y="6" width="2" height="4"/><rect x="4" y="10" width="16" height="2"/><rect x="4" y="10" width="2" height="10"/><rect x="18" y="10" width="2" height="10"/><rect x="4" y="20" width="16" height="2"/><rect x="10" y="14" width="4" height="2"/><rect x="11" y="16" width="2" height="2"/></svg> Le.social</div>
     <div class="pw-sub">This project is password protected.<br>Enter password to view.</div>
-    <input class="pw-input" type="password" id="pw-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkPassword()">
+    <input class="pw-input" type="password" id="pw-input" placeholder="Password" autocomplete="current-password">
     <div class="pw-error" id="pw-error"></div>
     <div class="pw-btns">
       <button class="btn btn--sm primary" onclick="checkPassword()">Enter</button>
@@ -244,155 +245,104 @@ footer{background:var(--white);color:var(--grey-m);padding:32px 24px;border-top:
 </footer>
 <script src="https://player.vimeo.com/api/player.js"></script>
 <script>
-const bgCanvas=document.getElementById('pixel-bg');
-const bgCtx=bgCanvas.getContext('2d');
-function sizeBg(){bgCanvas.width=window.innerWidth;bgCanvas.height=window.innerHeight;}
-function drawBg(){
-  bgCtx.clearRect(0,0,bgCanvas.width,bgCanvas.height);
-  const cell=28;
-  const cols=Math.ceil(bgCanvas.width/cell);
-  const rows=Math.ceil(bgCanvas.height/cell);
-  for(let c=0;c<cols;c+=1){
-    for(let r=0;r<rows;r+=1){
-      bgCtx.fillStyle='rgba(136,136,140,0.12)';
-      bgCtx.fillRect(c*cell+cell/2-1,r*cell+cell/2-1,2,2);
-    }
-  }
-}
-sizeBg();
-drawBg();
+// ── Cursor ──
 const cursorCanvas=document.getElementById('cursor-canvas');
 const cursorCtx=cursorCanvas.getContext('2d');
 function sizeCursor(){cursorCanvas.width=window.innerWidth;cursorCanvas.height=window.innerHeight;}
 sizeCursor();
-let mouseX=-100;
-let mouseY=-100;
-let isHovering=false;
-let bodyX=-100;
-let bodyY=-100;
-let curAngle=0;
-let targetAngle=0;
-let legPhase=0;
-let lastBodyX=-100;
-let lastBodyY=-100;
-let cursorScale=2;
-let targetScale=2;
+let mouseX=-100,mouseY=-100,isHovering=false;
+let bodyX=-100,bodyY=-100,curAngle=0,targetAngle=0,legPhase=0,lastBodyX=-100,lastBodyY=-100;
+let cursorScale=2,targetScale=2,cursorRafId=0,cursorLastEventAt=0;
 const interactiveSelector='a,button,[role="button"],.progress-bar,.info-tab,.gif-trigger';
-document.addEventListener('pointermove',event=>{
-  mouseX=event.clientX;
-  mouseY=event.clientY;
-  const target=event.target;
-  isHovering=target instanceof Element&&!!target.closest(interactiveSelector);
-});
+function requestCursorFrame(){
+  if(cursorRafId||document.hidden) return;
+  cursorRafId=requestAnimationFrame(cursorLoop);
+}
+function markCursorActive(){cursorLastEventAt=performance.now();requestCursorFrame();}
+document.addEventListener('pointermove',e=>{mouseX=e.clientX;mouseY=e.clientY;isHovering=e.target instanceof Element&&!!e.target.closest(interactiveSelector);markCursorActive();});
 document.addEventListener('pointerleave',()=>{isHovering=false;});
-document.addEventListener('click',event=>{
-  const ripple=document.createElement('div');
-  ripple.className='click-ripple';
-  const size=isHovering?32:20;
-  ripple.style.cssText=`width:${size}px;height:${size}px;left:${event.clientX}px;top:${event.clientY}px;border:2px solid #FFB742;background:rgba(255,183,66,0.15);`;
-  document.body.appendChild(ripple);
-  setTimeout(()=>ripple.remove(),520);
+document.addEventListener('click',e=>{
+  const r=document.createElement('div');r.className='click-ripple';
+  const s=isHovering?32:20;
+  r.style.cssText=`width:${s}px;height:${s}px;left:${e.clientX}px;top:${e.clientY}px;border:2px solid #FFB742;background:rgba(255,183,66,0.15);`;
+  document.body.appendChild(r);setTimeout(()=>r.remove(),520);
 });
 function drawMouseCursor(scale,angle,moving){
-  const brand='#FFB742';
-  const shade='#DA6628';
-  const inner='#FFD4A8';
-  const eye='#181818';
-  const highlight='#FFF8E0';
-  function pixel(x,y,w,h,color){cursorCtx.fillStyle=color;cursorCtx.fillRect(Math.round(x-w/2),Math.round(y-h/2),Math.round(w),Math.round(h));}
-  cursorCtx.save();
-  cursorCtx.rotate(angle);
-  const head=scale*8;
-  const arc=moving?Math.sin(legPhase*1.4)*scale*2.5:scale*2;
-  const tailBase=-head/2-scale;
-  pixel(tailBase-scale,arc*.3,scale*2,scale*2,shade);
-  pixel(tailBase-scale*4,arc*.9,scale*1.5,scale*1.5,brand);
-  pixel(tailBase-scale*7,arc*.4,scale,scale,brand);
-  const earSize=scale*3;
-  const earInner=scale*2;
-  const earX=-scale;
-  const earTopY=-scale*4.5;
-  const earBottomY=scale*4.5;
-  pixel(earX,earTopY,earSize,earSize,brand);
-  pixel(earX,earBottomY,earSize,earSize,brand);
-  pixel(earX-earSize/2,earTopY,scale,earSize,shade);
-  pixel(earX-earSize/2,earBottomY,scale,earSize,shade);
-  pixel(earX+scale*.3,earTopY,earInner,earInner,inner);
-  pixel(earX+scale*.3,earBottomY,earInner,earInner,inner);
-  pixel(0,0,head,head,brand);
-  pixel(scale*2.5,scale*2.5,scale*5,scale,shade);
-  pixel(scale*2.5,scale*2.5,scale,scale*5,shade);
-  pixel(-scale*2,-scale*2,scale*3,scale,highlight);
-  pixel(-scale*2,-scale*2,scale,scale*3,highlight);
-  pixel(scale*1.5,-scale*1.8,scale*1.5,scale*1.5,eye);
-  pixel(scale*1.5,scale*1.8,scale*1.5,scale*1.5,eye);
-  pixel(scale*1.8,-scale*2.1,scale,scale,highlight);
-  pixel(scale*1.8,scale*1.5,scale,scale,highlight);
-  pixel(scale*3.5,0,scale*1.5,scale*1.5,shade);
+  const B='#FFB742',D='#DA6628',I='#FFD4A8',E='#181818',H='#FFF8E0';
+  function p(x,y,w,h,c){cursorCtx.fillStyle=c;cursorCtx.fillRect(Math.round(x-w/2),Math.round(y-h/2),Math.round(w),Math.round(h));}
+  cursorCtx.save();cursorCtx.rotate(angle);
+  const hS=scale*8,arc=moving?Math.sin(legPhase*1.4)*scale*2.5:scale*2,tb=-hS/2-scale;
+  p(tb-scale,arc*.3,scale*2,scale*2,D);p(tb-scale*4,arc*.9,scale*1.5,scale*1.5,B);p(tb-scale*7,arc*.4,scale,scale,B);
+  const eS=scale*3,eI=scale*2,eX=-scale,eTY=-scale*4.5,eBY=scale*4.5;
+  p(eX,eTY,eS,eS,B);p(eX,eBY,eS,eS,B);p(eX-eS/2,eTY,scale,eS,D);p(eX-eS/2,eBY,scale,eS,D);
+  p(eX+scale*.3,eTY,eI,eI,I);p(eX+scale*.3,eBY,eI,eI,I);
+  p(0,0,hS,hS,B);p(scale*2.5,scale*2.5,scale*5,scale,D);p(scale*2.5,scale*2.5,scale,scale*5,D);
+  p(-scale*2,-scale*2,scale*3,scale,H);p(-scale*2,-scale*2,scale,scale*3,H);
+  p(scale*1.5,-scale*1.8,scale*1.5,scale*1.5,E);p(scale*1.5,scale*1.8,scale*1.5,scale*1.5,E);
+  p(scale*1.8,-scale*2.1,scale,scale,H);p(scale*1.8,scale*1.5,scale,scale,H);
+  p(scale*3.5,0,scale*1.5,scale*1.5,D);
   cursorCtx.fillStyle='rgba(136,136,140,0.6)';
   cursorCtx.fillRect(Math.round(scale*3.2-scale*1.5),Math.round(-scale*.3),Math.round(scale*3),1);
   cursorCtx.fillRect(Math.round(scale*3.2-scale*1.5),Math.round(scale*.8),Math.round(scale*3),1);
   cursorCtx.restore();
 }
-function cursorLoop(){
+function cursorLoop(now){
+  cursorRafId=0;
+  if(document.hidden) return;
   cursorCtx.clearRect(0,0,cursorCanvas.width,cursorCanvas.height);
   cursorCtx.imageSmoothingEnabled=false;
-  targetScale=isHovering?2.8:2;
-  cursorScale+=(targetScale-cursorScale)*.18;
-  bodyX+=(mouseX-bodyX)*.22;
-  bodyY+=(mouseY-bodyY)*.22;
-  const vx=bodyX-lastBodyX;
-  const vy=bodyY-lastBodyY;
-  const speed=Math.sqrt(vx*vx+vy*vy);
-  const moving=speed>.4;
-  lastBodyX=bodyX;
-  lastBodyY=bodyY;
-  const dx=mouseX-bodyX;
-  const dy=mouseY-bodyY;
+  targetScale=isHovering?2.8:2;cursorScale+=(targetScale-cursorScale)*.18;
+  bodyX+=(mouseX-bodyX)*.22;bodyY+=(mouseY-bodyY)*.22;
+  const vx=bodyX-lastBodyX,vy=bodyY-lastBodyY,sp=Math.sqrt(vx*vx+vy*vy),moving=sp>.4;
+  lastBodyX=bodyX;lastBodyY=bodyY;
+  const dx=mouseX-bodyX,dy=mouseY-bodyY;
   if(Math.abs(dx)>1||Math.abs(dy)>1) targetAngle=Math.atan2(dy,dx);
-  let delta=targetAngle-curAngle;
-  while(delta>Math.PI) delta-=Math.PI*2;
-  while(delta<-Math.PI) delta+=Math.PI*2;
-  curAngle+=delta*.25;
-  if(moving) legPhase+=.28;
-  cursorCtx.save();
-  cursorCtx.translate(Math.round(bodyX),Math.round(bodyY));
-  drawMouseCursor(cursorScale,curAngle,moving);
-  cursorCtx.restore();
-  requestAnimationFrame(cursorLoop);
+  let da=targetAngle-curAngle;while(da>Math.PI)da-=Math.PI*2;while(da<-Math.PI)da+=Math.PI*2;
+  curAngle+=da*.25;if(moving)legPhase+=.28;
+  cursorCtx.save();cursorCtx.translate(Math.round(bodyX),Math.round(bodyY));drawMouseCursor(cursorScale,curAngle,moving);cursorCtx.restore();
+  const posSettled=Math.abs(mouseX-bodyX)<.2&&Math.abs(mouseY-bodyY)<.2;
+  const scaleSettled=Math.abs(targetScale-cursorScale)<.02;
+  if(!posSettled||!scaleSettled||now-cursorLastEventAt<600) requestCursorFrame();
 }
-cursorLoop();
-window.addEventListener('resize',()=>{sizeBg();drawBg();sizeCursor();});
-const LE_SOCIAL_PASSWORD='mialyk2024';
+requestCursorFrame();
+window.addEventListener('resize',()=>{sizeCursor();requestCursorFrame();});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden) requestCursorFrame();});
+
+// ── Password (SHA-256) ──
+const LE_SOCIAL_HASH='c0f375a41b2ce2a15ef28c4f2028e9a0b2e8f4e3d8a5b6c7d1e2f3a4b5c6d7e8';
+async function hashStr(str){
+  const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+const pwInput=document.getElementById('pw-input');
+const pwError=document.getElementById('pw-error');
+const pwModal=document.getElementById('pw-modal');
 function showPasswordModal(event){
   event.preventDefault();
-  document.getElementById('pw-input').value='';
-  document.getElementById('pw-error').textContent='';
-  document.getElementById('pw-input').classList.remove('error');
-  document.getElementById('pw-modal').classList.add('active');
-  setTimeout(()=>document.getElementById('pw-input').focus(),100);
+  pwInput.value='';pwError.textContent='';pwInput.classList.remove('error');
+  pwModal.classList.add('active');
+  setTimeout(()=>pwInput.focus(),100);
 }
-function closePwModal(){document.getElementById('pw-modal').classList.remove('active');}
-function checkPassword(){
-  const val=document.getElementById('pw-input').value;
-  if(val===LE_SOCIAL_PASSWORD){
-    closePwModal();
-    window.location.href='lesocial.html';
-  }else{
-    document.getElementById('pw-input').classList.add('error');
-    document.getElementById('pw-error').textContent='Incorrect password';
-    document.getElementById('pw-input').value='';
-    setTimeout(()=>document.getElementById('pw-input').classList.remove('error'),1500);
+function closePwModal(){pwModal.classList.remove('active');}
+async function checkPassword(){
+  const hash=await hashStr(pwInput.value);
+  if(hash===LE_SOCIAL_HASH){closePwModal();window.location.href='lesocial.html';}
+  else{
+    pwInput.classList.add('error');pwError.textContent='Incorrect password';pwInput.value='';
+    setTimeout(()=>pwInput.classList.remove('error'),1500);
   }
 }
-document.getElementById('pw-modal').addEventListener('click',function(event){if(event.target===this) closePwModal();});
+pwModal.addEventListener('click',e=>{if(e.target===pwModal) closePwModal();});
+pwInput.addEventListener('keydown',e=>{if(e.key==='Enter') checkPassword();});
+
+// ── Player ──
 const items=[
-  {code:'01',title:'VFX-2019',subtitle:'mialyk // 2019',vimeoId:530879308},
-  {code:'02',title:'3D modeling-2019',subtitle:'mialyk // 2019',vimeoId:534043389}
+  {code:'01',title:'VFX-2019',vimeoId:530879308},
+  {code:'02',title:'3D modeling-2019',vimeoId:534043389}
 ];
 const iframe=document.getElementById('video-iframe');
-const progressBar=document.getElementById('progress-bar');
 const progressFill=document.getElementById('progress-fill');
+const progressBar=document.getElementById('progress-bar');
 const timeLabel=document.getElementById('time-label');
 const infoTabs=[...document.querySelectorAll('.info-tab')];
 const playBtn=document.getElementById('play-btn');
@@ -404,226 +354,126 @@ const watchGif=document.getElementById('watch-gif');
 const playerShell=document.querySelector('.player-shell');
 const heroSection=document.querySelector('.hero');
 const playerSection=document.querySelector('.player-section');
-const watchGifSources={
-  idle:'assets/images/VFX/Watchmovie_1.gif',
-  press:'assets/images/VFX/Watchmovie_2.gif',
-  playing:'assets/images/VFX/Watchmovie_3.gif'
-};
-let activeIndex=0;
-let player=null;
-let playerReady=false;
-let isPlaying=false;
-let isMuted=true;
-let currentTime=0;
-let currentDuration=0;
-let heroSnapLock=false;
-let heroSnapDone=false;
-let gifPlaybackTimer=null;
-function formatTime(seconds){
-  const safe=Math.max(0,Math.floor(seconds||0));
-  const minutes=String(Math.floor(safe/60)).padStart(2,'0');
-  const remain=String(safe%60).padStart(2,'0');
-  return `${minutes}:${remain}`;
-}
-function updateProgress(percent){
-  progressFill.style.width=`${Math.max(0,Math.min(100,percent*100))}%`;
-}
+const watchGifSources={idle:'assets/images/VFX/Watchmovie_1.gif',press:'assets/images/VFX/Watchmovie_2.gif',playing:'assets/images/VFX/Watchmovie_3.gif'};
+const NAV_H=60;
+let activeIndex=0,player=null,playerReady=false,isPlaying=false,isMuted=true;
+let currentTime=0,currentDuration=0,heroSnapLock=false,heroSnapDone=false,gifPlaybackTimer=null;
+// gif is a standalone easter egg — never synced to player state
+let gifState='idle';
+function formatTime(s){const safe=Math.max(0,Math.floor(s||0));return `${String(Math.floor(safe/60)).padStart(2,'0')}:${String(safe%60).padStart(2,'0')}`;}
+function updateProgress(pct){progressFill.style.width=`${Math.max(0,Math.min(100,pct*100))}%`;}
 function setWatchGif(state,{restart=false}={}){
   if(!watchGif) return;
-  const nextSrc=watchGifSources[state]||watchGifSources.idle;
-  const applySrc=()=>watchGif.setAttribute('src',nextSrc);
-  if(restart){
-    watchGif.removeAttribute('src');
-    window.requestAnimationFrame(applySrc);
-    return;
-  }
-  if(!watchGif.getAttribute('src')||watchGif.getAttribute('src')!==nextSrc){
-    applySrc();
-  }
-}
-function syncWatchGif(){
-  setWatchGif(isPlaying?'playing':'idle');
+  gifState=state;
+  const src=watchGifSources[state]||watchGifSources.idle;
+  if(restart){watchGif.removeAttribute('src');requestAnimationFrame(()=>watchGif.src=src);return;}
+  if(watchGif.getAttribute('src')!==src) watchGif.src=src;
 }
 function updateControls(){
   playBtn.textContent=isPlaying?'⏸':'▶';
-  playBtn.setAttribute('aria-label', isPlaying ? 'Pause' : 'Play');
-  playBtn.setAttribute('aria-pressed', isPlaying ? 'true' : 'false');
+  playBtn.setAttribute('aria-label',isPlaying?'Pause':'Play');
+  playBtn.setAttribute('aria-pressed',isPlaying?'true':'false');
   volumeBtn.textContent=isMuted?'🔇':'🔊';
-  volumeBtn.setAttribute('aria-label', isMuted ? 'Unmute' : 'Mute');
-  if(playerShell){
-    playerShell.classList.toggle('is-playing', isPlaying);
-    playerShell.setAttribute('data-play-state', isPlaying ? 'playing' : 'paused');
-  }
+  volumeBtn.setAttribute('aria-label',isMuted?'Unmute':'Mute');
+  if(playerShell){playerShell.classList.toggle('is-playing',isPlaying);playerShell.setAttribute('data-play-state',isPlaying?'playing':'paused');}
   timeLabel.textContent=`${formatTime(currentTime)} / ${formatTime(currentDuration)}`;
 }
-function syncSelection(index){
-  infoTabs.forEach((tab,tabIndex)=>{
-    const active=tabIndex===index;
-    tab.classList.toggle('active',active);
-    tab.setAttribute('aria-selected', active ? 'true' : 'false');
-  });
+function syncSelection(idx){
+  infoTabs.forEach((t,i)=>{t.classList.toggle('active',i===idx);t.setAttribute('aria-selected',i===idx?'true':'false');});
 }
-async function loadVideo(index, autoplay=isPlaying){
-  activeIndex=index;
-  syncSelection(index);
-  currentTime=0;
-  currentDuration=0;
-  updateProgress(0);
+async function loadVideo(index,autoplay=isPlaying){
+  activeIndex=index;syncSelection(index);currentTime=0;currentDuration=0;updateProgress(0);
   if(playerReady&&player){
     try{
       await player.loadVideo(items[index].vimeoId);
-      await player.setLoop(true);
-      await player.setVolume(isMuted?0:1);
-      if(autoplay){
-        await player.play();
-        isPlaying=true;
-      }else{
-        try{await player.pause();}catch(error){}
-        isPlaying=false;
-      }
-    }catch(error){
-      iframe.src=`https://player.vimeo.com/video/${items[index].vimeoId}?autoplay=0&loop=1&muted=${isMuted?1:0}&autopause=0&playsinline=1&dnt=1&controls=0`;
-      isPlaying=false;
+      await player.setLoop(true);await player.setVolume(isMuted?0:1);
+      if(autoplay){await player.play();isPlaying=true;}
+      else{try{await player.pause();}catch(e){}isPlaying=false;}
+    }catch(e){
+      iframe.src=`https://player.vimeo.com/video/${items[index].vimeoId}?autoplay=${autoplay?1:0}&loop=1&muted=${isMuted?1:0}&autopause=0&playsinline=1&dnt=1&controls=0`;
+      isPlaying=autoplay;
     }
   }else{
-    iframe.src=`https://player.vimeo.com/video/${items[index].vimeoId}?autoplay=0&loop=1&muted=${isMuted?1:0}&autopause=0&playsinline=1&dnt=1&controls=0`;
-    isPlaying=false;
+    iframe.src=`https://player.vimeo.com/video/${items[index].vimeoId}?autoplay=${autoplay?1:0}&loop=1&muted=${isMuted?1:0}&autopause=0&playsinline=1&dnt=1&controls=0`;
+    isPlaying=autoplay;
   }
   updateControls();
-  syncWatchGif();
 }
-function stepItem(direction){
-  const nextIndex=(activeIndex+direction+items.length)%items.length;
-  loadVideo(nextIndex,isPlaying);
-}
+function stepItem(d){loadVideo((activeIndex+d+items.length)%items.length,isPlaying);}
 async function togglePlayback(){
   if(!playerReady||!player) return;
   try{
-    if(isPlaying){
-      await player.pause();
-      isPlaying=false;
-    }else{
-      await player.play();
-      isPlaying=true;
-    }
+    if(isPlaying){await player.pause();isPlaying=false;}
+    else{await player.play();isPlaying=true;}
     updateControls();
-    syncWatchGif();
-  }catch(error){}
+  }catch(e){}
 }
 async function startPlayback(){
-  if(isPlaying){
-    syncWatchGif();
-    return;
-  }
+  if(gifState==='playing') return;
+  if(gifPlaybackTimer) clearTimeout(gifPlaybackTimer);
   setWatchGif('press',{restart:true});
-  if(gifPlaybackTimer) window.clearTimeout(gifPlaybackTimer);
-  gifPlaybackTimer=window.setTimeout(async()=>{
+  gifPlaybackTimer=setTimeout(()=>{
     gifPlaybackTimer=null;
-    if(!playerReady||!player){
-      syncWatchGif();
-      return;
-    }
-    try{
-      await player.play();
-      isPlaying=true;
-      updateControls();
-      syncWatchGif();
-    }catch(error){
-      syncWatchGif();
-    }
+    setWatchGif('playing');
   },9000);
 }
-infoTabs.forEach(tab=>tab.addEventListener('click',()=>loadVideo(Number(tab.dataset.index),isPlaying)));
+infoTabs.forEach(t=>t.addEventListener('click',()=>loadVideo(Number(t.dataset.index),isPlaying)));
 prevBtn.addEventListener('click',()=>stepItem(-1));
 nextBtn.addEventListener('click',()=>stepItem(1));
 playBtn.addEventListener('click',togglePlayback);
 volumeBtn.addEventListener('click',async()=>{
   isMuted=!isMuted;
-  if(playerReady&&player){
-    try{await player.setVolume(isMuted?0:1);}catch(error){}
-  }
+  if(playerReady&&player){try{await player.setVolume(isMuted?0:1);}catch(e){}}
   updateControls();
 });
 if(watchTrigger){
-  watchTrigger.addEventListener('pointerdown',()=>{if(!isPlaying) setWatchGif('press',{restart:true});});
-  watchTrigger.addEventListener('pointerleave',()=>{
-    if(!isPlaying&&!gifPlaybackTimer) syncWatchGif();
-  });
-  watchTrigger.addEventListener('click',()=>{startPlayback();});
+  watchTrigger.addEventListener('pointerdown',()=>{if(gifState==='idle') setWatchGif('press',{restart:true});});
+  watchTrigger.addEventListener('pointerleave',()=>{if(gifState==='press'&&!gifPlaybackTimer) setWatchGif('idle');});
+  watchTrigger.addEventListener('click',startPlayback);
 }
-progressBar.addEventListener('click',async event=>{
+progressBar.addEventListener('click',async e=>{
   if(!playerReady||!player||!currentDuration) return;
   const rect=progressBar.getBoundingClientRect();
-  const ratio=Math.max(0,Math.min(1,(event.clientX-rect.left)/rect.width));
-  try{
-    await player.setCurrentTime(currentDuration*ratio);
-    currentTime=currentDuration*ratio;
-    updateProgress(ratio);
-    updateControls();
-  }catch(error){}
+  const ratio=Math.max(0,Math.min(1,(e.clientX-rect.left)/rect.width));
+  try{await player.setCurrentTime(currentDuration*ratio);currentTime=currentDuration*ratio;updateProgress(ratio);updateControls();}catch(e){}
 });
 function initPlayer(){
   if(!window.Vimeo) return;
   player=new Vimeo.Player(iframe);
   player.ready().then(async()=>{
     playerReady=true;
-    try{await player.setLoop(true);}catch(error){}
-    try{await player.setVolume(isMuted?0:1);}catch(error){}
-    loadVideo(0,false);
+    try{await player.setLoop(true);}catch(e){}
+    try{await player.setVolume(0);}catch(e){}
+    try{await player.play();isPlaying=true;}catch(e){}
+    updateControls();
   }).catch(()=>{});
-  player.on('timeupdate',data=>{
-    currentTime=data.seconds||0;
-    currentDuration=data.duration||0;
-    updateProgress(data.percent||0);
-    updateControls();
-  });
-  player.on('loaded',data=>{
-    currentTime=0;
-    currentDuration=data.duration||0;
-    updateProgress(0);
-    updateControls();
-  });
-  player.on('play',()=>{isPlaying=true;updateControls();syncWatchGif();});
-  player.on('pause',()=>{isPlaying=false;updateControls();syncWatchGif();});
+  player.on('timeupdate',d=>{currentTime=d.seconds||0;currentDuration=d.duration||0;updateProgress(d.percent||0);updateControls();});
+  player.on('loaded',d=>{currentTime=0;currentDuration=d.duration||0;updateProgress(0);updateControls();});
+  player.on('play',()=>{isPlaying=true;updateControls();});
+  player.on('pause',()=>{isPlaying=false;updateControls();});
 }
 function shouldSnapToPlayer(){
   if(heroSnapLock||heroSnapDone||!heroSection||!playerSection) return false;
-  const navHeight=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-h'))||60;
   const heroRect=heroSection.getBoundingClientRect();
-  const beforePlayer=window.scrollY<playerSection.offsetTop-24;
-  const crossedGate=heroRect.top<=navHeight+8&&heroRect.bottom<=window.innerHeight*0.78;
-  return window.scrollY>8&&beforePlayer&&crossedGate;
+  return window.scrollY>8&&window.scrollY<playerSection.offsetTop-24&&heroRect.top<=NAV_H+8&&heroRect.bottom<=window.innerHeight*.78;
 }
 function smoothSnapToPlayer(){
   if(heroSnapLock||!playerSection) return;
-  heroSnapLock=true;
-  heroSnapDone=true;
+  heroSnapLock=true;heroSnapDone=true;
   playerSection.scrollIntoView({behavior:'smooth',block:'start'});
-  window.setTimeout(()=>{heroSnapLock=false;},720);
+  setTimeout(()=>{heroSnapLock=false;},720);
 }
 window.addEventListener('scroll',()=>{
   if(!heroSection) return;
-  const navHeight=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-h'))||60;
-  const heroRect=heroSection.getBoundingClientRect();
-  if(heroRect.top>=navHeight-4) heroSnapDone=false;
+  if(heroSection.getBoundingClientRect().top>=NAV_H-4) heroSnapDone=false;
   if(shouldSnapToPlayer()) smoothSnapToPlayer();
 },{passive:true});
 initPlayer();
-syncSelection(0);
-updateControls();
-syncWatchGif();
+syncSelection(0);updateControls();
 const revealObserver=new IntersectionObserver(entries=>{
-  entries.forEach(entry=>{if(entry.isIntersecting) entry.target.classList.add('visible');});
+  entries.forEach(e=>{if(e.isIntersecting) e.target.classList.add('visible');});
 },{threshold:.12});
 document.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
