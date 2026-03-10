@@ -9,7 +9,7 @@
 <style>
 :root{
   --white:#FEFEFE;--grey-l:#A8B0B2;--grey-m:#88888C;
-  --black:#181818;--brand:#FFB742;--effect1:#DA6628;
+  --black:#181818;--brand:#FFB742;--effect1:#DA6628;--cyan:#00e6c8;
   --project:#FFBF56;--nav-h:60px;
   --font-brand:'Press Start 2P',monospace;
   --font-body:'DM Mono',monospace;
@@ -38,8 +38,8 @@ header{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:var(--
 nav{display:flex;align-items:center;gap:36px;}
 .nav-link{font-size:12px;color:var(--grey-m);text-decoration:none;letter-spacing:.06em;text-transform:uppercase;position:relative;transition:color .2s;}
 .nav-link::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:var(--brand);transition:width .3s cubic-bezier(.4,0,.2,1);}
-.nav-link:hover,.nav-link.active{color:var(--black);}
-.nav-link:hover::after,.nav-link.active::after{width:100%;}
+.nav-link:hover{color:var(--black);}
+.nav-link:hover::after{width:100%;}
 .nav-item{position:relative;}
 .nav-dropdown{position:absolute;top:calc(100% + 16px);left:50%;background:var(--white);border:1px solid rgba(24,24,24,.1);min-width:180px;padding:8px 0;opacity:0;visibility:hidden;transform:translateX(-50%) translateY(-8px);transition:opacity .2s,transform .2s,visibility .2s;box-shadow:0 8px 32px rgba(24,24,24,.08);}
 .nav-item:hover .nav-dropdown{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0);}
@@ -62,11 +62,11 @@ nav{display:flex;align-items:center;gap:36px;}
 .pw-error{font-size:10px;color:var(--effect1);margin-bottom:16px;min-height:14px;font-weight:300;}
 .pw-btns{display:flex;gap:10px;}
 .btn{font-family:var(--font-body);font-size:12px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--black);background:transparent;color:var(--black);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;line-height:1;-webkit-appearance:none;transition:background .2s,color .2s,border-color .2s;}
-.btn:hover{background:var(--black);color:var(--white);}
+.btn:hover{background:var(--brand);border-color:var(--brand);color:var(--black);}
 .btn--sm{font-size:10px;padding:0 16px;height:36px;}
 .btn--lg{padding:0 32px;height:52px;}
 .btn.primary{background:var(--project);border-color:var(--project);color:var(--black);}
-.btn.primary:hover{background:var(--effect1);border-color:var(--effect1);color:var(--white);}
+.btn.primary:hover{background:var(--cyan);border-color:var(--cyan);color:var(--black);}
 
 /* PAGE */
 main{position:relative;z-index:1;}
@@ -263,7 +263,7 @@ footer{background:var(--white);color:var(--grey-m);padding:32px 40px;display:fle
 .foot-soc{display:flex;align-items:center;gap:20px;}
 .soc-a{color:var(--grey-m);transition:color .2s;display:flex;align-items:center;text-decoration:none;}
 .soc-a:hover{color:var(--brand);}
-.soc-a svg{width:16px;height:16px;display:block;}
+.soc-a svg{width:18px;height:18px;display:block;}
 .meta-value--accent{color:var(--project);}
 .asset-thumb-num{color:var(--project);margin-right:6px;}
 .dropdown-tag{font-size:10px;color:var(--grey-m);}
@@ -277,13 +277,13 @@ footer{background:var(--white);color:var(--grey-m);padding:32px 40px;display:fle
   <a href="index.html" class="nav-logo">mialyk<span class="slash">//</span><sub>building something creative</sub></a>
   <nav>
     <div class="nav-item">
-      <a href="#" class="nav-link active">Projects</a>
+      <a href="#" class="nav-link">Projects</a>
       <div class="nav-dropdown">
-        <a href="https://www.instagram.com/helpurrapp/reels/" target="_blank" rel="noreferrer"      class="dropdown-item"><span class="dropdown-dot"></span>Helpurr</a>
+        <a href="helpurr.html" class="dropdown-item"><span class="dropdown-dot"></span>Helpurr</a>
         <a href="#" class="dropdown-item dropdown-locked" onclick="showPw(event)"><span class="dropdown-dot"></span>Le.social <svg class="pxi pxi--sm" viewBox="0 0 24 24" fill="currentColor" style="margin-left:4px;opacity:.5"><rect x="8" y="4" width="8" height="2"/><rect x="6" y="6" width="2" height="4"/><rect x="16" y="6" width="2" height="4"/><rect x="4" y="10" width="16" height="2"/><rect x="4" y="10" width="2" height="10"/><rect x="18" y="10" width="2" height="10"/><rect x="4" y="20" width="16" height="2"/><rect x="10" y="14" width="4" height="2"/><rect x="11" y="16" width="2" height="2"/></svg></a>
         <a href="https://www.ora.io/" target="_blank" rel="noreferrer"          class="dropdown-item"><span class="dropdown-dot"></span>ORA</a>
         <a href="https://www.meedloyalty.com/" target="_blank" rel="noreferrer"         class="dropdown-item"><span class="dropdown-dot"></span>Meed</a>
-        <a href="cheddar.html" class="dropdown-item"><span class="dropdown-dot"></span>Cheddar Verse</a>
+        <a href="cheddar.html" class="dropdown-item active"><span class="dropdown-dot"></span>Cheddar Verse</a>
         <a href="https://www.artstation.com/mialyk" target="_blank" rel="noreferrer" class="dropdown-item"><span class="dropdown-dot"></span>Illustration</a>
         <a href="vfx.html"          class="dropdown-item"><span class="dropdown-dot"></span>VFX</a>
         <a href="hamartia.html"     class="dropdown-item"><span class="dropdown-dot"></span>Hamartia <span class="dropdown-tag">Game</span></a>

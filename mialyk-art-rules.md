@@ -113,6 +113,14 @@
 - Variants: default (transparent) / primary (`--brand` bg)
 - Sharp corners always. `appearance: none` reset.
 
+### Button Hover States
+| Variant | Role | Resting | Hover |
+|---|---|---|---|
+| `.btn.primary` | Call-to-action | `--brand` fill | `--cyan` fill (`#00e6c8`), black text |
+| `.btn` (default) | Always-available | transparent | `rgba(255,183,66,0.10)` fill, `rgba(255,183,66,0.48)` border — half brand tone |
+
+**Rule:** Primary CTA = brand → cyan. Default/white = transparent → half-brand. Never hover to black. Text always stays `--black` on hover.
+
 ### Popup Windows ??3 sizes
 | | SM | MD | LG |
 |---|---|---|---|
@@ -219,6 +227,8 @@ Fixed `560 x 420px`, 3-section flex / grid column:
 | 4 | Typography: body 12px, sub-body 10px, logo 16px |
 | 4 | Mouse: body lag + direction tracking + tail arc wiggle |
 | 4 | Footer cursor: same dot as homepage (isOnGame = true) |
+| 5 | Button hover: primary (brand) → cyan; default (white) → half-brand tone; text always --black |
+| 5 | Nav-link active class removed — underline only on :hover, no persistent active state |
 
 ---
 

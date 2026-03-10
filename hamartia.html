@@ -14,6 +14,7 @@
   --brand:   #FFB742;
   --effect1: #DA6628;
   --effect2: #F3FF97;
+  --cyan:    #00e6c8;
   --accent:  #FF4444;
   --fs-16: 16px; --fs-12: 12px; --fs-10: 10px;
   --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -59,8 +60,8 @@ nav{display:flex;align-items:center;gap:36px;}
 .nav-item{position:relative;}
 .nav-link{font-size:var(--fs-12);color:var(--grey-m);text-decoration:none;letter-spacing:.06em;text-transform:uppercase;position:relative;transition:color .2s;}
 .nav-link::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:var(--brand);transition:width .3s cubic-bezier(0.4,0,0.2,1);}
-.nav-link:hover,.nav-link.active{color:var(--black);}
-.nav-link:hover::after,.nav-link.active::after{width:100%;}
+.nav-link:hover{color:var(--black);}
+.nav-link:hover::after{width:100%;}
 .nav-dropdown{position:absolute;top:calc(100% + 16px);left:50%;transform:translateX(-50%) translateY(-8px);background:var(--white);border:1px solid rgba(24,24,24,0.1);padding:8px 0;min-width:180px;opacity:0;visibility:hidden;transition:opacity .2s,transform .2s,visibility .2s;box-shadow:0 8px 32px rgba(24,24,24,0.08);}
 .nav-item:hover .nav-dropdown{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0);}
 .dropdown-item{display:block;padding:10px 20px;font-size:var(--fs-12);color:var(--grey-m);text-decoration:none;letter-spacing:.04em;transition:background .15s,color .15s;white-space:nowrap;}
@@ -417,8 +418,8 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
 .btn{font-family:'DM Mono',monospace;font-size:var(--fs-10);appearance:none;border:1px solid rgba(24,24,24,0.2);background:transparent;color:var(--black);cursor:none;letter-spacing:.04em;transition:background .15s,color .15s,border-color .15s;}
 .btn--sm{height:36px;padding:0 16px;}
 .btn.primary{background:var(--brand);border-color:var(--brand);color:var(--black);}
-.btn.primary:hover{background:var(--effect1);border-color:var(--effect1);color:var(--white);}
-.btn:not(.primary):hover{background:var(--black);color:var(--white);border-color:var(--black);}
+.btn.primary:hover{background:var(--cyan);border-color:var(--cyan);color:var(--black);}
+.btn:not(.primary):hover{background:var(--brand);border-color:var(--brand);color:var(--black);}
 
 /* reveal */
 .reveal{opacity:1;transform:none;transition:opacity .5s ease-out,transform .5s ease-out;}
@@ -438,9 +439,9 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
   <a href="index.html" class="nav-logo">mialyk<span class="slash">//</span><sub>building something creative</sub></a>
   <nav>
     <div class="nav-item">
-      <a href="#" class="nav-link active">Projects</a>
+      <a href="#" class="nav-link">Projects</a>
       <div class="nav-dropdown">
-        <a href="https://www.instagram.com/helpurrapp/reels/" target="_blank" rel="noreferrer" class="dropdown-item"><span class="dropdown-dot"></span>Helpurr</a>
+        <a href="helpurr.html" class="dropdown-item"><span class="dropdown-dot"></span>Helpurr</a>
         <a href="#" class="dropdown-item dropdown-locked" onclick="showPasswordModal(event)">
           <span class="dropdown-dot"></span>Le.social
           <svg class="pxi pxi--sm" viewBox="0 0 24 24" fill="currentColor" style="margin-left:4px;opacity:.5">
