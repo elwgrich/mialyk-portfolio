@@ -73,17 +73,18 @@ nav{display:flex;align-items:center;gap:36px;}
 main{position:relative;z-index:1;padding-bottom:24px;}
 .section-pad{padding-left:24px;padding-right:24px;}
 .section-inner{max-width:1200px;margin:0 auto;}
-.hero{margin-top:60px;padding:32px 24px;height:238px;border-bottom:1px solid rgba(24,24,24,.1);background:var(--white);position:relative;overflow:hidden;z-index:1;scroll-snap-align:start;scroll-snap-stop:always;}
+.hero{margin-top:60px;padding:32px 24px;min-height:226px;border-bottom:1px solid rgba(24,24,24,.1);background:var(--white);position:relative;overflow:hidden;z-index:1;scroll-snap-align:start;scroll-snap-stop:always;}
 .hero::after{content:'';position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(24,24,24,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(24,24,24,.018) 1px,transparent 1px);background-size:8px 8px;}
-.hero-inner{width:100%;max-width:1200px;margin:0 auto;position:relative;z-index:1;}
-.hero-eyebrow{display:flex;align-items:center;gap:12px;font-size:var(--fs-10);color:var(--brand);letter-spacing:.12em;text-transform:uppercase;margin-bottom:20px;line-height:19px;}
+.hero-inner{width:100%;max-width:1200px;margin:0 auto;position:relative;z-index:1;min-height:100%;display:flex;flex-direction:column;}
+.hero-head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:24px;}
+.hero-eyebrow{display:flex;align-items:center;gap:12px;font-size:var(--fs-10);color:var(--brand);letter-spacing:.12em;text-transform:uppercase;margin-bottom:0;line-height:20px;}
 .hero-eyebrow::before{content:'';width:16px;height:2px;background:var(--brand);display:block;}
-.hero-year{font-family:var(--font-brand);font-size:9px;color:var(--grey-m);border:1px solid rgba(24,24,24,.15);padding:4px 10px;}
-h1{font-family:var(--font-brand);font-size:clamp(26px,4.5vw,50px);line-height:1.35;margin-bottom:32px;color:var(--black);}
-h1 .accent{color:var(--grey-m);}
-.hero-meta{display:flex;gap:48px;flex-wrap:wrap;}
+.hero-year{font-family:var(--font-brand);font-size:10px;color:var(--grey-m);border:1px solid rgba(24,24,24,.15);padding:4px 10px;height:20px;line-height:10px;background:var(--white);display:inline-flex;align-items:center;}
+.hero-title{font-family:var(--font-brand);font-size:clamp(24px,4.5vw,50px);line-height:1.35;margin:0 0 24px;color:var(--black);}
+.hero-title .accent{color:var(--grey-m);}
+.hero-meta{display:flex;gap:48px;flex-wrap:wrap;margin-top:auto;}
 .meta-item{display:flex;flex-direction:column;gap:4px;padding:0;}
-.meta-label{font-size:var(--fs-10);color:var(--grey-l);text-transform:uppercase;letter-spacing:.1em;line-height:13px;}
+.meta-label{font-size:var(--fs-10);color:var(--grey-l);text-transform:uppercase;letter-spacing:.1em;line-height:12px;}
 .meta-value{font-size:var(--fs-12);color:var(--black);line-height:16px;}
 .ticker-wrap{padding:0 24px;border-top:1px solid rgba(24,24,24,.1);border-bottom:1px solid rgba(24,24,24,.1);height:32px;overflow:hidden;background:var(--white);position:relative;z-index:1;}
 .ticker-shell{max-width:1200px;height:100%;margin:0 auto;display:flex;align-items:center;}
@@ -168,8 +169,11 @@ footer{background:var(--white);color:var(--grey-m);padding:32px 24px;border-top:
 </header>
 <section class="hero">
   <div class="hero-inner">
-    <div class="hero-eyebrow">University Work <span class="hero-year">2020</span> </div>
-    <h1>V<span class="accent">FX</span></h1>
+    <div class="hero-head">
+      <div class="hero-eyebrow">University Work</div>
+      <span class="hero-year">2020</span>
+    </div>
+    <h1 class="hero-title">V<span class="accent">FX</span></h1>
     <div class="hero-meta">
       <div class="meta-item"><span class="meta-label">Type</span><span class="meta-value">Visual Effects / Motion</span></div>
       <div class="meta-item"><span class="meta-label">Credit</span><span class="meta-value">mialyk</span></div>

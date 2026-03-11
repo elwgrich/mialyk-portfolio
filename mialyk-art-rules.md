@@ -47,10 +47,10 @@
 ### Scale
 | Token | Size | Usage |
 |---|---|---|
-| `--fs-24` | clamp(20??4px) | Score display, sub-headings |
+| `--fs-24` | 24px | Score display, sub-headings |
 | `--fs-16` | 16px | Logo (mialyk), popup title |
-| `--fs-12` | 12px | **Body** ??nav, descriptions, buttons, footer |
-| `--fs-10` | 10px | **Sub-body only** ??labels, hints, btn--sm, pw-sub/error |
+| `--fs-12` | 12px | **Body** nav, descriptions, buttons, footer |
+| `--fs-10` | 10px | **Sub-body only** labels, hints, btn--sm, pw-sub/error |
 
 **Rule: minimum 10px. Body = 12px. Never go below 10px.**
 
@@ -58,7 +58,7 @@
 
 ## 4. Icons
 
-- All inline SVG, `fill="currentColor"` ??zero CDN
+- All inline SVG, `fill="currentColor"` zero CDN
 - Social: official brand paths (LinkedIn, Instagram, ArtStation, X)
 - UI: custom pixel-art `<rect>` (close, lock) or stroke (arrow)
 
@@ -76,7 +76,7 @@
 
 ### Yellow ratseal design
 - Character family: sharp pixel ratseal, front-heavy rectangular body, never rounded or plush.
-- Body: `#FFB742`; shade: `#DA6628`; outline: `#181818`; highlight: `#FFF8E0`.
+- Body: `#FFB742`; shade: `#DA6628`; highlight: `#FFF8E0`.
 - Ears: two square ears on the rear side of movement, cream fill `#FFD4A8`, tiny warm highlight.
 - Tail: grey dot-chain tail (`#A8B0B2`) with a slight wiggle when moving.
 - Nose: white; whisker strokes: grey; eye reads as a black forward-facing block.
@@ -94,7 +94,7 @@
 - 16% initial density, refills to 12% on eat.
 
 ### Experience Beans / Nodes
-- Always 5 on screen, 5s watchdog refill.
+- Always 8 on screen, 8s watchdog refill.
 - Cycles through all projects (no lock-out after seen).
 - Diamond sprite, project accent colour, label below.
 - Do not place nodes under the homepage HUD / `Clean Pixel Explorer` panel.
@@ -103,7 +103,7 @@
 
 ## 6. Components
 
-### Buttons ??3 fixed sizes
+### Buttons 3 fixed sizes
 | Class | Font | H | W | Usage |
 |---|---|---|---|---|
 | `.btn--sm` | 10px | 36px | auto | Password modal |
@@ -148,13 +148,15 @@ Fixed `560 x 420px`, 3-section flex / grid column:
 | Page content max-width | 1200px centered on all pages except index.html |
 | Footer | White bg, top border divider |
 | Popup backdrop | `rgba(24,24,24,0.4)` + `blur(4px)` |
-| Popup entry | scale `0.92??` + `translateY 16??`, spring easing |
+| Popup entry | scale `0.92` + `translateY 16`, spring easing |
 
 ### Hero section
 
 - Default project hero = eyebrow + optional year chip + H1 + meta row. Do not add hero tags or hero deck copy unless explicitly requested.
 - Placement = first section under header, `margin-top: 60px`.
-- Frame = `padding: 32px 24px`, white background, `border-bottom: 1px solid rgba(24,24,24,0.1)`, fixed hero height `238px`.
+- Frame = `padding: 32px 24px`, white background, `border-bottom: 1px solid rgba(24,24,24,0.1)`, base hero height `226px`.
+- Background texture = keep the white base; optional subtle pixel-grid overlay is allowed using two `linear-gradient` layers at `rgba(24,24,24,0.018)` with `background-size: 8px 8px`.
+- Scroll snap = when the page uses snap sections, hero should keep `scroll-snap-align: start` and `scroll-snap-stop: always`.
 - Inner wrap = max-width `1200px`, centered.
 - Eyebrow = `DM Mono`, `10px`, uppercase, brand orange, `letter-spacing: .12em`, with a `16px x 2px` orange rule before the text.
 - Year chip = `Press Start 2P`, `9px`, `color: --grey-m`, `border: 1px solid rgba(24,24,24,0.15)`, `padding: 4px 10px`, white background.
@@ -166,7 +168,9 @@ Fixed `560 x 420px`, 3-section flex / grid column:
 
 | Hero item | H | Padding | Font size |
 |---|---|---|---|
-| Hero frame | `238px` | `32px 24px` | n/a |
+| Hero frame | `226px` | `32px 24px` | n/a |
+| Hero surface | n/a | n/a | White base + optional `8px` pixel grid |
+| Hero snap | n/a | n/a | `scroll-snap-align: start`, `scroll-snap-stop: always` when snapping is enabled |
 | Eyebrow | `19px` line-height | `0` | `10px` |
 | Year chip | auto | `4px 10px` | `9px` |
 | H1 | auto | `0` | `clamp(26px, 4.5vw, 50px)` |
@@ -264,7 +268,7 @@ Header hover = brand orange underline + dropdown hover background `rgba(255,183,
         <a href="cheddar.html" class="dropdown-item"><span class="dropdown-dot"></span>Cheddar Verse</a>
         <a href="illustration.html" class="dropdown-item"><span class="dropdown-dot"></span>Illustration</a>
         <a href="vfx.html" class="dropdown-item"><span class="dropdown-dot"></span>VFX</a>
-        <a href="hamartia.html" class="dropdown-item"><span class="dropdown-dot"></span>Hamartia <span style="font-size:10px;color:var(--grey-m)">Game</span></a>
+        <a href="hamartia.html" class="dropdown-item"><span class="dropdown-dot"></span>Hamartia</span></a>
       </div>
     </div>
     <a href="about.html" class="nav-link">About</a>
@@ -319,7 +323,7 @@ Header hover = brand orange underline + dropdown hover background `rgba(255,183,
 ### Password Modal JS (add to every page)
 
 ```js
-const LE_SOCIAL_PASSWORD = 'mialyk2024'; // update when ready
+const LE_SOCIAL_PASSWORD = 'mialyk2025'; // update when ready
 function showPasswordModal(e) {
   e.preventDefault();
   document.getElementById('pw-input').value = '';
