@@ -2278,6 +2278,8 @@
     }
     document.addEventListener('mousemove',syncPointer);
     document.addEventListener('pointermove',syncPointer);
+    document.addEventListener('mouseleave',()=>{mouseX=-200;mouseY=-200;});
+    document.addEventListener('mouseenter',e=>{mouseX=e.clientX;mouseY=e.clientY;bodyX=e.clientX;bodyY=e.clientY;});
     document.addEventListener('mousedown',syncPointer);
     document.addEventListener('pointerdown',syncPointer);
     document.addEventListener('mouseup',syncPointer);

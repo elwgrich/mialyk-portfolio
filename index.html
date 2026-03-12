@@ -1285,6 +1285,8 @@ document.addEventListener('mousemove', e => {
   // Footer, nav, popup, and password modal always use dot cursor
   if (el && (el.closest("footer") || el.closest("header") || el.closest("#popup") || el.closest("#pw-modal"))) isOnGame = true;
 });
+document.addEventListener('mouseleave', () => { mouseX = -200; mouseY = -200; });
+document.addEventListener('mouseenter', e => { mouseX = e.clientX; mouseY = e.clientY; bodyX = e.clientX; bodyY = e.clientY; });
 
 document.querySelectorAll('a, button, .nav-link').forEach(el => {
   el.addEventListener('mouseenter', () => { isHovering = true; });

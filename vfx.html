@@ -48,7 +48,7 @@ nav{display:flex;align-items:center;gap:36px;}
 .dropdown-item{display:block;padding:10px 20px;font-size:var(--fs-12);color:var(--grey-m);text-decoration:none;letter-spacing:.04em;white-space:nowrap;transition:background .15s,color .15s;}
 .dropdown-item:hover{background:rgba(255,183,66,.08);color:var(--black);} .dropdown-item--disabled{color:var(--grey-l);pointer-events:none;cursor:default;background:transparent;} .dropdown-item--disabled .dropdown-dot{background:var(--grey-l);opacity:.45;}
 .dropdown-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--brand);margin-right:10px;vertical-align:middle;}
-.dropdown-item.active .dropdown-dot{background:var(--brand);}
+.dropdown-item.active .dropdown-dot{background:var(--grey-l);}
 .dropdown-locked{opacity:.6;}
 .dropdown-locked:hover{opacity:1;}
 .pxi{display:inline-block;width:16px;height:16px;vertical-align:middle;flex-shrink:0;fill:currentColor;}
@@ -100,6 +100,7 @@ main{position:relative;z-index:1;padding-bottom:24px;}
 .player-shell.is-playing{border-color:rgba(255,183,66,.48);box-shadow:0 0 0 1px rgba(255,183,66,.18);}
 .video-stage{position:relative;background:#0C0C0C;aspect-ratio:16/9;min-height:340px;max-height:calc(640px - 98px);overflow:hidden;flex:1 1 auto;}
 .video-stage::after{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.05) 3px,rgba(0,0,0,.05) 4px);}
+.video-mouse-trap{position:absolute;inset:0;z-index:2;}
 .video-embed,.video-embed iframe{display:block;width:100%;height:100%;border:0;}
 .video-embed{position:absolute;inset:0;}
 .ctrl-bar{height:34px;border-top:1px solid rgba(24,24,24,.08);display:flex;align-items:center;padding:0 24px;gap:10px;background:var(--white);}
@@ -185,6 +186,7 @@ footer{background:var(--white);color:var(--grey-m);padding:32px 24px;border-top:
     <div class="section-inner">
       <div class="player-shell reveal">
         <div class="video-stage" id="video-stage">
+          <div class="video-mouse-trap"></div>
           <iframe
             id="video-iframe"
             class="video-embed"
@@ -265,7 +267,8 @@ function requestCursorFrame(){
 }
 function markCursorActive(){cursorLastEventAt=performance.now();requestCursorFrame();}
 document.addEventListener('pointermove',e=>{mouseX=e.clientX;mouseY=e.clientY;isHovering=e.target instanceof Element&&!!e.target.closest(interactiveSelector);markCursorActive();});
-document.addEventListener('pointerleave',()=>{isHovering=false;});
+document.addEventListener('pointerleave',()=>{isHovering=false;mouseX=-200;mouseY=-200;});
+document.addEventListener('pointerenter',e=>{mouseX=e.clientX;mouseY=e.clientY;bodyX=e.clientX;bodyY=e.clientY;markCursorActive();});
 document.addEventListener('click',e=>{
   const r=document.createElement('div');r.className='click-ripple';
   const s=isHovering?32:20;

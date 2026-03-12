@@ -424,6 +424,8 @@ let mouseX=-100,mouseY=-100,isHovering=false;
 let bodyX=-100,bodyY=-100,curAngle=0,targetAngle=0,legPhase=0,lastBodyX=-100,lastBodyY=-100;
 let cursorScale=2,targetScale=2;
 document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY;});
+document.addEventListener('mouseleave',()=>{mouseX=-200;mouseY=-200;});
+document.addEventListener('mouseenter',e=>{mouseX=e.clientX;mouseY=e.clientY;bodyX=e.clientX;bodyY=e.clientY;});
 document.querySelectorAll('a,button,.exp-card,.contact-item,.hero-tag').forEach(el=>{
   el.addEventListener('mouseenter',()=>{isHovering=true;});
   el.addEventListener('mouseleave',()=>{isHovering=false;});

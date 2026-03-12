@@ -141,6 +141,7 @@ nav{display:flex;align-items:center;gap:36px;}
 .menu-item:hover{color:var(--black);}
 
 .video-area{background:#0C0C0C;position:relative;overflow:hidden;width:100%;height:720px;min-height:720px;flex:none;}
+.video-mouse-trap{position:absolute;inset:0;z-index:2;}
 .video-area::after{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.06) 3px,rgba(0,0,0,0.06) 4px);}
 .live-badge{position:absolute;top:58px;left:24px;z-index:3;background:var(--accent);color:var(--white);font-family:'Press Start 2P',monospace;font-size:7px;padding:4px 8px;display:flex;align-items:center;gap:5px;}
 .live-dot{width:5px;height:5px;border-radius:50%;background:var(--white);animation:blink 1.2s infinite;}
@@ -514,6 +515,7 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
   </div>
   <div class="video-area">
     <div class="live-badge"><div class="live-dot"></div>LIVE</div>
+    <div class="video-mouse-trap"></div>
     <div class="video-content">
       <iframe
         id="video-iframe" class="video-embed"
@@ -792,7 +794,7 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
 const cursorCanvas=document.getElementById('cursor-canvas');
 const cursorCtx=cursorCanvas.getContext('2d');
 cursorCanvas.width=window.innerWidth; cursorCanvas.height=window.innerHeight;
-window.addEventListener('resize',()=>{cursorCanvas.width=window.innerWidth;cursorCanvas.height=window.innerHeight;});
+window.addEventListener('resize',()=>{cursorCanvas.width=window.innerWidth;cursorCanvas.height=window.innerHeight;requestCursorFrame();});
 let mouseX=-100,mouseY=-100,isHovering=false;
 let bodyX=-100,bodyY=-100,curAngle=0,targetAngle=0,legPhase=0,lastBodyX=-100,lastBodyY=-100;
 let cursorScale=2,targetScale=2;
@@ -800,11 +802,12 @@ const hoverSelector='a,button,input,textarea,select,[onclick],.art-trigger-btn,.
 function updateHoverState(target){
   isHovering=!!(target&&target.closest&&target.closest(hoverSelector));
 }
-document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY;updateHoverState(e.target);});
-document.addEventListener('mouseover',e=>updateHoverState(e.target));
+document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY;updateHoverState(e.target);requestCursorFrame();});
+document.addEventListener('mouseover',e=>{updateHoverState(e.target);requestCursorFrame();});
 document.addEventListener('mouseout',e=>{
   const related=e.relatedTarget;
   isHovering=!!(related&&related.closest&&related.closest(hoverSelector));
+  requestCursorFrame();
 });
 document.addEventListener('click',e=>{
   const ripple=document.createElement('div');
@@ -835,9 +838,14 @@ function drawMouseCursor(P,angle,moving){
   cursorCtx.fillRect(Math.round(P*3.2-P*1.5),Math.round(P*0.8),Math.round(P*3),1);
   cursorCtx.restore();
 }
+let cursorRafId=null,cursorActive=false;
+function requestCursorFrame(){if(!cursorActive&&!document.hidden){cursorActive=true;cursorRafId=requestAnimationFrame(cursorLoop);}}
 function cursorLoop(){
+  cursorActive=false; cursorRafId=null;
+  if(document.hidden)return;
   cursorCtx.clearRect(0,0,cursorCanvas.width,cursorCanvas.height);
   cursorCtx.imageSmoothingEnabled=false;
+  const prevScale=cursorScale,prevBodyX=bodyX,prevBodyY=bodyY,prevAngle=curAngle;
   targetScale=isHovering?3.2:2; cursorScale+=(targetScale-cursorScale)*0.18;
   bodyX+=(mouseX-bodyX)*0.22; bodyY+=(mouseY-bodyY)*0.22;
   const vx=bodyX-lastBodyX,vy=bodyY-lastBodyY,speed=Math.sqrt(vx*vx+vy*vy),moving=speed>0.4;
@@ -849,9 +857,13 @@ function cursorLoop(){
   curAngle+=da*0.25; if(moving)legPhase+=0.28;
   cursorCtx.save(); cursorCtx.translate(Math.round(bodyX),Math.round(bodyY));
   drawMouseCursor(cursorScale,curAngle,moving); cursorCtx.restore();
-  requestAnimationFrame(cursorLoop);
+  const settled=Math.abs(cursorScale-prevScale)<0.01&&Math.abs(bodyX-prevBodyX)<0.3&&Math.abs(bodyY-prevBodyY)<0.3&&Math.abs(curAngle-prevAngle)<0.005;
+  if(!settled)requestCursorFrame();
 }
-cursorLoop();
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)requestCursorFrame();});
+document.addEventListener('mouseleave',()=>{mouseX=-200;mouseY=-200;requestCursorFrame();});
+document.addEventListener('mouseenter',e=>{mouseX=e.clientX;mouseY=e.clientY;bodyX=e.clientX;bodyY=e.clientY;requestCursorFrame();});
+requestCursorFrame();
 
 // ── FAKE PLAYER UI
 let playing=true;
