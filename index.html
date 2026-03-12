@@ -243,7 +243,50 @@ canvas#gameCanvas {
   pointer-events: none;
   z-index: 10;
   width: min(360px, calc(100vw - 80px));
+  user-select: none;
 }
+
+/* Win-bar titlebar */
+#game-ui .win-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px 0 12px;
+  height: 24px;
+  background: var(--brand);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  color: var(--black);
+  pointer-events: auto;
+  cursor: none;
+  border: 1px solid var(--line-mid);
+  border-bottom: none;
+  flex-shrink: 0;
+}
+#game-ui .win-bar .win-title {
+  letter-spacing: 0.06em;
+  opacity: 0.8;
+}
+#game-ui .win-controls {
+  display: flex;
+  gap: 3px;
+}
+#game-ui .win-btn {
+  width: 14px;
+  height: 14px;
+  border: 1px solid rgba(0,0,0,0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  color: rgba(0,0,0,0.55);
+  font-family: 'DM Mono', monospace;
+  pointer-events: auto;
+  cursor: none;
+  transition: background 0.1s;
+  line-height: 1;
+}
+#game-ui .win-btn:hover { background: rgba(0,0,0,0.12); }
 
 .hud-shell {
   background: var(--panel);
@@ -251,6 +294,13 @@ canvas#gameCanvas {
   padding: 22px 22px 20px;
   box-shadow: var(--shadow-soft);
   backdrop-filter: blur(10px);
+  transition: none;
+}
+#game-ui.is-minimised .hud-shell {
+  display: none;
+}
+#game-ui.is-dragging {
+  opacity: 0.92;
 }
 
 .hud-eyebrow {
@@ -1088,6 +1138,13 @@ footer {
   <div id="node-layer" aria-label="Project map"></div>
 
   <div id="game-ui">
+    <div class="win-bar" id="hud-winbar">
+      <span class="win-title">portfolio_map.exe</span>
+      <div class="win-controls">
+        <div class="win-btn" id="hud-minimise" title="Minimise">─</div>
+        <div class="win-btn" id="hud-close" title="Minimise">✕</div>
+      </div>
+    </div>
     <div class="hud-shell">
 
       <div class="hud-top">
@@ -1337,6 +1394,66 @@ function cursorLoop() {
 cursorLoop();
 
 function scrollToTop(e) { e.preventDefault(); window.scrollTo({top:0}); }
+
+// ── HUD WIN-BAR: drag + minimise
+(function() {
+  const ui     = document.getElementById('game-ui');
+  const winbar = document.getElementById('hud-winbar');
+  const btnMin = document.getElementById('hud-minimise');
+  const btnClose = document.getElementById('hud-close');
+
+  // Minimise / restore — both buttons toggle
+  function toggleMinimise() {
+    ui.classList.toggle('is-minimised');
+  }
+  [btnMin, btnClose].forEach(btn => {
+    btn.addEventListener('pointerdown', e => e.stopPropagation()); // don't start drag
+    btn.addEventListener('click',       e => { e.stopPropagation(); toggleMinimise(); });
+  });
+
+  // Hover state for cursor enlargement on win-bar
+  winbar.addEventListener('pointerenter', () => { isHovering = true; });
+  winbar.addEventListener('pointerleave', () => { if (!dragging) isHovering = false; });
+
+  // Drag — pointer events for reliable capture even outside window
+  let dragging = false, ox = 0, oy = 0;
+
+  winbar.addEventListener('pointerdown', e => {
+    dragging = true;
+    isHovering = true;
+    ui.classList.add('is-dragging');
+    const rect = ui.getBoundingClientRect();
+    const homeRect = ui.offsetParent.getBoundingClientRect();
+    ui.style.left = (rect.left - homeRect.left) + 'px';
+    ui.style.top  = (rect.top  - homeRect.top)  + 'px';
+    ox = e.clientX - rect.left;
+    oy = e.clientY - rect.top;
+    winbar.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  });
+
+  winbar.addEventListener('pointermove', e => {
+    // Keep cursor position updated while pointer is captured
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    if (!dragging) return;
+    const homeRect = ui.offsetParent.getBoundingClientRect();
+    const maxX = homeRect.width  - ui.offsetWidth;
+    const maxY = homeRect.height - ui.offsetHeight;
+    const x = Math.max(0, Math.min(e.clientX - homeRect.left - ox, maxX));
+    const y = Math.max(0, Math.min(e.clientY - homeRect.top  - oy, maxY));
+    ui.style.left = x + 'px';
+    ui.style.top  = y + 'px';
+  });
+
+  winbar.addEventListener('pointerup',     stopDrag);
+  winbar.addEventListener('pointercancel', stopDrag);
+  function stopDrag() {
+    dragging = false;
+    isHovering = false;
+    ui.classList.remove('is-dragging');
+  }
+})();
 
 // Canvas Setup
 const canvas  = document.getElementById('gameCanvas');
