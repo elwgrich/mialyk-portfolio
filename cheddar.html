@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>mialyk // cheddar verse</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -474,7 +475,7 @@ const PADDING = 120;
 const MAX_CARD_W = 620;
 const MAX_CARD_H = 420;
 const MOTION_BUFFER = 60;
-const IMAGE_BUFFER = 280;
+const IMAGE_BUFFER = 480;
 
 let VW, VH, stageW, stageH;
 let cards = [];
@@ -665,7 +666,7 @@ function buildCards() {
           setTimeout(() => {
             el.classList.remove('is-entering');
             el.classList.add('is-entered');
-          }, idx * 42);
+          }, idx * 28);
         });
       });
     });
@@ -711,6 +712,9 @@ function syncCardTransforms(now = 0, animate = false) {
 
     const img = getCardImageEl(idx);
     const hovered = idx === hoverCardIdx;
+    // Skip transform work for cards far outside the viewport
+    const inRange = hovered || (card.x + card.w >= currentX - VW && card.x <= currentX + VW * 2);
+    if (!inRange) return;
     const visible = hovered || isCardNearViewport(card);
     const wave = animate && visible
       ? Math.sin(t * 1.45 + card.wavePhase) * card.waveAmp + Math.cos(t * 1.05 + card.wavePhase * 1.2) * (card.waveAmp * 0.35)
@@ -780,7 +784,7 @@ function hydrateVisibleCards() {
   const vRight = currentX + VW + IMAGE_BUFFER;
   cards.forEach((c, i) => {
     if (c.x + c.w >= vLeft && c.x <= vRight) {
-      ensureCardImageLoaded(i, i < 2 && currentX < 16 ? 'high' : 'low');
+      ensureCardImageLoaded(i, i < 4 ? 'high' : 'low');
       dissolve(i);
     }
   });
@@ -885,7 +889,6 @@ function jumpToSection(key) {
 }
 
 function rebuildGallery() {
-  dissolved.clear();
   measure();
   buildCards();
   if (galleryRafId) {
@@ -907,13 +910,17 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 function dissolve(idx) {
-  if (dissolved.has(idx)) return;
+  const el = stage.children[idx];
+  const img = el?.querySelector('img');
+  if (dissolved.has(idx)) {
+    // Rebuild after resize: new DOM element, just restore visibility without animation
+    if (img) img.style.opacity = '1';
+    return;
+  }
   dissolved.add(idx);
 
-  const el = stage.children[idx];
   if (!el) return;
   const cv = el.querySelector('canvas');
-  const img = el.querySelector('img');
   if (!cv || !img) return;
 
   const W = cards[idx].w;
