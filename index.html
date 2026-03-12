@@ -2727,15 +2727,21 @@ function draw() {
   drawNodePaths();
   drawPopupConnection();
 
+  const starT = performance.now();
   candies.forEach(c => {
     const ox = c.x * CELL;
     const oy = c.y * CELL;
     const S = CELL;
+    const phase = c.x * 7.31 + c.y * 13.73; // unique phase per star position
 
     if (c.size === 1) {
+      // sm — fast twinkle ~1.8s period, high variance (0.08 → 0.82)
+      const a = (0.08 + 0.74 * (0.5 + 0.5 * Math.sin(starT * 0.0035 + phase))).toFixed(3);
       const p = Math.max(1, Math.round(S * 0.08));
-      px(ox + S / 2 - p, oy + S / 2 - p, p * 2, p * 2, 'rgba(220,224,226,0.82)');
+      px(ox + S / 2 - p, oy + S / 2 - p, p * 2, p * 2, `rgba(220,224,226,${a})`);
     } else if (c.size === 5) {
+      // md — medium twinkle ~2.8s period, medium variance (0.22 → 0.78)
+      const a = (0.22 + 0.56 * (0.5 + 0.5 * Math.sin(starT * 0.00225 + phase))).toFixed(3);
       const p = Math.max(1, Math.round(S * 0.1));
       const cross = [
         [0,1,0],
@@ -2745,9 +2751,11 @@ function draw() {
       const offX = ox + Math.floor(S / 2) - p * 1.5;
       const offY = oy + Math.floor(S / 2) - p * 1.5;
       cross.forEach((row, ry) => row.forEach((v, rx) => {
-        if (v) px(offX + rx * p, offY + ry * p, p, p, 'rgba(201,205,206,0.78)');
+        if (v) px(offX + rx * p, offY + ry * p, p, p, `rgba(201,205,206,${a})`);
       }));
     } else {
+      // lg — slow twinkle ~4.2s period, gentle variance (0.28 → 0.55)
+      const a = (0.28 + 0.27 * (0.5 + 0.5 * Math.sin(starT * 0.0015 + phase))).toFixed(3);
       const p = Math.max(1, Math.round(S * 0.11));
       const star = [
         [0,0,1,0,0],
@@ -2759,7 +2767,7 @@ function draw() {
       const offX = ox + Math.floor(S / 2) - p * 2.5;
       const offY = oy + Math.floor(S / 2) - p * 2.5;
       star.forEach((row, ry) => row.forEach((v, rx) => {
-        if (v) px(offX + rx * p, offY + ry * p, p, p, 'rgba(255,183,66,0.55)');
+        if (v) px(offX + rx * p, offY + ry * p, p, p, `rgba(255,183,66,${a})`);
       }));
     }
   });
