@@ -1348,6 +1348,8 @@ let COLS, ROWS;
 function resize() {
   canvas.width  = window.innerWidth;
   canvas.height = window.innerHeight;
+  cursorCanvas.width  = window.innerWidth;
+  cursorCanvas.height = window.innerHeight;
   COLS = Math.floor(canvas.width  / CELL);
   ROWS = Math.floor(canvas.height / CELL);
 }
