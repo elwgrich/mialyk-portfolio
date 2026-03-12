@@ -729,6 +729,7 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    background: #ece5dd;
   }
 
   .video-slide video {
@@ -739,6 +740,12 @@
     -webkit-user-drag: none;
     user-select: none;
     touch-action: none;
+    background: #ece5dd;
+    opacity: 0;
+    transition: opacity .2s ease;
+  }
+  .video-slide video.is-ready {
+    opacity: 1;
   }
 
   /* placeholder when no video */
@@ -2135,28 +2142,28 @@
                 </div>
 
                 <div class="video-slide">
-                  <video data-slide-video muted loop playsinline preload="metadata" src="assets/images/helpurr/Video/01_Paindetection-01.mp4"></video>
+                  <video data-slide-video muted loop playsinline preload="auto" src="assets/images/helpurr/Video/01_Paindetection-01.mp4"></video>
                 </div>
                 <div class="video-slide">
-                  <video data-slide-video muted loop playsinline preload="metadata" src="assets/images/helpurr/Video/02_Paindetection-02.mp4"></video>
+                  <video data-slide-video muted loop playsinline preload="auto" src="assets/images/helpurr/Video/02_Paindetection-02.mp4"></video>
                 </div>
                 <div class="video-slide">
-                  <video data-slide-video muted loop playsinline preload="metadata" src="assets/images/helpurr/Video/03_sticker-01.mp4"></video>
+                  <video data-slide-video muted loop playsinline preload="auto" src="assets/images/helpurr/Video/03_sticker-01.mp4"></video>
                 </div>
                 <div class="video-slide">
-                  <video data-slide-video muted loop playsinline preload="metadata" src="assets/images/helpurr/Video/04_sticker-02.mp4"></video>
+                  <video data-slide-video muted loop playsinline preload="auto" src="assets/images/helpurr/Video/04_sticker-02.mp4"></video>
                 </div>
                 <div class="video-slide">
-                  <video data-slide-video muted loop playsinline preload="metadata" src="assets/images/helpurr/Video/05_sticker-03.mp4"></video>
+                  <video data-slide-video muted loop playsinline preload="auto" src="assets/images/helpurr/Video/05_sticker-03.mp4"></video>
                 </div>
                 <div class="video-slide">
-                  <video data-slide-video muted loop playsinline preload="metadata" src="assets/images/helpurr/Video/06_sticker-04.mp4"></video>
+                  <video data-slide-video muted loop playsinline preload="auto" src="assets/images/helpurr/Video/06_sticker-04.mp4"></video>
                 </div>
                 <div class="video-slide">
-                  <video data-slide-video muted loop playsinline preload="metadata" src="assets/images/helpurr/Video/07_sticker-05.mp4"></video>
+                  <video data-slide-video muted loop playsinline preload="auto" src="assets/images/helpurr/Video/07_sticker-05.mp4"></video>
                 </div>
                 <div class="video-slide">
-                  <video data-slide-video muted loop playsinline preload="metadata" src="assets/images/helpurr/Video/08_sticker-06.mp4"></video>
+                  <video data-slide-video muted loop playsinline preload="auto" src="assets/images/helpurr/Video/08_sticker-06.mp4"></video>
                 </div>
 
 
@@ -2505,6 +2512,8 @@
   const slides = Array.from(document.querySelectorAll(".video-slide"));
   const dots = document.querySelectorAll(".phone-dot");
   const slideVideos = Array.from(document.querySelectorAll("[data-slide-video]"));
+  const VIDEO_READY_STATE = HTMLMediaElement.HAVE_CURRENT_DATA;
+  const VIDEO_WARM_TIMEOUT = 2000;
 
   const pixelIcons = {
     heart: '<svg viewBox="0 0 8 8" aria-hidden="true"><rect x="1" y="0" width="2" height="1"/><rect x="5" y="0" width="2" height="1"/><rect x="0" y="1" width="3" height="1"/><rect x="5" y="1" width="3" height="1"/><rect x="0" y="2" width="8" height="1"/><rect x="1" y="3" width="6" height="1"/><rect x="2" y="4" width="4" height="1"/><rect x="3" y="5" width="2" height="1"/><rect x="3" y="6" width="2" height="1"/></svg>',
@@ -2553,6 +2562,61 @@
   }
 
   renderSlideTikTokUI();
+
+  function setVideoReadyState(video, isReady) {
+    if (!video) return;
+    video.dataset.ready = isReady ? "true" : "false";
+    video.classList.toggle("is-ready", isReady);
+  }
+
+  function warmVideo(video) {
+    if (!video) return Promise.resolve();
+    video.preload = "auto";
+    if (video.readyState >= VIDEO_READY_STATE) {
+      setVideoReadyState(video, true);
+      return Promise.resolve();
+    }
+
+    setVideoReadyState(video, false);
+    return new Promise(resolve => {
+      let settled = false;
+      const finish = () => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        video.removeEventListener("loadeddata", finish);
+        video.removeEventListener("canplay", finish);
+        video.removeEventListener("error", finish);
+        setVideoReadyState(video, video.readyState >= VIDEO_READY_STATE);
+        resolve();
+      };
+      const timer = setTimeout(finish, VIDEO_WARM_TIMEOUT);
+      video.addEventListener("loadeddata", finish);
+      video.addEventListener("canplay", finish);
+      video.addEventListener("error", finish);
+
+      try {
+        video.load();
+      } catch (_) {
+        finish();
+      }
+    });
+  }
+
+  function warmNeighborVideos(videoIndex) {
+    [videoIndex, videoIndex + 1].forEach(index => {
+      const video = slideVideos[index];
+      if (!video) return;
+      warmVideo(video);
+    });
+  }
+
+  slideVideos.forEach(video => {
+    video.preload = "auto";
+    setVideoReadyState(video, video.readyState >= VIDEO_READY_STATE);
+    video.addEventListener("loadeddata", () => setVideoReadyState(video, true));
+    video.addEventListener("canplay", () => setVideoReadyState(video, true));
+  });
 
   function getSlideHeight() {
     const reel = document.getElementById("videoReel");
@@ -2618,22 +2682,39 @@
         homeBar.style.borderRadius = "0";
       }
     }
-    startProgress();
+    stopProgress();
   }
 
   function syncSlideMedia() {
-    const videos = Array.from(document.querySelectorAll("[data-slide-video]"));
-    videos.forEach(video => {
+    slideVideos.forEach(video => {
       video.pause();
       video.currentTime = 0;
     });
     if (currentSlide === 0) return;
-    const activeVideo = videos[currentSlide - 1];
+    const activeVideo = slideVideos[currentSlide - 1];
     if (!activeVideo) return;
-    const playPromise = activeVideo.play();
-    if (playPromise && typeof playPromise.catch === "function") {
-      playPromise.catch(() => {});
+
+    const startActiveVideo = () => {
+      if (slideVideos[currentSlide - 1] !== activeVideo) return;
+      activeVideo.currentTime = 0;
+      const playPromise = activeVideo.play();
+      if (playPromise && typeof playPromise.catch === "function") {
+        playPromise.catch(() => {});
+      }
+      startProgress();
+      warmNeighborVideos(currentSlide);
+    };
+
+    if (activeVideo.readyState >= VIDEO_READY_STATE) {
+      setVideoReadyState(activeVideo, true);
+      startActiveVideo();
+      return;
     }
+
+    warmVideo(activeVideo).then(() => {
+      if (slideVideos[currentSlide - 1] !== activeVideo) return;
+      startActiveVideo();
+    });
   }
 
   function goToSlide(n) {
@@ -2835,12 +2916,12 @@
     }
   }
 
+  warmNeighborVideos(0);
   goToSlide(0);
 </script>
 
 </body>
 </html>
-
 
 
 

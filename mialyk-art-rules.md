@@ -88,10 +88,24 @@
 - Hover / interactive dot: `#00e6c8`, radius `12px`, alpha about `0.7`.
 - Non-home cursor: yellow ratseal sprite with body lag `0.22` lerp and facing rotation `0.25` lerp.
 - Hover on interactive targets enlarges the non-home ratseal cursor.
+- **Window leave/enter:** on `mouseleave`, cursor hides (mouseX/mouseY → −200, off-screen). On `mouseenter`, body snaps instantly to entry point — no lerp delay from stale position.
+- **Cross-origin iframes (Vimeo):** place a `.video-mouse-trap` div (`position:absolute; inset:0; z-index:2`) over the iframe so `mousemove` events reach `document` and the cursor doesn't freeze.
+- **HUD win-bar hover:** `isHovering = true` while hovering or dragging the game-ui win-bar, so the cursor enlarges to the hover state.
+
+### HUD Win-Bar (index.html game-ui)
+- Win-bar strip at top of `#game-ui`: brand orange background, `Press Start 2P` 7px, title `portfolio_map.exe`.
+- Two buttons: ─ (minimise) and ✕ (also minimise — not close). Both toggle `is-minimised` class on `#game-ui`.
+- When `is-minimised`: `.hud-shell { display: none }` — only the win-bar strip remains.
+- Draggable via `pointerdown` / `pointermove` / `pointerup` + `setPointerCapture` on `#hud-winbar`. Clamped within `#home` bounds.
+- Buttons use `pointerdown` stopPropagation to prevent drag start on button click.
 
 ### Candies
 - Small +1 / Medium +5 / Large +10.
 - 16% initial density, refills to 12% on eat.
+- **Breathing animation (galaxy-star effect):** each size pulses at a unique rate using `performance.now()` + per-position phase offset (so stars never sync):
+  - `candy-sm` (size 1): fast ~1.8s period, high variance — alpha `0.08 → 0.82`
+  - `candy-md` (size 5): medium ~2.8s period — alpha `0.22 → 0.78`
+  - `candy-lg` (size 10): slow ~4.2s period, gentle — alpha `0.28 → 0.55`
 
 ### Experience Beans / Nodes
 - Always 8 on screen, 8s watchdog refill.
