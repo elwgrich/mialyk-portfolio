@@ -1,0 +1,2003 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORA ??mialyk</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --white:#FEFEFE;
+        --grey-l:#A8B0B2;
+        --grey-m:#88888C;
+        --black:#181818;
+        --brand:#FFB742;
+        --effect1:#DA6628;
+        --cyan:#00e6c8;
+        --project:#00F6FF;
+        --nav-h:60px;
+        --font-brand:'Press Start 2P',monospace;
+        --font-body:'DM Mono',monospace;
+      }
+      *,*::before,*::after {
+        box-sizing:border-box;
+        margin:0;
+        padding:0;
+      }
+      html {
+        scroll-behavior:smooth;
+        scroll-snap-type:y mandatory;
+        scroll-padding-top:var(--nav-h);
+      }
+      body {
+        background:var(--white);
+        color:var(--black);
+        font-family:var(--font-body);
+        font-size:12px;
+        line-height:1.6;
+        -webkit-font-smoothing:antialiased;
+        cursor:none;
+        overflow-x:hidden;
+      }
+      /* CURSOR */
+      #cursor-canvas {
+        position:fixed;
+        top:0;
+        left:0;
+        width:100vw;
+        height:100vh;
+        pointer-events:none;
+        z-index:9999;
+      }
+      /* NAV */
+      header {
+        position:fixed;
+        top:0;
+        left:0;
+        right:0;
+        height:var(--nav-h);
+        background:var(--white);
+        border-bottom:1px solid rgba(24,24,24,.08);
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        padding:0 40px;
+        z-index:500;
+      }
+      .nav-logo {
+        font-family:var(--font-brand);
+        font-size:16px;
+        color:var(--black);
+        text-decoration:none;
+        letter-spacing:.02em;
+        display:flex;
+        align-items:center;
+        gap:6px;
+        line-height:1;
+      }
+      .nav-logo .slash {
+        color:var(--brand);
+      }
+      .nav-logo sub {
+        font-family:var(--font-body);
+        font-weight:300;
+        font-size:12px;
+        color:var(--grey-m);
+        vertical-align:baseline;
+        margin-left:2px;
+      }
+      nav {
+        display:flex;
+        align-items:center;
+        gap:36px;
+      }
+      .nav-link {
+        font-size:12px;
+        color:var(--grey-m);
+        text-decoration:none;
+        letter-spacing:.06em;
+        text-transform:uppercase;
+        position:relative;
+        transition:color .2s;
+      }
+      .nav-link::after {
+        content:'';
+        position:absolute;
+        bottom:-2px;
+        left:0;
+        width:0;
+        height:1px;
+        background:var(--brand);
+        transition:width .3s cubic-bezier(.4,0,.2,1);
+      }
+      .nav-link:hover {
+        color:var(--black);
+      }
+      .nav-link:hover::after,.nav-link.active::after {
+        width:100%;
+      }
+      .nav-item {
+        position:relative;
+      }
+      .nav-dropdown {
+        position:absolute;
+        top:calc(100% + 16px);
+        left:50%;
+        background:var(--white);
+        border:1px solid rgba(24,24,24,.1);
+        min-width:180px;
+        padding:8px 0;
+        opacity:0;
+        visibility:hidden;
+        transform:translateX(-50%) translateY(-8px);
+        transition:opacity .2s,transform .2s,visibility .2s;
+        box-shadow:0 8px 32px rgba(24,24,24,.08);
+      }
+      .nav-item:hover .nav-dropdown {
+        opacity:1;
+        visibility:visible;
+        transform:translateX(-50%) translateY(0);
+      }
+      .dropdown-item {
+        display:block;
+        padding:10px 20px;
+        font-size:12px;
+        color:var(--grey-m);
+        text-decoration:none;
+        letter-spacing:.04em;
+        transition:background .15s,color .15s;
+        white-space:nowrap;
+      }
+      .dropdown-item:hover {
+        background:rgba(255,183,66,.08);
+        color:var(--black);
+      }
+      .dropdown-item.active {
+        color:var(--black);
+      }
+      .dropdown-dot {
+        display:inline-block;
+        width:5px;
+        height:5px;
+        background:var(--brand);
+        border-radius:50%;
+        margin-right:10px;
+        vertical-align:middle;
+      }
+      .dropdown-item.active .dropdown-dot {
+        background:var(--project);
+      }
+      .dropdown-locked {
+        opacity:.6;
+      }
+      .dropdown-locked:hover {
+        opacity:1;
+      }
+      .pxi {
+        display:inline-block;
+        vertical-align:middle;
+      }
+      .pxi--sm {
+        width:14px;
+        height:14px;
+      }
+      .pxi--md {
+        width:18px;
+        height:18px;
+      }
+      /* PW MODAL */
+      @keyframes popIn {
+        from {
+          opacity:0;
+          transform:scale(.92) translateY(16px);
+        }
+        to {
+          opacity:1;
+          transform:scale(1) translateY(0);
+        }
+      }
+      #pw-modal {
+        display:none;
+        position:fixed;
+        inset:0;
+        background:rgba(24,24,24,.5);
+        backdrop-filter:blur(4px);
+        z-index:700;
+        align-items:center;
+        justify-content:center;
+      }
+      #pw-modal.active {
+        display:flex;
+      }
+      #pw-inner {
+        background:var(--white);
+        border:1px solid rgba(24,24,24,.12);
+        padding:32px;
+        max-width:360px;
+        width:90%;
+        box-shadow:0 24px 80px rgba(24,24,24,.12);
+        animation:popIn .3s cubic-bezier(.34,1.56,.64,1);
+      }
+      .pw-title {
+        font-family:var(--font-brand);
+        font-size:12px;
+        color:var(--black);
+        margin-bottom:8px;
+        line-height:1.8;
+      }
+      .pw-sub {
+        font-size:10px;
+        color:var(--grey-m);
+        margin-bottom:24px;
+        font-weight:300;
+        letter-spacing:.06em;
+      }
+      .pw-input {
+        font-family:var(--font-body);
+        font-size:12px;
+        width:100%;
+        padding:12px 16px;
+        border:1px solid rgba(24,24,24,.2);
+        background:var(--white);
+        color:var(--black);
+        outline:none;
+        margin-bottom:8px;
+        transition:border-color .2s;
+        letter-spacing:.1em;
+      }
+      .pw-input:focus {
+        border-color:var(--brand);
+      }
+      .pw-input.error {
+        border-color:var(--effect1);
+      }
+      .pw-error {
+        font-size:10px;
+        color:var(--effect1);
+        margin-bottom:16px;
+        min-height:14px;
+        font-weight:300;
+      }
+      .pw-btns {
+        display:flex;
+        gap:10px;
+      }
+      .btn {
+        font-family:var(--font-body);
+        font-size:12px;
+        letter-spacing:.1em;
+        text-transform:uppercase;
+        border:1px solid var(--black);
+        background:transparent;
+        color:var(--black);
+        cursor:none;
+        text-decoration:none;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        gap:8px;
+        white-space:nowrap;
+        line-height:1;
+        -webkit-appearance:none;
+        transition:background .2s,color .2s,border-color .2s;
+      }
+      .btn:hover {
+        background:rgba(255,183,66,.1);
+        border-color:rgba(255,183,66,.48);
+      }
+      .btn--sm {
+        font-size:10px;
+        padding:0 16px;
+        height:36px;
+      }
+      .btn.primary {
+        background:var(--project);
+        border-color:var(--project);
+        color:var(--black);
+      }
+      .btn.primary:hover {
+        background:var(--cyan);
+        border-color:var(--cyan);
+        color:var(--black);
+      }
+      /* ====== STANDARD HERO ====== */
+      .hero {
+        margin-top:60px;
+        padding:32px 24px;
+        min-height:226px;
+        border-bottom:1px solid rgba(24,24,24,.1);
+        background:var(--white);
+        position:relative;
+        overflow:hidden;
+        scroll-snap-align:start;
+      }
+      .hero::after {
+        content:'';
+        position:absolute;
+        inset:0;
+        pointer-events:none;
+        background-image:linear-gradient(rgba(24,24,24,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(24,24,24,.018) 1px,transparent 1px);
+        background-size:8px 8px;
+      }
+      .hero-inner {
+        width:100%;
+        max-width:1200px;
+        margin:0 auto;
+        position:relative;
+        z-index:1;
+        min-height:100%;
+        display:flex;
+        flex-direction:column;
+      }
+      .hero-head {
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:16px;
+        flex-wrap:wrap;
+        margin-bottom:24px;
+      }
+      .hero-eyebrow {
+        display:flex;
+        align-items:center;
+        gap:12px;
+        font-size:10px;
+        color:var(--brand);
+        letter-spacing:.12em;
+        text-transform:uppercase;
+        margin-bottom:0;
+        line-height:20px;
+      }
+      .hero-eyebrow::before {
+        content:'';
+        width:16px;
+        height:2px;
+        background:var(--brand);
+        display:block;
+      }
+      .hero-year {
+        font-family:var(--font-brand);
+        font-size:10px;
+        color:var(--grey-m);
+        border:1px solid rgba(24,24,24,.15);
+        padding:4px 10px;
+        height:20px;
+        line-height:10px;
+        background:var(--white);
+        display:inline-flex;
+        align-items:center;
+      }
+      .hero-title {
+        font-family:var(--font-brand);
+        font-size:clamp(24px,4.5vw,50px);
+        line-height:1.35;
+        margin:0 0 24px;
+        color:var(--black);
+      }
+      .hero-title .accent {
+        color:var(--grey-m);
+      }
+      .hero-meta {
+        display:flex;
+        gap:48px;
+        flex-wrap:wrap;
+        margin-top:auto;
+      }
+      .meta-item {
+        display:flex;
+        flex-direction:column;
+        gap:4px;
+        padding:0;
+      }
+      .meta-label {
+        font-size:10px;
+        color:var(--grey-l);
+        text-transform:uppercase;
+        letter-spacing:.1em;
+        line-height:12px;
+      }
+      .meta-value {
+        font-size:12px;
+        color:var(--black);
+        line-height:16px;
+      }
+      /* ====== VISUAL INTRO ====== */
+      #hero-visual {
+        position:relative;
+        width:100%;
+        height:880px;
+        background:var(--white);
+        overflow:hidden;
+        display:flex;
+        flex-direction:column;
+        justify-content:flex-end;
+        padding:0 40px 0;
+        scroll-snap-align:start;
+        scroll-snap-stop:always;
+        scroll-margin-top:calc(-1 * var(--nav-h));
+      }
+      #hero-canvas {
+        position:absolute;
+        inset:0;
+        width:100%;
+        height:100%;
+        opacity:1;
+        pointer-events:none;
+        image-rendering:pixelated;
+      }
+      #donut-canvas {
+        position:absolute;
+        top:50%;
+        left:50%;
+        transform:translate(-50%,-50%);
+        pointer-events:none;
+        z-index:1;
+      }
+      .hero-lines {
+        position:absolute;
+        inset:0;
+        pointer-events:none;
+        z-index:3;
+      }
+      .hero-line {
+        position:absolute;
+        top:0;
+        width:1px;
+        background:linear-gradient(to bottom,rgba(255,183,66,.38) 0%,rgba(255,183,66,.22) 56%,rgba(255,255,255,.92) 86%,rgba(255,255,255,0) 100%);
+        height:0;
+        transition:height 1.2s cubic-bezier(.16,1,.3,1);
+      }
+      /* 4 lines evenly at col-1, col-2, col-4, col-5 within 1200px centre-aligned grid */
+      .hero-line:nth-child(1) {
+        left:calc(50% - 360px);
+        transition-delay:.05s;
+      }
+      .hero-line:nth-child(2) {
+        left:calc(50% - 120px);
+        transition-delay:.15s;
+      }
+      .hero-line:nth-child(3) {
+        left:calc(50% + 120px);
+        transition-delay:.10s;
+      }
+      .hero-line:nth-child(4) {
+        left:calc(50% + 360px);
+        transition-delay:.22s;
+      }
+      .hero-lines.revealed .hero-line {
+        height:100%;
+      }
+      .hero-line-label {
+        position:absolute;
+        top:12px;
+        left:calc(50% + 12px);
+        transform:translateX(-50%);
+        writing-mode:vertical-rl;
+        text-orientation:mixed;
+        font-family:var(--font-body);
+        font-size:10px;
+        letter-spacing:.08em;
+        text-transform:uppercase;
+        color:var(--black);
+        text-decoration:none;
+        white-space:nowrap;
+        transition:color .2s;
+        pointer-events:auto;
+      }
+      .hero-line-label:hover {
+        color:var(--project);
+      }
+      .hero-scanlines {
+        display:none;
+      }
+      .hero-fade {
+        position:absolute;
+        bottom:0;
+        left:0;
+        right:0;
+        height:45%;
+        background:linear-gradient(to bottom,transparent,var(--white));
+        pointer-events:none;
+        z-index:2;
+      }
+      @keyframes fadeUp {
+        from {
+          opacity:0;
+          transform:translateY(20px);
+        }
+        to {
+          opacity:1;
+          transform:translateY(0);
+        }
+      }
+      .hero-tagline {
+        position:absolute;
+        top:50%;
+        left:40px;
+        right:40px;
+        transform:translateY(-50%);
+        z-index:8;
+        pointer-events:none;
+      }
+      .hero-tagline-inner {
+        max-width:1200px;
+        margin:0 auto;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:48px;
+      }
+      .hero-tagline-copy {
+        display:block;
+        font-family:var(--font-brand);
+        font-size:24px;
+        line-height:1.6;
+        color:var(--black);
+      }
+      .hero-tagline-copy:last-child {
+        text-align:right;
+      }
+      .hero-tagline-copy--hover {
+        display:inline-flex;
+        flex-direction:column;
+        align-items:flex-start;
+        gap:0;
+        pointer-events:auto;
+      }
+      .hero-tagline-line {
+        position:relative;
+        display:block;
+        overflow:hidden;
+        line-height:1.2;
+        padding-right:.08em;
+      }
+      .hero-tagline-line-text {
+        display:block;
+        transition:transform .34s cubic-bezier(.16,1,.3,1);
+      }
+      .hero-tagline-line::before {
+        content:attr(data-text);
+        position:absolute;
+        left:0;
+        top:100%;
+        color:var(--brand);
+        transition:transform .34s cubic-bezier(.16,1,.3,1);
+      }
+      .hero-tagline-copy--hover:hover .hero-tagline-line-text,.hero-tagline-copy--hover:focus-visible .hero-tagline-line-text {
+        transform:translateY(-115%);
+      }
+      .hero-tagline-copy--hover:hover .hero-tagline-line::before,.hero-tagline-copy--hover:focus-visible .hero-tagline-line::before {
+        transform:translateY(-115%);
+      }
+      .hero-visual-copy {
+        position:relative;
+        z-index:10;
+        max-width:1200px;
+        width:100%;
+        margin:-24px auto 0;
+        transform:translateY(-64px);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+      }
+      .hero-visual-copy .swipe-hint {
+        font-size:10px;
+        color:var(--grey-m);
+        display:flex;
+        align-items:center;
+        gap:6px;
+        pointer-events:none;
+        transition:opacity .3s;
+        animation:hint-breathe 2s ease-in-out infinite;
+      }
+      .hero-visual-copy .swipe-hint svg {
+        width:12px;
+        height:12px;
+        flex:0 0 12px;
+      }
+      @keyframes hint-breathe {
+        0%,100% {
+          opacity:.4;
+        }
+        50% {
+          opacity:.9;
+        }
+      }
+      .click-ripple {
+        position:fixed;
+        border-radius:50%;
+        pointer-events:none;
+        z-index:9998;
+        transform:translate(-50%,-50%) scale(0);
+        animation:ripple .5s ease-out forwards;
+      }
+      @keyframes ripple {
+        to {
+          transform:translate(-50%,-50%) scale(1);
+          opacity:0;
+        }
+      }
+      @media(max-width:900px) {
+        .hero-tagline {
+          left:24px;
+          right:24px;
+        }
+        .hero-tagline-inner {
+          flex-direction:column;
+          align-items:flex-start;
+          gap:20px;
+        }
+        .hero-tagline-copy:last-child {
+          text-align:left;
+        }
+      }
+      /* ====== SECTION BASE ====== */
+      section {
+        padding:100px 40px;
+      }
+      .section-inner {
+        max-width:1200px;
+        margin:0 auto;
+      }
+      .section-eyebrow {
+        display:flex;
+        align-items:center;
+        gap:12px;
+        margin-bottom:48px;
+      }
+      .section-eyebrow::before {
+        content:'';
+        display:block;
+        width:16px;
+        height:2px;
+        background:var(--brand);
+        flex-shrink:0;
+      }
+      .section-eyebrow span {
+        font-size:10px;
+        color:var(--brand);
+        letter-spacing:.12em;
+        text-transform:uppercase;
+      }
+      .section-eyebrow .section-num {
+        font-size:10px;
+        color:var(--grey-l);
+        letter-spacing:.06em;
+        margin-left:auto;
+      }
+      .section-eyebrow.ora-ey::before {
+        background:var(--project);
+      }
+      .section-eyebrow.ora-ey span {
+        color:var(--project);
+      }
+      .section-h2 {
+        font-family:var(--font-brand);
+        font-size:clamp(16px,2.6vw,32px);
+        color:var(--black);
+        line-height:1.4;
+        letter-spacing:-.01em;
+      }
+      /* Media placeholder */
+      .media-ph {
+        background:#111114;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-size:10px;
+        color:rgba(0,246,255,.25);
+        letter-spacing:.08em;
+        text-transform:uppercase;
+        border:1px solid rgba(0,246,255,.1);
+      }
+      /* ====== OVERVIEW ====== */
+      #overview {
+        background:var(--white);
+        border-bottom:1px solid rgba(24,24,24,.08);
+        padding:24px;
+        scroll-snap-align:start;
+        scroll-snap-stop:always;
+      }
+      #overview .section-eyebrow {
+        margin-bottom:24px;
+      }
+      .overview-editorial {
+        display:flex;
+        flex-direction:column;
+        gap:16px;
+        align-items:stretch;
+      }
+      .overview-text {
+        max-width:920px;
+        opacity:0;
+        transform:translateY(18px);
+        transition:opacity .5s ease .22s,transform .65s cubic-bezier(.16,1,.3,1) .22s;
+      }
+      .overview-text.is-visible {
+        opacity:1;
+        transform:translateY(0);
+      }
+      .overview-desc {
+        font-size:14px;
+        line-height:1.95;
+        color:var(--black);
+        font-weight:300;
+      }
+      .overview-desc p {
+        min-height:1.95em;
+      }
+      .overview-desc p+p {
+        margin-top:20px;
+      }
+      .overview-type-line {
+        position:relative;
+      }
+      .overview-type-line.is-typing::after {
+        content:' ';
+        display:inline-block;
+        width:7px;
+        height:1em;
+        margin-left:4px;
+        background:var(--black);
+        vertical-align:-.12em;
+        animation:caretBlink .9s steps(1,end) infinite;
+      }
+      @keyframes caretBlink {
+        0%,49% {
+          opacity:1;
+        }
+        50%,100% {
+          opacity:0;
+        }
+      }
+      @keyframes overviewWindowPop {
+        0% {
+          opacity:0;
+          transform:translateY(84px) scale(.82) rotateX(14deg) skewX(-1.6deg);
+          filter:blur(18px);
+        }
+        58% {
+          opacity:1;
+          transform:translateY(-14px) scale(1.03) rotateX(0deg) skewX(0deg);
+          filter:blur(0);
+        }
+        78% {
+          opacity:1;
+          transform:translateY(4px) scale(.992) rotateX(0deg) skewX(0deg);
+          filter:blur(0);
+        }
+        100% {
+          opacity:1;
+          transform:translateY(0) scale(1) rotateX(0deg) skewX(0deg);
+          filter:blur(0);
+        }
+      }
+.overview-img {
+        width:100%;
+        margin-top:4px;
+        position:relative;
+        perspective:1600px;
+      }
+      .overview-player {
+        position:relative;
+        background:var(--white);
+        border:1px solid rgba(24,24,24,.14);
+        box-shadow:0 0 0 1px rgba(255,255,255,.75) inset;
+        transform-origin:50% 100%;
+        opacity:0;
+        transform:translateY(84px) scale(.82) rotateX(14deg) skewX(-1.6deg);
+        filter:blur(18px);
+        will-change:transform,opacity,filter;
+      }      .overview-player::after {
+        content:'';
+        position:absolute;
+        inset:0;
+        pointer-events:none;
+        box-shadow:0 28px 60px rgba(24,24,24,.18),24px 24px 0 rgba(24,24,24,.06);
+      }
+      .overview-img.is-visible .overview-player {
+        animation:overviewWindowPop .82s cubic-bezier(.16,1.24,.28,1) forwards;
+      }
+
+      .overview-win-bar {
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        padding:0 18px;
+        height:24px;
+        background:var(--brand);
+        font-family:var(--font-brand);
+        font-size:7px;
+        color:var(--black);
+      }
+      .overview-win-title {
+        line-height:1;
+      }
+      .overview-win-controls {
+        display:flex;
+        gap:4px;
+      }
+      .overview-win-btn {
+        width:12px;
+        height:12px;
+        border:1px solid rgba(0,0,0,.18);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-size:7px;
+        color:rgba(0,0,0,.58);
+      }
+      .overview-menu-bar {
+        display:flex;
+        gap:16px;
+        align-items:center;
+        height:22px;
+        padding:0 18px;
+        border-bottom:1px solid rgba(24,24,24,.08);
+        background:#F5F4F0;
+      }
+      .overview-menu-item {
+        font-size:10px;
+        color:var(--grey-m);
+      }
+      .overview-video-stage {
+        position:relative;
+        background:#050505;
+        overflow:hidden;
+        line-height:0;
+      }
+      .overview-video-stage::before {
+        content:'';
+        position:absolute;
+        inset:0;
+        background:radial-gradient(circle at 50% 18%,rgba(255,255,255,.14),transparent 44%);
+        pointer-events:none;
+        z-index:1;
+      }
+      .overview-video-stage::after {
+        content:'';
+        position:absolute;
+        inset:0;
+        background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,255,255,.05) 3px,rgba(255,255,255,.05) 4px);
+        pointer-events:none;
+        z-index:1;
+      }
+      .overview-live-badge {
+        position:absolute;
+        top:18px;
+        left:18px;
+        z-index:3;
+        background:var(--brand);
+        color:var(--black);
+        font-family:var(--font-brand);
+        font-size:7px;
+        padding:5px 9px;
+        display:flex;
+        align-items:center;
+        gap:5px;
+      }
+      .overview-live-dot {
+        width:5px;
+        height:5px;
+        background:var(--black);
+      }
+      .overview-video-stage video {
+        width:100%;
+        height:auto;
+        display:block;
+        opacity:0;
+        transform:scale(1.06);
+        filter:saturate(.95) contrast(1.02);
+        transition:opacity .12s linear .16s,transform .9s cubic-bezier(.16,1,.3,1) .14s;
+      }
+      .overview-img.is-visible .overview-video-stage video {
+        opacity:1;
+        transform:scale(1);
+      }
+      .overview-video-overlay {
+        position:absolute;
+        left:0;
+        right:0;
+        bottom:0;
+        padding:18px;
+        background:linear-gradient(to top,rgba(0,0,0,.72),rgba(0,0,0,0));
+        z-index:2;
+      }
+      .overview-video-title {
+        font-family:var(--font-brand);
+        font-size:8px;
+        line-height:1.5;
+        color:var(--white);
+      }
+      .overview-video-sub {
+        margin-top:4px;
+        font-size:10px;
+        color:rgba(255,255,255,.55);
+      }
+      .overview-status-bar {
+        padding:24px;
+        border-top:1px solid rgba(24,24,24,.08);
+        display:flex;
+        flex-direction:column;
+        align-items:flex-start;
+        gap:6px;
+        background:var(--white);
+      }
+      .overview-status-copy {
+        width:100%;
+        min-height:1.6em;
+        padding:0;
+        font-size:12px;
+        line-height:1.6;
+        color:var(--black);
+        letter-spacing:.01em;
+        text-transform:none;
+        font-weight:300;
+      }
+      @media(max-width:900px) {`r`n.overview-status-bar {
+          flex-direction:column;
+          align-items:flex-start;
+        }
+      }
+      .tag {
+        font-size:10px;
+        color:var(--grey-m);
+        border:1px solid rgba(24,24,24,.12);
+        padding:5px 12px;
+        letter-spacing:.06em;
+        text-transform:uppercase;
+      }
+      .stat-num {
+        font-family:var(--font-brand);
+        font-size:clamp(24px,3.5vw,44px);
+        color:var(--project);
+        line-height:1;
+        margin-bottom:8px;
+      }
+      .stat-label {
+        font-size:10px;
+        color:var(--grey-m);
+        letter-spacing:.1em;
+        text-transform:uppercase;
+        line-height:1.5;
+      }
+      /* ====== PROCESS ====== */
+      #process {
+        background:#F9F9F9;
+      }
+      .process-intro {
+        font-size:13px;
+        color:var(--grey-m);
+        line-height:1.85;
+        max-width:640px;
+        margin-bottom:56px;
+        font-weight:300;
+      }
+      .process-cards {
+        display:grid;
+        grid-template-columns:repeat(5,1fr);
+        gap:1px;
+        background:rgba(24,24,24,.08);
+      }
+      .pcard {
+        background:#F9F9F9;
+        padding:32px 24px 36px;
+        display:flex;
+        flex-direction:column;
+        gap:0;
+      }
+      .pcard-num {
+        font-family:var(--font-brand);
+        font-size:10px;
+        color:var(--project);
+        margin-bottom:20px;
+      }
+      .pcard-title {
+        font-family:var(--font-brand);
+        font-size:11px;
+        color:var(--black);
+        line-height:1.65;
+        margin-bottom:16px;
+      }
+      .pcard-desc {
+        font-size:12px;
+        color:var(--grey-m);
+        line-height:1.8;
+        font-weight:300;
+      }
+      @media(max-width:800px) {
+        .process-cards {
+          grid-template-columns:1fr;
+        }
+        .pcard {
+          border-bottom:1px solid rgba(24,24,24,.08);
+        }
+      }
+      /* ====== UI DIRECTION ====== */
+      #ui-direction {
+        background:var(--white);
+        border-top:1px solid rgba(24,24,24,.08);
+      }
+      .ui-intro {
+        font-size:13px;
+        color:var(--grey-m);
+        line-height:1.9;
+        max-width:680px;
+        margin-top:32px;
+        margin-bottom:56px;
+        font-weight:300;
+      }
+      .ui-video-main {
+        width:100%;
+        aspect-ratio:16/9;
+      }
+      .ui-screen-grid {
+        display:grid;
+        grid-template-columns:repeat(3,1fr);
+        gap:2px;
+        margin-top:2px;
+      }
+      .ui-cell {
+        aspect-ratio:4/3;
+      }
+      .ui-captions {
+        display:grid;
+        grid-template-columns:repeat(4,1fr);
+        gap:2px;
+        margin-top:32px;
+      }
+      .ui-cap-item {
+        padding:14px 0;
+        border-top:1px solid rgba(24,24,24,.08);
+      }
+      .ui-cap-num {
+        font-size:10px;
+        color:var(--project);
+        letter-spacing:.06em;
+        margin-bottom:6px;
+      }
+      .ui-cap-text {
+        font-size:12px;
+        color:var(--grey-m);
+        line-height:1.7;
+        font-weight:300;
+      }
+      /* ====== OFFLINE ====== */
+      #offline {
+        background:#0D0D0F;
+        padding:100px 40px;
+      }
+      #offline .section-h2 {
+        color:var(--white);
+      }
+      .offline-intro {
+        font-size:13px;
+        color:rgba(255,255,255,.5);
+        line-height:1.9;
+        max-width:600px;
+        margin-top:28px;
+        font-weight:300;
+      }
+      .offline-grid {
+        display:grid;
+        grid-template-columns:2fr 1fr;
+        grid-template-rows:auto auto;
+        gap:3px;
+        margin-top:60px;
+      }
+      .offline-img.tall {
+        aspect-ratio:3/4;
+        grid-row:span 2;
+      }
+      .offline-img.wide {
+        aspect-ratio:16/9;
+      }
+      .offline-img.sq {
+        aspect-ratio:1/1;
+      }
+      .offline-caption {
+        font-size:10px;
+        color:rgba(255,255,255,.25);
+        letter-spacing:.08em;
+        text-transform:uppercase;
+        margin-top:20px;
+      }
+      /* ====== EXPLORATIONS ====== */
+      #visual-explorations {
+        background:#F4F4F2;
+      }
+      .explorations-intro {
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:80px;
+        margin-top:48px;
+        margin-bottom:60px;
+        align-items:center;
+      }
+      .explorations-desc {
+        font-size:12px;
+        color:var(--grey-m);
+        line-height:1.85;
+        font-weight:300;
+      }
+      .explorations-quote {
+        font-size:clamp(14px,1.8vw,20px);
+        color:var(--black);
+        line-height:1.5;
+        border-left:2px solid var(--project);
+        padding-left:24px;
+        font-weight:300;
+      }
+      .ex-masonry {
+        columns:3;
+        column-gap:3px;
+      }
+      .ex-item {
+        break-inside:avoid;
+        margin-bottom:3px;
+        background:#111114;
+        border:1px solid rgba(0,246,255,.07);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-size:9px;
+        color:rgba(0,246,255,.2);
+        letter-spacing:.04em;
+        text-transform:uppercase;
+      }
+      .ex-item.r1 {
+        aspect-ratio:4/5;
+      }
+      .ex-item.r2 {
+        aspect-ratio:3/4;
+      }
+      .ex-item.r3 {
+        aspect-ratio:1/1;
+      }
+      .ex-item.r4 {
+        aspect-ratio:16/9;
+      }
+      .ex-item.r5 {
+        aspect-ratio:4/3;
+      }
+      /* ====== CONTRIBUTIONS ====== */
+      #contributions {
+        background:var(--white);
+        border-top:1px solid rgba(24,24,24,.08);
+      }
+      .contrib-grid {
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        margin-top:60px;
+      }
+      .contrib-block {
+        padding:48px 0;
+        border-top:1px solid rgba(24,24,24,.08);
+      }
+      .contrib-block:nth-child(odd) {
+        padding-right:72px;
+        border-right:1px solid rgba(24,24,24,.08);
+      }
+      .contrib-block:nth-child(even) {
+        padding-left:72px;
+      }
+      .contrib-kw {
+        font-family:var(--font-brand);
+        font-size:clamp(14px,1.8vw,20px);
+        color:var(--black);
+        margin-bottom:16px;
+        line-height:1.4;
+      }
+      .contrib-line {
+        font-size:12px;
+        color:var(--grey-m);
+        line-height:1.75;
+        font-weight:300;
+      }
+      /* ====== OUTCOME ====== */
+      #outcome {
+        background:#0D0D0F;
+        padding:100px 40px;
+      }
+      .outcome-grid {
+        display:grid;
+        grid-template-columns:1.2fr 1fr;
+        gap:100px;
+        margin-top:60px;
+        align-items:start;
+      }
+      .outcome-text {
+        font-size:13px;
+        color:rgba(255,255,255,.5);
+        line-height:1.9;
+        font-weight:300;
+      }
+      .outcome-text p+p {
+        margin-top:18px;
+      }
+      .metric-item {
+        padding:28px 0;
+        border-bottom:1px solid rgba(0,246,255,.1);
+      }
+      .metric-item:first-child {
+        border-top:1px solid rgba(0,246,255,.1);
+      }
+      .metric-num {
+        font-family:var(--font-brand);
+        font-size:clamp(26px,4vw,48px);
+        color:var(--project);
+        line-height:1;
+        margin-bottom:8px;
+      }
+      .metric-desc {
+        font-size:12px;
+        color:rgba(255,255,255,.35);
+        letter-spacing:.04em;
+        line-height:1.5;
+        font-weight:300;
+      }
+      /* ====== FOOTER CTA ====== */
+      #footer-cta {
+        background:var(--white);
+        padding:80px 40px;
+        border-top:1px solid rgba(24,24,24,.1);
+      }
+      .cta-inner {
+        max-width:1200px;
+        margin:0 auto;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:40px;
+      }
+      .cta-label {
+        font-size:10px;
+        color:var(--grey-l);
+        letter-spacing:.1em;
+        text-transform:uppercase;
+        margin-bottom:14px;
+      }
+      .cta-next {
+        font-family:var(--font-brand);
+        font-size:clamp(16px,3vw,32px);
+        color:var(--black);
+        text-decoration:none;
+        display:inline-flex;
+        align-items:center;
+        gap:16px;
+        transition:color .2s;
+      }
+      .cta-next:hover {
+        color:var(--brand);
+      }
+      .cta-next svg {
+        width:22px;
+        height:22px;
+        stroke:currentColor;
+        fill:none;
+        stroke-width:1.5;
+        stroke-linecap:square;
+        flex-shrink:0;
+      }
+      .cta-back {
+        font-size:12px;
+        color:var(--grey-m);
+        text-decoration:none;
+        letter-spacing:.06em;
+        text-transform:uppercase;
+        border-bottom:1px solid rgba(24,24,24,.18);
+        padding-bottom:2px;
+        transition:color .18s,border-color .18s;
+      }
+      .cta-back:hover {
+        color:var(--brand);
+        border-color:var(--brand);
+      }
+      /* FOOTER */
+      footer {
+        background:var(--white);
+        border-top:1px solid rgba(24,24,24,.1);
+        height:60px;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        padding:0 40px;
+      }
+      .footer-copy {
+        font-size:12px;
+        color:var(--grey-m);
+      }
+      .footer-copy span {
+        color:var(--black);
+      }
+      .footer-socials {
+        display:flex;
+        gap:20px;
+      }
+      .social-link {
+        color:var(--grey-m);
+        transition:color .18s;
+        display:flex;
+        align-items:center;
+      }
+      .social-link:hover {
+        color:var(--brand);
+      }
+    </style>
+    <link rel="stylesheet" href="assets/mobile-block.css">
+  </head>
+  <body>
+  <!-- CURSOR CANVAS -->
+  <canvas id="cursor-canvas">
+  </canvas>
+  <!-- HEADER -->
+  <header>
+    <a href="index.html" class="nav-logo">    mialyk<span class="slash">//</span>
+      <sub>building something creative</sub>
+    </a>
+    <nav>
+      <div class="nav-item">
+        <a href="#" class="nav-link">Projects</a>
+        <div class="nav-dropdown">
+          <a href="helpurr.html" class="dropdown-item">
+            <span class="dropdown-dot">
+            </span>Helpurr</a>
+            <a href="#" class="dropdown-item dropdown-locked" onclick="window.showPasswordModal ? showPasswordModal(event) : showPw(event)">
+              <span class="dropdown-dot">
+              </span>Le.social <svg class="pxi pxi--sm" viewBox="0 0 24 24" fill="currentColor" style="margin-left:4px;opacity:.5">
+              <rect x="8" y="4" width="8" height="2"/>
+              <rect x="6" y="6" width="2" height="4"/>
+              <rect x="16" y="6" width="2" height="4"/>
+              <rect x="4" y="10" width="16" height="2"/>
+              <rect x="4" y="10" width="2" height="10"/>
+              <rect x="18" y="10" width="2" height="10"/>
+              <rect x="4" y="20" width="16" height="2"/>
+              <rect x="10" y="14" width="4" height="2"/>
+              <rect x="11" y="16" width="2" height="2"/>
+            </svg>
+          </a>
+          <a href="ora.html" class="dropdown-item active">
+            <span class="dropdown-dot">
+            </span>ORA</a>
+            <a href="https://www.meedloyalty.com/" target="_blank" rel="noreferrer" class="dropdown-item">
+              <span class="dropdown-dot">
+              </span>Meed</a>
+              <a href="cheddar.html" class="dropdown-item">
+                <span class="dropdown-dot">
+                </span>Cheddar Verse</a>
+                <a href="hamartia.html" class="dropdown-item">
+                  <span class="dropdown-dot">
+                  </span>Hamartia</a>
+                  <a href="vfx.html" class="dropdown-item">
+                    <span class="dropdown-dot">
+                    </span>VFX</a>
+                    <a href="https://www.artstation.com/mialyk" target="_blank" rel="noreferrer" class="dropdown-item">
+                      <span class="dropdown-dot">
+                      </span>Illustration</a>
+                    </div>
+                  </div>
+                  <a href="about.html" class="nav-link">About</a>
+                </nav>
+              </header>
+              <section id="mobile-blocker" aria-label="Mobile access blocked">
+                <div class="mobile-blocker__inner">
+                  <div class="mobile-blocker__card">
+                    <img class="mobile-blocker__media" src="assets/images/pc.gif" alt="PC animation">
+                    <p class="mobile-blocker__hint">This portfolio is available on desktop only. Please revisit on a larger screen.</p>
+                  </div>
+                </div>
+              </section>
+              <!-- ====== STANDARD HERO ====== -->
+              <section class="hero">
+                <div class="hero-inner">
+                  <div class="hero-head">
+                    <div class="hero-eyebrow">AI Infrastructure / Creative Direction</div>
+                    <span class="hero-year">2024</span>
+                  </div>
+                  <h1 class="hero-title">ORA<span class="accent">.</span>
+                  </h1>
+                  <div class="hero-meta">
+                    <div class="meta-item">
+                      <span class="meta-label">Role</span>
+                      <span class="meta-value">Creative Lead</span>
+                    </div>
+                    <div class="meta-item">
+                      <span class="meta-label">Scope</span>
+                      <span class="meta-value">Brand &amp; Product Design</span>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <!-- ====== VISUAL INTRO ====== -->
+              <section id="hero-visual">
+                <canvas id="hero-canvas">
+                </canvas>
+                <canvas id="donut-canvas">
+                </canvas>
+                <div class="hero-lines">
+                  <div class="hero-line">
+                    <a class="hero-line-label" href="#overview">Overview</a>
+                  </div>
+                  <div class="hero-line">
+                    <a class="hero-line-label" href="#process">Process</a>
+                  </div>
+                  <div class="hero-line">
+                    <a class="hero-line-label" href="#ui-direction">UI Direction</a>
+                  </div>
+                  <div class="hero-line">
+                    <a class="hero-line-label" href="#outcome">Outcome</a>
+                  </div>
+                </div>
+                <div class="hero-fade">
+                </div>
+                <div class="hero-tagline" aria-hidden="true">
+                  <div class="hero-tagline-inner">
+                    <span class="hero-tagline-copy hero-tagline-copy--hover" aria-label="Multiple initiatives">
+                      <span class="hero-tagline-line" data-text="Multiple">
+                        <span class="hero-tagline-line-text">Multiple</span>
+                      </span>
+                      <span class="hero-tagline-line" data-text="initiatives">
+                        <span class="hero-tagline-line-text">initiatives</span>
+                      </span>
+                    </span>
+                    <span class="hero-tagline-copy">one brand</span>
+                  </div>
+                </div>
+                <div class="hero-visual-copy">
+                  <div class="swipe-hint" aria-hidden="true">
+                    <svg width="46" height="46" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M11 4h2v2h-2V4ZM9 8V6h2v2H9Zm0 0v2H7V8h2Zm6 0h-2V6h2v2Zm0 0h2v2h-2V8Zm-6 8H7v-2h2v2Zm2 2H9v-2h2v2Zm2 0v2h-2v-2h2Zm2-2h-2v2h2v-2Zm0 0v-2h2v2h-2Z">
+                    </path>
+                  </svg>      Shaping one coherent brand language across a growing ecosystem.    </div>
+                </div>
+              </section>
+              <!-- ====== OVERVIEW ====== -->
+              <section id="overview">
+                <div class="section-inner">
+                  <div class="overview-editorial">
+                    <div class="overview-img">
+                      <div class="overview-player">
+                        <div class="overview-win-bar">
+                          <span class="overview-win-title">ora_website_overview.mp4</span>
+                          <div class="overview-win-controls">
+                            <span class="overview-win-btn">-</span>
+                            <span class="overview-win-btn">+</span>
+                            <span class="overview-win-btn">x</span>
+                          </div>
+                        </div>
+                        <div class="overview-menu-bar">
+                          <span class="overview-menu-item">File</span>
+                          <span class="overview-menu-item">View</span>
+                          <span class="overview-menu-item">Window</span>
+                          <span class="overview-menu-item">Render</span>
+                        </div>
+                        <div class="overview-video-stage">
+                          <div class="overview-live-badge"><span class="overview-live-dot"></span>PLAYING</div>
+                          <video muted loop playsinline preload="metadata" src="assets/images/Ora/websiteoverview.MP4"></video>
+                          <div class="overview-video-overlay">
+                            <div class="overview-video-title">ORA ECOSYSTEM WEBSITE</div>
+                            <div class="overview-video-sub">Brand overview / interface direction / ecosystem framing</div>
+                          </div>
+                        </div>
+                        <div class="overview-status-bar">
+                          <div class="overview-status-copy">ORA is an AI ? blockchain infrastructure project spanning multiple initiatives, products, and technical layers.</div>
+                          <div class="overview-status-copy">My role focused on bringing clarity to that complexity ??not by reducing its ambition, but by giving it a stronger narrative, sharper structure, and more coherent visual direction.</div>
+                          <div class="overview-status-copy">The work extended across interface thinking, ecosystem communication, and broader creative output, shaping how ORA could be seen, understood, and experienced.</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <!-- ====== PROCESS ====== -->
+              <section id="process">
+                <div class="section-inner">
+                  <div class="section-eyebrow">
+                    <span>Process</span>
+                    <span class="section-num">02</span>
+                  </div>
+                  <p class="process-intro">A large part of the work was not only visual execution, but building a clearer logic for how the ecosystem should be understood.</p>
+                  <div class="process-cards">
+                    <div class="pcard">
+                      <div class="pcard-num">01</div>
+                      <div class="pcard-title">Understand the system</div>
+                      <p class="pcard-desc">I started by understanding the logic behind each initiative ??not just the interface layer, but the protocol thinking underneath.</p>
+                    </div>
+                    <div class="pcard">
+                      <div class="pcard-num">02</div>
+                      <div class="pcard-title">Translate complexity</div>
+                      <p class="pcard-desc">I turned abstract research and technical concepts into clearer product and communication structures.</p>
+                    </div>
+                    <div class="pcard">
+                      <div class="pcard-num">03</div>
+                      <div class="pcard-title">Build hierarchy across products</div>
+                      <p class="pcard-desc">I created a more coherent information architecture across DSC, IMO Launchpad, and AI Settlement.</p>
+                    </div>
+                    <div class="pcard">
+                      <div class="pcard-num">04</div>
+                      <div class="pcard-title">Shape trust through design</div>
+                      <p class="pcard-desc">I explored visual directions that felt precise, calm, and system-led rather than overly promotional.</p>
+                    </div>
+                    <div class="pcard">
+                      <div class="pcard-num">05</div>
+                      <div class="pcard-title">Align teams through design</div>
+                      <p class="pcard-desc">Design acted as a bridge across research, engineering, and go-to-market perspectives.</p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <!-- ====== UI DIRECTION ====== -->
+              <section id="ui-direction">
+                <div class="section-inner">
+                  <div class="section-eyebrow">
+                    <span>UI Direction</span>
+                    <span class="section-num">03</span>
+                  </div>
+                  <h2 class="section-h2">Interface as argument</h2>
+                  <p class="ui-intro">I explored interface directions that could communicate technical credibility without feeling cold, generic, or overly dense. The aim was to create product surfaces that felt structured, readable, and aligned with ORA's broader ecosystem narrative ??balancing precision, clarity, and restraint across digital touchpoints.</p>
+                  <div class="ui-video-main media-ph">[ Interface Walkthrough ??Video ]</div>
+                  <div class="ui-screen-grid">
+                    <div class="ui-cell media-ph">DSC Product</div>
+                    <div class="ui-cell media-ph">IMO Launchpad</div>
+                    <div class="ui-cell media-ph">AI Settlement</div>
+                  </div>
+                  <div class="ui-captions">
+                    <div class="ui-cap-item">
+                      <div class="ui-cap-num">01</div>
+                      <p class="ui-cap-text">Product surfaces designed for clarity and technical trust.</p>
+                    </div>
+                    <div class="ui-cap-item">
+                      <div class="ui-cap-num">02</div>
+                      <p class="ui-cap-text">Exploring interface language across ecosystem-facing pages.</p>
+                    </div>
+                    <div class="ui-cap-item">
+                      <div class="ui-cap-num">03</div>
+                      <p class="ui-cap-text">Balancing structure, motion, and restraint.</p>
+                    </div>
+                    <div class="ui-cap-item">
+                      <div class="ui-cap-num">04</div>
+                      <p class="ui-cap-text">Translating infrastructure complexity into a more legible visual system.</p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <!-- ====== OFFLINE PRESENCE ====== -->
+              <section id="offline">
+                <div class="section-inner">
+                  <div class="section-eyebrow ora-ey">
+                    <span>Offline Presence</span>
+                    <span class="section-num" style="color:rgba(255,255,255,.3)">04</span>
+                  </div>
+                  <h2 class="section-h2">Beyond<br>screens</h2>
+                  <p class="offline-intro">Beyond screens, I also extended the visual direction into offline and ecosystem-facing contexts. This part of the work focused on how ORA could appear in real-world settings with the same sense of clarity, atmosphere, and cohesion ??carrying the project's tone beyond interface design and into community-facing moments.</p>
+                  <div class="offline-grid">
+                    <div class="offline-img tall media-ph">[ Ecosystem Event ]</div>
+                    <div class="offline-img wide media-ph">[ Visual Language in Environment ]</div>
+                    <div class="offline-img sq media-ph">[ Community Presence ]</div>
+                  </div>
+                  <p class="offline-caption">Extending the visual language ??ORA 2024</p>
+                </div>
+              </section>
+              <!-- ====== VISUAL EXPLORATIONS ====== -->
+              <section id="visual-explorations">
+                <div class="section-inner">
+                  <div class="section-eyebrow">
+                    <span>Visual Explorations</span>
+                    <span class="section-num">05</span>
+                  </div>
+                  <div class="explorations-intro">
+                    <p class="explorations-desc">Alongside interface and communication work, I developed visual studies and artwork to explore tone, atmosphere, and a more authored creative language for the project. These explorations helped define how ORA could feel ??not only as a product ecosystem, but as a visual world with its own rhythm, texture, and point of view.</p>
+                    <blockquote class="explorations-quote">"These explorations helped define how ORA could feel ??not only as a product ecosystem, but as a visual world."</blockquote>
+                  </div>
+                  <div class="ex-masonry">
+                    <div class="ex-item r1">Early visual studies ??tone &amp; texture</div>
+                    <div class="ex-item r3">Atmosphere beyond functional UI</div>
+                    <div class="ex-item r4">System feeling explorations</div>
+                    <div class="ex-item r2">Authored visual layer studies</div>
+                    <div class="ex-item r5">Abstraction &amp; structure</div>
+                    <div class="ex-item r1">Ecosystem identity directions</div>
+                    <div class="ex-item r3">Motion &amp; rhythm tests</div>
+                    <div class="ex-item r2">Final visual language</div>
+                  </div>
+                </div>
+              </section>
+              <!-- ====== KEY CONTRIBUTIONS ====== -->
+              <section id="contributions">
+                <div class="section-inner">
+                  <div class="section-eyebrow">
+                    <span>Key Contributions</span>
+                    <span class="section-num">06</span>
+                  </div>
+                  <div class="contrib-grid">
+                    <div class="contrib-block">
+                      <div class="contrib-kw">Creative Direction</div>
+                      <p class="contrib-line">Led the visual and narrative direction across product, ecosystem, and communication touchpoints.</p>
+                    </div>
+                    <div class="contrib-block">
+                      <div class="contrib-kw">System Clarity</div>
+                      <p class="contrib-line">Translated complex infrastructure thinking into clearer structures and more legible experiences.</p>
+                    </div>
+                    <div class="contrib-block">
+                      <div class="contrib-kw">Interface Language</div>
+                      <p class="contrib-line">Developed UI directions that balanced precision, trust, and restraint.</p>
+                    </div>
+                    <div class="contrib-block">
+                      <div class="contrib-kw">Ecosystem Expression</div>
+                      <p class="contrib-line">Extended ORA's presence across digital, physical, and visual mediums.</p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <!-- ====== OUTCOME ====== -->
+              <section id="outcome">
+                <div class="section-inner">
+                  <div class="section-eyebrow ora-ey">
+                    <span>Outcome</span>
+                    <span class="section-num" style="color:rgba(255,255,255,.3)">07</span>
+                  </div>
+                  <div class="outcome-grid">
+                    <div>
+                      <h2 class="section-h2" style="color:var(--white)">What landed</h2>
+                      <div class="outcome-text" style="margin-top:32px;">
+                        <p>ORA launched with a brand that read immediately as premium without ever feeling cold. The design system was robust enough that the team extended it independently through post-launch features ??with no design debt.</p>
+                        <p>The offline presence pulled in retail enquiries without any formal outreach. The app onboarding tested at a 94% completion rate in beta ??significantly above category benchmarks ??and the brand received press coverage in three design publications within the first month.</p>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="metric-item">
+                        <div class="metric-num">94%</div>
+                        <div class="metric-desc">Onboarding completion rate in beta</div>
+                      </div>
+                      <div class="metric-item">
+                        <div class="metric-num">3.2?</div>
+                        <div class="metric-desc">Brand recall vs. competitor benchmark</div>
+                      </div>
+                      <div class="metric-item">
+                        <div class="metric-num">0</div>
+                        <div class="metric-desc">Design system breakdowns post-launch</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <!-- ====== FOOTER CTA ====== -->
+              <div id="footer-cta">
+                <div class="cta-inner">
+                  <div>
+                    <p class="cta-label">Next Project</p>
+                    <a href="helpurr.html" class="cta-next">        Helpurr        <svg viewBox="0 0 24 24">
+                      <line x1="5" y1="12" x2="19" y2="12"/>
+                      <polyline points="12 5 19 12 12 19"/>
+                    </svg>
+                  </a>
+                </div>
+                <a href="index.html" class="cta-back">??Back to all projects</a>
+              </div>
+            </div>
+            <!-- FOOTER -->
+            <footer>
+              <div class="footer-copy">??2026 <span>mialyk</span> ??All rights reserved</div>
+              <div class="footer-socials">
+                <a href="https://www.linkedin.com/in/mia-lyk" target="_blank" class="social-link" title="LinkedIn">
+                  <svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                  </svg>
+                </a>
+                <a href="https://www.instagram.com/mia_lyk" target="_blank" class="social-link" title="Instagram">
+                  <svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+                  </svg>
+                </a>
+                <a href="https://www.artstation.com/mialyk" target="_blank" class="social-link" title="ArtStation">
+                  <svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M0 17.723l2.027 3.505h.001a2.424 2.424 0 0 0 2.164 1.333h13.457l-2.792-4.838H0zm24 .025c0-.484-.143-.935-.388-1.314L15.728 2.728a2.424 2.424 0 0 0-2.164-1.333H9.419L21.598 22.54l1.92-3.325c.378-.637.482-.919.482-1.467zm-11.129-3.462L7.428 4.858l-5.444 9.428h10.887z"/>
+                  </svg>
+                </a>
+                <a href="https://x.com/elwgrich/" target="_blank" class="social-link" title="X">
+                  <svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.213 5.567 5.95-5.567zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                  </svg>
+                </a>
+              </div>
+            </footer>
+            <!-- PASSWORD MODAL -->
+            <div id="pw-modal">
+              <div id="pw-inner">
+                <div class="pw-title">Le.social</div>
+                <div class="pw-sub">This project is password protected.<br>Enter password to view.</div>
+                <input class="pw-input" type="password" id="pw-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkPassword()">
+                <div class="pw-error" id="pw-error">
+                </div>
+                <div class="pw-btns">
+                  <button class="btn btn--sm primary" onclick="checkPassword()">Enter</button>
+                    <button class="btn btn--sm" onclick="closePwModal()">Cancel</button>
+                  </div>
+                </div>
+              </div>
+              <script src="assets/mobile-block.js"></script>
+              <script>
+    /* ====== HERO DITHER CANVAS ====== */
+    (function() {
+      const canvas = document.getElementById('hero-canvas'); if(!canvas) return; const ctx = canvas.getContext('2d'); let W, H, t = 0, lastTs = 0; let mx = 1e5, my = 1e5; const B = [ [ 0, 8, 2, 10], [12, 4, 14, 6], [ 3, 11, 1, 9], [15, 7, 13, 5] ]; const CELL = 6; const MOUSE_RADIUS = 98; const MOUSE_FORCE = 3; const clamp01 = (v) => Math.max(0, Math.min(1, v)); function resize() {
+        W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight;
+      }
+      function mouseWhiten(px, py) {
+        const dx = px - mx; const dy = py - my; const d2 = dx * dx + dy * dy; if(d2 > MOUSE_RADIUS * MOUSE_RADIUS) return 0; const d = Math.sqrt(d2); const falloff = (MOUSE_RADIUS - d) / MOUSE_RADIUS; const gradient = falloff * falloff * (3 - 2 * falloff); return clamp01(gradient * (MOUSE_FORCE / 5));
+      }
+      function draw() {
+        const cols = Math.ceil(W / CELL); const rows = Math.ceil(H / CELL); const vmin = Math.min(W, H); const R_OUT = vmin * 0.36; const R_IN = vmin * 0.166; const R_MID = (R_OUT + R_IN) * 0.5; const R_HLF = (R_OUT - R_IN) * 0.5; const CX = W * 0.5; const CY = H * 0.5; const bgTime = t * 0.58 + 11.7; const ringTime = t * 0.92; ctx.clearRect(0, 0, W, H);
+        /* ================================================================       LAYER 1 - perspective room background dither       White base is the untouched canvas; only #A8B0B2 pixels are drawn.       Density follows side walls + ceiling corners + floor wave.    ================================================================ */
+        for(let y = 0; y < rows; y++) {
+          for(let x = 0; x < cols; x++) {
+            const sampleX = (x + 0.5) * CELL; const sampleY = (y + 0.5) * CELL; const mouseWhite = mouseWhiten(sampleX, sampleY); const nx = sampleX / W; const ny = sampleY / H; const ex = Math.abs(nx - 0.5) * 2; const sideWalls = Math.max(0, ex - 0.28) * 1.55; const waveLift = Math.sin(x * 0.048 + bgTime * 0.12) * 0.13 + Math.cos(x * 0.029 - bgTime * 0.08) * 0.05 + Math.sin((x + y) * 0.018 + bgTime * 0.15) * 0.035 + Math.cos((x - y) * 0.012 - bgTime * 0.09) * 0.022; const ceilingCorners = Math.max(0, (1 - ny) * 3.2 - 2.0) * ex; const floorWave = Math.max(0, ny - 0.60 + waveLift) * 2.0; const roomDensity = clamp01(sideWalls + ceilingCorners + floorWave - mouseWhite * 1.15); if(roomDensity <= 0) continue; const threshold = B[y & 3][x & 3] / 16; if(roomDensity > threshold) {
+              const alpha = Math.min(0.46, roomDensity * 0.42 + 0.03); ctx.fillStyle = 'rgba(168,176,178,' + alpha.toFixed(2) + ')'; ctx.fillRect(x * CELL, y * CELL, CELL - 1, CELL - 1);
+            }
+          }
+        }
+        /* ================================================================       LAYER 2 - ORA icon ring dither       Ring mask: outer 36% / inner 16.6% of vmin.       Denser than the room layer so it emerges from the background.       Colour mix: 70% #A8B0B2, 30% #88888C.    ================================================================ */
+        for(let y = 0; y < rows; y++) {
+          for(let x = 0; x < cols; x++) {
+            const sampleX = (x + 0.5) * CELL; const sampleY = (y + 0.5) * CELL; const mouseWhite = mouseWhiten(sampleX, sampleY); const px = sampleX - CX; const py = sampleY - CY; const pr = Math.sqrt(px * px + py * py); if(pr < R_IN || pr > R_OUT) continue; const ringMask = clamp01(1 - Math.abs(pr - R_MID) / R_HLF); const organicWave = Math.sin(x * 0.13 + ringTime * 0.55) * Math.cos(y * 0.10 - ringTime * 0.38) * 0.22 + Math.sin(x * 0.06 - ringTime * 0.28) * Math.sin(y * 0.14 + ringTime * 0.42) * 0.16 + Math.cos(x * 0.20 + y * 0.09 + ringTime * 0.18) * 0.10 + Math.sin((x - y) * 0.05 + ringTime * 0.24) * 0.08; const ringDensity = clamp01(Math.pow(ringMask, 0.72) * (0.86 + organicWave) - mouseWhite * 1.2); if(ringDensity <= 0) continue; const threshold = (B[y & 3][x & 3] / 16) * 0.72; if(ringDensity > threshold) {
+              const h = (x * 7 + y * 13) % 10; const useDark = h <= 2; const alpha = useDark ? Math.min(0.82, ringDensity * 0.74 + 0.10) : Math.min(0.70, ringDensity * 0.60 + 0.08); const rgb = useDark ? '136,136,140,' : '168,176,178,'; ctx.fillStyle = 'rgba(' + rgb + alpha.toFixed(2) + ')'; ctx.fillRect(x * CELL, y * CELL, CELL - 1, CELL - 1);
+            }
+          }
+        }
+      }
+      const hv = document.getElementById('hero-visual'); if(hv) {
+        hv.addEventListener('mousemove', function(e) {
+          const r = canvas.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top;
+        }); hv.addEventListener('mouseleave', function() {
+          mx = 1e5; my = 1e5;
+        });
+      }
+      function loop(ts) {
+        requestAnimationFrame(loop); if(ts - lastTs < 83) return; t += 0.032; draw(); lastTs = ts;
+      }
+      resize(); window.addEventListener('resize', resize); loop(0); setTimeout(function() {
+        document.querySelector('.hero-lines').classList.add('revealed');
+      }, 120);
+    })();
+    (function() {
+      const section=document.getElementById('overview'); if(!section)return; const media=section.querySelector('.overview-img'); const video=media?media.querySelector('video'):null; const textWrap=section.querySelector('.overview-text'); const lines=Array.from(section.querySelectorAll('.overview-status-copy')); const prefersReduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches; lines.forEach(function(line) {
+        line.classList.add('overview-type-line'); line.dataset.fullText=line.textContent.trim(); if(!prefersReduced)line.textContent='';
+      }); let started=false; function fillAll() {
+        lines.forEach(function(line) {
+          line.textContent=line.dataset.fullText||''; line.classList.remove('is-typing');
+        });
+      }
+      function playVideo() {
+        if(!video)return; video.currentTime=0; const playPromise=video.play(); if(playPromise&&typeof playPromise.catch==='function')playPromise.catch(function() {
+        });
+      }
+      function typeLine(index) {
+        if(index>=lines.length)return; const line=lines[index]; const text=line.dataset.fullText||''; let i=0; line.textContent=''; line.classList.add('is-typing'); (function tick() {
+          line.textContent=text.slice(0,i); if(i<text.length) {
+            const ch=text.charAt(i); i+=1; const delay=/[.,]/.test(ch)?42:(ch===' '?14:19); setTimeout(tick,delay);
+          }
+          else {
+            line.classList.remove('is-typing'); setTimeout(function() {
+              typeLine(index+1);
+            },110);
+          }
+        })();
+      }
+      function reveal() {
+        if(started)return; started=true; if(media)media.classList.add('is-visible'); if(textWrap)textWrap.classList.add('is-visible'); setTimeout(playVideo,140); if(prefersReduced) {
+          fillAll(); return;
+        }
+        setTimeout(function() {
+          typeLine(0);
+        },220);
+      }
+      const observer=new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if(entry.isIntersecting) {
+            reveal(); observer.disconnect();
+          }
+        });
+      }, {
+        threshold:.35
+      }); observer.observe(section);
+    })();
+    /* ====== RATSEAL CURSOR ====== */
+    const cc=document.getElementById('cursor-canvas'), cx=cc.getContext('2d');
+    cc.width=window.innerWidth;
+    cc.height=window.innerHeight;
+    window.addEventListener('resize',()=> {
+      cc.width=window.innerWidth;cc.height=window.innerHeight;requestCursorFrame();
+    });
+    let mx=-100, my=-100, hov=false, bx=-100, by=-100, ang=0, tang=0, lph=0, lbx=-100, lby=-100, csc=2, tsc=2;
+    let cursorRafId=0, cursorLastEventAt=0;
+    function requestCursorFrame() {
+      if(cursorRafId||document.hidden)return;
+      cursorRafId=requestAnimationFrame(cursorLoop);
+    }
+    function markCursorActive() {
+      cursorLastEventAt=performance.now();
+      requestCursorFrame();
+    }
+    document.addEventListener('mousemove',e=> {
+      mx=e.clientX;my=e.clientY;markCursorActive();
+    });
+    document.addEventListener('mouseleave',()=>{mx=-200;my=-200;markCursorActive();});
+    document.addEventListener('mouseenter',e=>{mx=e.clientX;my=e.clientY;bx=e.clientX;by=e.clientY;markCursorActive();});
+    document.querySelectorAll('a,button').forEach(el=> {
+      el.addEventListener('mouseenter',()=> {
+        hov=true;markCursorActive();
+      }); el.addEventListener('mouseleave',()=> {
+        hov=false;markCursorActive();
+      });
+    });
+    document.addEventListener('click',e=> {
+      const r=document.createElement('div');r.className='click-ripple'; const s=hov?32:20; r.style.cssText=`width:${s}px;height:${s}px;left:${e.clientX}px;top:${e.clientY}px;border:2px solid #FFB742;background:rgba(255,183,66,.15);`; document.body.appendChild(r);setTimeout(()=>r.remove(),520); markCursorActive();
+    });
+    function drawCursor(P,a,mv) {
+      const B='#FFB742', D='#DA6628', I='#FFD4A8', E='#181818', H='#FFF8E0';
+      function p(rx,ry,w,h,col) {
+        cx.fillStyle=col;
+        cx.fillRect(Math.round(rx-w/2),Math.round(ry-h/2),Math.round(w),Math.round(h));
+      }
+      cx.save();
+      cx.rotate(a);
+      const hS=P*8, arc=mv?Math.sin(lph*1.4)*P*2.5:P*2, tb=-hS/2-P;
+      p(tb-P,arc*.3,P*2,P*2,D);
+      p(tb-P*4,arc*.9,P*1.5,P*1.5,B);
+      p(tb-P*7,arc*.4,P,P,B);
+      const eS=P*3, eI=P*2, eX=-P, eTY=-P*4.5, eBY=P*4.5;
+      p(eX,eTY,eS,eS,B);
+      p(eX,eBY,eS,eS,B);
+      p(eX-eS/2,eTY,P,eS,D);
+      p(eX-eS/2,eBY,P,eS,D);
+      p(eX+P*.3,eTY,eI,eI,I);
+      p(eX+P*.3,eBY,eI,eI,I);
+      p(0,0,hS,hS,B);
+      p(P*2.5,P*2.5,P*5,P,D);
+      p(P*2.5,P*2.5,P,P*5,D);
+      p(-P*2,-P*2,P*3,P,H);
+      p(-P*2,-P*2,P,P*3,H);
+      p(P*1.5,-P*1.8,P*1.5,P*1.5,E);
+      p(P*1.5,P*1.8,P*1.5,P*1.5,E);
+      p(P*1.8,-P*2.1,P,P,H);
+      p(P*1.8,P*1.5,P,P,H);
+      p(P*3.5,0,P*1.5,P*1.5,D);
+      cx.fillStyle='rgba(136,136,140,.6)';
+      cx.fillRect(Math.round(P*1.7),Math.round(-P*.3),Math.round(P*3),1);
+      cx.fillRect(Math.round(P*1.7),Math.round(P*.8),Math.round(P*3),1);
+      cx.restore();
+    }
+    function cursorLoop(now) {
+      cursorRafId=0;
+      if(document.hidden)return;
+      cx.clearRect(0,0,cc.width,cc.height);
+      cx.imageSmoothingEnabled=false;
+      tsc=hov?2.8:2;
+      csc+=(tsc-csc)*.18;
+      bx+=(mx-bx)*.22;
+      by+=(my-by)*.22;
+      const vx=bx-lbx, vy=by-lby, sp=Math.sqrt(vx*vx+vy*vy), mv=sp>.4;
+      lbx=bx;
+      lby=by;
+      const dx=mx-bx, dy=my-by;
+      if(Math.abs(dx)>1||Math.abs(dy)>1)tang=Math.atan2(dy,dx);
+      let da=tang-ang;
+      while(da>Math.PI)da-=Math.PI*2;
+      while(da<-Math.PI)da+=Math.PI*2;
+      ang+=da*.25;
+      if(mv)lph+=.28;
+      cx.save();
+      cx.translate(Math.round(bx),Math.round(by));
+      drawCursor(csc,ang,mv);
+      cx.restore();
+      const posSettled=Math.abs(mx-bx)<.2&&Math.abs(my-by)<.2;
+      const scaleSettled=Math.abs(tsc-csc)<.02;
+      const recentlyActive=now-cursorLastEventAt<600;
+      if(!posSettled||!scaleSettled||recentlyActive)requestCursorFrame();
+    }
+    requestCursorFrame();
+    document.addEventListener('visibilitychange',()=> {
+      if(document.hidden) {
+        if(cursorRafId) {
+          cancelAnimationFrame(cursorRafId);cursorRafId=0;
+        }
+        return;
+      }
+      requestCursorFrame();
+    });
+    /* ====== PARTICLE TORUS ====== */
+    (function() {
+      const dc=document.getElementById('donut-canvas'); if(!dc)return; const ctx=dc.getContext('2d'); let W,H,MR,TR; function applySize() {
+        const vmin=Math.min(window.innerWidth,window.innerHeight); const S=Math.round(vmin*.888); dc.width=W=S; dc.height=H=S; MR=W*.295; TR=W*.108;
+      }
+      applySize();
+      /* ---- build particle list ---- */
+      const NRING=6480,NSTAR=342; let pts=[]; function mkPts() {
+        pts=[]; for(let i=0;i<NRING;i++) {
+          const phi=Math.random()*6.2832,th=Math.random()*6.2832; const ox=(MR+TR*Math.cos(th))*Math.cos(phi); const oy=TR*Math.sin(th); const oz=(MR+TR*Math.cos(th))*Math.sin(phi); pts.push( {
+            ox,oy,oz,x:ox+(Math.random()-.5)*TR,y:oy+(Math.random()-.5)*TR, vx:0,vy:0,sz:(Math.random()*1.7+.35)*1.1,al:Math.random()*.62+.28,ring:true
+          });
+        }
+        for(let i=0;i<NSTAR;i++) {
+          const a=Math.random()*6.2832,d=(Math.random()*.42+.12)*W; const ox=Math.cos(a)*d,oy=Math.sin(a)*d*.58; pts.push( {
+            ox,oy,oz:0,x:ox,y:oy,vx:0,vy:0, sz:(Math.random()*.85+.25)*1.1,al:Math.random()*.32+.10,ring:false
+          });
+        }
+      }
+      mkPts();
+      /* ---- mouse tracking ---- */
+      let mx=1e5,my=1e5; const hv=document.getElementById('hero-visual'); hv.addEventListener('mousemove',function(e) {
+        const r=dc.getBoundingClientRect(); mx=e.clientX-r.left-W*.5; my=e.clientY-r.top -H*.5;
+      }); hv.addEventListener('mouseleave',function() {
+        mx=1e5;my=1e5;
+      });
+      /* ---- animation loop ---- */
+      const TC=Math.cos(.32),TS=Math.sin(.32); /* ~18deg X-tilt */
+      let rotY=0;
+      (function tick() {
+        requestAnimationFrame(tick); rotY+=.0026; const cr=Math.cos(rotY),sr=Math.sin(rotY); ctx.clearRect(0,0,W,H); for(const p of pts) {
+          /* rotate original 3D pos around Y */
+          const rx=p.ox*cr+p.oz*sr; const rz=-p.ox*sr+p.oz*cr; const ry=p.oy;
+          /* tilt around X */
+          const tx=rx; const ty=ry*TC-rz*TS; const tz=ry*TS+rz*TC;
+          /* mouse repulsion */
+          const ddx=p.x-mx,ddy=p.y-my; const d2=ddx*ddx+ddy*ddy; if(d2<16900&&d2>0) {
+            /* 130px radius */ const d=Math.sqrt(d2); const f=(130-d)/130*7.5; p.vx+=ddx/d*f; p.vy+=ddy/d*f;
+          }
+          /* spring toward rotation target */
+          p.vx+=(tx-p.x)*.10; p.vy+=(ty-p.y)*.10; p.vx*=.72; p.vy*=.72; p.x+=p.vx; p.y+=p.vy;
+          /* depth-based alpha + size */
+          const nd=(tz/(MR+TR)+1)*.5; ctx.globalAlpha=p.al*(.28+nd*.72); ctx.fillStyle='#00F6FF'; ctx.beginPath(); ctx.arc(W*.5+p.x,H*.5+p.y,Math.max(.25,p.sz*(.55+nd*.65)),0,6.2832); ctx.fill();
+        }
+        ctx.globalAlpha=1;
+      })(); window.addEventListener('resize',function() {
+        applySize();mkPts();
+      });
+    })();
+    /* ====== PASSWORD MODAL ====== */
+    const LE_SOCIAL_PASSWORD = 'mialyk2024';
+    function showPasswordModal(e) {
+      e.preventDefault();
+      document.getElementById('pw-input').value = '';
+      document.getElementById('pw-error').textContent = '';
+      document.getElementById('pw-input').classList.remove('error');
+      document.getElementById('pw-modal').classList.add('active');
+      setTimeout(function() {
+        document.getElementById('pw-input').focus();
+      }, 100);
+    }
+    function closePwModal() {
+      document.getElementById('pw-modal').classList.remove('active');
+    }
+    function checkPassword() {
+      const val = document.getElementById('pw-input').value;
+      if(val === LE_SOCIAL_PASSWORD) {
+        closePwModal();
+        window.location.href = 'lesocial.html';
+      }
+      else {
+        document.getElementById('pw-input').classList.add('error');
+        document.getElementById('pw-error').textContent = '??Incorrect password';
+        document.getElementById('pw-input').value = '';
+        setTimeout(function() {
+          document.getElementById('pw-input').classList.remove('error');
+        }, 1500);
+      }
+    }
+    document.getElementById('pw-modal').addEventListener('click', function(e) {
+      if(e.target === this) closePwModal();
+    });
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

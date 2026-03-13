@@ -431,6 +431,7 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
 #popup-backdrop{position:fixed;inset:0;z-index:590;background:transparent;backdrop-filter:none;display:none;pointer-events:none;}
 #popup-backdrop.active{display:block;}
 </style>
+<link rel="stylesheet" href="assets/mobile-block.css">
 </head>
 <body>
 
@@ -456,6 +457,14 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
     <a href="about.html" class="nav-link">About</a>
   </nav>
 </header>
+<section id="mobile-blocker" aria-label="Mobile access blocked">
+  <div class="mobile-blocker__inner">
+    <div class="mobile-blocker__card">
+      <img class="mobile-blocker__media" src="assets/images/pc.gif" alt="PC animation">
+      <p class="mobile-blocker__hint">This portfolio is available on desktop only. Please revisit on a larger screen.</p>
+    </div>
+  </div>
+</section>
 
 <!-- ══ HERO ══ -->
 <section class="hero">
@@ -789,6 +798,7 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
   </div>
 </div>
 
+<script src="assets/mobile-block.js"></script>
 <script>
 // ── CURSOR
 const cursorCanvas=document.getElementById('cursor-canvas');
@@ -1238,11 +1248,6 @@ document.getElementById('pw-modal').addEventListener('click',function(e){if(e.ta
 </script>
 </body>
 </html>
-
-
-
-
-
 
 
 

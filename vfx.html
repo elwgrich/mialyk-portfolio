@@ -146,6 +146,7 @@ footer{background:var(--white);color:var(--grey-m);padding:32px 24px;border-top:
 @media (max-width:768px){header{padding:0 24px;}nav{gap:24px;}.hero{padding-top:28px;padding-bottom:28px;}}
 @media (max-width:560px){header{padding:0 18px;}nav{gap:18px;}.hero-meta{flex-direction:column;gap:16px;}}
 </style>
+<link rel="stylesheet" href="assets/mobile-block.css">
 </head>
 <body>
 <canvas id="cursor-canvas"></canvas>
@@ -168,6 +169,14 @@ footer{background:var(--white);color:var(--grey-m);padding:32px 24px;border-top:
     <a href="about.html" class="nav-link">About</a>
   </nav>
 </header>
+<section id="mobile-blocker" aria-label="Mobile access blocked">
+  <div class="mobile-blocker__inner">
+    <div class="mobile-blocker__card">
+      <img class="mobile-blocker__media" src="assets/images/pc.gif" alt="PC animation">
+      <p class="mobile-blocker__hint">This portfolio is available on desktop only. Please revisit on a larger screen.</p>
+    </div>
+  </div>
+</section>
 <section class="hero">
   <div class="hero-inner">
     <div class="hero-head">
@@ -250,6 +259,7 @@ footer{background:var(--white);color:var(--grey-m);padding:32px 24px;border-top:
     </div>
   </div>
 </footer>
+<script src="assets/mobile-block.js"></script>
 <script src="https://player.vimeo.com/api/player.js"></script>
 <script>
 // ── Cursor ──

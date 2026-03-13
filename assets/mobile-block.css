@@ -1,0 +1,177 @@
+#mobile-blocker {
+  display: none;
+  position: relative;
+  min-height: calc(100svh - var(--nav-h, 60px));
+  margin-top: var(--nav-h, 60px);
+  padding: 32px 24px 48px;
+  background: var(--white, #FEFEFE);
+  border-bottom: 1px solid rgba(24,24,24,0.1);
+}
+
+#mobile-blocker::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(24,24,24,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(24,24,24,0.018) 1px, transparent 1px);
+  background-size: 8px 8px;
+}
+
+.mobile-blocker__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  min-height: calc(100svh - var(--nav-h, 60px) - 80px);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-blocker__card {
+  width: min(100%, 420px);
+  padding: 24px 12px 32px;
+  text-align: center;
+  background: var(--white, #FEFEFE);
+  border: 1px solid rgba(24,24,24,0.1);
+  box-shadow: 0 18px 60px rgba(24,24,24,0.08);
+}
+
+.mobile-blocker__media {
+  display: block;
+  width: 100%;
+  max-width: 280px;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  margin: 0 auto 20px;
+  image-rendering: pixelated;
+}
+
+.mobile-blocker__hint {
+  color: var(--grey-m, #88888C);
+  font-family: var(--font-body, 'DM Mono', monospace);
+  font-size: 12px;
+  line-height: 1.9;
+}
+
+body.mobile-block-mode {
+  cursor: auto !important;
+}
+
+body.mobile-block-mode * {
+  cursor: auto !important;
+}
+
+body.mobile-block-mode header {
+  justify-content: flex-start !important;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+}
+
+body.mobile-block-mode header nav {
+  display: none !important;
+}
+
+body.mobile-block-mode .nav-logo {
+  gap: 0 !important;
+  font-size: 16px !important;
+}
+
+body.mobile-block-mode .nav-logo .slash,
+body.mobile-block-mode .nav-logo sub {
+  display: none !important;
+}
+
+html.mobile-block-mode {
+  scroll-snap-type: none !important;
+  scroll-padding-top: 0 !important;
+}
+
+body.mobile-block-mode {
+  scroll-snap-type: none !important;
+  overflow-y: auto !important;
+}
+
+body.mobile-block-mode > :not(header):not(#mobile-blocker):not(footer):not(script):not(style):not(link) {
+  display: none !important;
+}
+
+body.mobile-block-mode #mobile-blocker {
+  display: block;
+}
+
+body.mobile-block-mode footer {
+  display: flex !important;
+  position: relative !important;
+  z-index: 1 !important;
+  min-height: auto !important;
+  height: auto !important;
+  padding: 16px 12px 24px !important;
+  justify-content: flex-start !important;
+  border-top: 1px solid rgba(24,24,24,0.1) !important;
+  scroll-snap-align: none !important;
+  scroll-snap-stop: normal !important;
+}
+
+body.mobile-block-mode .footer-inner {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  gap: 12px !important;
+}
+
+body.mobile-block-mode .footer-copy,
+body.mobile-block-mode .foot-copy {
+  display: block !important;
+  text-align: left !important;
+  color: var(--grey-m, #88888C) !important;
+  font-size: 10px !important;
+}
+
+body.mobile-block-mode .footer-copy span,
+body.mobile-block-mode .foot-copy span {
+  color: var(--brand, #FFB742) !important;
+}
+
+body.mobile-block-mode .footer-socials,
+body.mobile-block-mode .foot-soc {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 16px !important;
+}
+
+body.mobile-block-mode .social-link,
+body.mobile-block-mode .soc-a {
+  color: var(--grey-m, #88888C) !important;
+}
+
+body.mobile-block-mode .social-link svg,
+body.mobile-block-mode .soc-a svg {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+body.mobile-block-mode .social-link:hover,
+body.mobile-block-mode .soc-a:hover {
+  color: var(--brand, #FFB742) !important;
+}
+
+body.mobile-block-mode #cursor-canvas,
+body.mobile-block-mode #popup,
+body.mobile-block-mode #pw-modal,
+body.mobile-block-mode #game-ui,
+body.mobile-block-mode #hint,
+body.mobile-block-mode #node-layer {
+  display: none !important;
+}
+
+@media (max-width: 640px) {
+  .mobile-blocker__card {
+    padding: 24px 12px 32px;
+  }
+}

@@ -152,6 +152,7 @@ footer{background:var(--white);color:var(--grey-m);padding:32px 40px;display:fle
 .social-link:hover{color:var(--brand);}
 .social-link svg{width:18px;height:18px;fill:currentColor;flex-shrink:0;pointer-events:none;}
 </style>
+<link rel="stylesheet" href="assets/mobile-block.css">
 </head>
 <body>
 <canvas id="cursor-canvas"></canvas>
@@ -177,6 +178,15 @@ footer{background:var(--white);color:var(--grey-m);padding:32px 40px;display:fle
     <a href="about.html" class="nav-link">About</a>
   </nav>
 </header>
+
+<section id="mobile-blocker" aria-label="Mobile access blocked">
+  <div class="mobile-blocker__inner">
+    <div class="mobile-blocker__card">
+      <img class="mobile-blocker__media" src="assets/images/pc.gif" alt="PC animation">
+      <p class="mobile-blocker__hint">This portfolio is available on desktop only. Please revisit on a larger screen.</p>
+    </div>
+  </div>
+</section>
 
 <!-- MAIN -->
 <main>
@@ -401,6 +411,7 @@ footer{background:var(--white);color:var(--grey-m);padding:32px 40px;display:fle
   </div>
 </footer>
 
+<script src="assets/mobile-block.js"></script>
 <script>
 // PIXEL BG
 const bgCanvas=document.getElementById('pixel-bg');

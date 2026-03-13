@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh repo:*)",
+      "Bash(ls C:/dev/mialyk-portfolio/*.json C:/dev/mialyk-portfolio/*.js)",
+      "mcp__Claude_Preview__preview_start"
+    ]
+  }
+}

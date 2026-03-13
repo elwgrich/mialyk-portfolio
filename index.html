@@ -1098,11 +1098,13 @@ footer {
     padding: 7px 8px 7px 10px;
   }
 
-    .project-node__tooltip-title {
+  .project-node__tooltip-title {
     font-size: var(--fs-10);
   }
+
 }
 </style>
+<link rel="stylesheet" href="assets/mobile-block.css">
 </head>
 <body>
 
@@ -1131,6 +1133,15 @@ footer {
     <a href="about.html" class="nav-link">About</a>
   </nav>
 </header>
+
+<section id="mobile-blocker" aria-label="Mobile access blocked">
+  <div class="mobile-blocker__inner">
+    <div class="mobile-blocker__card">
+      <img class="mobile-blocker__media" src="assets/images/pc.gif" alt="PC animation">
+      <p class="mobile-blocker__hint">This portfolio is available on desktop only. Please revisit on a larger screen.</p>
+    </div>
+  </div>
+</section>
 
 <!-- HOME: SNAKE GAME -->
 <section id="home">
@@ -1174,6 +1185,7 @@ footer {
 
   <div id="hint">arrow keys to explore // space or click to switch modes</div>
 </section>
+
 <!-- EXPERIENCE POPUP -->
 <div id="popup">
   <div id="popup-inner">
@@ -1247,6 +1259,7 @@ footer {
 <!-- ============================================================
      GAME SCRIPT
      ============================================================ -->
+<script src="assets/mobile-block.js"></script>
 <script>
 // Mouse Cursor Canvas
 const cursorCanvas = document.getElementById('cursor-canvas');
@@ -1254,6 +1267,7 @@ const cursorCtx    = cursorCanvas.getContext('2d');
 cursorCanvas.width  = window.innerWidth;
 cursorCanvas.height = window.innerHeight;
 window.addEventListener('resize', () => {
+  if (window.__MIALYK_MOBILE_BLOCK__) return;
   resize();
   if (snake.length > 0) {
     snake.forEach(s => {
@@ -1473,6 +1487,7 @@ function resize() {
   ROWS = Math.floor(canvas.height / CELL);
 }
 window.addEventListener('resize', () => {
+  if (window.__MIALYK_MOBILE_BLOCK__) return;
   resize();
   if (snake.length > 0) {
     snake.forEach(s => {
@@ -3118,7 +3133,7 @@ document.getElementById('pw-input').addEventListener('keydown', e => {
 function autoDemo() {
   initGame();
 }
-autoDemo();
+if (!window.__MIALYK_MOBILE_BLOCK__) autoDemo();
 </script>
 </body>
 </html>
