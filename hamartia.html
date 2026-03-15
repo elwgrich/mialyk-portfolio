@@ -20,7 +20,7 @@
   --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;scroll-snap-type:y mandatory;scroll-padding-top:60px;}
+html{scroll-behavior:smooth;scroll-snap-type:y proximity;scroll-padding-top:60px;}
 body{
   font-family:'DM Mono',monospace;
   font-size:var(--fs-12);
@@ -446,7 +446,7 @@ footer{background:var(--white);border-top:1px solid rgba(24,24,24,0.1);padding:3
       <div class="nav-dropdown">
         <a href="helpurr.html" class="dropdown-item"><span class="dropdown-dot"></span>Helpurr</a>
         <a href="#" class="dropdown-item dropdown-locked" onclick="window.showPasswordModal ? showPasswordModal(event) : showPw(event)"><span class="dropdown-dot"></span>Le.social <svg class="pxi pxi--sm" viewBox="0 0 24 24" fill="currentColor" style="margin-left:4px;opacity:.5"><rect x="8" y="4" width="8" height="2"/><rect x="6" y="6" width="2" height="4"/><rect x="16" y="6" width="2" height="4"/><rect x="4" y="10" width="16" height="2"/><rect x="4" y="10" width="2" height="10"/><rect x="18" y="10" width="2" height="10"/><rect x="4" y="20" width="16" height="2"/><rect x="10" y="14" width="4" height="2"/><rect x="11" y="16" width="2" height="2"/></svg></a>
-        <a href="https://www.ora.io/" target="_blank" rel="noreferrer" class="dropdown-item"><span class="dropdown-dot"></span>ORA</a>
+        <a href="ora.html" class="dropdown-item"><span class="dropdown-dot"></span>ORA</a>
         <a href="https://www.meedloyalty.com/" target="_blank" rel="noreferrer" class="dropdown-item"><span class="dropdown-dot"></span>Meed</a>
         <a href="cheddar.html" class="dropdown-item"><span class="dropdown-dot"></span>Cheddar Verse</a>
         <a href="hamartia.html" class="dropdown-item active"><span class="dropdown-dot"></span>Hamartia</a>
@@ -807,12 +807,32 @@ cursorCanvas.width=window.innerWidth; cursorCanvas.height=window.innerHeight;
 window.addEventListener('resize',()=>{cursorCanvas.width=window.innerWidth;cursorCanvas.height=window.innerHeight;requestCursorFrame();});
 let mouseX=-100,mouseY=-100,isHovering=false;
 let bodyX=-100,bodyY=-100,curAngle=0,targetAngle=0,legPhase=0,lastBodyX=-100,lastBodyY=-100;
-let cursorScale=2,targetScale=2;
+let cursorScale=2,targetScale=2,cursorVisible=false;
 const hoverSelector='a,button,input,textarea,select,[onclick],.art-trigger-btn,.loc-item,.char-icon,.demo-foot,.demo-cta,.nav-link,.dropdown-item';
 function updateHoverState(target){
   isHovering=!!(target&&target.closest&&target.closest(hoverSelector));
 }
-document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY;updateHoverState(e.target);requestCursorFrame();});
+function syncPointer(e){
+  mouseX=e.clientX;
+  mouseY=e.clientY;
+  if(!cursorVisible){
+    bodyX=e.clientX;
+    bodyY=e.clientY;
+    lastBodyX=e.clientX;
+    lastBodyY=e.clientY;
+  }
+  cursorVisible=true;
+  updateHoverState(e.target);
+  requestCursorFrame();
+}
+function hideCursor(){
+  cursorVisible=false;
+  isHovering=false;
+  cursorScale=2;
+  targetScale=2;
+  requestCursorFrame();
+}
+document.addEventListener('mousemove',syncPointer);
 document.addEventListener('mouseover',e=>{updateHoverState(e.target);requestCursorFrame();});
 document.addEventListener('mouseout',e=>{
   const related=e.relatedTarget;
@@ -855,6 +875,7 @@ function cursorLoop(){
   if(document.hidden)return;
   cursorCtx.clearRect(0,0,cursorCanvas.width,cursorCanvas.height);
   cursorCtx.imageSmoothingEnabled=false;
+  if(!cursorVisible)return;
   const prevScale=cursorScale,prevBodyX=bodyX,prevBodyY=bodyY,prevAngle=curAngle;
   targetScale=isHovering?3.2:2; cursorScale+=(targetScale-cursorScale)*0.18;
   bodyX+=(mouseX-bodyX)*0.22; bodyY+=(mouseY-bodyY)*0.22;
@@ -871,8 +892,9 @@ function cursorLoop(){
   if(!settled)requestCursorFrame();
 }
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)requestCursorFrame();});
-document.addEventListener('mouseleave',()=>{mouseX=-200;mouseY=-200;requestCursorFrame();});
-document.addEventListener('mouseenter',e=>{mouseX=e.clientX;mouseY=e.clientY;bodyX=e.clientX;bodyY=e.clientY;requestCursorFrame();});
+document.addEventListener('mouseleave',hideCursor);
+document.addEventListener('mouseenter',syncPointer);
+window.addEventListener('blur',hideCursor);
 requestCursorFrame();
 
 // ── FAKE PLAYER UI
@@ -1248,9 +1270,6 @@ document.getElementById('pw-modal').addEventListener('click',function(e){if(e.ta
 </script>
 </body>
 </html>
-
-
-
 
 
 

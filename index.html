@@ -1122,7 +1122,7 @@ footer {
       <div class="nav-dropdown">
         <a href="helpurr.html" class="dropdown-item"><span class="dropdown-dot"></span>Helpurr</a>
         <a href="#" class="dropdown-item dropdown-locked" onclick="window.showPasswordModal ? showPasswordModal(event) : showPw(event)"><span class="dropdown-dot"></span>Le.social <svg class="pxi pxi--sm" viewBox="0 0 24 24" fill="currentColor" style="margin-left:4px;opacity:.5"><rect x="8" y="4" width="8" height="2"/><rect x="6" y="6" width="2" height="4"/><rect x="16" y="6" width="2" height="4"/><rect x="4" y="10" width="16" height="2"/><rect x="4" y="10" width="2" height="10"/><rect x="18" y="10" width="2" height="10"/><rect x="4" y="20" width="16" height="2"/><rect x="10" y="14" width="4" height="2"/><rect x="11" y="16" width="2" height="2"/></svg></a>
-        <a href="https://www.ora.io/" target="_blank" rel="noreferrer" class="dropdown-item"><span class="dropdown-dot"></span>ORA</a>
+        <a href="ora.html" class="dropdown-item"><span class="dropdown-dot"></span>ORA</a>
         <a href="https://www.meedloyalty.com/" target="_blank" rel="noreferrer" class="dropdown-item"><span class="dropdown-dot"></span>Meed</a>
         <a href="cheddar.html" class="dropdown-item"><span class="dropdown-dot"></span>Cheddar Verse</a>
         <a href="hamartia.html" class="dropdown-item"><span class="dropdown-dot"></span>Hamartia</a>
@@ -1289,18 +1289,38 @@ let mouseX = -100, mouseY = -100;
 let isHovering = false;
 let isOnGame   = true; // homepage = dot cursor, elsewhere = mouse cursor
 const HOME_SECTION = document.getElementById('home');
+let cursorVisible = false;
 
-document.addEventListener('mousemove', e => {
+function syncCursorPosition(e) {
   mouseX = e.clientX;
   mouseY = e.clientY;
+  if (!cursorVisible) {
+    bodyX = e.clientX;
+    bodyY = e.clientY;
+    lastBodyX = e.clientX;
+    lastBodyY = e.clientY;
+  }
+  cursorVisible = true;
+}
+
+function hideCursor() {
+  cursorVisible = false;
+  isHovering = false;
+  cursorScale = 2;
+  targetScale = 2;
+}
+
+document.addEventListener('mousemove', e => {
+  syncCursorPosition(e);
   // Use elementFromPoint to precisely detect if cursor is over the game canvas
   const el = document.elementFromPoint(mouseX, mouseY);
   isOnGame = !!(el && (el === canvas || HOME_SECTION.contains(el)));
   // Footer, nav, popup, and password modal always use dot cursor
   if (el && (el.closest("footer") || el.closest("header") || el.closest("#popup") || el.closest("#pw-modal"))) isOnGame = true;
 });
-document.addEventListener('mouseleave', () => { mouseX = -200; mouseY = -200; });
-document.addEventListener('mouseenter', e => { mouseX = e.clientX; mouseY = e.clientY; bodyX = e.clientX; bodyY = e.clientY; });
+document.addEventListener('mouseleave', hideCursor);
+document.addEventListener('mouseenter', syncCursorPosition);
+window.addEventListener('blur', hideCursor);
 
 document.querySelectorAll('a, button, .nav-link').forEach(el => {
   el.addEventListener('mouseenter', () => { isHovering = true; });
@@ -1362,6 +1382,10 @@ function cursorLoop() {
 
   targetScale = isHovering ? 2.8 : 2;
   cursorScale += (targetScale - cursorScale) * 0.18;
+  if (!cursorVisible) {
+    requestAnimationFrame(cursorLoop);
+    return;
+  }
 
   if (isOnGame) {
     // Homepage: simple brand dot
@@ -1635,7 +1659,7 @@ const EXPERIENCES = [
     period: 'Jun 2024 - Feb 2025 // Full-time',
     desc: 'Built ORA\'s visual identity and brand system from zero. Led art direction for Chain Reaction, Token Launches, and ETH - AI initiatives - videos, products, merchandise.',
     pts: 50,
-    url: 'https://www.ora.io/',
+    url: 'ora.html',
     color: BRAND,
   },
   {

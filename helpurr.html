@@ -35,7 +35,7 @@
     height: 100vh;
     overflow-y: auto;
     overflow-x: hidden;
-    scroll-snap-type: y mandatory;
+    scroll-snap-type: y proximity;
     scroll-padding-top: 60px;
   }
 
@@ -1845,21 +1845,23 @@
   /* FOOTER */
   footer {
     background: var(--white);
+    color: var(--grey-m);
     border-top: 1px solid rgba(24,24,24,0.1);
+    padding: 32px 40px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 40px;
-    height: 60px;
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-size: var(--fs-12);
+    letter-spacing: 0.08em;
   }
   .footer-copy {
-    font-size: var(--fs-12);
     color: var(--grey-m);
+    font-weight: var(--fw-light);
   }
   .footer-copy span { color: var(--brand); }
-  .footer-socials { display: flex; gap: 16px; align-items: center; }
+  .footer-socials { display: flex; gap: 20px; align-items: center; }
   .social-link {
     color: var(--grey-m);
     display: flex;
@@ -2001,7 +2003,7 @@
       <div class="nav-dropdown">
         <a href="helpurr.html" class="dropdown-item active"><span class="dropdown-dot"></span>Helpurr</a>
         <a href="#" class="dropdown-item dropdown-locked" onclick="window.showPasswordModal ? showPasswordModal(event) : showPw(event)"><span class="dropdown-dot"></span>Le.social <svg class="pxi pxi--sm" viewBox="0 0 24 24" fill="currentColor" style="margin-left:4px;opacity:.5"><rect x="8" y="4" width="8" height="2"/><rect x="6" y="6" width="2" height="4"/><rect x="16" y="6" width="2" height="4"/><rect x="4" y="10" width="16" height="2"/><rect x="4" y="10" width="2" height="10"/><rect x="18" y="10" width="2" height="10"/><rect x="4" y="20" width="16" height="2"/><rect x="10" y="14" width="4" height="2"/><rect x="11" y="16" width="2" height="2"/></svg></a>
-        <a href="https://www.ora.io/" target="_blank" rel="noreferrer" class="dropdown-item"><span class="dropdown-dot"></span>ORA</a>
+        <a href="ora.html" class="dropdown-item"><span class="dropdown-dot"></span>ORA</a>
         <a href="https://www.meedloyalty.com/" target="_blank" rel="noreferrer" class="dropdown-item"><span class="dropdown-dot"></span>Meed</a>
         <a href="cheddar.html" class="dropdown-item"><span class="dropdown-dot"></span>Cheddar Verse</a>
         <a href="hamartia.html" class="dropdown-item"><span class="dropdown-dot"></span>Hamartia</a>
@@ -2234,7 +2236,7 @@
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-copy">穢2026 <span>mialyk</span> // All rights reserved</div>
+  <div class="footer-copy">2026 <span>mialyk</span> // All rights reserved</div>
   <div class="footer-socials">
     <a href="https://www.linkedin.com/in/mia-lyk" target="_blank" class="social-link" title="LinkedIn">
       <svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
@@ -2284,7 +2286,7 @@
     window.addEventListener('resize',()=>{cursorCanvas.width=window.innerWidth;cursorCanvas.height=window.innerHeight;});
     let mouseX=-100,mouseY=-100,isHovering=false;
     let bodyX=-100,bodyY=-100,curAngle=0,targetAngle=0,legPhase=0,lastBodyX=-100,lastBodyY=-100;
-    let cursorScale=2,targetScale=2;
+    let cursorScale=2,targetScale=2,cursorVisible=false;
     const hoverSelector='a,button,input,textarea,select,[onclick],.btn,.phone-dot,.tik-btn,.wa-sticker-btn,.wa-sticker-tab,.nav-link,.dropdown-item';
     function updateHoverState(target){
       isHovering=!!(target&&target.closest&&target.closest(hoverSelector));
@@ -2292,16 +2294,30 @@
     function syncPointer(e){
       mouseX=e.clientX;
       mouseY=e.clientY;
+      if(!cursorVisible){
+        bodyX=e.clientX;
+        bodyY=e.clientY;
+        lastBodyX=e.clientX;
+        lastBodyY=e.clientY;
+      }
+      cursorVisible=true;
       updateHoverState(e.target);
+    }
+    function hideCursor(){
+      cursorVisible=false;
+      isHovering=false;
+      cursorScale=2;
+      targetScale=2;
     }
     document.addEventListener('mousemove',syncPointer);
     document.addEventListener('pointermove',syncPointer);
-    document.addEventListener('mouseleave',()=>{mouseX=-200;mouseY=-200;});
-    document.addEventListener('mouseenter',e=>{mouseX=e.clientX;mouseY=e.clientY;bodyX=e.clientX;bodyY=e.clientY;});
+    document.addEventListener('mouseleave',hideCursor);
+    document.addEventListener('mouseenter',syncPointer);
     document.addEventListener('mousedown',syncPointer);
     document.addEventListener('pointerdown',syncPointer);
     document.addEventListener('mouseup',syncPointer);
     document.addEventListener('pointerup',syncPointer);
+    window.addEventListener('blur',hideCursor);
     document.addEventListener('mouseover',e=>updateHoverState(e.target));
     document.addEventListener('mouseout',e=>{
       const related=e.relatedTarget;
@@ -2341,6 +2357,10 @@
       cursorCtx.clearRect(0,0,cursorCanvas.width,cursorCanvas.height);
       cursorCtx.imageSmoothingEnabled=false;
       targetScale=isHovering?3.2:2; cursorScale+=(targetScale-cursorScale)*0.18;
+      if(!cursorVisible){
+        requestAnimationFrame(cursorLoop);
+        return;
+      }
       bodyX+=(mouseX-bodyX)*0.22; bodyY+=(mouseY-bodyY)*0.22;
       const vx=bodyX-lastBodyX,vy=bodyY-lastBodyY,speed=Math.sqrt(vx*vx+vy*vy),moving=speed>0.4;
       lastBodyX=bodyX; lastBodyY=bodyY;
@@ -2933,10 +2953,6 @@
 
 </body>
 </html>
-
-
-
-
 
 
 

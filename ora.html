@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ORA ??mialyk</title>
+    <title>ORA - mialyk</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
@@ -27,7 +27,7 @@
       }
       html {
         scroll-behavior:smooth;
-        scroll-snap-type:y mandatory;
+        scroll-snap-type:y proximity;
         scroll-padding-top:var(--nav-h);
       }
       body {
@@ -311,6 +311,7 @@
         position:relative;
         overflow:hidden;
         scroll-snap-align:start;
+        scroll-snap-stop:always;
       }
       .hero::after {
         content:'';
@@ -415,7 +416,7 @@
         padding:0 40px 0;
         scroll-snap-align:start;
         scroll-snap-stop:always;
-        scroll-margin-top:calc(-1 * var(--nav-h));
+        scroll-margin-top:var(--nav-h);
       }
       #hero-canvas {
         position:absolute;
@@ -548,27 +549,17 @@
       .hero-tagline-line {
         position:relative;
         display:block;
-        overflow:hidden;
         line-height:1.2;
         padding-right:.08em;
+        min-height:1.2em;
       }
       .hero-tagline-line-text {
         display:block;
-        transition:transform .34s cubic-bezier(.16,1,.3,1);
+        min-width:1ch;
+        white-space:pre;
       }
-      .hero-tagline-line::before {
-        content:attr(data-text);
-        position:absolute;
-        left:0;
-        top:100%;
+      .hero-tagline-line-text.is-scrambling {
         color:var(--brand);
-        transition:transform .34s cubic-bezier(.16,1,.3,1);
-      }
-      .hero-tagline-copy--hover:hover .hero-tagline-line-text,.hero-tagline-copy--hover:focus-visible .hero-tagline-line-text {
-        transform:translateY(-115%);
-      }
-      .hero-tagline-copy--hover:hover .hero-tagline-line::before,.hero-tagline-copy--hover:focus-visible .hero-tagline-line::before {
-        transform:translateY(-115%);
       }
       .hero-visual-copy {
         position:relative;
@@ -693,11 +684,14 @@
       }
       /* ====== OVERVIEW ====== */
       #overview {
+        --overview-exit-y:0px;
+        --overview-exit-opacity:1;
+        --overview-exit-scale:1;
+        --overview-exit-blur:0px;
         background:var(--white);
-        border-bottom:1px solid rgba(24,24,24,.08);
         padding:24px;
         scroll-snap-align:start;
-        scroll-snap-stop:always;
+        scroll-snap-stop:normal;
       }
       #overview .section-eyebrow {
         margin-bottom:24px;
@@ -707,6 +701,11 @@
         flex-direction:column;
         gap:16px;
         align-items:stretch;
+        transform:translate3d(0,var(--overview-exit-y),0) scale(var(--overview-exit-scale));
+        transform-origin:50% 100%;
+        opacity:var(--overview-exit-opacity);
+        filter:blur(var(--overview-exit-blur));
+        will-change:transform,opacity,filter;
       }
       .overview-text {
         max-width:920px;
@@ -964,202 +963,435 @@
       }
       /* ====== PROCESS ====== */
       #process {
-        background:#F9F9F9;
+        --process-step-height:440px;
+        --process-bottom-fade-opacity:0;
+        --process-bottom-fade-blur:0px;
+        padding:24px 0 140px;
+        box-sizing:border-box;
+        height:3200px;
+        overflow:clip;
+        position:relative;
       }
-      .process-intro {
-        font-size:13px;
-        color:var(--grey-m);
-        line-height:1.85;
-        max-width:640px;
-        margin-bottom:56px;
-        font-weight:300;
+      #process::after {
+        content:'';
+        position:absolute;
+        left:0;
+        right:0;
+        bottom:0;
+        height:min(38vh,360px);
+        pointer-events:none;
+        z-index:4;
+        opacity:var(--process-bottom-fade-opacity);
+        background:linear-gradient(180deg,rgba(254,254,254,0) 0%,rgba(254,254,254,.18) 42%,rgba(254,254,254,.66) 74%,rgba(254,254,254,.8) 100%);
+        backdrop-filter:blur(var(--process-bottom-fade-blur));
+        -webkit-backdrop-filter:blur(var(--process-bottom-fade-blur));
       }
-      .process-cards {
+      .process-shell {
+        width:min(1560px,100%);
+        margin:0 auto;
+        padding:0 24px;
+      }
+      .process-sticky-stage {
+        position:sticky;
+        top:max(var(--nav-h),calc(50vh - 220px));
+        z-index:2;
+        height:440px;
         display:grid;
-        grid-template-columns:repeat(5,1fr);
-        gap:1px;
-        background:rgba(24,24,24,.08);
+        grid-template-columns:repeat(6,minmax(0,1fr));
+        gap:14px;
+        align-items:center;
+        width:100vw;
+        margin-left:calc(50% - 50vw);
+        padding:0 24px;
+        box-sizing:border-box;
+        pointer-events:none;
       }
-      .pcard {
-        background:#F9F9F9;
-        padding:32px 24px 36px;
+      .process-statements {
+        position:relative;
+        grid-column:2 / span 4;
+        width:100%;
+        min-height:360px;
+      }
+      .process-statement {
+        position:absolute;
+        inset:0;
         display:flex;
         flex-direction:column;
-        gap:0;
-      }
-      .pcard-num {
-        font-family:var(--font-brand);
-        font-size:10px;
-        color:var(--project);
-        margin-bottom:20px;
-      }
-      .pcard-title {
-        font-family:var(--font-brand);
-        font-size:11px;
-        color:var(--black);
-        line-height:1.65;
-        margin-bottom:16px;
-      }
-      .pcard-desc {
-        font-size:12px;
-        color:var(--grey-m);
-        line-height:1.8;
-        font-weight:300;
-      }
-      @media(max-width:800px) {
-        .process-cards {
-          grid-template-columns:1fr;
-        }
-        .pcard {
-          border-bottom:1px solid rgba(24,24,24,.08);
-        }
-      }
-      /* ====== UI DIRECTION ====== */
-      #ui-direction {
-        background:var(--white);
-        border-top:1px solid rgba(24,24,24,.08);
-      }
-      .ui-intro {
-        font-size:13px;
-        color:var(--grey-m);
-        line-height:1.9;
-        max-width:680px;
-        margin-top:32px;
-        margin-bottom:56px;
-        font-weight:300;
-      }
-      .ui-video-main {
-        width:100%;
-        aspect-ratio:16/9;
-      }
-      .ui-screen-grid {
-        display:grid;
-        grid-template-columns:repeat(3,1fr);
-        gap:2px;
-        margin-top:2px;
-      }
-      .ui-cell {
-        aspect-ratio:4/3;
-      }
-      .ui-captions {
-        display:grid;
-        grid-template-columns:repeat(4,1fr);
-        gap:2px;
-        margin-top:32px;
-      }
-      .ui-cap-item {
-        padding:14px 0;
-        border-top:1px solid rgba(24,24,24,.08);
-      }
-      .ui-cap-num {
-        font-size:10px;
-        color:var(--project);
-        letter-spacing:.06em;
-        margin-bottom:6px;
-      }
-      .ui-cap-text {
-        font-size:12px;
-        color:var(--grey-m);
-        line-height:1.7;
-        font-weight:300;
-      }
-      /* ====== OFFLINE ====== */
-      #offline {
-        background:#0D0D0F;
-        padding:100px 40px;
-      }
-      #offline .section-h2 {
-        color:var(--white);
-      }
-      .offline-intro {
-        font-size:13px;
-        color:rgba(255,255,255,.5);
-        line-height:1.9;
-        max-width:600px;
-        margin-top:28px;
-        font-weight:300;
-      }
-      .offline-grid {
-        display:grid;
-        grid-template-columns:2fr 1fr;
-        grid-template-rows:auto auto;
-        gap:3px;
-        margin-top:60px;
-      }
-      .offline-img.tall {
-        aspect-ratio:3/4;
-        grid-row:span 2;
-      }
-      .offline-img.wide {
-        aspect-ratio:16/9;
-      }
-      .offline-img.sq {
-        aspect-ratio:1/1;
-      }
-      .offline-caption {
-        font-size:10px;
-        color:rgba(255,255,255,.25);
-        letter-spacing:.08em;
-        text-transform:uppercase;
-        margin-top:20px;
-      }
-      /* ====== EXPLORATIONS ====== */
-      #visual-explorations {
-        background:#F4F4F2;
-      }
-      .explorations-intro {
-        display:grid;
-        grid-template-columns:1fr 1fr;
-        gap:80px;
-        margin-top:48px;
-        margin-bottom:60px;
         align-items:center;
+        justify-content:center;
+        gap:16px;
+        margin:0;
+        padding:0 8px;
+        text-align:center;
+        transform:translate3d(var(--process-statement-shift-x,0px),var(--process-statement-rise,0px),0) scale(var(--process-statement-scale,1));
+        opacity:var(--process-statement-opacity,0);
+        transform-origin:50% 50%;
+        filter:blur(var(--process-statement-blur,0px));
+        will-change:transform,opacity,filter;
+        pointer-events:none;
       }
-      .explorations-desc {
+      .process-statement.is-intro {
+        left:50%;
+        right:auto;
+        width:100vw;
+        padding:0 24px;
+        --process-statement-shift-x:-50%;
+      }
+      .process-statement-label {
+        margin:0;
+        font-family:var(--font-body);
         font-size:12px;
-        color:var(--grey-m);
-        line-height:1.85;
-        font-weight:300;
+        line-height:1.6;
+        color:var(--project);
+        letter-spacing:.12em;
+        text-transform:uppercase;
       }
-      .explorations-quote {
-        font-size:clamp(14px,1.8vw,20px);
+      .process-statement-title {
+        margin:0;
+        font-family:var(--font-brand);
+        font-size:12px;
+        line-height:2;
+        letter-spacing:.06em;
+        font-weight:400;
         color:var(--black);
-        line-height:1.5;
-        border-left:2px solid var(--project);
-        padding-left:24px;
+      }
+      .process-statement-copy {
+        margin:0;
+        max-width:none;
+        font-family:var(--font-body);
+        font-size:12px;
+        line-height:1.9;
+        letter-spacing:.02em;
+        color:var(--grey-m);
         font-weight:300;
       }
-      .ex-masonry {
-        columns:3;
-        column-gap:3px;
+      .process-statement-copy--intro {
+        max-width:none;
+        font-family:var(--font-brand);
+        font-size:12px;
+        line-height:2;
+        letter-spacing:.06em;
+        font-weight:400;
+        color:var(--black);
       }
-      .ex-item {
-        break-inside:avoid;
-        margin-bottom:3px;
-        background:#111114;
-        border:1px solid rgba(0,246,255,.07);
+      .process-gallery {
+        position:relative;
+        display:flex;
+        flex-direction:column;
+        width:100vw;
+        gap:32px;
+        margin-left:calc(50% - 50vw);
+        padding:8px 24px 0;
+        box-sizing:border-box;
+        opacity:var(--process-gallery-opacity,1);
+        transform:translate3d(0,var(--process-gallery-y,0px),0);
+        will-change:transform,opacity;
+      }
+      .process-grid-row {
+        display:grid;
+        grid-template-columns:repeat(6,minmax(0,1fr));
+        gap:14px;
+        align-items:start;
+      }
+      .process-grid-item {
+        position:relative;
+        grid-column:var(--col-start-mobile,auto) / var(--col-end-mobile,span 6);
+        opacity:var(--card-opacity,1);
+        transform:translate3d(var(--spread-x,0px),var(--base-shift-mobile,0px),0);
+        will-change:transform;
+        z-index:var(--process-card-z,0);
+      }
+      .process-grid-media {
+        position:relative;
+        width:100%;
+        margin:0 auto;
+        min-height:180px;
+        height:var(--media-height,250px);
+        max-height:250px;
+        overflow:hidden;
+        background:var(--white);
+        transform:translate3d(var(--frame-shift-x,0px),var(--frame-shift-y,0px),0) perspective(1200px) rotateX(var(--tilt-y,0deg)) rotateY(var(--tilt-x,0deg)) scale3d(var(--frame-scale,1),var(--frame-scale,1),1);
+        transform-style:preserve-3d;
+        transform-origin:50% 50%;
+        will-change:transform;
+      }
+      .process-grid-parallax {
+        position:absolute;
+        inset:12px;
         display:flex;
         align-items:center;
         justify-content:center;
-        font-size:9px;
-        color:rgba(0,246,255,.2);
-        letter-spacing:.04em;
+        transform:translate3d(var(--float-x,0px),var(--float-y,0px),24px);
+        will-change:transform;
+      }
+      .process-grid-parallax img {
+        width:100%;
+        height:100%;
+        object-fit:contain;
+        object-position:center;
+        display:block;
+        filter:saturate(.98) contrast(1.02);
+        backface-visibility:hidden;
+      }
+      @media(min-width:1025px) {
+        .process-sticky-stage {
+          grid-template-columns:repeat(12,minmax(0,1fr));
+          gap:16px;
+        }
+        .process-statements {
+          grid-column:5 / span 4;
+        }
+        .process-gallery {
+          gap:40px;
+        }
+        .process-grid-row {
+          grid-template-columns:repeat(12,minmax(0,1fr));
+          gap:16px;
+        }
+        .process-grid-item {
+          grid-column:var(--col-start,auto) / var(--col-end,span 12);
+          transform:translate3d(var(--spread-x,0px),var(--base-shift,0px),0);
+        }
+      }
+      @media(max-width:900px) {
+        #process {
+          padding-bottom:104px;
+        }
+        .process-shell {
+          padding:0 16px;
+        }
+        .process-sticky-stage {
+          top:max(var(--nav-h),calc(50vh - 160px));
+          height:320px;
+          padding:0 16px;
+        }
+        .process-statements {
+          grid-column:2 / span 4;
+          width:100%;
+          min-height:320px;
+        }
+        .process-statement-title {
+          font-size:12px;
+        }
+        .process-statement.is-intro {
+          padding:0 16px;
+        }
+        .process-statement-copy {
+          font-size:12px;
+          line-height:1.9;
+        }
+        .process-gallery {
+          gap:24px;
+          padding:8px 16px 0;
+        }
+      }
+      /* ====== OFFLINE ====== */
+      #offline {
+        --offline-panel-width:250px;
+        --offline-panel-height:180px;
+        --offline-panel-radius:0px;
+        --offline-panel-y:0px;
+        --offline-scene-scale:1.22;
+        --offline-scene-opacity:1;
+        --offline-media-opacity:1;
+        --offline-media-shadow-alpha:0;
+        --offline-media-overlay-opacity:.94;
+        --offline-copy-opacity:0;
+        --offline-copy-visibility:hidden;
+        --offline-header-shift-x:72px;
+        --offline-copy-shift-y:48px;
+        --offline-copy-scale:.96;
+        --offline-copy-blur:18px;
+        --offline-line-scale:.18;
+        --offline-line-opacity:.18;
+        --offline-hover-x:50%;
+        --offline-hover-y:50%;
+        --offline-check-opacity:0;
+        --offline-grid-opacity:.18;
+        background:var(--white);
+        height:2200px;
+        padding:0;
+        overflow:clip;
+      }
+      .offline-sticky-stage {
+        position:sticky;
+        top:0;
+        height:100vh;
+        overflow:hidden;
+      }
+      .offline-media-frame {
+        position:absolute;
+        top:0;
+        left:50%;
+        width:var(--offline-panel-width);
+        height:var(--offline-panel-height);
+        border-radius:var(--offline-panel-radius);
+        overflow:hidden;
+        transform:translate3d(-50%,var(--offline-panel-y),0) scale(var(--offline-scene-scale));
+        box-shadow:0 40px 120px rgba(0,0,0,var(--offline-media-shadow-alpha));
+        opacity:var(--offline-media-opacity,1);
+        background:#060709;
+      }
+      .offline-media-video {
+        position:absolute;
+        inset:0;
+        z-index:0;
+        width:100%;
+        height:100%;
+        object-fit:cover;
+        object-position:center;
+        opacity:var(--offline-scene-opacity);
+        transform:scale(var(--offline-scene-scale));
+        transform-origin:50% 50%;
+        will-change:transform;
+      }
+      .offline-hover-layer {
+        position:absolute;
+        inset:0;
+        z-index:2;
+        overflow:hidden;
+        pointer-events:none;
+        opacity:1;
+      }
+      .offline-distortion-canvas {
+        position:absolute;
+        inset:0;
+        width:100%;
+        height:100%;
+        display:block;
+        opacity:var(--offline-check-opacity);
+        transition:opacity .08s linear;
+      }
+      .offline-grid-overlay {
+        position:absolute;
+        inset:0;
+        background:
+          repeating-linear-gradient(0deg,rgba(255,183,66,.28) 0 1px,transparent 1px 24px),
+          repeating-linear-gradient(90deg,rgba(255,183,66,.28) 0 1px,transparent 1px 24px);
+        background-color:rgba(255,183,66,.1);
+        opacity:var(--offline-grid-opacity);
+        mix-blend-mode:normal;
+        transform:translateZ(0);
+      }
+      .offline-media-frame::after {
+        content:'';
+        position:absolute;
+        inset:0;
+        background:
+          linear-gradient(180deg,rgba(13,13,15,.1) 0%,rgba(13,13,15,.2) 44%,rgba(13,13,15,.66) 100%),
+          linear-gradient(90deg,rgba(13,13,15,.48) 0%,rgba(13,13,15,.12) 36%,rgba(13,13,15,.1) 68%,rgba(13,13,15,.52) 100%);
+        opacity:var(--offline-media-overlay-opacity);
+        z-index:1;
+        pointer-events:none;
+      }
+      .offline-content {
+        position:relative;
+        z-index:1;
+        height:100%;
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        gap:52px;
+        padding:calc(var(--nav-h) + 24px) 0 36px;
+        box-sizing:border-box;
+        opacity:var(--offline-copy-opacity);
+        visibility:var(--offline-copy-visibility);
+        transform:translate3d(0,0,0) scale(var(--offline-copy-scale));
+        filter:blur(var(--offline-copy-blur));
+      }
+      .offline-header {
+        width:min(1200px,100%);
+        margin:0 auto;
+        display:flex;
+        align-items:center;
+        gap:32px;
+        transform:translate3d(var(--offline-header-shift-x),0,0);
+      }
+      .offline-number {
+        font-family:var(--font-body);
+        font-size:12px;
+        color:rgba(255,255,255,.52);
+        letter-spacing:.14em;
         text-transform:uppercase;
+        white-space:nowrap;
       }
-      .ex-item.r1 {
-        aspect-ratio:4/5;
+      .offline-line {
+        flex:1;
+        height:1px;
+        background:rgba(255,255,255,.28);
+        transform-origin:0 50%;
+        transform:scaleX(var(--offline-line-scale));
+        opacity:var(--offline-line-opacity);
       }
-      .ex-item.r2 {
-        aspect-ratio:3/4;
+      .offline-suptitle {
+        font-family:var(--font-body);
+        font-size:10px;
+        color:var(--brand);
+        letter-spacing:.14em;
+        text-transform:uppercase;
+        white-space:nowrap;
       }
-      .ex-item.r3 {
-        aspect-ratio:1/1;
+      .offline-copy-wrap {
+        width:min(1200px,100%);
+        margin:0 auto;
+        display:grid;
+        grid-template-columns:repeat(12,minmax(0,1fr));
+        gap:16px;
+        align-items:end;
+        transform:translate3d(0,var(--offline-copy-shift-y),0);
       }
-      .ex-item.r4 {
-        aspect-ratio:16/9;
+      .offline-copy {
+        grid-column:7 / span 4;
       }
-      .ex-item.r5 {
-        aspect-ratio:4/3;
+      #offline .section-eyebrow {
+        margin-bottom:24px;
+      }
+      #offline .section-h2 {
+        color:var(--white);
+        margin:0;
+      }
+      .offline-intro {
+        font-size:13px;
+        color:rgba(255,255,255,.64);
+        line-height:1.9;
+        margin-top:28px;
+        font-weight:300;
+      }
+      .offline-caption {
+        font-size:10px;
+        color:rgba(255,255,255,.88);
+        letter-spacing:.08em;
+        text-transform:uppercase;
+        width:100%;
+        margin:22px 0 0;
+        text-align:left;
+        transform:translate3d(0,var(--offline-copy-shift-y),0);
+      }
+      @media(max-width:900px) {
+        #offline {
+          height:1900px;
+        }
+        .offline-content {
+          gap:36px;
+          padding:calc(var(--nav-h) + 20px) 16px 24px;
+        }
+        .offline-header {
+          gap:16px;
+        }
+        .offline-copy-wrap {
+          grid-template-columns:1fr;
+          gap:24px;
+          align-items:start;
+        }
+        .offline-copy {
+          grid-column:auto;
+        }
+        .offline-caption {
+          align-self:auto;
+        }
+        .offline-hover-layer {
+          display:none;
+        }
       }
       /* ====== CONTRIBUTIONS ====== */
       #contributions {
@@ -1195,124 +1427,37 @@
         line-height:1.75;
         font-weight:300;
       }
-      /* ====== OUTCOME ====== */
-      #outcome {
-        background:#0D0D0F;
-        padding:100px 40px;
-      }
-      .outcome-grid {
-        display:grid;
-        grid-template-columns:1.2fr 1fr;
-        gap:100px;
-        margin-top:60px;
-        align-items:start;
-      }
-      .outcome-text {
-        font-size:13px;
-        color:rgba(255,255,255,.5);
-        line-height:1.9;
-        font-weight:300;
-      }
-      .outcome-text p+p {
-        margin-top:18px;
-      }
-      .metric-item {
-        padding:28px 0;
-        border-bottom:1px solid rgba(0,246,255,.1);
-      }
-      .metric-item:first-child {
-        border-top:1px solid rgba(0,246,255,.1);
-      }
-      .metric-num {
-        font-family:var(--font-brand);
-        font-size:clamp(26px,4vw,48px);
-        color:var(--project);
-        line-height:1;
-        margin-bottom:8px;
-      }
-      .metric-desc {
-        font-size:12px;
-        color:rgba(255,255,255,.35);
-        letter-spacing:.04em;
-        line-height:1.5;
-        font-weight:300;
-      }
-      /* ====== FOOTER CTA ====== */
-      #footer-cta {
-        background:var(--white);
-        padding:80px 40px;
-        border-top:1px solid rgba(24,24,24,.1);
-      }
-      .cta-inner {
-        max-width:1200px;
-        margin:0 auto;
-        display:flex;
-        align-items:center;
-        justify-content:space-between;
-        gap:40px;
-      }
-      .cta-label {
-        font-size:10px;
-        color:var(--grey-l);
-        letter-spacing:.1em;
-        text-transform:uppercase;
-        margin-bottom:14px;
-      }
-      .cta-next {
-        font-family:var(--font-brand);
-        font-size:clamp(16px,3vw,32px);
-        color:var(--black);
-        text-decoration:none;
-        display:inline-flex;
-        align-items:center;
-        gap:16px;
-        transition:color .2s;
-      }
-      .cta-next:hover {
-        color:var(--brand);
-      }
-      .cta-next svg {
-        width:22px;
-        height:22px;
-        stroke:currentColor;
-        fill:none;
-        stroke-width:1.5;
-        stroke-linecap:square;
-        flex-shrink:0;
-      }
-      .cta-back {
-        font-size:12px;
-        color:var(--grey-m);
-        text-decoration:none;
-        letter-spacing:.06em;
-        text-transform:uppercase;
-        border-bottom:1px solid rgba(24,24,24,.18);
-        padding-bottom:2px;
-        transition:color .18s,border-color .18s;
-      }
-      .cta-back:hover {
-        color:var(--brand);
-        border-color:var(--brand);
-      }
       /* FOOTER */
       footer {
         background:var(--white);
         border-top:1px solid rgba(24,24,24,.1);
-        height:60px;
+        padding:32px 40px;
         display:flex;
         align-items:center;
         justify-content:space-between;
-        padding:0 40px;
+        flex-wrap:wrap;
+        gap:16px;
+        position:relative;
+        z-index:1;
+      }
+      .footer-inner {
+        width:100%;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:16px;
+        flex-wrap:wrap;
       }
       .footer-copy {
         font-size:12px;
         color:var(--grey-m);
       }
       .footer-copy span {
-        color:var(--black);
+        color:var(--brand);
       }
       .footer-socials {
         display:flex;
+        align-items:center;
         gap:20px;
       }
       .social-link {
@@ -1360,7 +1505,7 @@
           <a href="ora.html" class="dropdown-item active">
             <span class="dropdown-dot">
             </span>ORA</a>
-            <a href="https://www.meedloyalty.com/" target="_blank" rel="noreferrer" class="dropdown-item">
+            <a href="https://www.meedloyalty.com/" target="_blank" rel="noopener noreferrer" class="dropdown-item">
               <span class="dropdown-dot">
               </span>Meed</a>
               <a href="cheddar.html" class="dropdown-item">
@@ -1372,7 +1517,7 @@
                   <a href="vfx.html" class="dropdown-item">
                     <span class="dropdown-dot">
                     </span>VFX</a>
-                    <a href="https://www.artstation.com/mialyk" target="_blank" rel="noreferrer" class="dropdown-item">
+                    <a href="https://www.artstation.com/mialyk" target="_blank" rel="noopener noreferrer" class="dropdown-item">
                       <span class="dropdown-dot">
                       </span>Illustration</a>
                     </div>
@@ -1415,20 +1560,6 @@
                 </canvas>
                 <canvas id="donut-canvas">
                 </canvas>
-                <div class="hero-lines">
-                  <div class="hero-line">
-                    <a class="hero-line-label" href="#overview">Overview</a>
-                  </div>
-                  <div class="hero-line">
-                    <a class="hero-line-label" href="#process">Process</a>
-                  </div>
-                  <div class="hero-line">
-                    <a class="hero-line-label" href="#ui-direction">UI Direction</a>
-                  </div>
-                  <div class="hero-line">
-                    <a class="hero-line-label" href="#outcome">Outcome</a>
-                  </div>
-                </div>
                 <div class="hero-fade">
                 </div>
                 <div class="hero-tagline" aria-hidden="true">
@@ -1481,8 +1612,8 @@
                           </div>
                         </div>
                         <div class="overview-status-bar">
-                          <div class="overview-status-copy">ORA is an AI ? blockchain infrastructure project spanning multiple initiatives, products, and technical layers.</div>
-                          <div class="overview-status-copy">My role focused on bringing clarity to that complexity ??not by reducing its ambition, but by giving it a stronger narrative, sharper structure, and more coherent visual direction.</div>
+                          <div class="overview-status-copy">ORA is an AI / blockchain infrastructure project spanning multiple initiatives, products, and technical layers.</div>
+                          <div class="overview-status-copy">My role focused on bringing clarity to that complexity - not by reducing its ambition, but by giving it a stronger narrative, sharper structure, and more coherent visual direction.</div>
                           <div class="overview-status-copy">The work extended across interface thinking, ecosystem communication, and broader creative output, shaping how ORA could be seen, understood, and experienced.</div>
                         </div>
                       </div>
@@ -1492,213 +1623,96 @@
               </section>
               <!-- ====== PROCESS ====== -->
               <section id="process">
-                <div class="section-inner">
-                  <div class="section-eyebrow">
-                    <span>Process</span>
-                    <span class="section-num">02</span>
-                  </div>
-                  <p class="process-intro">A large part of the work was not only visual execution, but building a clearer logic for how the ecosystem should be understood.</p>
-                  <div class="process-cards">
-                    <div class="pcard">
-                      <div class="pcard-num">01</div>
-                      <div class="pcard-title">Understand the system</div>
-                      <p class="pcard-desc">I started by understanding the logic behind each initiative ??not just the interface layer, but the protocol thinking underneath.</p>
-                    </div>
-                    <div class="pcard">
-                      <div class="pcard-num">02</div>
-                      <div class="pcard-title">Translate complexity</div>
-                      <p class="pcard-desc">I turned abstract research and technical concepts into clearer product and communication structures.</p>
-                    </div>
-                    <div class="pcard">
-                      <div class="pcard-num">03</div>
-                      <div class="pcard-title">Build hierarchy across products</div>
-                      <p class="pcard-desc">I created a more coherent information architecture across DSC, IMO Launchpad, and AI Settlement.</p>
-                    </div>
-                    <div class="pcard">
-                      <div class="pcard-num">04</div>
-                      <div class="pcard-title">Shape trust through design</div>
-                      <p class="pcard-desc">I explored visual directions that felt precise, calm, and system-led rather than overly promotional.</p>
-                    </div>
-                    <div class="pcard">
-                      <div class="pcard-num">05</div>
-                      <div class="pcard-title">Align teams through design</div>
-                      <p class="pcard-desc">Design acted as a bridge across research, engineering, and go-to-market perspectives.</p>
-                    </div>
-                  </div>
-                </div>
-              </section>
-              <!-- ====== UI DIRECTION ====== -->
-              <section id="ui-direction">
-                <div class="section-inner">
-                  <div class="section-eyebrow">
-                    <span>UI Direction</span>
-                    <span class="section-num">03</span>
-                  </div>
-                  <h2 class="section-h2">Interface as argument</h2>
-                  <p class="ui-intro">I explored interface directions that could communicate technical credibility without feeling cold, generic, or overly dense. The aim was to create product surfaces that felt structured, readable, and aligned with ORA's broader ecosystem narrative ??balancing precision, clarity, and restraint across digital touchpoints.</p>
-                  <div class="ui-video-main media-ph">[ Interface Walkthrough ??Video ]</div>
-                  <div class="ui-screen-grid">
-                    <div class="ui-cell media-ph">DSC Product</div>
-                    <div class="ui-cell media-ph">IMO Launchpad</div>
-                    <div class="ui-cell media-ph">AI Settlement</div>
-                  </div>
-                  <div class="ui-captions">
-                    <div class="ui-cap-item">
-                      <div class="ui-cap-num">01</div>
-                      <p class="ui-cap-text">Product surfaces designed for clarity and technical trust.</p>
-                    </div>
-                    <div class="ui-cap-item">
-                      <div class="ui-cap-num">02</div>
-                      <p class="ui-cap-text">Exploring interface language across ecosystem-facing pages.</p>
-                    </div>
-                    <div class="ui-cap-item">
-                      <div class="ui-cap-num">03</div>
-                      <p class="ui-cap-text">Balancing structure, motion, and restraint.</p>
-                    </div>
-                    <div class="ui-cap-item">
-                      <div class="ui-cap-num">04</div>
-                      <p class="ui-cap-text">Translating infrastructure complexity into a more legible visual system.</p>
+                <div class="process-shell">
+                  <div class="process-sticky-stage">
+                    <div class="process-statements" data-process-statements>
+                      <article class="process-statement is-intro">
+                        <p class="process-statement-copy process-statement-copy--intro">A large part of the work was not only visual execution,<br>but building a clearer logic for<br>how the ecosystem should be understood</p>
+                      </article>
+                      <article class="process-statement">
+                        <p class="process-statement-label">01</p>
+                        <h3 class="process-statement-title">Understand the system</h3>
+                        <p class="process-statement-copy">I started by understanding the logic behind each initiative<br>not just the interface layer, but the protocol thinking underneath.</p>
+                      </article>
+                      <article class="process-statement">
+                        <p class="process-statement-label">02</p>
+                        <h3 class="process-statement-title">Translate complexity</h3>
+                        <p class="process-statement-copy">I turned abstract research and technical concepts into clearer product and communication structures.</p>
+                      </article>
+                      <article class="process-statement">
+                        <p class="process-statement-label">03</p>
+                        <h3 class="process-statement-title">Build hierarchy across products</h3>
+                        <p class="process-statement-copy">I created a more coherent information architecture<br>across DSC, IMO Launchpad, and AI Settlement.</p>
+                      </article>
+                      <article class="process-statement">
+                        <p class="process-statement-label">04</p>
+                        <h3 class="process-statement-title">Shape trust through design</h3>
+                        <p class="process-statement-copy">I explored visual directions that felt precise, calm,<br>and system-led rather than overly promotional.</p>
+                      </article>
+                      <article class="process-statement">
+                        <p class="process-statement-label">05</p>
+                        <h3 class="process-statement-title">Align teams through design</h3>
+                        <p class="process-statement-copy">Leading design acted as a bridge across<br>research, engineering, and go-to-market perspectives.</p>
+                      </article>
                     </div>
                   </div>
+                  <div class="process-gallery" data-process-gallery></div>
                 </div>
               </section>
               <!-- ====== OFFLINE PRESENCE ====== -->
               <section id="offline">
-                <div class="section-inner">
-                  <div class="section-eyebrow ora-ey">
-                    <span>Offline Presence</span>
-                    <span class="section-num" style="color:rgba(255,255,255,.3)">04</span>
-                  </div>
-                  <h2 class="section-h2">Beyond<br>screens</h2>
-                  <p class="offline-intro">Beyond screens, I also extended the visual direction into offline and ecosystem-facing contexts. This part of the work focused on how ORA could appear in real-world settings with the same sense of clarity, atmosphere, and cohesion ??carrying the project's tone beyond interface design and into community-facing moments.</p>
-                  <div class="offline-grid">
-                    <div class="offline-img tall media-ph">[ Ecosystem Event ]</div>
-                    <div class="offline-img wide media-ph">[ Visual Language in Environment ]</div>
-                    <div class="offline-img sq media-ph">[ Community Presence ]</div>
-                  </div>
-                  <p class="offline-caption">Extending the visual language ??ORA 2024</p>
-                </div>
-              </section>
-              <!-- ====== VISUAL EXPLORATIONS ====== -->
-              <section id="visual-explorations">
-                <div class="section-inner">
-                  <div class="section-eyebrow">
-                    <span>Visual Explorations</span>
-                    <span class="section-num">05</span>
-                  </div>
-                  <div class="explorations-intro">
-                    <p class="explorations-desc">Alongside interface and communication work, I developed visual studies and artwork to explore tone, atmosphere, and a more authored creative language for the project. These explorations helped define how ORA could feel ??not only as a product ecosystem, but as a visual world with its own rhythm, texture, and point of view.</p>
-                    <blockquote class="explorations-quote">"These explorations helped define how ORA could feel ??not only as a product ecosystem, but as a visual world."</blockquote>
-                  </div>
-                  <div class="ex-masonry">
-                    <div class="ex-item r1">Early visual studies ??tone &amp; texture</div>
-                    <div class="ex-item r3">Atmosphere beyond functional UI</div>
-                    <div class="ex-item r4">System feeling explorations</div>
-                    <div class="ex-item r2">Authored visual layer studies</div>
-                    <div class="ex-item r5">Abstraction &amp; structure</div>
-                    <div class="ex-item r1">Ecosystem identity directions</div>
-                    <div class="ex-item r3">Motion &amp; rhythm tests</div>
-                    <div class="ex-item r2">Final visual language</div>
-                  </div>
-                </div>
-              </section>
-              <!-- ====== KEY CONTRIBUTIONS ====== -->
-              <section id="contributions">
-                <div class="section-inner">
-                  <div class="section-eyebrow">
-                    <span>Key Contributions</span>
-                    <span class="section-num">06</span>
-                  </div>
-                  <div class="contrib-grid">
-                    <div class="contrib-block">
-                      <div class="contrib-kw">Creative Direction</div>
-                      <p class="contrib-line">Led the visual and narrative direction across product, ecosystem, and communication touchpoints.</p>
-                    </div>
-                    <div class="contrib-block">
-                      <div class="contrib-kw">System Clarity</div>
-                      <p class="contrib-line">Translated complex infrastructure thinking into clearer structures and more legible experiences.</p>
-                    </div>
-                    <div class="contrib-block">
-                      <div class="contrib-kw">Interface Language</div>
-                      <p class="contrib-line">Developed UI directions that balanced precision, trust, and restraint.</p>
-                    </div>
-                    <div class="contrib-block">
-                      <div class="contrib-kw">Ecosystem Expression</div>
-                      <p class="contrib-line">Extended ORA's presence across digital, physical, and visual mediums.</p>
+                <div class="offline-sticky-stage">
+                  <div class="offline-media-frame">
+                    <video class="offline-media-video" autoplay muted loop playsinline preload="auto" aria-hidden="true" tabindex="-1">
+                      <source src="assets/images/Ora/offline.mp4" type="video/mp4">
+                    </video>
+                    <div class="offline-hover-layer" aria-hidden="true">
+                      <canvas class="offline-distortion-canvas"></canvas>
+                      <div class="offline-grid-overlay"></div>
                     </div>
                   </div>
-                </div>
-              </section>
-              <!-- ====== OUTCOME ====== -->
-              <section id="outcome">
-                <div class="section-inner">
-                  <div class="section-eyebrow ora-ey">
-                    <span>Outcome</span>
-                    <span class="section-num" style="color:rgba(255,255,255,.3)">07</span>
-                  </div>
-                  <div class="outcome-grid">
-                    <div>
-                      <h2 class="section-h2" style="color:var(--white)">What landed</h2>
-                      <div class="outcome-text" style="margin-top:32px;">
-                        <p>ORA launched with a brand that read immediately as premium without ever feeling cold. The design system was robust enough that the team extended it independently through post-launch features ??with no design debt.</p>
-                        <p>The offline presence pulled in retail enquiries without any formal outreach. The app onboarding tested at a 94% completion rate in beta ??significantly above category benchmarks ??and the brand received press coverage in three design publications within the first month.</p>
-                      </div>
+                  <div class="section-inner offline-content">
+                    <div class="offline-header">
+                      <div class="offline-line"></div>
+                      <div class="offline-suptitle">Offline Presence</div>
                     </div>
-                    <div>
-                      <div class="metric-item">
-                        <div class="metric-num">94%</div>
-                        <div class="metric-desc">Onboarding completion rate in beta</div>
-                      </div>
-                      <div class="metric-item">
-                        <div class="metric-num">3.2?</div>
-                        <div class="metric-desc">Brand recall vs. competitor benchmark</div>
-                      </div>
-                      <div class="metric-item">
-                        <div class="metric-num">0</div>
-                        <div class="metric-desc">Design system breakdowns post-launch</div>
+                    <div class="offline-copy-wrap">
+                      <div class="offline-copy">
+                        <h2 class="section-h2">Beyond<br>screens</h2>
+                        <p class="offline-intro">Beyond the screen, I led the design team in extending ORA's visual direction into offline and ecosystem-facing contexts. The work focused on how ORA could show up in real-world settings with the same clarity, atmosphere, and cohesion, carrying the project's tone beyond interface design into broader community-facing moments.</p>
+                        <p class="offline-caption">Ethereum x AI Confluence Day at #TOKEN2049 #2024</p>
                       </div>
                     </div>
                   </div>
                 </div>
               </section>
-              <!-- ====== FOOTER CTA ====== -->
-              <div id="footer-cta">
-                <div class="cta-inner">
-                  <div>
-                    <p class="cta-label">Next Project</p>
-                    <a href="helpurr.html" class="cta-next">        Helpurr        <svg viewBox="0 0 24 24">
-                      <line x1="5" y1="12" x2="19" y2="12"/>
-                      <polyline points="12 5 19 12 12 19"/>
-                    </svg>
-                  </a>
-                </div>
-                <a href="index.html" class="cta-back">??Back to all projects</a>
-              </div>
             </div>
             <!-- FOOTER -->
             <footer>
-              <div class="footer-copy">??2026 <span>mialyk</span> ??All rights reserved</div>
-              <div class="footer-socials">
-                <a href="https://www.linkedin.com/in/mia-lyk" target="_blank" class="social-link" title="LinkedIn">
-                  <svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                  </svg>
-                </a>
-                <a href="https://www.instagram.com/mia_lyk" target="_blank" class="social-link" title="Instagram">
-                  <svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
-                  </svg>
-                </a>
-                <a href="https://www.artstation.com/mialyk" target="_blank" class="social-link" title="ArtStation">
-                  <svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M0 17.723l2.027 3.505h.001a2.424 2.424 0 0 0 2.164 1.333h13.457l-2.792-4.838H0zm24 .025c0-.484-.143-.935-.388-1.314L15.728 2.728a2.424 2.424 0 0 0-2.164-1.333H9.419L21.598 22.54l1.92-3.325c.378-.637.482-.919.482-1.467zm-11.129-3.462L7.428 4.858l-5.444 9.428h10.887z"/>
-                  </svg>
-                </a>
-                <a href="https://x.com/elwgrich/" target="_blank" class="social-link" title="X">
-                  <svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.213 5.567 5.95-5.567zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                  </svg>
-                </a>
+              <div class="footer-inner">
+                <div class="footer-copy">2026 <span>mialyk</span> // All rights reserved</div>
+                <div class="footer-socials">
+                  <a href="https://www.linkedin.com/in/mia-lyk" target="_blank" rel="noopener noreferrer" class="social-link" title="LinkedIn">
+                    <svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                    </svg>
+                  </a>
+                  <a href="https://www.instagram.com/mia_lyk" target="_blank" rel="noopener noreferrer" class="social-link" title="Instagram">
+                    <svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+                    </svg>
+                  </a>
+                  <a href="https://www.artstation.com/mialyk" target="_blank" rel="noopener noreferrer" class="social-link" title="ArtStation">
+                    <svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M0 17.723l2.027 3.505h.001a2.424 2.424 0 0 0 2.164 1.333h13.457l-2.792-4.838H0zm24 .025c0-.484-.143-.935-.388-1.314L15.728 2.728a2.424 2.424 0 0 0-2.164-1.333H9.419L21.598 22.54l1.92-3.325c.378-.637.482-.919.482-1.467zm-11.129-3.462L7.428 4.858l-5.444 9.428h10.887z"/>
+                    </svg>
+                  </a>
+                  <a href="https://x.com/elwgrich/" target="_blank" rel="noopener noreferrer" class="social-link" title="X">
+                    <svg class="pxi pxi--md" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.213 5.567 5.95-5.567zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                  </a>
+                </div>
               </div>
             </footer>
             <!-- PASSWORD MODAL -->
@@ -1755,11 +1769,783 @@
         requestAnimationFrame(loop); if(ts - lastTs < 83) return; t += 0.032; draw(); lastTs = ts;
       }
       resize(); window.addEventListener('resize', resize); loop(0); setTimeout(function() {
-        document.querySelector('.hero-lines').classList.add('revealed');
+        const heroLines = document.querySelector('.hero-lines');
+        if(heroLines) heroLines.classList.add('revealed');
       }, 120);
     })();
     (function() {
-      const section=document.getElementById('overview'); if(!section)return; const media=section.querySelector('.overview-img'); const video=media?media.querySelector('video'):null; const textWrap=section.querySelector('.overview-text'); const lines=Array.from(section.querySelectorAll('.overview-status-copy')); const prefersReduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches; lines.forEach(function(line) {
+      const hoverCopy = document.querySelector('.hero-tagline-copy--hover');
+      if(!hoverCopy) return;
+      const lines = Array.from(hoverCopy.querySelectorAll('.hero-tagline-line'));
+      const textNodes = lines.map(function(line) {
+        return line.querySelector('.hero-tagline-line-text');
+      });
+      if(!lines.length || textNodes.some(function(node) { return !node; })) return;
+      const basePhrase = textNodes.map(function(node) {
+        return node.textContent.trim();
+      });
+      const scrambleGlyphs = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*+=?/<>[]';
+      const phrasePool = [
+        ['Layered', 'systems'],
+        ['Shared', 'language'],
+        ['Connected', 'products'],
+        ['Complex', 'ecosystems']
+      ];
+      let lastPhraseKey = basePhrase.join(' ');
+      let scrambleRunId = 0;
+      let isHovering = false;
+      function randomGlyph() {
+        return scrambleGlyphs[Math.floor(Math.random() * scrambleGlyphs.length)];
+      }
+      function buildScrambleFrame(target, resolvedCount) {
+        let output = '';
+        for(let i = 0; i < target.length; i++) {
+          const char = target.charAt(i);
+          if(char === ' ') {
+            output += ' ';
+          } else if(i < resolvedCount) {
+            output += char;
+          } else {
+            output += randomGlyph();
+          }
+        }
+        return output;
+      }
+      function animateLine(node, target, delay, runId) {
+        const totalFrames = Math.max(8, Math.min(16, target.length + 6));
+        let frame = 0;
+        node.classList.add('is-scrambling');
+        function step() {
+          if(runId !== scrambleRunId) return;
+          const resolved = Math.max(0, Math.floor((frame / totalFrames) * (target.length + 2)) - 1);
+          node.textContent = buildScrambleFrame(target, resolved);
+          frame += 1;
+          if(frame <= totalFrames) {
+            window.setTimeout(step, delay > 0 && frame === 1 ? delay : 36);
+          } else {
+            node.textContent = target;
+            node.classList.remove('is-scrambling');
+          }
+        }
+        step();
+      }
+      function animatePhrase(phrase) {
+        scrambleRunId += 1;
+        const runId = scrambleRunId;
+        lines.forEach(function(line, index) {
+          const target = phrase[index] || basePhrase[index] || '';
+          line.dataset.text = target;
+          animateLine(textNodes[index], target, index * 80, runId);
+        });
+      }
+      function setPhraseInstant(phrase) {
+        scrambleRunId += 1;
+        lines.forEach(function(line, index) {
+          const target = phrase[index] || basePhrase[index] || '';
+          line.dataset.text = target;
+          textNodes[index].textContent = target;
+          textNodes[index].classList.remove('is-scrambling');
+        });
+      }
+      function pickPhrase() {
+        const candidates = phrasePool.filter(function(phrase) {
+          return phrase.length === lines.length && phrase.join(' ') !== lastPhraseKey;
+        });
+        if(!candidates.length) return basePhrase;
+        const phrase = candidates[Math.floor(Math.random() * candidates.length)];
+        lastPhraseKey = phrase.join(' ');
+        return phrase;
+      }
+      setPhraseInstant(basePhrase);
+      hoverCopy.addEventListener('mouseenter', function() {
+        if(isHovering) return;
+        isHovering = true;
+        animatePhrase(pickPhrase());
+      });
+      hoverCopy.addEventListener('mouseleave', function() {
+        isHovering = false;
+        lastPhraseKey = basePhrase.join(' ');
+        setPhraseInstant(basePhrase);
+      });
+    })();
+    (function() {
+      const processImages = [
+        "\u2609 \u211D\u00A0\u2200 Chad Discord role.jpg",
+        "A5 - 1.png",
+        "AI-powered creator economies.jpg",
+        "ARB_Chain Reactions Blurry teaser.jpg",
+        "ARB_Chain Reactions_lunach.jpg",
+        "Base Campaign \u201CJumpstart development\u201D1.jpg",
+        "Base x ORA Ed Post Image Adaptation2.png",
+        "Base x ORA Ed Post Image Adaptation3.png",
+        "Base x ORA YT Workshop Vids1.jpg",
+        "Base x ORA YT Workshop Vids2.jpg",
+        "BASE_CHAIN Reactions_lunach.jpg",
+        "Build with AI visual.jpg",
+        "collab_Chain Reactions Blurry tease.jpg",
+        "collab_Chain Reactions lunach teaser.jpg",
+        "collab_Chain Reactions lunach1.jpg",
+        "collab_Chain Reactions lunach2.jpg",
+        "collab_Chain Reactions lunach3.jpg",
+        "collab_Chain Reactions lunach4.jpg",
+        "Cover  Image.jpg",
+        "DES-3233.png",
+        "DES-3233_02.png",
+        "DevCon Rundown Tweet 02.png",
+        "DevCon Rundown Tweet 02\u2014\u20141.png",
+        "DevCon Rundown Tweet.png",
+        "End Image.jpg",
+        "Ethereum x AI  Confluence Event Announcement- KV 1.png",
+        "ETHKL1.png",
+        "Future engagement visual.jpg",
+        "GdaOtZQbcAEwaCu.jpg",
+        "GdfKjw0XUAI0HfJ.jpg",
+        "GeANZfla0AI1hFK.jpg",
+        "GeErn2ebIAA_94Y.jpg",
+        "Gg9QGRAbIAA0TzI.jpg",
+        "GkMv0iHaMAAl_w7.jpg",
+        "GpPIdKta8AUwy6C.jpg",
+        "Gq1PUcnbAAAk7GL.jpg",
+        "GrkQdkRbMAAul88.jpg",
+        "GXkb_KCbUAAnoPm 1.png",
+        "GXkb-UvbAAAiIgj 1.png",
+        "GXkb-vCawAAbpGz 1.png",
+        "GXpPpt2b0AAqh05 1.png",
+        "GZ5kUjcb0AE5T0O.jpg",
+        "Hardware & Ecosystem Support.png",
+        "Integrate with any Smart Contract using our AI Oracle.png",
+        "Key Visual.jpg",
+        "Linea_Chain Reactions_lunach.jpg",
+        "Linea_Chain Reactions_lunach-1.jpg",
+        "Linkedin_Fundraising Announcement_final.jpg",
+        "Mantle lunach_Chain Reactions Banner.jpg",
+        "Mantle lunach_Chain Reactions.jpg",
+        "Mantle_Chain Reactions Blurry tease.jpg",
+        "OP_CHAIN Reactions_lunach.jpg",
+        "ORA  X Space-Lucidity.png",
+        "ORA Game Night  is Back  + New Role Opportunity.png",
+        "ORA.jpg",
+        "ORA-1.jpg",
+        "Points Program A5 H.png",
+        "Proactive DeFi.jpg",
+        "Smarter smart contracts.jpg",
+        "This is the last tweet in this thread.jpg",
+        "Time-limited quest.jpg",
+        "Time-limited quest-1.jpg",
+        "TORA.jpg",
+        "TORA-1.jpg",
+        "TORA-2.jpg",
+        "unleash AI power onchain..jpg",
+        "Use-case visuals 1.jpg",
+        "Use-case visuals 2.jpg",
+        "V3rpg Competition Check In.png",
+        "v3rpg-1.png",
+        "Weekly Dev Challenge.png",
+        "What is IMO16_9.png",
+        "X post image.jpg",
+        "X post image-1.jpg",
+        "X Space Announcement.png"
+      ];
+      function humanizeFilename(name) {
+        return name
+          .replace(/\.[^.]+$/, '')
+          .replace(/[_-]+/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim();
+      }
+      function shuffle(items) {
+        var copy = items.slice();
+        for (var i = copy.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var temp = copy[i];
+          copy[i] = copy[j];
+          copy[j] = temp;
+        }
+        return copy;
+      }
+      function getProcessRatio(name) {
+        var ratioMap = {
+          'A5 - 1.png': '320 / 454',
+          'ETHKL1.png': '320 / 467',
+          'Base x ORA Ed Post Image Adaptation2.png': '1 / 1',
+          'Base x ORA Ed Post Image Adaptation3.png': '1 / 1',
+          'DevCon Rundown Tweet 02.png': '1 / 1',
+          'DevCon Rundown Tweet 02——1.png': '1 / 1',
+          'DevCon Rundown Tweet.png': '1 / 1',
+          'Hardware & Ecosystem Support.png': '1 / 1',
+          'ORA  X Space-Lucidity.png': '1 / 1',
+          'X post image-1.jpg': '1 / 1',
+          'X Space Announcement.png': '1 / 1',
+          'GXkb_KCbUAAnoPm 1.png': '323 / 320',
+          'GXkb-vCawAAbpGz 1.png': '323 / 320',
+          'GXkb-UvbAAAiIgj 1.png': '324 / 320',
+          'Points Program A5 H.png': '320 / 226',
+          'GXpPpt2b0AAqh05 1.png': '570 / 320',
+          'Mantle lunach_Chain Reactions Banner.jpg': '1280 / 320'
+        };
+        return ratioMap[name] || '569 / 320';
+      }
+      var galleryRoot = document.querySelector('[data-process-gallery]');
+      if (!galleryRoot) return;
+      var classified = {
+        portrait: [],
+        square: [],
+        wide: [],
+        banner: []
+      };
+      processImages.forEach(function(name) {
+        var lower = name.toLowerCase();
+        if (lower.indexOf('ethkl1') > -1 || lower.indexOf('a5 - 1') > -1) {
+          classified.portrait.push(name);
+          return;
+        }
+        if (
+          lower.indexOf('banner') > -1 ||
+          lower.indexOf('points program') > -1
+        ) {
+          classified.banner.push(name);
+          return;
+        }
+        if (
+          lower.indexOf('discord role') > -1 ||
+          lower.indexOf('announcement.png') > -1 ||
+          lower.indexOf('lucidity') > -1 ||
+          lower.indexOf('devcon rundown') > -1 ||
+          lower.indexOf('adaptation') > -1 ||
+          lower.indexOf('hardware & ecosystem support') > -1 ||
+          lower.indexOf('gxkb_') > -1 ||
+          lower.indexOf('gxkb-') > -1 ||
+          lower.indexOf('x post image-1') > -1
+        ) {
+          classified.square.push(name);
+          return;
+        }
+        classified.wide.push(name);
+      });
+      Object.keys(classified).forEach(function(key) {
+        classified[key] = shuffle(classified[key]);
+      });
+      var mediaHeights = [180, 196, 214, 232, 250];
+      function pickHeightIndex(lastIndex, previousRowIndex) {
+        var candidates = mediaHeights.map(function(_, index) {
+          return index;
+        }).filter(function(index) {
+          var farFromLast = lastIndex < 0 || Math.abs(index - lastIndex) > 1;
+          var farFromPrevRow = previousRowIndex < 0 || Math.abs(index - previousRowIndex) > 1;
+          return farFromLast && farFromPrevRow;
+        });
+        if (!candidates.length) {
+          candidates = mediaHeights.map(function(_, index) {
+            return index;
+          }).filter(function(index) {
+            return index !== lastIndex && index !== previousRowIndex;
+          });
+        }
+        if (!candidates.length) {
+          candidates = mediaHeights.map(function(_, index) {
+            return index;
+          });
+        }
+        return candidates[Math.floor(Math.random() * candidates.length)];
+      }
+      var totalImages =
+        classified.portrait.length +
+        classified.square.length +
+        classified.wide.length +
+        classified.banner.length;
+      function takeImage(preferences) {
+        for (var i = 0; i < preferences.length; i++) {
+          var key = preferences[i];
+          if (classified[key] && classified[key].length) return classified[key].shift();
+        }
+        return null;
+      }
+      var rowTemplates = [
+        [
+          { pick: ['wide'], start: 1, end: 4, mobileStart: 1, mobileEnd: 6, shift: '0px', mobileShift: '0px', opacity: '1', drift: 62, mouseX: 20, mouseY: 14, side: -1, spread: 136 },
+          { pick: ['square', 'portrait'], start: 4, end: 6, mobileStart: 4, mobileEnd: 7, shift: '98px', mobileShift: '34px', opacity: '.24', drift: 78, mouseX: 16, mouseY: 12, side: -1, spread: 84 },
+          { pick: ['square', 'wide'], start: 6, end: 9, mobileStart: 1, mobileEnd: 4, shift: '86px', mobileShift: '18px', opacity: '.22', drift: 88, mouseX: 12, mouseY: 8, side: 1, spread: 84 },
+          { pick: ['wide'], start: 9, end: 13, mobileStart: 4, mobileEnd: 7, shift: '-24px', mobileShift: '0px', opacity: '1', drift: 54, mouseX: 18, mouseY: 12, side: 1, spread: 136 }
+        ],
+        [
+          { pick: ['portrait', 'square'], start: 1, end: 3, mobileStart: 1, mobileEnd: 4, shift: '72px', mobileShift: '18px', opacity: '1', drift: 72, mouseX: 18, mouseY: 14, side: -1, spread: 124 },
+          { pick: ['wide'], start: 3, end: 6, mobileStart: 1, mobileEnd: 6, shift: '-10px', mobileShift: '0px', opacity: '.86', drift: 58, mouseX: 18, mouseY: 12, side: -1, spread: 108 },
+          { pick: ['square', 'wide'], start: 6, end: 9, mobileStart: 1, mobileEnd: 4, shift: '54px', mobileShift: '12px', opacity: '.24', drift: 72, mouseX: 14, mouseY: 10, side: 1, spread: 90 },
+          { pick: ['wide', 'banner'], start: 9, end: 13, mobileStart: 3, mobileEnd: 7, shift: '-56px', mobileShift: '-12px', opacity: '1', drift: 52, mouseX: 18, mouseY: 12, side: 1, spread: 128 }
+        ],
+        [
+          { pick: ['square', 'wide'], start: 1, end: 2, mobileStart: 1, mobileEnd: 4, shift: '-18px', mobileShift: '-8px', opacity: '.28', drift: 76, mouseX: 14, mouseY: 10, side: -1, spread: 84 },
+          { pick: ['wide'], start: 2, end: 6, mobileStart: 1, mobileEnd: 5, shift: '0px', mobileShift: '0px', opacity: '1', drift: 56, mouseX: 18, mouseY: 12, side: -1, spread: 112 },
+          { pick: ['wide'], start: 6, end: 12, mobileStart: 2, mobileEnd: 7, shift: '58px', mobileShift: '18px', opacity: '.92', drift: 60, mouseX: 18, mouseY: 12, side: 1, spread: 112 },
+          { pick: ['square', 'wide'], start: 12, end: 13, mobileStart: 4, mobileEnd: 7, shift: '-74px', mobileShift: '12px', opacity: '.18', drift: 88, mouseX: 12, mouseY: 8, side: 1, spread: 84 }
+        ],
+        [
+          { pick: ['banner', 'wide'], start: 1, end: 5, mobileStart: 1, mobileEnd: 7, shift: '28px', mobileShift: '0px', opacity: '1', drift: 46, mouseX: 16, mouseY: 10, side: -1, spread: 132 },
+          { pick: ['square', 'wide'], start: 5, end: 7, mobileStart: 1, mobileEnd: 4, shift: '-40px', mobileShift: '12px', opacity: '.24', drift: 78, mouseX: 14, mouseY: 10, side: -1, spread: 82 },
+          { pick: ['wide'], start: 7, end: 13, mobileStart: 3, mobileEnd: 7, shift: '64px', mobileShift: '-8px', opacity: '1', drift: 54, mouseX: 18, mouseY: 12, side: 1, spread: 132 }
+        ]
+      ];
+      rowTemplates = shuffle(rowTemplates);
+      var rendered = 0;
+      var templateIndex = 0;
+      var previousRowHeightIndices = [];
+      while (rendered < totalImages) {
+        var rowTemplate = rowTemplates[templateIndex % rowTemplates.length];
+        var row = document.createElement('div');
+        row.className = 'process-grid-row';
+        var rowHasContent = false;
+        var rowHeightIndices = [];
+        var lastHeightIndex = -1;
+        for (var slotIndex = 0; slotIndex < rowTemplate.length; slotIndex++) {
+          if (rendered >= totalImages) break;
+          var slot = rowTemplate[slotIndex];
+          var imageName = takeImage(slot.pick);
+          if (!imageName) continue;
+          var heightIndex = pickHeightIndex(lastHeightIndex, previousRowHeightIndices[slotIndex]);
+          var item = document.createElement('article');
+          item.className = 'process-grid-item';
+          item.dataset.drift = slot.drift;
+          item.dataset.mouseX = slot.mouseX;
+          item.dataset.mouseY = slot.mouseY;
+          item.dataset.side = slot.side;
+          item.dataset.spread = slot.spread;
+          item.dataset.cardOpacity = slot.opacity;
+          item.style.setProperty('--col-start', slot.start);
+          item.style.setProperty('--col-end', slot.end);
+          item.style.setProperty('--col-start-mobile', slot.mobileStart);
+          item.style.setProperty('--col-end-mobile', slot.mobileEnd);
+          item.style.setProperty('--base-shift', slot.shift);
+          item.style.setProperty('--base-shift-mobile', slot.mobileShift);
+          item.style.setProperty('--card-opacity', slot.opacity);
+          var media = document.createElement('div');
+          media.className = 'process-grid-media';
+          media.style.setProperty('--media-height', mediaHeights[heightIndex] + 'px');
+          var parallax = document.createElement('div');
+          parallax.className = 'process-grid-parallax';
+          var img = document.createElement('img');
+          img.loading = rendered < 6 ? 'eager' : 'lazy';
+          img.decoding = 'async';
+          img.alt = humanizeFilename(imageName);
+          img.src = 'assets/images/Ora/image/' + encodeURIComponent(imageName);
+          parallax.appendChild(img);
+          media.appendChild(parallax);
+          item.appendChild(media);
+          row.appendChild(item);
+          rowHeightIndices[slotIndex] = heightIndex;
+          lastHeightIndex = heightIndex;
+          rendered++;
+          rowHasContent = true;
+        }
+        if (rowHasContent) {
+          galleryRoot.appendChild(row);
+          previousRowHeightIndices = rowHeightIndices;
+        }
+        templateIndex++;
+      }
+    })();
+    (function() {
+      var section = document.getElementById('process');
+      if (!section) return;
+      var stage = section.querySelector('.process-sticky-stage');
+      var statements = Array.from(section.querySelectorAll('.process-statement'));
+      var layers = Array.from(section.querySelectorAll('.process-grid-item'));
+      if (!stage || !statements.length || !layers.length) return;
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var stepHeight = parseFloat(getComputedStyle(section).getPropertyValue('--process-step-height')) || 440;
+      var mouse = {
+        moving: false,
+        target: { x: 0, y: 0 },
+        current: { x: 0, y: 0 }
+      };
+      function clamp(value, min, max) {
+        return Math.max(min, Math.min(max, value));
+      }
+      function lerp(from, to, amount) {
+        return from + (to - from) * amount;
+      }
+      function ease(value) {
+        return value * value * (3 - 2 * value);
+      }
+      function debounce(delay, callback) {
+        var timeoutId = 0;
+        return function() {
+          var args = arguments;
+          clearTimeout(timeoutId);
+          timeoutId = window.setTimeout(function() {
+            callback.apply(null, args);
+          }, delay);
+        };
+      }
+      function moveEnd() {
+        mouse.moving = false;
+      }
+      var moveEndDebounced = debounce(400, moveEnd);
+      function onMove(event) {
+        if (reduceMotion) return;
+        var point = event.changedTouches ? event.changedTouches[0] : event;
+        mouse.moving = true;
+        mouse.target.x = (point.clientX / Math.max(window.innerWidth, 1)) * 2 - 1;
+        mouse.target.y = (point.clientY / Math.max(window.innerHeight, 1)) * 2 - 1;
+        moveEndDebounced();
+      }
+      function resetMove() {
+        mouse.moving = false;
+        mouse.target.x = 0;
+        mouse.target.y = 0;
+      }
+      section.addEventListener('mousemove', onMove);
+      section.addEventListener('touchmove', onMove, { passive: true });
+      section.addEventListener('mouseleave', resetMove);
+      section.addEventListener('touchend', resetMove, { passive: true });
+      function tick() {
+        if (!mouse.moving) {
+          mouse.target.x = lerp(mouse.target.x, 0, 0.08);
+          mouse.target.y = lerp(mouse.target.y, 0, 0.08);
+        }
+        mouse.current.x = lerp(mouse.current.x, mouse.target.x, reduceMotion ? 1 : 0.08);
+        mouse.current.y = lerp(mouse.current.y, mouse.target.y, reduceMotion ? 1 : 0.08);
+        var viewportHeight = window.innerHeight || 1;
+        var sectionRect = section.getBoundingClientRect();
+        var stageRect = stage.getBoundingClientRect();
+        var introProgress = clamp((viewportHeight - sectionRect.top) / Math.max(viewportHeight * 0.95, 1), 0, 1);
+        var introEase = ease(introProgress);
+        var stageProgress = clamp((viewportHeight * 0.42 - stageRect.top) / Math.max(stageRect.height, 1), 0, 1);
+        var maxStatementIndex = Math.max(statements.length - 1, 0);
+        var totalScroll = statements.length * stepHeight;
+        var localScroll = clamp(-sectionRect.top, 0, totalScroll);
+        var galleryOpacity = clamp((introEase - 0.28) / 0.72, 0, 1);
+        var sequencePosition = clamp(localScroll / stepHeight, 0, maxStatementIndex);
+        var activeIndex = Math.round(sequencePosition);
+        var statementPhase = clamp(Math.abs(sequencePosition - activeIndex) / 0.5, 0, 1);
+        var spreadInProgress = clamp(localScroll / Math.max(stepHeight, 1), 0, 1);
+        var spreadOutProgress = clamp((localScroll - stepHeight * maxStatementIndex) / Math.max(stepHeight, 1), 0, 1);
+        var spreadEase = ease(spreadInProgress) * (1 - ease(spreadOutProgress));
+        var finalStatementExit = ease(spreadOutProgress);
+        var sectionExitProgress = reduceMotion ? 0 : ease(clamp((spreadOutProgress - 0.08) / 0.92, 0, 1));
+        var blurStrength = 8;
+        statements.forEach(function(item, index) {
+          var isActiveStatement = index === activeIndex;
+          var visibility = isActiveStatement ? 1 : 0;
+          var blurDelayProgress = clamp((statementPhase - 0.71) / 0.29, 0, 1);
+          var statementScale = 1 + (1 - visibility) * 0.06 + (1 - introEase) * 0.16;
+          var statementOpacity = clamp((0.12 + introEase * 0.88) * visibility * (1 - stageProgress * 0.06), 0, 1);
+          var statementRise = (1 - introEase) * 120 + ease(statementPhase) * 34 - stageProgress * 10;
+          var statementBlur = !isActiveStatement || index === 0 ? 0 : (1 - introEase) * blurStrength + ease(blurDelayProgress) * blurStrength;
+          if (index === 0 && activeIndex === 0) {
+            var introDropEase = reduceMotion ? 1 : ease(clamp(introProgress / 0.92, 0, 1));
+            var introDropOvershoot = reduceMotion ? 0 : Math.sin(introDropEase * Math.PI) * 12 * (1 - introDropEase * 0.55);
+            statementScale = lerp(0.94, 1.02, introDropEase);
+            statementOpacity = clamp(0.08 + introDropEase * 0.92, 0, 1);
+            statementRise = lerp(-112, 0, introDropEase) + introDropOvershoot;
+            statementBlur = 0;
+          }
+          if (index === maxStatementIndex) {
+            statementOpacity = statementOpacity * (1 - finalStatementExit);
+            statementRise += finalStatementExit * 34;
+            statementBlur += finalStatementExit * blurStrength;
+            statementScale += finalStatementExit * 0.04;
+          }
+          item.style.setProperty('--process-statement-scale', statementScale.toFixed(3));
+          item.style.setProperty('--process-statement-opacity', statementOpacity.toFixed(3));
+          item.style.setProperty('--process-statement-rise', statementRise.toFixed(2) + 'px');
+          item.style.setProperty('--process-statement-blur', statementBlur.toFixed(2) + 'px');
+        });
+        section.style.setProperty('--process-bottom-fade-opacity', lerp(0, 1, sectionExitProgress).toFixed(3));
+        section.style.setProperty('--process-bottom-fade-blur', lerp(0, 14, sectionExitProgress).toFixed(2) + 'px');
+        section.style.setProperty('--process-gallery-opacity', galleryOpacity.toFixed(3));
+        section.style.setProperty('--process-gallery-y', ((1 - introEase) * 36).toFixed(2) + 'px');
+        layers.forEach(function(item) {
+          var mouseX = Number(item.dataset.mouseX || 0);
+          var mouseY = Number(item.dataset.mouseY || 0);
+          var side = Number(item.dataset.side || 0);
+          var spread = Number(item.dataset.spread || 0);
+          var baseOpacity = Number(item.dataset.cardOpacity || 1);
+          var media = item.querySelector('.process-grid-parallax');
+          var frame = item.querySelector('.process-grid-media');
+          if (!media || !frame) return;
+          var shiftY = 0;
+          var spreadX = reduceMotion ? 0 : side * spread * spreadEase;
+          item.style.setProperty('--spread-x', spreadX.toFixed(2) + 'px');
+          media.style.setProperty('--scroll-shift', shiftY.toFixed(2) + 'px');
+          media.style.setProperty('--float-x', (mouse.current.x * mouseX * 0.34).toFixed(2) + 'px');
+          media.style.setProperty('--float-y', (mouse.current.y * mouseY * 0.34).toFixed(2) + 'px');
+          var frameTiltX = mouse.current.x * mouseX * 0.14;
+          var frameTiltY = -mouse.current.y * mouseY * 0.14;
+          var frameScale = 1 + (Math.abs(mouse.current.x) + Math.abs(mouse.current.y)) * 0.012;
+          item.style.opacity = baseOpacity.toFixed(3);
+          item.style.setProperty('--process-card-z', '0');
+          frame.style.setProperty('--frame-shift-x', '0px');
+          frame.style.setProperty('--frame-shift-y', '0px');
+          frame.style.setProperty('--tilt-x', frameTiltX.toFixed(2) + 'deg');
+          frame.style.setProperty('--tilt-y', frameTiltY.toFixed(2) + 'deg');
+          frame.style.setProperty('--frame-scale', frameScale.toFixed(3));
+        });
+        requestAnimationFrame(tick);
+      }
+      tick();
+    })();
+    (function() {
+      var section = document.getElementById('offline');
+      if (!section) return;
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var hoverCapable = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+      var frame = section.querySelector('.offline-media-frame');
+      var video = section.querySelector('.offline-media-video');
+      var hoverLayer = section.querySelector('.offline-hover-layer');
+      var distortionCanvas = section.querySelector('.offline-distortion-canvas');
+      var distortionCtx = distortionCanvas ? distortionCanvas.getContext('2d', { alpha:true }) : null;
+      var hoverState = {
+        active:false,
+        targetX:0,
+        targetY:0,
+        currentX:0,
+        currentY:0,
+        velocityX:0,
+        velocityY:0,
+        strength:0,
+        ready:false,
+        width:0,
+        height:0,
+        dpr:1
+      };
+      function clamp(value, min, max) {
+        return Math.max(min, Math.min(max, value));
+      }
+      function lerp(from, to, amount) {
+        return from + (to - from) * amount;
+      }
+      function ease(value) {
+        return value * value * (3 - 2 * value);
+      }
+      function resizeDistortionCanvas() {
+        if (!frame || !distortionCanvas || !distortionCtx) return;
+        var width = Math.max(1, Math.round(frame.clientWidth));
+        var height = Math.max(1, Math.round(frame.clientHeight));
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        if (hoverState.width !== width || hoverState.height !== height || hoverState.dpr !== dpr) {
+          hoverState.width = width;
+          hoverState.height = height;
+          hoverState.dpr = dpr;
+          distortionCanvas.width = Math.round(width * dpr);
+          distortionCanvas.height = Math.round(height * dpr);
+          distortionCanvas.style.width = width + 'px';
+          distortionCanvas.style.height = height + 'px';
+        }
+      }
+      function clearDistortion() {
+        if (!distortionCtx || !distortionCanvas) return;
+        distortionCtx.setTransform(1, 0, 0, 1, 0, 0);
+        distortionCtx.clearRect(0, 0, distortionCanvas.width, distortionCanvas.height);
+      }
+      function getCoverSampleRect(sourceWidth, sourceHeight, boxWidth, boxHeight) {
+        var sourceRatio = sourceWidth / sourceHeight;
+        var boxRatio = boxWidth / boxHeight;
+        var scale;
+        var cropX = 0;
+        var cropY = 0;
+        if (sourceRatio > boxRatio) {
+          scale = boxHeight / sourceHeight;
+          cropX = (sourceWidth * scale - boxWidth) * 0.5 / scale;
+        } else {
+          scale = boxWidth / sourceWidth;
+          cropY = (sourceHeight * scale - boxHeight) * 0.5 / scale;
+        }
+        return {
+          scale:scale,
+          cropX:cropX,
+          cropY:cropY
+        };
+      }
+      function drawDistortion() {
+        if (!distortionCtx || !distortionCanvas || !video || video.readyState < 2) {
+          clearDistortion();
+          return;
+        }
+        resizeDistortionCanvas();
+        clearDistortion();
+        if (hoverState.strength < 0.025 || hoverState.width < 2 || hoverState.height < 2) return;
+        var width = hoverState.width;
+        var height = hoverState.height;
+        var dpr = hoverState.dpr;
+        var gridSize = clamp(Math.round(Math.min(width, height) * 0.06), 18, 24);
+        var speed = Math.min(26, Math.hypot(hoverState.velocityX, hoverState.velocityY));
+        var radius = Math.min(width, height) * 0.11 + speed * 0.7;
+        var sample = getCoverSampleRect(video.videoWidth || width, video.videoHeight || height, width, height);
+        var srcScale = 1 / sample.scale;
+        var startX = Math.max(0, Math.floor((hoverState.currentX - radius) / gridSize) * gridSize);
+        var endX = Math.min(width, Math.ceil((hoverState.currentX + radius) / gridSize) * gridSize);
+        var startY = Math.max(0, Math.floor((hoverState.currentY - radius) / gridSize) * gridSize);
+        var endY = Math.min(height, Math.ceil((hoverState.currentY + radius) / gridSize) * gridSize);
+        distortionCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        distortionCtx.imageSmoothingEnabled = false;
+        for (var y = startY; y < endY; y += gridSize) {
+          for (var x = startX; x < endX; x += gridSize) {
+            var centerX = x + gridSize * 0.5;
+            var centerY = y + gridSize * 0.5;
+            var dx = centerX - hoverState.currentX;
+            var dy = centerY - hoverState.currentY;
+            var distance = Math.hypot(dx, dy);
+            if (distance > radius) continue;
+            var influence = 1 - distance / radius;
+            var pulse = influence * influence * influence * hoverState.strength;
+            var angle = Math.atan2(dy || 0.0001, dx || 0.0001);
+            var cellNoise = Math.sin((x * 0.17) + (y * 0.11)) * 0.5 + 0.5;
+            var edgePush = (7 + speed * 0.55) * pulse;
+            var jitter = (cellNoise - 0.5) * gridSize * 0.55 * pulse;
+            var destinationX = clamp(x + Math.cos(angle) * edgePush + jitter, 0, width - gridSize);
+            var destinationY = clamp(y + Math.sin(angle) * edgePush - jitter * 0.7, 0, height - gridSize);
+            var sampleShiftX = (-hoverState.velocityX * 1.2 + jitter * 0.22) * pulse;
+            var sampleShiftY = (-hoverState.velocityY * 1.2 - jitter * 0.2) * pulse;
+            var sourceX = clamp(sample.cropX + (x + sampleShiftX) * srcScale, 0, Math.max(0, video.videoWidth - gridSize * srcScale));
+            var sourceY = clamp(sample.cropY + (y + sampleShiftY) * srcScale, 0, Math.max(0, video.videoHeight - gridSize * srcScale));
+            distortionCtx.globalAlpha = 0.24 + pulse * 0.76;
+            distortionCtx.drawImage(
+              video,
+              sourceX,
+              sourceY,
+              gridSize * srcScale,
+              gridSize * srcScale,
+              destinationX,
+              destinationY,
+              gridSize,
+              gridSize
+            );
+            distortionCtx.globalAlpha = 0.16 + pulse * 0.28;
+            distortionCtx.fillStyle = 'rgba(255,183,66,' + (0.1 + pulse * 0.2).toFixed(3) + ')';
+            distortionCtx.fillRect(destinationX, destinationY, gridSize, gridSize);
+            distortionCtx.globalAlpha = 0.16 + pulse * 0.34;
+            distortionCtx.strokeStyle = 'rgba(218,102,40,' + (0.12 + pulse * 0.34).toFixed(3) + ')';
+            distortionCtx.strokeRect(destinationX + 0.5, destinationY + 0.5, gridSize - 1, gridSize - 1);
+          }
+        }
+      }
+      if (video) {
+        var playPromise = video.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+          playPromise.catch(function() {
+          });
+        }
+      }
+      if (frame && hoverLayer && hoverCapable && !reduceMotion) {
+        function setFollower(active, clientX, clientY) {
+          var rect = frame.getBoundingClientRect();
+          var idleX = frame.clientWidth * 0.5;
+          var idleY = frame.clientHeight * 0.5;
+          if (!hoverState.ready) {
+            hoverState.targetX = idleX;
+            hoverState.targetY = idleY;
+            hoverState.currentX = idleX;
+            hoverState.currentY = idleY;
+            hoverState.ready = true;
+          }
+          if (typeof clientX === 'number' && typeof clientY === 'number') {
+            var scaleX = rect.width > 0 ? frame.clientWidth / rect.width : 1;
+            var scaleY = rect.height > 0 ? frame.clientHeight / rect.height : 1;
+            var boundedX = clamp((clientX - rect.left) * scaleX, 0, frame.clientWidth);
+            var boundedY = clamp((clientY - rect.top) * scaleY, 0, frame.clientHeight);
+            var dx = boundedX - hoverState.targetX;
+            var dy = boundedY - hoverState.targetY;
+            hoverState.velocityX = lerp(hoverState.velocityX, dx, 0.42);
+            hoverState.velocityY = lerp(hoverState.velocityY, dy, 0.42);
+            hoverState.targetX = boundedX;
+            hoverState.targetY = boundedY;
+          }
+          hoverState.active = active;
+        }
+        function trackHover(event) {
+          var rect = frame.getBoundingClientRect();
+          var inside = event.clientX >= rect.left && event.clientX <= rect.right && event.clientY >= rect.top && event.clientY <= rect.bottom;
+          if (inside) {
+            setFollower(true, event.clientX, event.clientY);
+          } else if (hoverState.active) {
+            setFollower(false);
+          }
+        }
+        window.addEventListener('mousemove', trackHover, { passive:true });
+        window.addEventListener('mouseleave', function() {
+          setFollower(false);
+        });
+      }
+      function tick() {
+        var viewportHeight = window.innerHeight || 1;
+        var viewportWidth = window.innerWidth || 1;
+        var sectionRect = section.getBoundingClientRect();
+        var scrollSpan = Math.max(section.offsetHeight - viewportHeight, 1);
+        var travel = viewportHeight + scrollSpan * 0.72;
+        var progress = clamp((viewportHeight - sectionRect.top) / Math.max(travel, 1), 0, 1);
+        var panelEase = reduceMotion ? 1 : ease(clamp(progress / 0.74, 0, 1));
+        var baseWidth = Math.min(250, Math.max(viewportWidth - 32, 180));
+        var baseHeight = Math.max(160, Math.min(220, baseWidth * 0.72));
+        var panelWidth = lerp(baseWidth, viewportWidth, panelEase);
+        var panelHeight = lerp(baseHeight, viewportHeight, panelEase);
+        var radius = 0;
+        var offsetY = 0;
+        var sceneScale = lerp(1.28, 1, panelEase);
+        var sceneOpacity = 1;
+        var shadowAlpha = 0;
+        var overlayOpacity = lerp(0.94, 0.78, panelEase);
+        var mediaOpacity = 1;
+        var copyProgress = clamp((progress - 0.38) / 0.2, 0, 1);
+        var copyEase = reduceMotion ? 1 : ease(copyProgress);
+        if (hoverCapable && !reduceMotion) {
+          var frameRect = frame ? frame.getBoundingClientRect() : null;
+          var idleX = frame ? frame.clientWidth * 0.5 : 0;
+          var idleY = frame ? frame.clientHeight * 0.5 : 0;
+          if (!hoverState.ready && frameRect) {
+            hoverState.targetX = idleX;
+            hoverState.targetY = idleY;
+            hoverState.currentX = idleX;
+            hoverState.currentY = idleY;
+            hoverState.ready = true;
+          }
+          hoverState.velocityX = lerp(hoverState.velocityX, 0, hoverState.active ? 0.14 : 0.2);
+          hoverState.velocityY = lerp(hoverState.velocityY, 0, hoverState.active ? 0.14 : 0.2);
+          if (!hoverState.active && frameRect) {
+            hoverState.targetX = lerp(hoverState.targetX, idleX, 0.18);
+            hoverState.targetY = lerp(hoverState.targetY, idleY, 0.18);
+          }
+          hoverState.currentX = lerp(hoverState.currentX, hoverState.targetX, 0.24);
+          hoverState.currentY = lerp(hoverState.currentY, hoverState.targetY, 0.24);
+          hoverState.strength = lerp(hoverState.strength, hoverState.active ? 1 : 0, hoverState.active ? 0.28 : 0.14);
+          section.style.setProperty('--offline-hover-x', hoverState.currentX.toFixed(2) + 'px');
+          section.style.setProperty('--offline-hover-y', hoverState.currentY.toFixed(2) + 'px');
+          section.style.setProperty('--offline-check-opacity', hoverState.strength.toFixed(3));
+          section.style.setProperty('--offline-grid-opacity', lerp(0.18, 0.42, hoverState.strength).toFixed(3));
+          drawDistortion();
+        } else {
+          clearDistortion();
+        }
+        section.style.setProperty('--offline-panel-width', panelWidth.toFixed(2) + 'px');
+        section.style.setProperty('--offline-panel-height', panelHeight.toFixed(2) + 'px');
+        section.style.setProperty('--offline-panel-radius', radius.toFixed(2) + 'px');
+        section.style.setProperty('--offline-panel-y', offsetY.toFixed(2) + 'px');
+        section.style.setProperty('--offline-scene-scale', sceneScale.toFixed(3));
+        section.style.setProperty('--offline-scene-opacity', sceneOpacity.toFixed(3));
+        section.style.setProperty('--offline-media-shadow-alpha', shadowAlpha.toFixed(3));
+        section.style.setProperty('--offline-media-overlay-opacity', overlayOpacity.toFixed(3));
+        section.style.setProperty('--offline-media-opacity', mediaOpacity.toFixed(3));
+        section.style.setProperty('--offline-copy-opacity', copyEase.toFixed(3));
+        section.style.setProperty('--offline-copy-visibility', copyEase > 0.01 ? 'visible' : 'hidden');
+        section.style.setProperty('--offline-header-shift-x', lerp(72, 0, copyEase).toFixed(2) + 'px');
+        section.style.setProperty('--offline-copy-shift-y', lerp(48, 0, copyEase).toFixed(2) + 'px');
+        section.style.setProperty('--offline-copy-scale', lerp(0.96, 1, copyEase).toFixed(3));
+        section.style.setProperty('--offline-copy-blur', lerp(18, 0, copyEase).toFixed(2) + 'px');
+        section.style.setProperty('--offline-line-scale', lerp(0.18, 1, copyEase).toFixed(3));
+        section.style.setProperty('--offline-line-opacity', lerp(0.18, 1, copyEase).toFixed(3));
+        requestAnimationFrame(tick);
+      }
+      window.addEventListener('resize', resizeDistortionCanvas);
+      resizeDistortionCanvas();
+      tick();
+    })();
+    (function() {
+      const section=document.getElementById('overview'); if(!section)return; const editorial=section.querySelector('.overview-editorial'); const media=section.querySelector('.overview-img'); const video=media?media.querySelector('video'):null; const textWrap=section.querySelector('.overview-text'); const lines=Array.from(section.querySelectorAll('.overview-status-copy')); const prefersReduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches; function clamp(v,min,max) {
+        return Math.max(min,Math.min(max,v));
+      } function lerp(a,b,t) {
+        return a+(b-a)*t;
+      } function ease(value) {
+        return value*value*(3-2*value);
+      } lines.forEach(function(line) {
         line.classList.add('overview-type-line'); line.dataset.fullText=line.textContent.trim(); if(!prefersReduced)line.textContent='';
       }); let started=false; function fillAll() {
         lines.forEach(function(line) {
@@ -1798,7 +2584,13 @@
         });
       }, {
         threshold:.35
-      }); observer.observe(section);
+      }); observer.observe(section); function tick() {
+        if(editorial&&!prefersReduced) {
+          const vh=window.innerHeight||1; const rect=section.getBoundingClientRect(); const exitStart=vh*.92; const exitEnd=vh*.4; const exitProgress=clamp((exitStart-rect.bottom)/Math.max(exitStart-exitEnd,1),0,1); const exitEase=ease(exitProgress); section.style.setProperty('--overview-exit-y',lerp(0,-148,exitEase).toFixed(2)+'px'); section.style.setProperty('--overview-exit-opacity',lerp(1,.18,exitEase).toFixed(3)); section.style.setProperty('--overview-exit-scale',lerp(1,.94,exitEase).toFixed(3)); section.style.setProperty('--overview-exit-blur',lerp(0,16,exitEase).toFixed(2)+'px');
+        } else {
+          section.style.setProperty('--overview-exit-y','0px'); section.style.setProperty('--overview-exit-opacity','1'); section.style.setProperty('--overview-exit-scale','1'); section.style.setProperty('--overview-exit-blur','0px');
+        } requestAnimationFrame(tick);
+      } tick();
     })();
     /* ====== RATSEAL CURSOR ====== */
     const cc=document.getElementById('cursor-canvas'), cx=cc.getContext('2d');
@@ -1807,7 +2599,7 @@
     window.addEventListener('resize',()=> {
       cc.width=window.innerWidth;cc.height=window.innerHeight;requestCursorFrame();
     });
-    let mx=-100, my=-100, hov=false, bx=-100, by=-100, ang=0, tang=0, lph=0, lbx=-100, lby=-100, csc=2, tsc=2;
+    let mx=-100, my=-100, hov=false, bx=-100, by=-100, ang=0, tang=0, lph=0, lbx=-100, lby=-100, csc=2, tsc=2, cursorVisible=false;
     let cursorRafId=0, cursorLastEventAt=0;
     function requestCursorFrame() {
       if(cursorRafId||document.hidden)return;
@@ -1817,11 +2609,29 @@
       cursorLastEventAt=performance.now();
       requestCursorFrame();
     }
-    document.addEventListener('mousemove',e=> {
-      mx=e.clientX;my=e.clientY;markCursorActive();
-    });
-    document.addEventListener('mouseleave',()=>{mx=-200;my=-200;markCursorActive();});
-    document.addEventListener('mouseenter',e=>{mx=e.clientX;my=e.clientY;bx=e.clientX;by=e.clientY;markCursorActive();});
+    function syncCursorPosition(e) {
+      mx=e.clientX;
+      my=e.clientY;
+      if(!cursorVisible) {
+        bx=e.clientX;
+        by=e.clientY;
+        lbx=e.clientX;
+        lby=e.clientY;
+      }
+      cursorVisible=true;
+      markCursorActive();
+    }
+    function hideCursor() {
+      cursorVisible=false;
+      hov=false;
+      csc=2;
+      tsc=2;
+      requestCursorFrame();
+    }
+    document.addEventListener('mousemove',syncCursorPosition);
+    document.addEventListener('mouseleave',hideCursor);
+    document.addEventListener('mouseenter',syncCursorPosition);
+    window.addEventListener('blur',hideCursor);
     document.querySelectorAll('a,button').forEach(el=> {
       el.addEventListener('mouseenter',()=> {
         hov=true;markCursorActive();
@@ -1871,6 +2681,7 @@
       if(document.hidden)return;
       cx.clearRect(0,0,cc.width,cc.height);
       cx.imageSmoothingEnabled=false;
+      if(!cursorVisible)return;
       tsc=hov?2.8:2;
       csc+=(tsc-csc)*.18;
       bx+=(mx-bx)*.22;
@@ -1976,7 +2787,7 @@
       }
       else {
         document.getElementById('pw-input').classList.add('error');
-        document.getElementById('pw-error').textContent = '??Incorrect password';
+        document.getElementById('pw-error').textContent = 'Incorrect password';
         document.getElementById('pw-input').value = '';
         setTimeout(function() {
           document.getElementById('pw-input').classList.remove('error');
