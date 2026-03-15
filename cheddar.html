@@ -270,9 +270,11 @@ footer{background:var(--white);color:var(--grey-m);padding:32px 40px;display:fle
 .asset-thumb-num{color:var(--project);margin-right:6px;}
 .dropdown-tag{font-size:10px;color:var(--grey-m);}
 </style>
+<link rel="stylesheet" href="assets/page-loader.css">
 <link rel="stylesheet" href="assets/mobile-block.css">
 </head>
 <body>
+<script src="assets/page-loader.js"></script>
 
 <canvas id="cursor-canvas"></canvas>
 
@@ -1036,8 +1038,15 @@ window.addEventListener('resize', () => {
   resizeTimer = setTimeout(rebuildGallery, 120);
 });
 
-rebuildGallery();
-updateGalleryInView();
+let cheddarGalleryInitialized = false;
+function initCheddarGallery() {
+  if (cheddarGalleryInitialized) return;
+  cheddarGalleryInitialized = true;
+  rebuildGallery();
+  updateGalleryInView();
+}
+window.addEventListener('page-loader:hidden', initCheddarGallery, { once: true });
+window.setTimeout(initCheddarGallery, 1800);
 
 /* ── Cursor ── */
 const cc=document.getElementById('cursor-canvas'),cx=cc.getContext('2d');

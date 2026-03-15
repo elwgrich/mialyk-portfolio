@@ -1104,9 +1104,11 @@ footer {
 
 }
 </style>
+<link rel="stylesheet" href="assets/page-loader.css">
 <link rel="stylesheet" href="assets/mobile-block.css">
 </head>
 <body>
+<script src="assets/page-loader.js"></script>
 
 <!-- CUSTOM CURSOR -->
 <canvas id="cursor-canvas"></canvas>
@@ -1570,6 +1572,9 @@ const hudSelectedMetaEl = document.getElementById('hud-selected-meta');
 const popupArrowIcon = ' <svg class="pxi pxi--sm" style="margin-top:3.4px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" xmlns="http://www.w3.org/2000/svg"><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
 function preloadImage(src) {
   const img = new Image();
+  if (window.__pageLoader && typeof window.__pageLoader.trackImage === 'function') {
+    window.__pageLoader.trackImage(img);
+  }
   img.src = src;
   return img;
 }
