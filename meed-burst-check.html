@@ -1,0 +1,1711 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>mialyk // meed</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+:root{
+  --white:#FEFEFE;
+  --grey-l:#A8B0B2;
+  --grey-m:#88888C;
+  --black:#181818;
+  --brand:#FFB742;
+  --effect1:#DA6628;
+  --cyan:#00e6c8;
+  --project:#F87C56;
+  --green:#156B40;
+  --orange:#FF3500;
+  --amber:#FF8301;
+  --pink:#FFBCCB;
+  --stone:#ADA999;
+  --nav-h:60px;
+  --font-brand:'Press Start 2P',monospace;
+  --font-body:'DM Mono',monospace;
+  --spring:cubic-bezier(.34,1.56,.64,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;scroll-snap-type:y proximity;scroll-padding-top:var(--nav-h);}
+body{
+  background:var(--white);
+  color:var(--black);
+  font-family:var(--font-body);
+  font-size:12px;
+  line-height:1.6;
+  overflow-x:hidden;
+}
+
+header{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  height:var(--nav-h);
+  background:var(--white);
+  border-bottom:1px solid rgba(24,24,24,.08);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 40px;
+  z-index:500;
+}
+.nav-logo{
+  font-family:var(--font-brand);
+  font-size:16px;
+  color:var(--black);
+  text-decoration:none;
+  letter-spacing:.02em;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  line-height:1;
+}
+.nav-logo .slash{color:var(--brand);}
+.nav-logo sub{
+  font-family:var(--font-body);
+  font-weight:300;
+  font-size:12px;
+  color:var(--grey-m);
+  vertical-align:baseline;
+  margin-left:2px;
+}
+nav{display:flex;align-items:center;gap:36px;}
+.nav-link{
+  font-size:12px;
+  color:var(--grey-m);
+  text-decoration:none;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  position:relative;
+  transition:color .2s;
+}
+.nav-link::after{
+  content:'';
+  position:absolute;
+  bottom:-2px;
+  left:0;
+  width:0;
+  height:1px;
+  background:var(--brand);
+  transition:width .3s cubic-bezier(.4,0,.2,1);
+}
+.nav-link:hover{color:var(--black);}
+.nav-link:hover::after{width:100%;}
+.nav-item{position:relative;}
+.nav-dropdown{
+  position:absolute;
+  top:calc(100% + 16px);
+  left:50%;
+  background:var(--white);
+  border:1px solid rgba(24,24,24,.1);
+  min-width:180px;
+  padding:8px 0;
+  opacity:0;
+  visibility:hidden;
+  transform:translateX(-50%) translateY(-8px);
+  transition:opacity .2s,transform .2s,visibility .2s;
+  box-shadow:0 8px 32px rgba(24,24,24,.08);
+}
+.nav-item:hover .nav-dropdown{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0);}
+.dropdown-item{
+  display:block;
+  padding:10px 20px;
+  font-size:12px;
+  color:var(--grey-m);
+  text-decoration:none;
+  letter-spacing:.04em;
+  transition:background .15s,color .15s;
+  white-space:nowrap;
+}
+.dropdown-item:hover{background:rgba(255,183,66,.08);color:var(--black);}
+.dropdown-locked{opacity:.6;}
+.dropdown-dot{
+  display:inline-block;
+  width:5px;
+  height:5px;
+  background:var(--brand);
+  border-radius:50%;
+  margin-right:10px;
+  vertical-align:middle;
+}
+.dropdown-item.active .dropdown-dot{background:var(--project);}
+.pxi{display:inline-block;}
+.pxi--sm{width:14px;height:14px;}
+
+main{position:relative;z-index:1;}
+
+.hero{
+  margin-top:60px;
+  padding:32px 24px;
+  min-height:226px;
+  border-bottom:1px solid rgba(24,24,24,.1);
+  background:var(--white);
+  position:relative;
+  overflow:hidden;
+  scroll-snap-align:start;
+  scroll-snap-stop:always;
+}
+.hero::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background-image:
+    linear-gradient(rgba(24,24,24,.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(24,24,24,.018) 1px,transparent 1px);
+  background-size:8px 8px;
+}
+.hero-inner{
+  width:100%;
+  max-width:1200px;
+  margin:0 auto;
+  position:relative;
+  z-index:1;
+  min-height:100%;
+  display:flex;
+  flex-direction:column;
+}
+.hero-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  flex-wrap:wrap;
+  margin-bottom:24px;
+}
+.hero-eyebrow{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-size:10px;
+  color:var(--project);
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  line-height:20px;
+}
+.hero-eyebrow::before{
+  content:'';
+  width:16px;
+  height:2px;
+  background:var(--project);
+  display:block;
+}
+.hero-year{
+  font-family:var(--font-brand);
+  font-size:10px;
+  color:var(--grey-m);
+  border:1px solid rgba(24,24,24,.15);
+  padding:4px 10px;
+  background:var(--white);
+  display:inline-flex;
+  align-items:center;
+}
+.hero-title{
+  font-family:var(--font-brand);
+  font-size:clamp(24px,4.5vw,50px);
+  line-height:1.35;
+  margin:0 0 24px;
+  color:var(--black);
+}
+.hero-title .accent{color:var(--project);}
+.hero-meta{display:flex;gap:48px;flex-wrap:wrap;margin-top:auto;}
+.meta-item{display:flex;flex-direction:column;gap:4px;}
+.meta-label{
+  font-size:10px;
+  color:var(--grey-l);
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  line-height:12px;
+}
+.meta-value{
+  font-size:12px;
+  color:var(--black);
+  line-height:16px;
+}
+
+.meed-field{
+  padding:0;
+  background:var(--white);
+  scroll-snap-align:start;
+  scroll-snap-stop:always;
+}
+.meed-field__inner{
+  width:100%;
+  max-width:none;
+  margin:0;
+  display:grid;
+  gap:0;
+}
+.meed-stage{
+  position:relative;
+  width:100%;
+  height:880px;
+  min-height:880px;
+  max-height:880px;
+  border:none;
+  background:var(--white);
+  overflow:hidden;
+  cursor:pointer;
+}
+.meed-stage::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:none;
+}
+.meed-stage::after{
+  content:none;
+}
+.floating{
+  position:absolute;
+  left:0;
+  top:0;
+  transform:
+    translate3d(var(--body-x,0px),var(--body-y,0px),0)
+    rotate(var(--rotation,var(--tilt,0deg)));
+  will-change:transform;
+  touch-action:none;
+  user-select:none;
+}
+.floating[data-bob]{
+  animation:none;
+}
+@keyframes bob{
+  0%,100%{margin-top:0;}
+  50%{margin-top:calc(var(--bob-shift,18px) * -1);}
+}
+
+.stage-console{
+  position:absolute;
+  left:28px;
+  top:28px;
+  width:min(320px,calc(100% - 56px));
+  z-index:5;
+  border:1px solid rgba(24,24,24,.12);
+  background:rgba(254,254,254,.94);
+  box-shadow:10px 10px 0 rgba(24,24,24,.05);
+}
+.stage-console__bar{
+  height:28px;
+  padding:0 18px;
+  background:var(--project);
+  border-bottom:1px solid rgba(24,24,24,.12);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  font-family:var(--font-brand);
+  font-size:7px;
+  color:var(--black);
+}
+.stage-console__body{
+  padding:18px;
+  display:grid;
+  gap:14px;
+}
+.stage-console__body p{color:var(--grey-m);}
+.stage-legend{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+}
+.stage-legend div{
+  border:1px solid rgba(24,24,24,.1);
+  padding:10px 12px;
+  min-height:64px;
+  background:var(--white);
+}
+.stage-legend strong{
+  display:block;
+  font-family:var(--font-brand);
+  font-size:8px;
+  line-height:1.8;
+  color:var(--black);
+}
+.stage-legend span{
+  display:block;
+  font-size:10px;
+  line-height:1.7;
+  color:var(--grey-m);
+}
+
+.shape{
+  border:1px solid rgba(24,24,24,.08);
+  z-index:1;
+  box-shadow:none;
+}
+.shape--square{width:154px;height:154px;background:var(--pink);}
+.shape--diamond{
+  width:138px;
+  height:138px;
+  background:var(--green);
+}
+.shape--diamond::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:var(--green);
+  transform:rotate(45deg);
+}
+.shape--cross{
+  width:164px;
+  height:164px;
+  background:transparent;
+  border:none;
+  box-shadow:none;
+}
+.shape--cross::before,
+.shape--cross::after{
+  content:'';
+  position:absolute;
+  background:var(--amber);
+  border:1px solid rgba(24,24,24,.08);
+  box-shadow:none;
+}
+.shape--cross::before{inset:0 48px;}
+.shape--cross::after{inset:48px 0;}
+.shape--star{
+  width:150px;
+  height:150px;
+  background:var(--orange);
+  border:none;
+  clip-path:polygon(50% 0%,61% 34%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 34%);
+}
+.shape--pill{
+  width:224px;
+  height:72px;
+  background:var(--stone);
+}
+.shape--bar{
+  width:252px;
+  height:74px;
+  background:var(--amber);
+}
+.shape--circle{width:132px;height:132px;background:var(--orange);}
+.shape--split{
+  width:208px;
+  height:128px;
+  background:transparent;
+  border:none;
+  box-shadow:none;
+}
+.shape--split::before,
+.shape--split::after{
+  content:'';
+  position:absolute;
+  width:92px;
+  height:92px;
+  top:18px;
+  background:var(--orange);
+  border:1px solid rgba(24,24,24,.08);
+  box-shadow:none;
+  transform:rotate(45deg);
+}
+.shape--split::before{left:6px;}
+.shape--split::after{
+  right:6px;
+  background:var(--green);
+}
+.shape--tall{
+  width:118px;
+  height:198px;
+  background:var(--pink);
+}
+
+.shape-icon{
+  width:124px;
+  height:124px;
+  object-fit:contain;
+  display:block;
+  z-index:2;
+  filter:none;
+}
+
+.orb{
+  width:var(--size,88px);
+  height:var(--size,88px);
+  object-fit:contain;
+  display:block;
+  z-index:2;
+  filter:
+    brightness(1.05)
+    saturate(1.12)
+    hue-rotate(var(--hue,0deg))
+    drop-shadow(0 12px 28px rgba(0,0,0,.4));
+  opacity:var(--alpha,.92);
+}
+
+.module{
+  width:176px;
+  height:176px;
+  padding:16px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(254,254,254,.95);
+  color:var(--black);
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  text-align:left;
+  box-shadow:12px 12px 0 rgba(24,24,24,.07);
+  z-index:4;
+  cursor:pointer;
+  transition:box-shadow .2s ease,border-color .2s ease,background .2s ease;
+}
+.module:hover,
+.module:focus-visible{
+  border-color:var(--project);
+  box-shadow:18px 18px 0 rgba(248,124,86,.18);
+  background:var(--white);
+  outline:none;
+}
+.module__meta{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  font-size:10px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--grey-m);
+}
+.module__meta strong{
+  color:var(--project);
+  font-family:var(--font-brand);
+  font-size:8px;
+  line-height:1.8;
+}
+.module__icon{
+  width:56px;
+  height:56px;
+  color:var(--black);
+}
+.module__icon svg{
+  width:100%;
+  height:100%;
+  display:block;
+  fill:currentColor;
+}
+.module__copy strong{
+  display:block;
+  font-family:var(--font-brand);
+  font-size:8px;
+  line-height:1.9;
+  color:var(--black);
+}
+.module__copy span{
+  display:block;
+  color:var(--grey-m);
+  line-height:1.7;
+}
+
+.footer{
+  background:var(--white);
+  color:var(--grey-m);
+  padding:32px 40px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:16px;
+  font-size:12px;
+  letter-spacing:.08em;
+  border-top:1px solid rgba(24,24,24,.1);
+  position:relative;
+  z-index:1;
+}
+.foot-copy{color:var(--grey-m);font-weight:300;}
+.foot-copy span{color:var(--brand);}
+.foot-soc{display:flex;align-items:center;gap:20px;}
+.soc-a{
+  color:var(--grey-m);
+  transition:color .2s;
+  display:flex;
+  align-items:center;
+  text-decoration:none;
+}
+.soc-a:hover{color:var(--brand);}
+.soc-a svg{width:18px;height:18px;display:block;}
+
+#pw-modal,
+#detail-modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(24,24,24,.42);
+  backdrop-filter:blur(4px);
+  z-index:720;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+}
+#pw-modal.active,
+#detail-modal.active{display:flex;}
+#pw-inner,
+.detail-window{
+  background:var(--white);
+  border:1px solid rgba(24,24,24,.14);
+  box-shadow:12px 12px 0 rgba(24,24,24,.08);
+  animation:popIn .32s var(--spring);
+}
+@keyframes popIn{
+  from{opacity:0;transform:scale(.92) translateY(16px);}
+  to{opacity:1;transform:scale(1) translateY(0);}
+}
+#pw-inner{
+  max-width:360px;
+  width:90%;
+  padding:32px;
+}
+.pw-title{
+  font-family:var(--font-brand);
+  font-size:12px;
+  color:var(--black);
+  margin-bottom:8px;
+  line-height:1.8;
+}
+.pw-sub{
+  font-size:10px;
+  color:var(--grey-m);
+  margin-bottom:24px;
+  font-weight:300;
+  letter-spacing:.06em;
+}
+.pw-input{
+  width:100%;
+  padding:12px 16px;
+  border:1px solid rgba(24,24,24,.2);
+  background:var(--white);
+  color:var(--black);
+  outline:none;
+  margin-bottom:8px;
+  transition:border-color .2s;
+  letter-spacing:.1em;
+  font-family:var(--font-body);
+  font-size:12px;
+}
+.pw-input:focus{border-color:var(--brand);}
+.pw-input.error{border-color:var(--effect1);}
+.pw-error{
+  font-size:10px;
+  color:var(--effect1);
+  margin-bottom:16px;
+  min-height:14px;
+  font-weight:300;
+}
+.pw-btns{display:flex;gap:10px;}
+.btn{
+  font-family:var(--font-body);
+  font-size:12px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  border:1px solid var(--black);
+  background:transparent;
+  color:var(--black);
+  cursor:pointer;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  white-space:nowrap;
+  line-height:1;
+  appearance:none;
+  transition:background .2s,color .2s,border-color .2s;
+}
+.btn:hover{
+  background:rgba(255,183,66,.1);
+  border-color:rgba(255,183,66,.48);
+}
+.btn--sm{font-size:10px;padding:0 16px;height:36px;}
+.btn.primary{
+  background:var(--brand);
+  border-color:var(--brand);
+}
+.btn.primary:hover{
+  background:var(--cyan);
+  border-color:var(--cyan);
+}
+
+.detail-window{
+  width:min(720px,calc(100vw - 48px));
+  max-height:min(760px,calc(100vh - 48px));
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
+.detail-window__bar{
+  height:28px;
+  padding:0 18px;
+  background:var(--project);
+  border-bottom:1px solid rgba(24,24,24,.12);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  font-family:var(--font-brand);
+  font-size:7px;
+  color:var(--black);
+}
+.detail-window__actions{display:flex;gap:4px;}
+.detail-window__close{
+  width:14px;
+  height:14px;
+  border:1px solid rgba(0,0,0,.22);
+  background:none;
+  color:rgba(0,0,0,.6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  font-family:var(--font-body);
+  font-size:8px;
+}
+.detail-window__close:hover{
+  background:rgba(0,0,0,.1);
+  color:var(--black);
+}
+.detail-window__body{
+  padding:26px;
+  display:grid;
+  gap:18px;
+  overflow:auto;
+}
+.detail-window__top{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 160px;
+  gap:18px;
+  align-items:start;
+}
+.detail-window__label{
+  font-family:var(--font-brand);
+  font-size:8px;
+  line-height:1.8;
+  color:var(--project);
+}
+.detail-window__title{
+  font-family:var(--font-brand);
+  font-size:14px;
+  line-height:1.9;
+  color:var(--black);
+}
+.detail-window__intro{color:var(--grey-m);}
+.detail-badge-grid{display:grid;gap:10px;}
+.detail-badge{
+  border:1px solid rgba(24,24,24,.1);
+  padding:12px;
+}
+.detail-badge strong{
+  display:block;
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:var(--grey-l);
+  margin-bottom:4px;
+}
+.detail-badge span{
+  display:block;
+  color:var(--black);
+}
+.detail-window__notes{
+  border:1px solid rgba(24,24,24,.1);
+  padding:18px;
+  display:grid;
+  gap:12px;
+}
+.detail-window__notes h3{
+  font-family:var(--font-brand);
+  font-size:8px;
+  line-height:1.8;
+  color:var(--black);
+}
+.detail-window__notes ul{
+  list-style:none;
+  display:grid;
+  gap:10px;
+}
+.detail-window__notes li{
+  padding-left:16px;
+  position:relative;
+  color:var(--grey-m);
+}
+.detail-window__notes li::before{
+  content:'';
+  position:absolute;
+  left:0;
+  top:8px;
+  width:6px;
+  height:6px;
+  background:var(--project);
+}
+
+@media (max-width:980px){
+  .detail-window__top{grid-template-columns:1fr;}
+  .stage-console{
+    position:relative;
+    left:auto;
+    top:auto;
+    width:auto;
+    margin:28px 28px 0;
+  }
+  .meed-stage{
+    height:880px;
+    min-height:880px;
+    max-height:880px;
+  }
+}
+
+@media (max-width:768px){
+  header{padding:0 16px;}
+  .nav-logo sub{display:none;}
+  nav{gap:20px;}
+  .nav-dropdown{left:auto;right:0;transform:translateY(-8px);}
+  .nav-item:hover .nav-dropdown{transform:translateY(0);}
+  .hero{padding-left:16px;padding-right:16px;}
+  .footer{padding:24px 16px;}
+}
+</style>
+<link rel="stylesheet" href="assets/page-loader.css">
+<link rel="stylesheet" href="assets/mobile-block.css">
+</head>
+<body>
+<script src="assets/page-loader.js"></script>
+
+<header>
+  <a href="index.html" class="nav-logo">mialyk<span class="slash">//</span><sub>building something creative</sub></a>
+  <nav>
+    <div class="nav-item">
+      <a href="#" class="nav-link">Projects</a>
+      <div class="nav-dropdown">
+        <a href="helpurr.html" class="dropdown-item"><span class="dropdown-dot"></span>Helpurr</a>
+        <a href="#" class="dropdown-item dropdown-locked" onclick="window.showPasswordModal ? showPasswordModal(event) : showPw(event)"><span class="dropdown-dot"></span>Le.social <svg class="pxi pxi--sm" viewBox="0 0 24 24" fill="currentColor" style="margin-left:4px;opacity:.5"><rect x="8" y="4" width="8" height="2"></rect><rect x="6" y="6" width="2" height="4"></rect><rect x="16" y="6" width="2" height="4"></rect><rect x="4" y="10" width="16" height="2"></rect><rect x="4" y="10" width="2" height="10"></rect><rect x="18" y="10" width="2" height="10"></rect><rect x="4" y="20" width="16" height="2"></rect><rect x="10" y="14" width="4" height="2"></rect><rect x="11" y="16" width="2" height="2"></rect></svg></a>
+        <a href="ora.html" class="dropdown-item"><span class="dropdown-dot"></span>ORA</a>
+        <a href="meed.html" class="dropdown-item active"><span class="dropdown-dot"></span>Meed</a>
+        <a href="cheddar.html" class="dropdown-item"><span class="dropdown-dot"></span>Cheddar Verse</a>
+        <a href="hamartia.html" class="dropdown-item"><span class="dropdown-dot"></span>Hamartia</a>
+        <a href="vfx.html" class="dropdown-item"><span class="dropdown-dot"></span>VFX</a>
+        <a href="https://www.artstation.com/mialyk" target="_blank" rel="noreferrer" class="dropdown-item"><span class="dropdown-dot"></span>Illustration</a>
+      </div>
+    </div>
+    <a href="about.html" class="nav-link">About</a>
+  </nav>
+</header>
+
+<section id="mobile-blocker" aria-label="Mobile access blocked">
+  <div class="mobile-blocker__inner">
+    <div class="mobile-blocker__card">
+      <img class="mobile-blocker__media" src="assets/images/pc.gif" alt="PC animation">
+      <p class="mobile-blocker__hint">This portfolio is available on desktop only. Please revisit on a larger screen.</p>
+    </div>
+  </div>
+</section>
+
+<main>
+  <section class="hero" id="hero">
+    <div class="hero-inner">
+      <div class="hero-head">
+        <div class="hero-eyebrow">AI Loyalty / Product Design</div>
+        <span class="hero-year">2022-2024</span>
+      </div>
+      <h1 class="hero-title">Meed <span class="accent">Playfield</span></h1>
+      <div class="hero-meta">
+        <div class="meta-item"><span class="meta-label">Role</span><span class="meta-value">Senior Designer</span></div>
+        <div class="meta-item"><span class="meta-label">Period</span><span class="meta-value">Jun 2022 - Jul 2024</span></div>
+        <div class="meta-item"><span class="meta-label">Focus</span><span class="meta-value">Rewards platform / dashboard / casual game hooks</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="meed-field">
+    <div class="meed-field__inner">
+      <div class="meed-stage" id="meedStage">
+        <div class="stage-console">
+          <div class="stage-console__bar">
+            <span>meed_windows.exe</span>
+            <span>click squares to inspect</span>
+          </div>
+          <div class="stage-console__body">
+            <p>The stage is built from placeholders so we can swap assets later without touching layout logic. Every circle below is already an image element, ready for replacement.</p>
+            <div class="stage-legend">
+              <div><strong>Circles</strong><span>11 image nodes for future deco art.</span></div>
+              <div><strong>Squares</strong><span>6 launchers for intro + detail popups.</span></div>
+              <div><strong>Shapes</strong><span>8 flat forms echoing the supplied reference.</span></div>
+            </div>
+          </div>
+        </div>
+
+        <img class="floating shape-icon" data-depth="1.6" data-bob src="assets/images/meed/happy.svg" alt="Decorative happy icon" style="left:74%;top:8%;--tilt:0deg;--bob-speed:7.4s;--bob-delay:-1.2s;">
+        <div class="floating shape shape--cross" data-depth="1.1" data-bob style="left:8%;top:18%;--tilt:-8deg;--bob-speed:9s;--bob-delay:-2.8s;"></div>
+        <img class="floating shape-icon" data-depth="1.4" data-bob src="assets/images/meed/heart.svg" alt="Decorative heart icon" style="left:69%;top:25%;--tilt:0deg;--bob-speed:8.5s;--bob-delay:-3s;">
+        <img class="floating shape-icon" data-depth="1.3" data-bob src="assets/images/meed/happy.svg" alt="Decorative happy icon" style="left:82%;top:34%;--tilt:12deg;--bob-speed:10s;--bob-delay:-1.6s;">
+        <div class="floating shape shape--star" data-depth=".9" data-bob style="left:5%;top:41%;--tilt:12deg;--bob-speed:8s;--bob-delay:-4.3s;"></div>
+        <img class="floating shape-icon" data-depth="1.5" data-bob src="assets/images/meed/heart.svg" alt="Decorative heart icon" style="left:18%;top:56%;--tilt:-10deg;--bob-speed:9.4s;--bob-delay:-1s;">
+        <div class="floating shape shape--square" data-depth="1.2" data-bob style="left:74%;top:66%;--tilt:0deg;--bob-speed:8.8s;--bob-delay:-2.4s;background:var(--green);"></div>
+        <div class="floating shape shape--tall" data-depth="1.1" data-bob style="left:88%;top:77%;--tilt:-18deg;--bob-speed:7.8s;--bob-delay:-3.1s;background:var(--green);"></div>
+
+        <img class="floating orb" data-depth="1.7" data-bob data-replace="decor-ball-01" src="assets/images/meed/ball8.png" alt="Decorative circle placeholder 01" style="left:63%;top:7%;--size:76px;--hue:-12deg;--bob-delay:-2.2s;">
+        <img class="floating orb" data-depth="1.4" data-bob data-replace="decor-ball-02" src="assets/images/meed/ball8.png" alt="Decorative circle placeholder 02" style="left:27%;top:16%;--size:94px;--hue:32deg;--bob-delay:-1s;">
+        <img class="floating orb" data-depth=".8" data-bob data-replace="decor-ball-03" src="assets/images/meed/ball8.png" alt="Decorative circle placeholder 03" style="left:12%;top:26%;--size:70px;--hue:98deg;--bob-delay:-3.8s;">
+        <img class="floating orb" data-depth="1.8" data-bob data-replace="decor-ball-04" src="assets/images/meed/ball8.png" alt="Decorative circle placeholder 04" style="left:86%;top:28%;--size:78px;--hue:-42deg;--bob-delay:-2.6s;">
+        <img class="floating orb" data-depth="1.1" data-bob data-replace="decor-ball-05" src="assets/images/meed/ball8.png" alt="Decorative circle placeholder 05" style="left:54%;top:36%;--size:92px;--hue:20deg;--bob-delay:-5.2s;">
+        <img class="floating orb" data-depth="1.6" data-bob data-replace="decor-ball-06" src="assets/images/meed/ball8.png" alt="Decorative circle placeholder 06" style="left:35%;top:47%;--size:82px;--hue:122deg;--bob-delay:-4.4s;">
+        <img class="floating orb" data-depth=".9" data-bob data-replace="decor-ball-07" src="assets/images/meed/ball8.png" alt="Decorative circle placeholder 07" style="left:68%;top:54%;--size:72px;--hue:-70deg;--bob-delay:-1.8s;">
+        <img class="floating orb" data-depth="1.5" data-bob data-replace="decor-ball-08" src="assets/images/meed/ball8.png" alt="Decorative circle placeholder 08" style="left:6%;top:64%;--size:88px;--hue:46deg;--bob-delay:-6.1s;">
+        <img class="floating orb" data-depth="1.2" data-bob data-replace="decor-ball-09" src="assets/images/meed/ball8.png" alt="Decorative circle placeholder 09" style="left:83%;top:71%;--size:98px;--hue:84deg;--bob-delay:-1.4s;">
+        <img class="floating orb" data-depth="1.7" data-bob data-replace="decor-ball-10" src="assets/images/meed/ball8.png" alt="Decorative circle placeholder 10" style="left:44%;top:81%;--size:78px;--hue:-20deg;--bob-delay:-3.5s;">
+        <img class="floating orb" data-depth="1" data-bob data-replace="decor-ball-11" src="assets/images/meed/ball8.png" alt="Decorative circle placeholder 11" style="left:17%;top:86%;--size:68px;--hue:142deg;--bob-delay:-4.9s;">
+
+        <button class="floating module" type="button" data-depth="1.4" data-module="rewards" data-bob style="left:34%;top:20%;--tilt:-4deg;--bob-speed:7.2s;--bob-delay:-1.4s;">
+          <div class="module__meta"><strong>01</strong><span>Live Product</span></div>
+          <div class="module__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14"></rect><rect x="6" y="8" width="5" height="2" fill="var(--white)"></rect><rect x="6" y="12" width="12" height="2" fill="var(--white)"></rect><rect x="6" y="16" width="8" height="1" fill="var(--white)"></rect></svg>
+          </div>
+          <div class="module__copy"><strong>Rewards OS</strong><span>Consumer-facing loyalty flow</span></div>
+        </button>
+
+        <button class="floating module" type="button" data-depth="1.3" data-module="dashboard" data-bob style="left:58%;top:18%;--tilt:5deg;--bob-speed:8.3s;--bob-delay:-2.3s;">
+          <div class="module__meta"><strong>02</strong><span>Ops Layer</span></div>
+          <div class="module__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="16"></rect><rect x="14" y="4" width="6" height="6"></rect><rect x="14" y="12" width="6" height="8"></rect></svg>
+          </div>
+          <div class="module__copy"><strong>Merchant Dash</strong><span>Analytics and campaign control</span></div>
+        </button>
+
+        <button class="floating module" type="button" data-depth="1.6" data-module="campaigns" data-bob style="left:17%;top:38%;--tilt:-6deg;--bob-speed:7.8s;--bob-delay:-4.1s;">
+          <div class="module__meta"><strong>03</strong><span>Growth</span></div>
+          <div class="module__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="5" y="15" width="3" height="4"></rect><rect x="10" y="11" width="3" height="8"></rect><rect x="15" y="7" width="3" height="12"></rect><rect x="4" y="4" width="14" height="2"></rect></svg>
+          </div>
+          <div class="module__copy"><strong>Campaign Loop</strong><span>Missions, rewards, retention hooks</span></div>
+        </button>
+
+        <button class="floating module" type="button" data-depth="1.1" data-module="skysurfer" data-bob style="left:66%;top:44%;--tilt:6deg;--bob-speed:8.9s;--bob-delay:-2.9s;">
+          <div class="module__meta"><strong>04</strong><span>Game Layer</span></div>
+          <div class="module__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="4"></rect><rect x="9" y="6" width="6" height="4"></rect><rect x="7" y="14" width="10" height="4"></rect></svg>
+          </div>
+          <div class="module__copy"><strong>Skysurfer</strong><span>Casual game world and promo energy</span></div>
+        </button>
+
+        <button class="floating module" type="button" data-depth="1.5" data-module="motion" data-bob style="left:31%;top:61%;--tilt:4deg;--bob-speed:7.6s;--bob-delay:-5.1s;">
+          <div class="module__meta"><strong>05</strong><span>Brand System</span></div>
+          <div class="module__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14"></rect><rect x="9" y="9" width="6" height="6" fill="var(--white)"></rect></svg>
+          </div>
+          <div class="module__copy"><strong>Motion Toolkit</strong><span>Launch assets and visual rhythm</span></div>
+        </button>
+
+        <button class="floating module" type="button" data-depth="1.2" data-module="hackathons" data-bob style="left:56%;top:73%;--tilt:-5deg;--bob-speed:8.5s;--bob-delay:-1.7s;">
+          <div class="module__meta"><strong>06</strong><span>Build Sprint</span></div>
+          <div class="module__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="11" y="4" width="2" height="6"></rect><rect x="7" y="10" width="10" height="2"></rect><rect x="6" y="12" width="12" height="7"></rect></svg>
+          </div>
+          <div class="module__copy"><strong>Hackathon Wins</strong><span>Rapid prototypes and pitch polish</span></div>
+        </button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="foot-copy">2026 <span>mialyk</span> // All rights reserved</div>
+  <div class="foot-soc">
+    <a href="https://www.linkedin.com/in/mia-lyk" target="_blank" class="soc-a"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"></path></svg></a>
+    <a href="https://www.instagram.com/mia_lyk" target="_blank" class="soc-a"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"></path></svg></a>
+    <a href="https://www.artstation.com/mialyk" target="_blank" class="soc-a"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M0 17.723l2.027 3.505h.001a2.424 2.424 0 0 0 2.164 1.333h13.457l-2.792-4.838H0zm24 .025c0-.484-.143-.935-.388-1.314L15.728 2.728a2.424 2.424 0 0 0-2.164-1.333H9.419L21.598 22.54l1.92-3.325c.378-.637.482-.919.482-1.467zm-11.129-3.462L7.428 4.858l-5.444 9.428h10.887z"></path></svg></a>
+    <a href="https://x.com/elwgrich/" target="_blank" class="soc-a"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.213 5.567 5.95-5.567zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg></a>
+  </div>
+</footer>
+
+<div id="pw-modal">
+  <div id="pw-inner">
+    <div class="pw-title">Le.social</div>
+    <div class="pw-sub">Password protected. Enter to view.</div>
+    <input class="pw-input" type="password" id="pw-input" placeholder="Password" autocomplete="current-password">
+    <div class="pw-error" id="pw-error"></div>
+    <div class="pw-btns">
+      <button class="btn btn--sm primary" type="button" onclick="checkPw()">Enter</button>
+      <button class="btn btn--sm" type="button" onclick="closePw()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div id="detail-modal" aria-hidden="true">
+  <div class="detail-window" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+    <div class="detail-window__bar">
+      <span>meed_detail_window.exe</span>
+      <div class="detail-window__actions">
+        <button class="detail-window__close" type="button" id="detailCloseBtn" aria-label="Close detail window">x</button>
+      </div>
+    </div>
+    <div class="detail-window__body">
+      <div class="detail-window__top">
+        <div>
+          <div class="detail-window__label" id="detailLabel">Module</div>
+          <h2 class="detail-window__title" id="detailTitle">Rewards OS</h2>
+          <p class="detail-window__intro" id="detailIntro"></p>
+        </div>
+        <div class="detail-badge-grid">
+          <div class="detail-badge"><strong>Role</strong><span id="detailRole"></span></div>
+          <div class="detail-badge"><strong>Surface</strong><span id="detailSurface"></span></div>
+          <div class="detail-badge"><strong>Mode</strong><span id="detailMode"></span></div>
+        </div>
+      </div>
+      <div class="detail-window__notes">
+        <h3>Project detail</h3>
+        <ul id="detailList"></ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="assets/mobile-block.js"></script>
+<script>
+const DETAIL_DATA = {
+  rewards: {
+    label: '01 / Live Product',
+    title: 'Rewards OS',
+    intro: 'Designed the consumer-facing reward journey so points, missions, and redemption felt legible and playful instead of dense or transactional.',
+    role: 'UX / UI direction',
+    surface: 'App flows + web touchpoints',
+    mode: 'Loyalty discovery',
+    details: [
+      'Built a clearer entry point for earning, tracking, and redeeming rewards across a growing feature set.',
+      'Balanced game-like progression cues with a white, professional product frame that still matched the broader portfolio language.',
+      'Structured the system so new promo moments could be added later without the navigation collapsing.'
+    ]
+  },
+  dashboard: {
+    label: '02 / Ops Layer',
+    title: 'Merchant Dashboard',
+    intro: 'Shaped the management side of the platform so campaign operators could understand performance, adjust rewards, and spot friction quickly.',
+    role: 'Product systems',
+    surface: 'Dashboard + admin states',
+    mode: 'Operations',
+    details: [
+      'Focused on hierarchy: what needs attention first, what can wait, and how reward mechanics translate into controls.',
+      'Used modular panels and compact metrics so operational views felt easier to scan under time pressure.',
+      'Made room for future campaign types by keeping the component language consistent and expandable.'
+    ]
+  },
+  campaigns: {
+    label: '03 / Growth',
+    title: 'Campaign Loop',
+    intro: 'Explored how loyalty mechanics could feel more like momentum than bookkeeping through missions, timed rewards, and repeatable hooks.',
+    role: 'Experience design',
+    surface: 'Promo flows + retention loops',
+    mode: 'Engagement',
+    details: [
+      'Mapped lightweight loops that could drive return visits without overwhelming the user with too many moving parts.',
+      'Tied promotional moments to clear visual states so the platform could broadcast urgency without looking noisy.',
+      'Designed around repeatability, letting the same system carry seasonal or partner activations later on.'
+    ]
+  },
+  skysurfer: {
+    label: '04 / Game Layer',
+    title: 'Skysurfer',
+    intro: 'Co-designed a casual game direction that could inject hype and surprise into the loyalty ecosystem while still feeling connected to the brand.',
+    role: 'Co-design + visual direction',
+    surface: 'Casual game concept',
+    mode: 'Hype activation',
+    details: [
+      'Pushed the energy upward with bolder motion, sharper silhouettes, and more playful pacing than the core dashboard surfaces.',
+      'Used game framing as a bridge between acquisition and retention, giving campaigns something more memorable to orbit around.',
+      'Kept the visual treatment modular so promo art and UI chrome could extend the same idea into launch materials.'
+    ]
+  },
+  motion: {
+    label: '05 / Brand System',
+    title: 'Motion Toolkit',
+    intro: 'Built a visual support layer for launch moments, social assets, and in-product highlights so the Meed work could move as one system.',
+    role: 'Art direction',
+    surface: 'Key visuals + launch assets',
+    mode: 'Brand support',
+    details: [
+      'Defined a flatter, sharper visual rhythm that could sit beside product UI without fighting it.',
+      'Created repeatable shape language and promo framing that made different initiatives feel related at a glance.',
+      'Left enough openness in the system for future campaign art to be swapped in without rebuilding the whole page.'
+    ]
+  },
+  hackathons: {
+    label: '06 / Build Sprint',
+    title: 'Hackathon Wins',
+    intro: 'Supported rapid concept-to-pitch cycles where the work had to read clearly, feel polished, and persuade quickly under tight deadlines.',
+    role: 'Sprint design',
+    surface: 'Prototype + presentation',
+    mode: 'Fast build',
+    details: [
+      'Compressed product thinking into a shorter loop: understand, frame, prototype, and present with enough fidelity to win attention.',
+      'Used visual clarity as leverage so prototypes felt stronger than their time budget usually allowed.',
+      'This module is intentionally placeholder-friendly and can be swapped with the exact winning concepts later.'
+    ]
+  }
+};
+
+const stage = document.getElementById('meedStage');
+const floaters = Array.from(stage.querySelectorAll('[data-depth]'));
+const orbNodes = Array.from(stage.querySelectorAll('.orb'));
+const detailModal = document.getElementById('detail-modal');
+const detailCloseBtn = document.getElementById('detailCloseBtn');
+const detailLabel = document.getElementById('detailLabel');
+const detailTitle = document.getElementById('detailTitle');
+const detailIntro = document.getElementById('detailIntro');
+const detailRole = document.getElementById('detailRole');
+const detailSurface = document.getElementById('detailSurface');
+const detailMode = document.getElementById('detailMode');
+const detailList = document.getElementById('detailList');
+
+let physicsBodies = [];
+let physicsRaf = 0;
+let physicsLastTs = 0;
+let resizeTimer = 0;
+let dragState = null;
+let physicsEnabled = false;
+const MAX_BOUNCES = 8;
+const MIN_REBOUND_DISTANCE = 10;
+const GRAVITY = 0.42;
+const STAGE_FLOOR_INSET = 20;
+const ORB_ART = [
+  'assets/images/meed/ball.png',
+  'assets/images/meed/ball1.png',
+  'assets/images/meed/ball2.png',
+  'assets/images/meed/ball3.png',
+  'assets/images/meed/ball4.png',
+  'assets/images/meed/ball5.png',
+  'assets/images/meed/ball6.png',
+  'assets/images/meed/ball7.png',
+  'assets/images/meed/ball8.png',
+];
+
+function shuffleList(items) {
+  const list = [...items];
+  for (let i = list.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [list[i], list[j]] = [list[j], list[i]];
+  }
+  return list;
+}
+
+function applyRandomOrbArt() {
+  if (!orbNodes.length) return;
+  const picks = [];
+  while (picks.length < orbNodes.length) {
+    picks.push(...shuffleList(ORB_ART));
+  }
+  orbNodes.forEach((orb, index) => {
+    orb.src = picks[index];
+  });
+}
+
+applyRandomOrbArt();
+
+function parseAxis(raw, size) {
+  if (!raw) return 0;
+  if (raw.includes('%')) return size * parseFloat(raw) / 100;
+  return parseFloat(raw) || 0;
+}
+
+function getVisualPadding(el) {
+  if (el.classList.contains('shape--diamond')) return { x: 32, y: 32 };
+  if (el.classList.contains('shape--split')) return { x: 20, y: 20 };
+  if (el.classList.contains('module')) return { x: 18, y: 18 };
+  return { x: 8, y: 8 };
+}
+
+function setupPhysics(preserveState) {
+  const previous = new Map();
+  if (preserveState) {
+    physicsBodies.forEach((body) => previous.set(body.el, body));
+  }
+
+  physicsBodies = floaters.map((el, index) => {
+    const rect = el.getBoundingClientRect();
+    const prev = previous.get(el);
+    const w = rect.width || el.offsetWidth || 80;
+    const h = rect.height || el.offsetHeight || 80;
+    const pad = getVisualPadding(el);
+    const tilt = parseFloat((el.style.getPropertyValue('--tilt') || '0deg').replace('deg', '')) || 0;
+    const initialLeft = el.style.left;
+    const initialTop = el.style.top;
+    const x = prev ? prev.x : parseAxis(initialLeft, stage.clientWidth);
+    const y = prev ? prev.y : parseAxis(initialTop, stage.clientHeight);
+    if (!prev) {
+      el.style.left = '0px';
+      el.style.top = '0px';
+    }
+    return {
+      el,
+      w,
+      h,
+      padX: pad.x,
+      padY: pad.y,
+      x,
+      y,
+      vx: prev ? prev.vx : (Math.random() - 0.5) * 0.8,
+      vy: prev ? prev.vy : 0,
+      rotation: prev ? prev.rotation : tilt,
+      rotV: prev ? prev.rotV : (Math.random() - 0.5) * 0.25,
+      bounce: el.classList.contains('module') ? 0.72 : 0.82,
+      bounceCount: prev ? prev.bounceCount || 0 : 0,
+      bounceLimit: MAX_BOUNCES,
+      drag: el.classList.contains('orb') ? 0.996 : 0.992,
+      resting: prev ? Boolean(prev.resting) : false,
+    };
+  });
+
+  clampBodies();
+  resolveBodyCollisions(10);
+  settleSupportedBodies(Math.max(0, stage.clientHeight - STAGE_FLOOR_INSET));
+  renderBodies();
+}
+
+function clampBodies() {
+  const maxW = stage.clientWidth;
+  const maxH = Math.max(0, stage.clientHeight - STAGE_FLOOR_INSET);
+  physicsBodies.forEach((body) => {
+    const minX = body.padX;
+    const minY = body.padY;
+    const maxX = Math.max(minX, maxW - body.w - body.padX);
+    const maxY = Math.max(minY, maxH - body.h - body.padY);
+    body.x = Math.min(Math.max(minX, body.x), maxX);
+    body.y = Math.min(Math.max(minY, body.y), maxY);
+  });
+}
+
+function resolveBodyCollisions(
+  iterations = 1,
+  floor = Math.max(0, stage.clientHeight - STAGE_FLOOR_INSET),
+  trackBounce = physicsEnabled
+) {
+  let collided = false;
+  const gap = 2;
+  const tolerance = 1.5;
+  const restTolerance = MIN_REBOUND_DISTANCE;
+
+  for (let pass = 0; pass < iterations; pass += 1) {
+    let passCollided = false;
+
+    for (let i = 0; i < physicsBodies.length; i += 1) {
+      for (let j = i + 1; j < physicsBodies.length; j += 1) {
+        const a = physicsBodies[i];
+        const b = physicsBodies[j];
+        const overlapX = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x);
+        const overlapY = Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y);
+
+        if (overlapX <= 0 || overlapY <= 0) continue;
+
+        collided = true;
+        passCollided = true;
+
+        const aDragged = dragState && dragState.body === a;
+        const bDragged = dragState && dragState.body === b;
+        const aPinned = !aDragged && a.resting;
+        const bPinned = !bDragged && b.resting;
+        const centerAX = a.x + a.w / 2;
+        const centerAY = a.y + a.h / 2;
+        const centerBX = b.x + b.w / 2;
+        const centerBY = b.y + b.h / 2;
+        const aSupport = getSupportForBody(a, floor);
+        const bSupport = getSupportForBody(b, floor);
+
+        if (aPinned && bPinned) continue;
+        if (overlapX <= tolerance && overlapY <= tolerance) continue;
+        if (aSupport && bSupport && isBodyCalm(a) && isBodyCalm(b) && overlapX <= restTolerance && overlapY <= restTolerance) {
+          snapBodyToRest(a, floor, aSupport);
+          snapBodyToRest(b, floor, bSupport);
+          continue;
+        }
+
+        if (overlapX < overlapY) {
+          const push = overlapX + gap;
+          const dir = centerAX <= centerBX ? -1 : 1;
+
+          if ((aDragged || aPinned) && !bDragged) {
+            b.x -= dir * push;
+            b.vx *= 0.6;
+            b.resting = false;
+          } else if ((bDragged || bPinned) && !aDragged) {
+            a.x += dir * push;
+            a.vx *= 0.6;
+            a.resting = false;
+          } else {
+            a.x += dir * (push / 2);
+            b.x -= dir * (push / 2);
+            a.vx *= 0.5;
+            b.vx *= 0.5;
+            a.resting = false;
+            b.resting = false;
+          }
+        } else {
+          const push = overlapY + gap;
+          const dir = centerAY <= centerBY ? -1 : 1;
+
+          if ((aDragged || aPinned) && !bDragged) {
+            b.y -= dir * push;
+            applyVerticalResponse(b, Math.abs(b.vy) < 3 ? 0 : b.vy * 0.3, floor, trackBounce);
+          } else if ((bDragged || bPinned) && !aDragged) {
+            a.y += dir * push;
+            applyVerticalResponse(a, Math.abs(a.vy) < 3 ? 0 : a.vy * 0.3, floor, trackBounce);
+          } else {
+            a.y += dir * (push / 2);
+            b.y -= dir * (push / 2);
+            applyVerticalResponse(a, Math.abs(a.vy) < 3 ? 0 : a.vy * 0.3, floor, trackBounce);
+            applyVerticalResponse(b, Math.abs(b.vy) < 3 ? 0 : b.vy * 0.3, floor, trackBounce);
+          }
+        }
+      }
+    }
+
+    clampBodies();
+    if (!passCollided) break;
+  }
+
+  return collided;
+}
+
+function getSupportForBody(body, floor) {
+  const floorY = floor - body.h - body.padY;
+  if (Math.abs(body.y - floorY) <= 1.5) {
+    return { type: 'floor', y: floorY };
+  }
+
+  let support = null;
+  let supportTop = Infinity;
+  physicsBodies.forEach((other) => {
+    if (other === body) return;
+    if (body.y >= other.y) return;
+
+    const overlapX = Math.min(body.x + body.w, other.x + other.w) - Math.max(body.x, other.x);
+    if (overlapX < Math.min(body.w, other.w) * 0.25) return;
+
+    const gap = other.y - (body.y + body.h);
+    if (gap < -1.5 || gap > 8) return;
+    if (other.y >= supportTop) return;
+
+    supportTop = other.y;
+    support = { type: 'body', y: other.y - body.h - 2 };
+  });
+
+  return support;
+}
+
+function isBodyCalm(body) {
+  return Math.abs(body.vx) < 0.12 && Math.abs(body.vy) < 0.22 && Math.abs(body.rotV) < 0.03;
+}
+
+function getProjectedReboundDistance(speed) {
+  const absSpeed = Math.abs(speed);
+  return (absSpeed * absSpeed) / (2 * GRAVITY);
+}
+
+function shouldSuppressRebound(speed) {
+  return getProjectedReboundDistance(speed) < MIN_REBOUND_DISTANCE;
+}
+
+function snapBodyToRest(body, floor, support = getSupportForBody(body, floor)) {
+  if (support) {
+    body.y = support.y;
+  } else if (body.y + body.h + body.padY >= floor - 0.5) {
+    body.y = floor - body.h - body.padY;
+  } else {
+    return false;
+  }
+
+  body.vx = 0;
+  body.vy = 0;
+  body.rotV = 0;
+  body.bounceCount = body.bounceLimit;
+  body.resting = true;
+  return true;
+}
+
+function noteBounce(body, floor) {
+  body.bounceCount = Math.min(body.bounceLimit, body.bounceCount + 1);
+  if (body.bounceCount < body.bounceLimit) return false;
+  return snapBodyToRest(body, floor);
+}
+
+function applyVerticalResponse(body, nextVy, floor, trackBounce = true) {
+  if (trackBounce && shouldSuppressRebound(nextVy) && snapBodyToRest(body, floor)) {
+    return;
+  }
+
+  if (trackBounce && noteBounce(body, floor)) {
+    return;
+  }
+
+  body.vy = Math.abs(nextVy) < 3 ? 0 : nextVy;
+  body.resting = false;
+}
+
+function settleSupportedBodies(floor) {
+  for (let pass = 0; pass < 3; pass += 1) {
+    physicsBodies.forEach((body) => {
+      if (dragState && dragState.body === body) return;
+
+      const support = getSupportForBody(body, floor);
+      if (!support) {
+        if (body.resting && body.vx === 0 && body.vy === 0) body.resting = false;
+        return;
+      }
+
+      if (body.bounceCount >= body.bounceLimit && snapBodyToRest(body, floor, support)) {
+        return;
+      }
+
+      if (isBodyCalm(body)) {
+        snapBodyToRest(body, floor, support);
+      }
+    });
+
+    clampBodies();
+  }
+}
+
+function getBodyFromElement(target) {
+  const node = target && target.closest ? target.closest('.floating') : null;
+  if (!node) return null;
+  return physicsBodies.find((body) => body.el === node) || null;
+}
+
+function renderBodies() {
+  physicsBodies.forEach((body) => {
+    body.el.style.setProperty('--body-x', `${body.x.toFixed(2)}px`);
+    body.el.style.setProperty('--body-y', `${body.y.toFixed(2)}px`);
+    body.el.style.setProperty('--rotation', `${body.rotation.toFixed(2)}deg`);
+  });
+}
+
+function stepPhysics(ts) {
+  if (!physicsLastTs) physicsLastTs = ts;
+  const delta = Math.min(1.6, (ts - physicsLastTs) / 16.6667);
+  physicsLastTs = ts;
+  physicsRaf = 0;
+
+  const floor = Math.max(0, stage.clientHeight - STAGE_FLOOR_INSET);
+  const rightEdge = stage.clientWidth;
+  physicsBodies.forEach((body) => {
+    const prevX = body.x;
+    const prevY = body.y;
+
+    if (dragState && dragState.body === body) {
+      body.resting = false;
+      return;
+    }
+
+    if (body.resting) {
+      body.vx = 0;
+      body.vy = 0;
+      body.rotV = 0;
+      return;
+    }
+
+    body.vy += GRAVITY * delta;
+    body.x += body.vx * delta;
+    body.y += body.vy * delta;
+    body.rotation += body.rotV * delta;
+    body.vx *= body.drag;
+    body.vy *= 0.996;
+    body.rotV *= 0.992;
+
+    if (body.x < body.padX) {
+      body.x = body.padX;
+      body.vx = Math.abs(body.vx) * body.bounce;
+      body.rotV += 0.12;
+    }
+    if (body.x + body.w + body.padX > rightEdge) {
+      body.x = rightEdge - body.w - body.padX;
+      body.vx = -Math.abs(body.vx) * body.bounce;
+      body.rotV -= 0.12;
+    }
+    if (body.y < body.padY) {
+      body.y = body.padY;
+      body.vy = Math.abs(body.vy) * body.bounce;
+    }
+    if (body.y + body.h + body.padY > floor) {
+      body.y = floor - body.h - body.padY;
+      const reboundVy = -Math.abs(body.vy) * body.bounce;
+      if (Math.abs(body.vy) < 0.9 || shouldSuppressRebound(reboundVy)) {
+        snapBodyToRest(body, floor);
+      } else if (!noteBounce(body, floor)) {
+        body.vy = reboundVy;
+        body.resting = false;
+      }
+      body.vx *= 0.985;
+      body.rotV *= 0.94;
+    }
+
+    if (Math.abs(body.vx) < 0.02) body.vx = 0;
+    if (Math.abs(body.vy) < 0.02 && body.y + body.h + body.padY >= floor - 0.5) body.vy = 0;
+    if (Math.abs(body.rotV) < 0.01) body.rotV = 0;
+
+    const support = getSupportForBody(body, floor);
+    const movedDistance = Math.hypot(body.x - prevX, body.y - prevY);
+    if (support && (body.bounceCount >= body.bounceLimit || isBodyCalm(body) || movedDistance < MIN_REBOUND_DISTANCE)) {
+      snapBodyToRest(body, floor, support);
+      return;
+    }
+
+    if (body.vx === 0 && body.vy === 0 && body.rotV === 0 && body.y + body.h + body.padY >= floor - 0.5) {
+      body.y = floor - body.h - body.padY;
+      body.resting = true;
+    } else {
+      body.resting = false;
+    }
+
+  });
+
+  resolveBodyCollisions(1, floor);
+  settleSupportedBodies(floor);
+  renderBodies();
+
+  const active = physicsBodies.some((body) => {
+    if (dragState && dragState.body === body) return true;
+    const support = getSupportForBody(body, floor);
+    if (support && (body.resting || isBodyCalm(body))) return false;
+    return Math.abs(body.vx) > 0.04 || Math.abs(body.vy) > 0.04 || Math.abs(body.rotV) > 0.02 || !support;
+  });
+
+  if (active) startPhysics();
+}
+
+function startPhysics() {
+  if (!physicsRaf) physicsRaf = requestAnimationFrame(stepPhysics);
+}
+
+function activatePhysics() {
+  physicsEnabled = true;
+  startPhysics();
+}
+
+function burstBodies(clientX, clientY) {
+  const rect = stage.getBoundingClientRect();
+  const px = clientX - rect.left;
+  const py = clientY - rect.top;
+  physicsBodies.forEach((body) => {
+    body.resting = false;
+    const cx = body.x + body.w / 2;
+    const cy = body.y + body.h / 2;
+    const dx = cx - px;
+    const dy = cy - py;
+    const dist = Math.max(24, Math.hypot(dx, dy));
+    if (dist > 320) return;
+    body.bounceCount = 0;
+    const power = (1 - dist / 320) * (body.el.classList.contains('module') ? 8 : 12);
+    body.vx += (dx / dist) * power * 0.8 + (Math.random() - 0.5) * 1.4;
+    body.vy -= Math.max(4.2, power * 1.3);
+    body.rotV += (Math.random() - 0.5) * 1.2;
+  });
+  activatePhysics();
+}
+
+function beginDrag(event, body) {
+  const rect = stage.getBoundingClientRect();
+  dragState = {
+    body,
+    pointerId: event.pointerId,
+    offsetX: event.clientX - rect.left - body.x,
+    offsetY: event.clientY - rect.top - body.y,
+    lastClientX: event.clientX,
+    lastClientY: event.clientY,
+    lastTs: performance.now(),
+    moved: false,
+    movedDistance: 0,
+    startX: body.x,
+    startY: body.y,
+  };
+  body.resting = false;
+  body.bounceCount = 0;
+  body.vx = 0;
+  body.vy = 0;
+  body.rotV *= 0.35;
+  body.el.style.zIndex = '12';
+  stage.setPointerCapture(event.pointerId);
+  activatePhysics();
+}
+
+function moveDrag(event) {
+  if (!dragState || dragState.pointerId !== event.pointerId) return;
+  const rect = stage.getBoundingClientRect();
+  const body = dragState.body;
+  const nextX = event.clientX - rect.left - dragState.offsetX;
+  const nextY = event.clientY - rect.top - dragState.offsetY;
+  const now = performance.now();
+  const dt = Math.max(8, now - dragState.lastTs);
+  const dx = event.clientX - dragState.lastClientX;
+  const dy = event.clientY - dragState.lastClientY;
+  const minX = body.padX;
+  const minY = body.padY;
+  const maxX = Math.max(minX, stage.clientWidth - body.w - body.padX);
+  const maxY = Math.max(minY, stage.clientHeight - STAGE_FLOOR_INSET - body.h - body.padY);
+
+  body.x = Math.min(Math.max(minX, nextX), maxX);
+  body.y = Math.min(Math.max(minY, nextY), maxY);
+  body.resting = false;
+  body.vx = dx / (dt / 16.6667);
+  body.vy = dy / (dt / 16.6667);
+  body.rotation += body.vx * 0.08;
+
+  dragState.movedDistance += Math.hypot(dx, dy);
+  if (dragState.movedDistance > 6) dragState.moved = true;
+  dragState.lastClientX = event.clientX;
+  dragState.lastClientY = event.clientY;
+  dragState.lastTs = now;
+  resolveBodyCollisions(1);
+  settleSupportedBodies(Math.max(0, stage.clientHeight - STAGE_FLOOR_INSET));
+  renderBodies();
+}
+
+function endDrag(event) {
+  if (!dragState || dragState.pointerId !== event.pointerId) return;
+  const body = dragState.body;
+  const wasMoved = dragState.moved;
+  body.el.style.zIndex = '';
+  body.rotV += body.vx * 0.04;
+  if (!wasMoved) {
+    body.vy -= 2.4;
+    if (body.el.classList.contains('module')) {
+      openDetail(body.el.dataset.module);
+    } else {
+      burstBodies(event.clientX, event.clientY);
+    }
+  } else {
+    body.el.dataset.dragMoved = '1';
+  }
+  dragState = null;
+  stage.releasePointerCapture(event.pointerId);
+  startPhysics();
+}
+
+stage.addEventListener('pointerdown', (event) => {
+  const body = getBodyFromElement(event.target);
+  if (body) {
+    event.preventDefault();
+    beginDrag(event, body);
+    return;
+  }
+  burstBodies(event.clientX, event.clientY);
+});
+
+stage.addEventListener('pointermove', moveDrag);
+stage.addEventListener('pointerup', endDrag);
+stage.addEventListener('pointercancel', endDrag);
+
+function openDetail(moduleId) {
+  const data = DETAIL_DATA[moduleId];
+  if (!data) return;
+  detailLabel.textContent = data.label;
+  detailTitle.textContent = data.title;
+  detailIntro.textContent = data.intro;
+  detailRole.textContent = data.role;
+  detailSurface.textContent = data.surface;
+  detailMode.textContent = data.mode;
+  detailList.innerHTML = '';
+  data.details.forEach((item) => {
+    const li = document.createElement('li');
+    li.textContent = item;
+    detailList.appendChild(li);
+  });
+  detailModal.classList.add('active');
+  detailModal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDetail() {
+  detailModal.classList.remove('active');
+  detailModal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+
+document.querySelectorAll('[data-module]').forEach((button) => {
+  button.addEventListener('click', (event) => {
+    if (button.dataset.dragMoved === '1') {
+      button.dataset.dragMoved = '0';
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+    openDetail(button.dataset.module);
+  });
+});
+
+detailCloseBtn.addEventListener('click', closeDetail);
+detailModal.addEventListener('click', (event) => {
+  if (event.target === detailModal) closeDetail();
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') {
+    if (detailModal.classList.contains('active')) closeDetail();
+    if (document.getElementById('pw-modal').classList.contains('active')) closePw();
+  }
+});
+
+async function hashStr(str) {
+  const buffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buffer)).map((byte) => byte.toString(16).padStart(2, '0')).join('');
+}
+
+const PW_HASH = 'c0f375a41b2ce2a15ef28c4f2028e9a0b2e8f4e3d8a5b6c7d1e2f3a4b5c6d7e8';
+
+function showPw(event) {
+  event.preventDefault();
+  const input = document.getElementById('pw-input');
+  input.value = '';
+  document.getElementById('pw-error').textContent = '';
+  input.classList.remove('error');
+  document.getElementById('pw-modal').classList.add('active');
+  setTimeout(() => input.focus(), 100);
+}
+
+function closePw() {
+  document.getElementById('pw-modal').classList.remove('active');
+}
+
+async function checkPw() {
+  const input = document.getElementById('pw-input');
+  const hash = await hashStr(input.value);
+  if (hash === PW_HASH) {
+    closePw();
+    window.location.href = 'lesocial.html';
+    return;
+  }
+  input.classList.add('error');
+  document.getElementById('pw-error').textContent = 'Incorrect password';
+  input.value = '';
+  setTimeout(() => input.classList.remove('error'), 1500);
+}
+
+document.getElementById('pw-modal').addEventListener('click', (event) => {
+  if (event.target === document.getElementById('pw-modal')) closePw();
+});
+
+document.getElementById('pw-input').addEventListener('keydown', (event) => {
+  if (event.key === 'Enter') checkPw();
+});
+
+window.addEventListener('load', () => {
+  setupPhysics(false);
+});
+
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = window.setTimeout(() => {
+    physicsLastTs = 0;
+    setupPhysics(true);
+    if (physicsEnabled) startPhysics();
+  }, 120);
+});
+</script>
+<script>
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const rect = stage.getBoundingClientRect();
+    burstBodies(rect.left + rect.width / 2, rect.top + rect.height / 2);
+  }, 120);
+});
+</script>
+</body>
+</html>
+

@@ -17,7 +17,7 @@
                 '<a href="helpurr.html" class="dropdown-item"><span class="dropdown-dot"></span>Helpurr</a>' +
                 '<a href="#" class="dropdown-item dropdown-locked" tabindex="-1" aria-disabled="true"><span class="dropdown-dot"></span>Le.social</a>' +
                 '<a href="ora.html" class="dropdown-item"><span class="dropdown-dot"></span>ORA</a>' +
-                '<a href="https://www.meedloyalty.com/" target="_blank" rel="noopener noreferrer" class="dropdown-item"><span class="dropdown-dot"></span>Meed</a>' +
+                '<a href="meed.html" class="dropdown-item"><span class="dropdown-dot"></span>Meed</a>' +
                 '<a href="cheddar.html" class="dropdown-item"><span class="dropdown-dot"></span>Cheddar Verse</a>' +
                 '<a href="hamartia.html" class="dropdown-item"><span class="dropdown-dot"></span>Hamartia</a>' +
                 '<a href="vfx.html" class="dropdown-item"><span class="dropdown-dot"></span>VFX</a>' +
