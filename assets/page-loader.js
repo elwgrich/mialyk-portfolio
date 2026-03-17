@@ -65,6 +65,18 @@
     ]);
   }
 
+  function waitForWindowLoadOrTimeout() {
+    if (document.readyState === 'complete') return Promise.resolve();
+    return Promise.race([
+      new Promise(function(resolve) {
+        window.addEventListener('load', resolve, { once: true });
+      }),
+      new Promise(function(resolve) {
+        window.setTimeout(resolve, 4000);
+      })
+    ]);
+  }
+
   function safeResolve(promise) {
     return Promise.resolve(promise).catch(function() {
     });
@@ -84,13 +96,6 @@
     return safeResolve(document.fonts.ready);
   }
 
-  function isNearViewport(el) {
-    if (!el || typeof el.getBoundingClientRect !== 'function') return false;
-    var rect = el.getBoundingClientRect();
-    var viewportHeight = window.innerHeight || 0;
-    return rect.bottom >= -(viewportHeight * 0.25) && rect.top <= viewportHeight * 1.5;
-  }
-
   function isRendered(el) {
     if (!el || typeof window.getComputedStyle !== 'function') return false;
     var styles = window.getComputedStyle(el);
@@ -102,14 +107,9 @@
 
   function shouldBlockLoaderForElement(el) {
     if (!el || el.closest('[data-page-loader]')) return false;
+    if (el.hasAttribute('data-page-loader-nonblocking')) return false;
     if (!isRendered(el)) return false;
-    if (el.hasAttribute('data-page-loader-critical')) return true;
-    if (el.getAttribute('fetchpriority') === 'high') return true;
-    if (el.getAttribute('loading') === 'lazy') return false;
-    if (el.tagName === 'VIDEO' && (el.autoplay || el.getAttribute('preload') === 'auto')) {
-      return isNearViewport(el);
-    }
-    return isNearViewport(el);
+    return true;
   }
 
   function waitForImage(img) {
@@ -234,7 +234,7 @@
       .concat(registeredPromises)
       .concat([waitForFonts()]);
 
-    withTimeout(Promise.all(work.map(safeResolve)), 10000).then(function() {
+    withTimeout(Promise.all(work.map(safeResolve)), 15000).then(function() {
       return new Promise(function(resolve) {
         window.setTimeout(resolve, 180);
       });
@@ -255,5 +255,7 @@
     }
   };
 
-  waitForDomReadyOrTimeout().then(bootLoader);
+  waitForDomReadyOrTimeout()
+    .then(waitForWindowLoadOrTimeout)
+    .then(bootLoader);
 })();
